@@ -1,0 +1,180 @@
+{
+ "chunk_id": "reigate-squires-0009",
+ "story": "reigate-squires",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "“Still at it, then?” said he to Holmes. “I thought you Londoners were never at fault. You don’t seem to be so very quick, after all.”\n\n“Ah, you must give us a little time,” said Holmes good-humoredly.\n\n“You’ll want it,” said young Alec Cunningham. “Why, I don’t see that we have any clue at all.”\n\n“There’s only one,” answered the Inspector. “We thought that if we could only find—Good heavens, Mr. Holmes! What is the matter?”\n\nMy poor friend’s face had suddenly assumed the most dreadful expression. His eyes rolled upwards, his features writhed in agony, and with a suppressed groan he dropped on his face upon the ground. Horrified at the suddenness and severity of the attack, we carried him into the kitchen, where he lay back in a large chair, and breathed heavily for some minutes. Finally, with a shamefaced apology for his weakness, he rose once more.\n\n“Watson would tell you that I have only just recovered from a severe illness,” he explained. “I am liable to these sudden nervous attacks.”\n\n“Shall I send you home in my trap?” asked old Cunningham.\n\n“Well, since I am here, there is one point on which I should like to feel sure. We can very easily verify it.”\n\n“What was it?”\n\n“Well, it seems to me that it is just possible that the arrival of this poor fellow William was not before, but after, the entrance of the burglar into the house. You appear to take it for granted that, although the door was forced, the robber never got in.”\n\n“I fancy that is quite obvious,” said Mr. Cunningham, gravely. “Why, my son Alec had not yet gone to bed, and he would certainly have heard any one moving about.”\n\n“Where was he sitting?”\n\n“I was smoking in my dressing-room.”\n\n“Which window is that?”\n\n“The last on the left next my father’s.”\n\n“Both of your lamps were lit, of course?”\n\n“Undoubtedly.”",
+ "gold": {
+  "entities": [
+   {
+    "name": "Holmes",
+    "type": "person",
+    "aliases": [
+     "Mr. Holmes"
+    ],
+    "quote": "said he to Holmes"
+   },
+   {
+    "name": "Watson",
+    "type": "person",
+    "aliases": [
+     "Watson"
+    ],
+    "quote": "Watson would tell you"
+   },
+   {
+    "name": "Alec Cunningham",
+    "type": "person",
+    "aliases": [
+     "Alec"
+    ],
+    "quote": "young Alec Cunningham"
+   },
+   {
+    "name": "Mr. Cunningham",
+    "type": "person",
+    "aliases": [
+     "old Cunningham"
+    ],
+    "quote": "asked old Cunningham"
+   },
+   {
+    "name": "the Inspector",
+    "type": "person",
+    "aliases": [],
+    "quote": "answered the Inspector"
+   },
+   {
+    "name": "William",
+    "type": "person",
+    "aliases": [],
+    "quote": "the arrival of this poor fellow William"
+   },
+   {
+    "name": "the burglar",
+    "type": "person",
+    "aliases": [
+     "the robber"
+    ],
+    "quote": "the entrance of the burglar into the house"
+   },
+   {
+    "name": "the kitchen",
+    "type": "place",
+    "aliases": [],
+    "quote": "we carried him into the kitchen"
+   },
+   {
+    "name": "dressing-room",
+    "type": "place",
+    "aliases": [],
+    "quote": "I was smoking in my dressing-room"
+   },
+   {
+    "name": "the door",
+    "type": "item",
+    "aliases": [],
+    "quote": "although the door was forced"
+   },
+   {
+    "name": "lamps",
+    "type": "item",
+    "aliases": [],
+    "quote": "Both of your lamps were lit"
+   },
+   {
+    "name": "trap",
+    "type": "item",
+    "aliases": [],
+    "quote": "send you home in my trap"
+   }
+  ],
+  "events": [
+   {
+    "description": "Holmes collapsed in a sudden attack",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Holmes"
+    ],
+    "quote": "he dropped on his face upon the ground"
+   },
+   {
+    "description": "Holmes was carried into the kitchen",
+    "time_text": null,
+    "place": "the kitchen",
+    "participants": [
+     "Holmes",
+     "Watson"
+    ],
+    "quote": "we carried him into the kitchen"
+   },
+   {
+    "description": "Alec Cunningham was smoking in his dressing-room",
+    "time_text": null,
+    "place": "dressing-room",
+    "participants": [
+     "Alec Cunningham"
+    ],
+    "quote": "I was smoking in my dressing-room"
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "Holmes",
+    "content": "William may have arrived after the burglar entered the house",
+    "about": "William",
+    "quote": "the arrival of this poor fellow William was not before, but after, the entrance of the burglar into the house"
+   },
+   {
+    "speaker": "Mr. Cunningham",
+    "content": "The robber never got in",
+    "about": "the burglar",
+    "quote": "I fancy that is quite obvious"
+   },
+   {
+    "speaker": "Mr. Cunningham",
+    "content": "Alec had not gone to bed and would have heard anyone moving about",
+    "about": "Alec Cunningham",
+    "quote": "my son Alec had not yet gone to bed, and he would certainly have heard any one moving about"
+   },
+   {
+    "speaker": "Alec Cunningham",
+    "content": "He was smoking in his dressing-room, the last window on the left next his father’s",
+    "about": "Alec Cunningham",
+    "quote": "The last on the left next my father’s"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "He has only just recovered from a severe illness",
+    "about": "Holmes",
+    "quote": "I have only just recovered from a severe illness"
+   },
+   {
+    "speaker": "Alec Cunningham",
+    "content": "The police have no clue",
+    "about": "the burglar",
+    "quote": "I don’t see that we have any clue at all"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "Alec Cunningham",
+    "predicate": "son of",
+    "object": "Mr. Cunningham",
+    "quote": "my son Alec"
+   },
+   {
+    "subject": "Alec Cunningham",
+    "predicate": "occupied",
+    "object": "dressing-room",
+    "quote": "I was smoking in my dressing-room"
+   },
+   {
+    "subject": "Holmes",
+    "predicate": "friend of",
+    "object": "Watson",
+    "quote": "My poor friend’s face"
+   }
+  ]
+ }
+}

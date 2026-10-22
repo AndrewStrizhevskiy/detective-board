@@ -1,0 +1,153 @@
+{
+ "chunk_id": "reigate-squires-0004",
+ "story": "reigate-squires",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "“We thought that perhaps you would care to step across, Mr. Holmes.”\n\n“The fates are against you, Watson,” said he, laughing. “We were chatting about the matter when you came in, Inspector. Perhaps you can let us have a few details.” As he leaned back in his chair in the familiar attitude I knew that the case was hopeless.\n\n“We had no clue in the Acton affair. But here we have plenty to go on, and there’s no doubt it is the same party in each case. The man was seen.”\n\n“Ah!”\n\n“Yes, sir. But he was off like a deer after the shot that killed poor William Kirwan was fired. Mr. Cunningham saw him from the bedroom window, and Mr. Alec Cunningham saw him from the back passage. It was quarter to twelve when the alarm broke out. Mr. Cunningham had just got into bed, and Mr. Alec was smoking a pipe in his dressing-gown. They both heard William the coachman calling for help, and Mr. Alec ran down to see what was the matter. The back door was open, and as he came to the foot of the stairs he saw two men wrestling together outside. One of them fired a shot, the other dropped, and the murderer rushed across the garden and over the hedge. Mr. Cunningham, looking out of his bedroom, saw the fellow as he gained the road, but lost sight of him at once. Mr. Alec stopped to see if he could help the dying man, and so the villain got clean away. Beyond the fact that he was a middle-sized man and dressed in some dark stuff, we have no personal clue; but we are making energetic inquiries, and if he is a stranger we shall soon find him out.”\n\n“What was this William doing there? Did he say anything before he died?”",
+ "gold": {
+  "entities": [
+   {
+    "name": "William Kirwan",
+    "type": "person",
+    "aliases": [
+     "William",
+     "William the coachman"
+    ],
+    "quote": "poor William Kirwan"
+   },
+   {
+    "name": "Mr. Cunningham",
+    "type": "person",
+    "aliases": [
+     "old Cunningham"
+    ],
+    "quote": "Mr. Cunningham saw him from the bedroom window"
+   },
+   {
+    "name": "Alec Cunningham",
+    "type": "person",
+    "aliases": [
+     "Mr. Alec"
+    ],
+    "quote": "Mr. Alec Cunningham"
+   },
+   {
+    "name": "Holmes",
+    "type": "person",
+    "aliases": [
+     "Mr. Holmes"
+    ],
+    "quote": "Mr. Holmes"
+   },
+   {
+    "name": "the Inspector",
+    "type": "person",
+    "aliases": [],
+    "quote": "Perhaps you can let us have a few details."
+   },
+   {
+    "name": "the burglar",
+    "type": "person",
+    "aliases": [
+     "the murderer",
+     "the villain"
+    ],
+    "quote": "The man was seen."
+   },
+   {
+    "name": "Acton",
+    "type": "place",
+    "aliases": [],
+    "quote": "We had no clue in the Acton affair"
+   }
+  ],
+  "events": [
+   {
+    "description": "William Kirwan was shot dead",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "William Kirwan",
+     "the burglar"
+    ],
+    "quote": "the shot that killed poor William Kirwan was fired"
+   },
+   {
+    "description": "The alarm broke out",
+    "time_text": "quarter to twelve",
+    "place": null,
+    "participants": [],
+    "quote": "It was quarter to twelve when the alarm broke out"
+   },
+   {
+    "description": "Alec Cunningham saw two men wrestling outside the back door",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Alec Cunningham"
+    ],
+    "quote": "he saw two men wrestling together outside"
+   },
+   {
+    "description": "The murderer ran across the garden and over the hedge",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "the burglar"
+    ],
+    "quote": "the murderer rushed across the garden and over the hedge"
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "the Inspector",
+    "content": "Mr. Cunningham saw the man from the bedroom window",
+    "about": "the burglar",
+    "quote": "Mr. Cunningham saw him from the bedroom window"
+   },
+   {
+    "speaker": "the Inspector",
+    "content": "Mr. Alec Cunningham saw the man from the back passage",
+    "about": "the burglar",
+    "quote": "Mr. Alec Cunningham saw him from the back passage"
+   },
+   {
+    "speaker": "the Inspector",
+    "content": "Mr. Cunningham had just got into bed and Alec was smoking a pipe",
+    "about": null,
+    "quote": "Mr. Cunningham had just got into bed, and Mr. Alec was smoking a pipe in his dressing-gown"
+   },
+   {
+    "speaker": "the Inspector",
+    "content": "The burglar was a middle-sized man in dark clothes",
+    "about": "the burglar",
+    "quote": "he was a middle-sized man and dressed in some dark stuff"
+   },
+   {
+    "speaker": "the Inspector",
+    "content": "The same party committed the Acton and this crime",
+    "about": "the burglar",
+    "quote": "there’s no doubt it is the same party in each case"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "the burglar",
+    "predicate": "killed",
+    "object": "William Kirwan",
+    "quote": "the shot that killed poor William Kirwan"
+   },
+   {
+    "subject": "Alec Cunningham",
+    "predicate": "witnessed",
+    "object": "the burglar",
+    "quote": "Mr. Alec Cunningham saw him from the back passage"
+   },
+   {
+    "subject": "Mr. Cunningham",
+    "predicate": "witnessed",
+    "object": "the burglar",
+    "quote": "Mr. Cunningham saw him from the bedroom window"
+   }
+  ]
+ }
+}

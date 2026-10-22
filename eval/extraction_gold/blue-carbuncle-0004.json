@@ -1,0 +1,151 @@
+{
+ "chunk_id": "blue-carbuncle-0004",
+ "story": "blue-carbuncle",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "For answer Holmes clapped the hat upon his head. It came right over the forehead and settled upon the bridge of his nose. “It is a question of cubic capacity,” said he; “a man with so large a brain must have something in it.”\n\n“The decline of his fortunes, then?”\n\n“This hat is three years old. These flat brims curled at the edge came in then. It is a hat of the very best quality. Look at the band of ribbed silk and the excellent lining. If this man could afford to buy so expensive a hat three years ago, and has had no hat since, then he has assuredly gone down in the world.”\n\n“Well, that is clear enough, certainly. But how about the foresight and the moral retrogression?”\n\nSherlock Holmes laughed. “Here is the foresight,” said he putting his finger upon the little disc and loop of the hat-securer. “They are never sold upon hats. If this man ordered one, it is a sign of a certain amount of foresight, since he went out of his way to take this precaution against the wind. But since we see that he has broken the elastic and has not troubled to replace it, it is obvious that he has less foresight now than formerly, which is a distinct proof of a weakening nature. On the other hand, he has endeavoured to conceal some of these stains upon the felt by daubing them with ink, which is a sign that he has not entirely lost his self-respect.”\n\n“Your reasoning is certainly plausible.”",
+ "gold": {
+  "entities": [
+   {
+    "name": "Holmes",
+    "type": "person",
+    "aliases": [
+     "Sherlock Holmes"
+    ],
+    "quote": "Sherlock Holmes laughed"
+   },
+   {
+    "name": "the hat owner",
+    "type": "person",
+    "aliases": [
+     "this man"
+    ],
+    "quote": "If this man could afford to buy so expensive a hat"
+   },
+   {
+    "name": "the hat",
+    "type": "item",
+    "aliases": [
+     "it"
+    ],
+    "quote": "This hat is three years old"
+   },
+   {
+    "name": "hat-securer",
+    "type": "item",
+    "aliases": [],
+    "quote": "the little disc and loop of the hat-securer"
+   },
+   {
+    "name": "ribbed silk band",
+    "type": "item",
+    "aliases": [],
+    "quote": "the band of ribbed silk"
+   },
+   {
+    "name": "the stains",
+    "type": "item",
+    "aliases": [],
+    "quote": "conceal some of these stains upon the felt"
+   },
+   {
+    "name": "ink",
+    "type": "item",
+    "aliases": [],
+    "quote": "daubing them with ink"
+   }
+  ],
+  "events": [
+   {
+    "description": "Holmes put the hat on his head and it covered his forehead",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Holmes"
+    ],
+    "quote": "Holmes clapped the hat upon his head"
+   },
+   {
+    "description": "The owner broke the elastic and did not replace it",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "the hat owner"
+    ],
+    "quote": "he has broken the elastic and has not troubled to replace it"
+   },
+   {
+    "description": "The owner daubed stains on the felt with ink",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "the hat owner"
+    ],
+    "quote": "he has endeavoured to conceal some of these stains upon the felt by daubing them with ink"
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "Holmes",
+    "content": "The hat is three years old",
+    "about": "the hat",
+    "quote": "This hat is three years old"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "The owner has gone down in the world",
+    "about": "the hat owner",
+    "quote": "he has assuredly gone down in the world"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "The owner once had foresight, since he ordered a hat-securer",
+    "about": "the hat owner",
+    "quote": "it is a sign of a certain amount of foresight"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "The owner has less foresight now than formerly",
+    "about": "the hat owner",
+    "quote": "he has less foresight now than formerly"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "The owner has not entirely lost his self-respect",
+    "about": "the hat owner",
+    "quote": "he has not entirely lost his self-respect"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "The hat is of the very best quality",
+    "about": "the hat",
+    "quote": "It is a hat of the very best quality"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "the hat owner",
+    "predicate": "owns",
+    "object": "the hat",
+    "quote": "If this man could afford to buy so expensive a hat"
+   },
+   {
+    "subject": "the hat",
+    "predicate": "has",
+    "object": "hat-securer",
+    "quote": "the little disc and loop of the hat-securer"
+   },
+   {
+    "subject": "the hat",
+    "predicate": "has",
+    "object": "ribbed silk band",
+    "quote": "the band of ribbed silk"
+   },
+   {
+    "subject": "ink",
+    "predicate": "conceals",
+    "object": "the stains",
+    "quote": "daubing them with ink"
+   }
+  ]
+ }
+}

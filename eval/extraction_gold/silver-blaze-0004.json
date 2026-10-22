@@ -1,0 +1,150 @@
+{
+ "chunk_id": "silver-blaze-0004",
+ "story": "silver-blaze",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "“On that evening the horses had been exercised and watered as usual, and the stables were locked up at nine o’clock. Two of the lads walked up to the trainer’s house, where they had supper in the kitchen, while the third, Ned Hunter, remained on guard. At a few minutes after nine the maid, Edith Baxter, carried down to the stables his supper, which consisted of a dish of curried mutton. She took no liquid, as there was a water-tap in the stables, and it was the rule that the lad on duty should drink nothing else. The maid carried a lantern with her, as it was very dark and the path ran across the open moor.\n\n“Edith Baxter was within thirty yards of the stables, when a man appeared out of the darkness and called to her to stop. As he stepped into the circle of yellow light thrown by the lantern she saw that he was a person of gentlemanly bearing, dressed in a grey suit of tweeds, with a cloth cap. He wore gaiters, and carried a heavy stick with a knob to it. She was most impressed, however, by the extreme pallor of his face and by the nervousness of his manner. His age, she thought, would be rather over thirty than under it.\n\n“‘Can you tell me where I am?’ he asked. ‘I had almost made up my mind to sleep on the moor, when I saw the light of your lantern.’\n\n“‘You are close to the King’s Pyland training-stables,’ said she.\n\n“‘Oh, indeed! What a stroke of luck!’ he cried. ‘I understand that a stable-boy sleeps there alone every night. Perhaps that is his supper which you are carrying to him. Now I am sure that you would not be too proud to earn the price of a new dress, would you?’ He took a piece of white paper folded up out of his waistcoat pocket. ‘See that the boy has this to-night, and you shall have the prettiest frock that money can buy.’",
+ "gold": {
+  "entities": [
+   {
+    "name": "Ned Hunter",
+    "type": "person",
+    "aliases": [],
+    "quote": "Ned Hunter, remained on guard"
+   },
+   {
+    "name": "Edith Baxter",
+    "type": "person",
+    "aliases": [
+     "the maid",
+     "she"
+    ],
+    "quote": "the maid, Edith Baxter"
+   },
+   {
+    "name": "the stranger",
+    "type": "person",
+    "aliases": [
+     "a person of gentlemanly bearing"
+    ],
+    "quote": "a man appeared out of the darkness"
+   },
+   {
+    "name": "King’s Pyland",
+    "type": "place",
+    "aliases": [
+     "the stables"
+    ],
+    "quote": "King’s Pyland training-stables"
+   },
+   {
+    "name": "lantern",
+    "type": "item",
+    "aliases": [],
+    "quote": "The maid carried a lantern"
+   },
+   {
+    "name": "curried mutton",
+    "type": "item",
+    "aliases": [],
+    "quote": "a dish of curried mutton"
+   },
+   {
+    "name": "folded white paper",
+    "type": "item",
+    "aliases": [],
+    "quote": "a piece of white paper folded up out of his waistcoat pocket"
+   },
+   {
+    "name": "heavy stick",
+    "type": "item",
+    "aliases": [],
+    "quote": "carried a heavy stick with a knob to it"
+   }
+  ],
+  "events": [
+   {
+    "description": "The stables were locked up",
+    "time_text": "nine o’clock",
+    "place": "King’s Pyland",
+    "participants": [],
+    "quote": "the stables were locked up at nine o’clock"
+   },
+   {
+    "description": "Edith Baxter carried supper to Ned Hunter",
+    "time_text": "a few minutes after nine",
+    "place": "King’s Pyland",
+    "participants": [
+     "Edith Baxter",
+     "Ned Hunter"
+    ],
+    "quote": "At a few minutes after nine the maid, Edith Baxter, carried down to the stables his supper"
+   },
+   {
+    "description": "A stranger stopped Edith Baxter near the stables",
+    "time_text": "a few minutes after nine",
+    "place": null,
+    "participants": [
+     "Edith Baxter",
+     "the stranger"
+    ],
+    "quote": "a man appeared out of the darkness and called to her to stop"
+   },
+   {
+    "description": "The stranger offered Edith Baxter money to give a paper to the stable-boy",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "the stranger",
+     "Edith Baxter"
+    ],
+    "quote": "See that the boy has this to-night, and you shall have the prettiest frock that money can buy."
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "the stranger",
+    "content": "He had almost decided to sleep on the moor when he saw the lantern",
+    "about": "the stranger",
+    "quote": "I had almost made up my mind to sleep on the moor"
+   },
+   {
+    "speaker": "the stranger",
+    "content": "A stable-boy sleeps alone at the stables every night",
+    "about": "Ned Hunter",
+    "quote": "I understand that a stable-boy sleeps there alone every night"
+   },
+   {
+    "speaker": "Edith Baxter",
+    "content": "The stranger looked rather over thirty",
+    "about": "the stranger",
+    "quote": "His age, she thought, would be rather over thirty than under it"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "Edith Baxter",
+    "predicate": "maid at",
+    "object": "King’s Pyland",
+    "quote": "the maid, Edith Baxter"
+   },
+   {
+    "subject": "Edith Baxter",
+    "predicate": "brought supper to",
+    "object": "Ned Hunter",
+    "quote": "carried down to the stables his supper"
+   },
+   {
+    "subject": "the stranger",
+    "predicate": "carried",
+    "object": "heavy stick",
+    "quote": "carried a heavy stick with a knob to it"
+   },
+   {
+    "subject": "the stranger",
+    "predicate": "offered paper to",
+    "object": "Edith Baxter",
+    "quote": "See that the boy has this to-night"
+   }
+  ]
+ }
+}

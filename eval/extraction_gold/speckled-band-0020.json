@@ -1,0 +1,160 @@
+{
+ "chunk_id": "speckled-band-0020",
+ "story": "speckled-band",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "Miss Stoner did so, and Holmes, after a careful examination through the open window, endeavoured in every way to force the shutter open, but without success. There was no slit through which a knife could be passed to raise the bar. Then with his lens he tested the hinges, but they were of solid iron, built firmly into the massive masonry. “Hum!” said he, scratching his chin in some perplexity, “my theory certainly presents some difficulties. No one could pass these shutters if they were bolted. Well, we shall see if the inside throws any light upon the matter.”\n\nA small side door led into the whitewashed corridor from which the three bedrooms opened. Holmes refused to examine the third chamber, so we passed at once to the second, that in which Miss Stoner was now sleeping, and in which her sister had met with her fate. It was a homely little room, with a low ceiling and a gaping fireplace, after the fashion of old country-houses. A brown chest of drawers stood in one corner, a narrow white-counterpaned bed in another, and a dressing-table on the left-hand side of the window. These articles, with two small wicker-work chairs, made up all the furniture in the room save for a square of Wilton carpet in the centre. The boards round and the panelling of the walls were of brown, worm-eaten oak, so old and discoloured that it may have dated from the original building of the house. Holmes drew one of the chairs into a corner and sat silent, while his eyes travelled round and round and up and down, taking in every detail of the apartment.\n\n“Where does that bell communicate with?” he asked at last pointing to a thick bell-rope which hung down beside the bed, the tassel actually lying upon the pillow.\n\n“It goes to the housekeeper’s room.”\n\n“It looks newer than the other things?”\n\n“Yes, it was only put there a couple of years ago.”\n\n“Your sister asked for it, I suppose?”",
+ "gold": {
+  "entities": [
+   {
+    "name": "Miss Stoner",
+    "type": "person",
+    "aliases": [
+     "your sister"
+    ],
+    "quote": "Miss Stoner did so"
+   },
+   {
+    "name": "Holmes",
+    "type": "person",
+    "aliases": [
+     "he"
+    ],
+    "quote": "Holmes, after a careful examination"
+   },
+   {
+    "name": "the shutter",
+    "type": "item",
+    "aliases": [],
+    "quote": "endeavoured in every way to force the shutter open"
+   },
+   {
+    "name": "the lens",
+    "type": "item",
+    "aliases": [],
+    "quote": "with his lens he tested the hinges"
+   },
+   {
+    "name": "the hinges",
+    "type": "item",
+    "aliases": [],
+    "quote": "they were of solid iron"
+   },
+   {
+    "name": "bell-rope",
+    "type": "item",
+    "aliases": [
+     "that bell"
+    ],
+    "quote": "a thick bell-rope which hung down beside the bed"
+   },
+   {
+    "name": "chest of drawers",
+    "type": "item",
+    "aliases": [],
+    "quote": "A brown chest of drawers stood in one corner"
+   },
+   {
+    "name": "Miss Stoner’s bedroom",
+    "type": "place",
+    "aliases": [
+     "the second chamber"
+    ],
+    "quote": "in which her sister had met with her fate"
+   },
+   {
+    "name": "the third chamber",
+    "type": "place",
+    "aliases": [],
+    "quote": "Holmes refused to examine the third chamber"
+   },
+   {
+    "name": "housekeeper’s room",
+    "type": "place",
+    "aliases": [],
+    "quote": "It goes to the housekeeper’s room"
+   }
+  ],
+  "events": [
+   {
+    "description": "Holmes tried to force the shutter open without success",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Holmes"
+    ],
+    "quote": "endeavoured in every way to force the shutter open, but without success"
+   },
+   {
+    "description": "Holmes tested the hinges with his lens",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Holmes"
+    ],
+    "quote": "with his lens he tested the hinges"
+   },
+   {
+    "description": "Holmes sat silent in a corner studying the room",
+    "time_text": null,
+    "place": "Miss Stoner’s bedroom",
+    "participants": [
+     "Holmes"
+    ],
+    "quote": "Holmes drew one of the chairs into a corner and sat silent"
+   },
+   {
+    "description": "Miss Stoner’s sister met her fate in the second room",
+    "time_text": null,
+    "place": "Miss Stoner’s bedroom",
+    "participants": [],
+    "quote": "in which her sister had met with her fate"
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "Holmes",
+    "content": "His theory has difficulties because no one could pass bolted shutters",
+    "about": "the shutter",
+    "quote": "my theory certainly presents some difficulties. No one could pass these shutters if they were bolted"
+   },
+   {
+    "speaker": "Miss Stoner",
+    "content": "The bell-rope goes to the housekeeper’s room",
+    "about": "bell-rope",
+    "quote": "It goes to the housekeeper’s room"
+   },
+   {
+    "speaker": "Miss Stoner",
+    "content": "The bell-rope was put there only a couple of years ago",
+    "about": "bell-rope",
+    "quote": "it was only put there a couple of years ago"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "The bell-rope looks newer than the other things",
+    "about": "bell-rope",
+    "quote": "It looks newer than the other things?"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "bell-rope",
+    "predicate": "communicates with",
+    "object": "housekeeper’s room",
+    "quote": "It goes to the housekeeper’s room"
+   },
+   {
+    "subject": "hinges",
+    "predicate": "built into",
+    "object": "the shutter",
+    "quote": "built firmly into the massive masonry"
+   },
+   {
+    "subject": "Miss Stoner",
+    "predicate": "sleeps in",
+    "object": "Miss Stoner’s bedroom",
+    "quote": "in which Miss Stoner was now sleeping"
+   }
+  ]
+ }
+}

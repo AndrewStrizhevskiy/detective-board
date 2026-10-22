@@ -1,0 +1,136 @@
+{
+ "chunk_id": "boscombe-valley-mystery-0006",
+ "story": "boscombe-valley-mystery",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "“On the contrary,” said Holmes, “it is the brightest rift which I can at present see in the clouds. However innocent he might be, he could not be such an absolute imbecile as not to see that the circumstances were very black against him. Had he appeared surprised at his own arrest, or feigned indignation at it, I should have looked upon it as highly suspicious, because such surprise or anger would not be natural under the circumstances, and yet might appear to be the best policy to a scheming man. His frank acceptance of the situation marks him as either an innocent man, or else as a man of considerable self-restraint and firmness. As to his remark about his deserts, it was also not unnatural if you consider that he stood beside the dead body of his father, and that there is no doubt that he had that very day so far forgotten his filial duty as to bandy words with him, and even, according to the little girl whose evidence is so important, to raise his hand as if to strike him. The self-reproach and contrition which are displayed in his remark appear to me to be the signs of a healthy mind rather than of a guilty one.”\n\nI shook my head. “Many men have been hanged on far slighter evidence,” I remarked.\n\n“So they have. And many men have been wrongfully hanged.”\n\n“What is the young man’s own account of the matter?”\n\n“It is, I am afraid, not very encouraging to his supporters, though there are one or two points in it which are suggestive. You will find it here, and may read it for yourself.”\n\nHe picked out from his bundle a copy of the local Herefordshire paper, and having turned down the sheet he pointed out the paragraph in which the unfortunate young man had given his own statement of what had occurred. I settled myself down in the corner of the carriage and read it very carefully. It ran in this way:",
+ "gold": {
+  "entities": [
+   {
+    "name": "Holmes",
+    "type": "person",
+    "aliases": [
+     "he"
+    ],
+    "quote": "said Holmes"
+   },
+   {
+    "name": "Watson",
+    "type": "person",
+    "aliases": [
+     "I"
+    ],
+    "quote": "I shook my head"
+   },
+   {
+    "name": "the young man",
+    "type": "person",
+    "aliases": [
+     "James McCarthy"
+    ],
+    "quote": "the unfortunate young man"
+   },
+   {
+    "name": "the deceased",
+    "type": "person",
+    "aliases": [],
+    "quote": "the dead body of his father"
+   },
+   {
+    "name": "the little girl",
+    "type": "person",
+    "aliases": [],
+    "quote": "the little girl whose evidence is so important"
+   },
+   {
+    "name": "Herefordshire paper",
+    "type": "item",
+    "aliases": [],
+    "quote": "a copy of the local Herefordshire paper"
+   }
+  ],
+  "events": [
+   {
+    "description": "The young man bandied words with his father that day and raised his hand to strike him",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "the young man",
+     "the deceased"
+    ],
+    "quote": "he had that very day so far forgotten his filial duty as to bandy words with him"
+   },
+   {
+    "description": "The young man stood beside his father’s dead body",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "the young man",
+     "the deceased"
+    ],
+    "quote": "he stood beside the dead body of his father"
+   },
+   {
+    "description": "Holmes handed Watson the paper with the young man’s statement",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Holmes",
+     "Watson"
+    ],
+    "quote": "He picked out from his bundle a copy of the local Herefordshire paper"
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "Holmes",
+    "content": "The young man’s frank acceptance of arrest marks him as innocent or self-restrained",
+    "about": "the young man",
+    "quote": "His frank acceptance of the situation marks him as either an innocent man, or else as a man of considerable self-restraint and firmness"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "Surprise or feigned indignation would have been suspicious",
+    "about": "the young man",
+    "quote": "Had he appeared surprised at his own arrest, or feigned indignation at it, I should have looked upon it as highly suspicious"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "The young man’s self-reproach is a sign of a healthy mind",
+    "about": "the young man",
+    "quote": "The self-reproach and contrition which are displayed in his remark appear to me to be the signs of a healthy mind rather than of a guilty one"
+   },
+   {
+    "speaker": "Watson",
+    "content": "Many men have been hanged on slighter evidence",
+    "about": "the young man",
+    "quote": "Many men have been hanged on far slighter evidence"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "Many men have been wrongfully hanged",
+    "about": "the young man",
+    "quote": "many men have been wrongfully hanged"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "the young man",
+    "predicate": "son of",
+    "object": "the deceased",
+    "quote": "the dead body of his father"
+   },
+   {
+    "subject": "the little girl",
+    "predicate": "witnessed",
+    "object": "the young man",
+    "quote": "according to the little girl whose evidence is so important"
+   },
+   {
+    "subject": "the young man",
+    "predicate": "gave statement to",
+    "object": "Herefordshire paper",
+    "quote": "the paragraph in which the unfortunate young man had given his own statement"
+   }
+  ]
+ }
+}

@@ -1,0 +1,178 @@
+{
+ "chunk_id": "red-headed-league-0003",
+ "story": "red-headed-league",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "“The fish that you have tattooed immediately above your right wrist could only have been done in China. I have made a small study of tattoo marks and have even contributed to the literature of the subject. That trick of staining the fishes’ scales of a delicate pink is quite peculiar to China. When, in addition, I see a Chinese coin hanging from your watch-chain, the matter becomes even more simple.”\n\nMr. Jabez Wilson laughed heavily. “Well, I never!” said he. “I thought at first that you had done something clever, but I see that there was nothing in it after all.”\n\n“I begin to think, Watson,” said Holmes, “that I make a mistake in explaining. ‘_Omne ignotum pro magnifico_,’ you know, and my poor little reputation, such as it is, will suffer shipwreck if I am so candid. Can you not find the advertisement, Mr. Wilson?”\n\n“Yes, I have got it now,” he answered with his thick red finger planted halfway down the column. “Here it is. This is what began it all. You just read it for yourself, sir.”\n\nI took the paper from him and read as follows:\n\n“TO THE RED-HEADED LEAGUE: On account of the bequest of the late Ezekiah Hopkins, of Lebanon, Pennsylvania, U.S.A., there is now another vacancy open which entitles a member of the League to a salary of £ 4 a week for purely nominal services. All red-headed men who are sound in body and mind and above the age of twenty-one years, are eligible. Apply in person on Monday, at eleven o’clock, to Duncan Ross, at the offices of the League, 7 Pope’s Court, Fleet Street.”\n\n“What on earth does this mean?” I ejaculated after I had twice read over the extraordinary announcement.",
+ "gold": {
+  "entities": [
+   {
+    "name": "Jabez Wilson",
+    "type": "person",
+    "aliases": [
+     "Mr. Wilson",
+     "Wilson"
+    ],
+    "quote": "Mr. Jabez Wilson laughed heavily"
+   },
+   {
+    "name": "Holmes",
+    "type": "person",
+    "aliases": [
+     "Sherlock Holmes"
+    ],
+    "quote": "said Holmes"
+   },
+   {
+    "name": "Watson",
+    "type": "person",
+    "aliases": [
+     "I"
+    ],
+    "quote": "I begin to think, Watson"
+   },
+   {
+    "name": "Duncan Ross",
+    "type": "person",
+    "aliases": [],
+    "quote": "to Duncan Ross, at the offices of the League"
+   },
+   {
+    "name": "Ezekiah Hopkins",
+    "type": "person",
+    "aliases": [],
+    "quote": "the late Ezekiah Hopkins, of Lebanon, Pennsylvania"
+   },
+   {
+    "name": "Red-Headed League",
+    "type": "place",
+    "aliases": [
+     "the League"
+    ],
+    "quote": "TO THE RED-HEADED LEAGUE"
+   },
+   {
+    "name": "7 Pope’s Court, Fleet Street",
+    "type": "place",
+    "aliases": [],
+    "quote": "7 Pope’s Court, Fleet Street"
+   },
+   {
+    "name": "China",
+    "type": "place",
+    "aliases": [],
+    "quote": "could only have been done in China"
+   },
+   {
+    "name": "tattooed fish",
+    "type": "item",
+    "aliases": [],
+    "quote": "The fish that you have tattooed immediately above your right wrist"
+   },
+   {
+    "name": "Chinese coin",
+    "type": "item",
+    "aliases": [],
+    "quote": "a Chinese coin hanging from your watch-chain"
+   },
+   {
+    "name": "advertisement",
+    "type": "item",
+    "aliases": [
+     "the paper"
+    ],
+    "quote": "find the advertisement"
+   }
+  ],
+  "events": [
+   {
+    "description": "Holmes deduced from the tattoo that Wilson had been in China",
+    "time_text": null,
+    "place": "China",
+    "participants": [
+     "Holmes",
+     "Jabez Wilson"
+    ],
+    "quote": "The fish that you have tattooed immediately above your right wrist could only have been done in China"
+   },
+   {
+    "description": "Wilson found the advertisement in the paper",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Jabez Wilson"
+    ],
+    "quote": "Yes, I have got it now"
+   },
+   {
+    "description": "Watson read the advertisement",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Watson"
+    ],
+    "quote": "I took the paper from him and read as follows"
+   },
+   {
+    "description": "Applicants are to apply in person on Monday at eleven o’clock",
+    "time_text": "Monday, at eleven o’clock",
+    "place": "7 Pope’s Court, Fleet Street",
+    "participants": [
+     "Duncan Ross"
+    ],
+    "quote": "Apply in person on Monday, at eleven o’clock"
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "Holmes",
+    "content": "The tattoo is of Chinese origin",
+    "about": "tattooed fish",
+    "quote": "That trick of staining the fishes’ scales of a delicate pink is quite peculiar to China"
+   },
+   {
+    "speaker": "Holmes",
+    "content": "He has made a study of tattoo marks",
+    "about": "Holmes",
+    "quote": "I have made a small study of tattoo marks"
+   },
+   {
+    "speaker": "Jabez Wilson",
+    "content": "He thought Holmes had done something clever at first",
+    "about": "Holmes",
+    "quote": "I thought at first that you had done something clever"
+   },
+   {
+    "speaker": "Red-Headed League",
+    "content": "A vacancy pays four pounds a week for nominal services",
+    "about": "Red-Headed League",
+    "quote": "a salary of £ 4 a week for purely nominal services"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "Jabez Wilson",
+    "predicate": "wears",
+    "object": "Chinese coin",
+    "quote": "a Chinese coin hanging from your watch-chain"
+   },
+   {
+    "subject": "Jabez Wilson",
+    "predicate": "has tattoo",
+    "object": "tattooed fish",
+    "quote": "The fish that you have tattooed"
+   },
+   {
+    "subject": "Ezekiah Hopkins",
+    "predicate": "bequest to",
+    "object": "Red-Headed League",
+    "quote": "On account of the bequest of the late Ezekiah Hopkins"
+   },
+   {
+    "subject": "Duncan Ross",
+    "predicate": "contact for",
+    "object": "Red-Headed League",
+    "quote": "Apply in person on Monday, at eleven o’clock, to Duncan Ross"
+   }
+  ]
+ }
+}

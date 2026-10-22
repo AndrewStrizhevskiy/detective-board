@@ -1,0 +1,163 @@
+{
+ "chunk_id": "naval-treaty-0007",
+ "story": "naval-treaty",
+ "labeled_by": "claude-agent (not human; needs spot-check)",
+ "text": "“I did exactly what he indicated, and waited until the other clerks had departed. One of them in my room, Charles Gorot, had some arrears of work to make up, so I left him there and went out to dine. When I returned he was gone. I was anxious to hurry my work, for I knew that Joseph—the Mr. Harrison whom you saw just now—was in town, and that he would travel down to Woking by the eleven o’clock train, and I wanted if possible to catch it.\n\n“When I came to examine the treaty I saw at once that it was of such importance that my uncle had been guilty of no exaggeration in what he had said. Without going into details, I may say that it defined the position of Great Britain towards the Triple Alliance, and fore-shadowed the policy which this country would pursue in the event of the French fleet gaining a complete ascendancy over that of Italy in the Mediterranean. The questions treated in it were purely naval. At the end were the signatures of the high dignitaries who had signed it. I glanced my eyes over it, and then settled down to my task of copying.\n\n“It was a long document, written in the French language, and containing twenty-six separate articles. I copied as quickly as I could, but at nine o’clock I had only done nine articles, and it seemed hopeless for me to attempt to catch my train. I was feeling drowsy and stupid, partly from my dinner and also from the effects of a long day’s work. A cup of coffee would clear my brain. A commissionnaire remains all night in a little lodge at the foot of the stairs, and is in the habit of making coffee at his spirit-lamp for any of the officials who may be working over time. I rang the bell, therefore, to summon him.",
+ "gold": {
+  "entities": [
+   {
+    "name": "Charles Gorot",
+    "type": "person",
+    "aliases": [],
+    "quote": "Charles Gorot, had some arrears of work"
+   },
+   {
+    "name": "Joseph Harrison",
+    "type": "person",
+    "aliases": [
+     "Joseph",
+     "Mr. Harrison"
+    ],
+    "quote": "the Mr. Harrison whom you saw just now"
+   },
+   {
+    "name": "the narrator",
+    "type": "person",
+    "aliases": [
+     "I"
+    ],
+    "quote": "I did exactly what he indicated"
+   },
+   {
+    "name": "the uncle",
+    "type": "person",
+    "aliases": [
+     "my uncle"
+    ],
+    "quote": "my uncle had been guilty of no exaggeration"
+   },
+   {
+    "name": "the commissionnaire",
+    "type": "person",
+    "aliases": [],
+    "quote": "A commissionnaire remains all night in a little lodge"
+   },
+   {
+    "name": "Woking",
+    "type": "place",
+    "aliases": [],
+    "quote": "travel down to Woking by the eleven o’clock train"
+   },
+   {
+    "name": "the lodge",
+    "type": "place",
+    "aliases": [],
+    "quote": "a little lodge at the foot of the stairs"
+   },
+   {
+    "name": "the naval treaty",
+    "type": "item",
+    "aliases": [
+     "the treaty",
+     "the document"
+    ],
+    "quote": "I saw at once that it was of such importance"
+   },
+   {
+    "name": "coffee",
+    "type": "item",
+    "aliases": [],
+    "quote": "A cup of coffee would clear my brain"
+   }
+  ],
+  "events": [
+   {
+    "description": "The narrator left Charles Gorot working and went out to dine",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "the narrator",
+     "Charles Gorot"
+    ],
+    "quote": "I left him there and went out to dine"
+   },
+   {
+    "description": "Charles Gorot was gone when the narrator returned",
+    "time_text": null,
+    "place": null,
+    "participants": [
+     "Charles Gorot"
+    ],
+    "quote": "When I returned he was gone"
+   },
+   {
+    "description": "Joseph Harrison would take the eleven o’clock train to Woking",
+    "time_text": "eleven o’clock",
+    "place": "Woking",
+    "participants": [
+     "Joseph Harrison"
+    ],
+    "quote": "he would travel down to Woking by the eleven o’clock train"
+   },
+   {
+    "description": "The narrator had copied only nine articles of the treaty",
+    "time_text": "nine o’clock",
+    "place": null,
+    "participants": [
+     "the narrator"
+    ],
+    "quote": "at nine o’clock I had only done nine articles"
+   },
+   {
+    "description": "The narrator rang the bell to summon the commissionnaire",
+    "time_text": null,
+    "place": "the lodge",
+    "participants": [
+     "the narrator",
+     "the commissionnaire"
+    ],
+    "quote": "I rang the bell, therefore, to summon him"
+   }
+  ],
+  "claims": [
+   {
+    "speaker": "the narrator",
+    "content": "The treaty defined Britain’s position towards the Triple Alliance",
+    "about": "the naval treaty",
+    "quote": "it defined the position of Great Britain towards the Triple Alliance"
+   },
+   {
+    "speaker": "the narrator",
+    "content": "He could not catch his train because he was too slow",
+    "about": "the narrator",
+    "quote": "it seemed hopeless for me to attempt to catch my train"
+   },
+   {
+    "speaker": "the narrator",
+    "content": "The treaty was in French with twenty-six articles",
+    "about": "the naval treaty",
+    "quote": "written in the French language, and containing twenty-six separate articles"
+   }
+  ],
+  "relations": [
+   {
+    "subject": "the narrator",
+    "predicate": "nephew of",
+    "object": "the uncle",
+    "quote": "my uncle had been guilty of no exaggeration"
+   },
+   {
+    "subject": "the commissionnaire",
+    "predicate": "makes coffee for",
+    "object": "the narrator",
+    "quote": "is in the habit of making coffee at his spirit-lamp for any of the officials"
+   },
+   {
+    "subject": "the narrator",
+    "predicate": "copying",
+    "object": "the naval treaty",
+    "quote": "settled down to my task of copying"
+   }
+  ]
+ }
+}
