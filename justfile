@@ -44,3 +44,7 @@ run *args:
 # Spike benchmarks (exist today). Heavy: needs Ollama; stop other model users first.
 bench which="llm":
     uv run python scripts/spike/bench_{{which}}.py
+
+# UI logic tests (node built-in runner; 2 live tests skip without DB_URL)
+test-web:
+    node --test tests/web_js/*.test.mjs
