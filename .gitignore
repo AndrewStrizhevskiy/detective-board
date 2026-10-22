@@ -1,10 +1,45 @@
+# Python / tooling
 .venv/
 __pycache__/
 *.pyc
 .env*
-data/cache/
-data/index/
-node_modules/
 .ruff_cache/
 .mypy_cache/
+.pyright/
 .pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+node_modules/
+
+# Corpus-derived and heavy artifacts (regenerate with `just index` / scripts/corpus)
+data/cache/
+data/index/
+data/graph/
+data/embeddings/
+*.faiss
+*.lance/
+*.sqlite
+*.sqlite3
+*.duckdb
+*.kuzu
+*.parquet
+*.npy
+*.npz
+
+# Models and weights (Ollama keeps its own store; never vendor weights)
+*.gguf
+*.safetensors
+*.bin
+*.onnx
+models/
+
+# Playwright / eval run outputs
+test-results/
+playwright-report/
+eval/runs/
+bench/out/
+.pre-commit-cache/
+data/raw/
+docs/spike/results/_invalid_*/

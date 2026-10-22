@@ -3,10 +3,57 @@ name = "detective-board"
 version = "0.0.1"
 description = "Local GraphRAG investigator agent over Sherlock Holmes stories"
 requires-python = ">=3.12"
+# Runtime deps intentionally empty: retrieval/graph deps wait for the spike ADR.
 dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff==0.17.1",
+    "pyright==1.1.414",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+]
+# E2E (UI) only, installed on demand: uv sync --group e2e && uv run playwright install chromium
+e2e = [
+    "pytest-playwright==0.10.0",
+]
 
 [tool.ruff]
 line-length = 100
+target-version = "py312"
+extend-exclude = ["data", ".venv", "docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Spike scripts are throwaway research code: long lines / multi-import lines tolerated.
+"scripts/spike/*" = ["E501", "E401", "E402", "E701", "E702", "E741", "B905", "I001"]
+"scripts/corpus/*" = ["E501"]
+"tests/*" = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
 
 [tool.pytest.ini_options]
-markers = ["live: needs a running Ollama and real models"]
+testpaths = ["tests"]
+markers = [
+    "live: needs a running Ollama and real models (never in CI)",
+    "e2e: browser/UI end-to-end tests (Playwright)",
+    "slow: >5 s, excluded from the fast pre-push loop",
+]
+addopts = "-ra --strict-markers"
+
+[tool.coverage.run]
+source = ["src/detective_board"]
+branch = true
+
+[tool.coverage.report]
+# Placeholder threshold for core; enforced in CI via --cov-fail-under.
+fail_under = 80
+show_missing = true
