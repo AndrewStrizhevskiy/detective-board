@@ -1,5 +1,4 @@
 import pytest
-from .conftest import FIXTURE, FIXTURE_DIR
 
 from detective_board.mcp import tools
 from detective_board.mcp.errors import ToolError
@@ -7,6 +6,8 @@ from detective_board.mcp.source import JsonFileFactSource
 from detective_board.mcp.tools import Window
 from detective_board.symbolic import api
 from detective_board.symbolic.api import TimeSpec
+
+from .conftest import FIXTURE, FIXTURE_DIR
 
 
 @pytest.fixture(scope="module")

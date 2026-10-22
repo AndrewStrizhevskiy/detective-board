@@ -21,15 +21,29 @@ def gold(tmp_path=None):
     ex = Extraction.model_validate(
         {
             "entities": [
-                {"name": "Sherlock Holmes", "type": "person", "aliases": ["Holmes"], "quote": "Holmes said"},
+                {
+                    "name": "Sherlock Holmes",
+                    "type": "person",
+                    "aliases": ["Holmes"],
+                    "quote": "Holmes said",
+                },
                 {"name": "Smith", "type": "person", "quote": "Mr. Smith"},
                 {"name": "the mill", "type": "place", "quote": "the mill"},
             ],
             "claims": [
-                {"speaker": "Holmes", "content": "saw Smith at nine", "quote": "I saw Mr. Smith at nine o’clock"}
+                {
+                    "speaker": "Holmes",
+                    "content": "saw Smith at nine",
+                    "quote": "I saw Mr. Smith at nine o’clock",
+                }
             ],
             "relations": [
-                {"subject": "Smith", "predicate": "near", "object": "the mill", "quote": "Mr. Smith at nine o’clock near the mill"}
+                {
+                    "subject": "Smith",
+                    "predicate": "near",
+                    "object": "the mill",
+                    "quote": "Mr. Smith at nine o’clock near the mill",
+                }
             ],
         }
     )
@@ -80,7 +94,9 @@ def test_invalid_json_and_missing_chunk_count_as_misses():
 
 
 def test_schema_violation_is_invalid():
-    res = se.score(gold(), pred(extraction={"entities": [{"name": "x", "type": "dragon", "quote": "x"}]}))
+    res = se.score(
+        gold(), pred(extraction={"entities": [{"name": "x", "type": "dragon", "quote": "x"}]})
+    )
     assert res["json_validity_rate"] == 0.0
 
 
@@ -108,7 +124,12 @@ def test_claim_requires_speaker_and_quote_overlap():
 
 
 def test_relation_match_via_alias_subject():
-    r = {"subject": "Mr. Smith", "predicate": "x", "object": "y", "quote": "Mr. Smith at nine o’clock near the mill"}
+    r = {
+        "subject": "Mr. Smith",
+        "predicate": "x",
+        "object": "y",
+        "quote": "Mr. Smith at nine o’clock near the mill",
+    }
     assert se.score(gold(), pred(extraction={"relations": [r]}))["relations"]["tp"] == 1
 
 
@@ -126,7 +147,12 @@ def test_ungrounded_quote_lowers_grounding_rate():
 def test_ollama_schema_inlined():
     s = json.dumps(ollama_format_schema())
     assert "$ref" not in s and "$defs" not in s
-    assert ollama_format_schema()["properties"].keys() == {"entities", "events", "claims", "relations"}
+    assert ollama_format_schema()["properties"].keys() == {
+        "entities",
+        "events",
+        "claims",
+        "relations",
+    }
 
 
 def test_real_gold_files_are_valid_and_grounded():

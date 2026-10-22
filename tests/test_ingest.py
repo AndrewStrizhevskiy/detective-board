@@ -17,15 +17,26 @@ _spec.loader.exec_module(ingest)
 
 CHUNKS = ROOT / "data" / "chunks.jsonl"
 CLEAN = ROOT / "data" / "clean"
-FIELDS = {"chunk_id", "story", "section", "para_start", "para_end", "char_start", "char_end", "text"}
+FIELDS = {
+    "chunk_id",
+    "story",
+    "section",
+    "para_start",
+    "para_end",
+    "char_start",
+    "char_end",
+    "text",
+}
 
 
 def test_synthetic_roundtrip():
-    clean = "I.\n\n" + "\n\n".join(" ".join(f"w{i}x{j}" for j in range(40)) for i in range(30)) + "\n"
+    clean = (
+        "I.\n\n" + "\n\n".join(" ".join(f"w{i}x{j}" for j in range(40)) for i in range(30)) + "\n"
+    )
     rows = ingest.build_chunks("demo", clean)
     assert len(rows) > 1
     for r in rows:
-        assert r["text"] == clean[r["char_start"]:r["char_end"]]
+        assert r["text"] == clean[r["char_start"] : r["char_end"]]
         assert r["section"] == "I"
     assert [r["para_start"] for r in rows[1:]] == [r["para_end"] + 1 for r in rows[:-1]]
 
@@ -47,6 +58,6 @@ def test_chunks_file_roundtrip():
         clean = cache.setdefault(
             r["story"], (CLEAN / f"{r['story']}.txt").read_text(encoding="utf-8")
         )
-        assert r["text"] == clean[r["char_start"]:r["char_end"]]
+        assert r["text"] == clean[r["char_start"] : r["char_end"]]
         assert r["para_start"] <= r["para_end"]
     assert 15 <= len(cache) <= 25

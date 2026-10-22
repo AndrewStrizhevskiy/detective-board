@@ -1,6 +1,5 @@
 import hashlib
 import importlib
-import json
 import math
 import re
 import sys
@@ -37,12 +36,16 @@ class FakeEmbed:
 
 # synthetic corpus: two stories, three chunks each, separated by 2-char gaps
 TEXTS = {
-    "alpha": ["The red fox jumped over the quiet river bank.",
-              "A lantern burned in the attic of the old mill.",
-              "Nothing happened in the garden that morning."],
-    "beta": ["The captain kept his compass inside a brass kettle.",
-             "Thunder rolled across the empty harbour at midnight.",
-             "She whispered the password to the sleepy gatekeeper."],
+    "alpha": [
+        "The red fox jumped over the quiet river bank.",
+        "A lantern burned in the attic of the old mill.",
+        "Nothing happened in the garden that morning.",
+    ],
+    "beta": [
+        "The captain kept his compass inside a brass kettle.",
+        "Thunder rolled across the empty harbour at midnight.",
+        "She whispered the password to the sleepy gatekeeper.",
+    ],
 }
 
 
@@ -53,8 +56,15 @@ def make_corpus(tmp_path):
     for story, parts in TEXTS.items():
         pos, full = 0, ""
         for i, t in enumerate(parts):
-            chunks.append({"chunk_id": f"{story}-{i:04d}", "story": story, "char_start": pos,
-                           "char_end": pos + len(t), "text": t})
+            chunks.append(
+                {
+                    "chunk_id": f"{story}-{i:04d}",
+                    "story": story,
+                    "char_start": pos,
+                    "char_end": pos + len(t),
+                    "text": t,
+                }
+            )
             full += t + "\n\n"
             pos += len(t) + 2
         (clean / f"{story}.txt").write_text(full, encoding="utf-8")
@@ -63,30 +73,61 @@ def make_corpus(tmp_path):
 
 def questions():
     return [
-        {"id": "q1", "lang": "en", "group": "old-en", "question": "red fox river bank",
-         "expected_stories": ["alpha"], "quotes": [("alpha", "red fox jumped")]},
-        {"id": "q2", "lang": "ru", "group": "old-ru", "question": "lantern attic old mill",
-         "expected_stories": ["alpha"], "quotes": [("alpha", "lantern burned")]},
-        {"id": "q3", "lang": "en", "group": "hard", "question": "where is the compass kept brass kettle",
-         "expected_stories": ["beta"], "quotes": [("beta", "compass inside a brass")]},
-        {"id": "q4", "lang": "en", "group": "cross", "question": "fox river harbour thunder midnight",
-         "expected_stories": ["alpha", "beta"],
-         "quotes": [("alpha", "quiet river"), ("beta", "Thunder rolled")]},
+        {
+            "id": "q1",
+            "lang": "en",
+            "group": "old-en",
+            "question": "red fox river bank",
+            "expected_stories": ["alpha"],
+            "quotes": [("alpha", "red fox jumped")],
+        },
+        {
+            "id": "q2",
+            "lang": "ru",
+            "group": "old-ru",
+            "question": "lantern attic old mill",
+            "expected_stories": ["alpha"],
+            "quotes": [("alpha", "lantern burned")],
+        },
+        {
+            "id": "q3",
+            "lang": "en",
+            "group": "hard",
+            "question": "where is the compass kept brass kettle",
+            "expected_stories": ["beta"],
+            "quotes": [("beta", "compass inside a brass")],
+        },
+        {
+            "id": "q4",
+            "lang": "en",
+            "group": "cross",
+            "question": "fox river harbour thunder midnight",
+            "expected_stories": ["alpha", "beta"],
+            "quotes": [("alpha", "quiet river"), ("beta", "Thunder rolled")],
+        },
     ]
 
 
 def test_find_spans_whitespace_and_quotes():
     text = "He said,  “It’s the\nonly way.” Done."
     assert cg.find_spans(text, "It's the only way.") != []
-    assert cg.find_spans(text, 'said, "It\'s') != []
+    assert cg.find_spans(text, "said, \"It's") != []
     assert cg.find_spans(text, "not present") == []
 
 
 def test_boundary_straddle_maps_to_both_chunks(tmp_path):
     chunks, clean = make_corpus(tmp_path)
     # quote crossing the gap between alpha-0000 and alpha-0001
-    q = [{"id": "s", "lang": "en", "group": "hard", "question": "x", "expected_stories": ["alpha"],
-          "quotes": [("alpha", "river bank. A lantern")]}]
+    q = [
+        {
+            "id": "s",
+            "lang": "en",
+            "group": "hard",
+            "question": "x",
+            "expected_stories": ["alpha"],
+            "quotes": [("alpha", "river bank. A lantern")],
+        }
+    ]
     gold, missing = cg.build_gold(q, chunks, clean)
     assert not missing
     assert gold["s"]["chunks"] == ["alpha-0000", "alpha-0001"]
@@ -94,8 +135,16 @@ def test_boundary_straddle_maps_to_both_chunks(tmp_path):
 
 def test_unmapped_quote_reported(tmp_path):
     chunks, clean = make_corpus(tmp_path)
-    q = [{"id": "m", "lang": "en", "group": "hard", "question": "x", "expected_stories": ["alpha"],
-          "quotes": [("alpha", "this text is nowhere")]}]
+    q = [
+        {
+            "id": "m",
+            "lang": "en",
+            "group": "hard",
+            "question": "x",
+            "expected_stories": ["alpha"],
+            "quotes": [("alpha", "this text is nowhere")],
+        }
+    ]
     gold, missing = cg.build_gold(q, chunks, clean)
     assert missing and missing[0]["id"] == "m" and gold["m"]["chunks"] == []
 
@@ -196,10 +245,13 @@ def test_changed_text_invalidates_only_that_chunk(tmp_path):
 def test_dry_run_makes_no_calls_and_writes_nothing(tmp_path, capsys, monkeypatch):
     def boom(*a, **k):
         raise AssertionError("network used in dry-run")
+
     monkeypatch.setattr(br, "Http", boom)
     monkeypatch.setattr(br, "embed_all", boom)
     cache = tmp_path / "emb"
-    rc = br.main(["bge-m3", "--dry-run", "--cache-dir", str(cache), "--doc-prefix", "bge-m3=passage: "])
+    rc = br.main(
+        ["bge-m3", "--dry-run", "--cache-dir", str(cache), "--doc-prefix", "bge-m3=passage: "]
+    )
     out = capsys.readouterr().out
     assert rc == 0 and "no network used" in out and "0/" in out
     assert not cache.exists()

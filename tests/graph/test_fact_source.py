@@ -1,5 +1,3 @@
-from .conftest import C2, C3, STORY, boscombe_extractions, build_boscombe, synth
-
 from detective_board.extract.schema import Event, Extraction
 from detective_board.graph import ALL_STORIES, GraphStore, SqliteFactSource
 from detective_board.symbolic.api import (
@@ -10,6 +8,8 @@ from detective_board.symbolic.api import (
     load_facts,
     run_all,
 )
+
+from .conftest import C2, C3, STORY, boscombe_extractions, build_boscombe, synth
 
 P = f"p:{STORY}:"
 EV3, EV2 = f"e:{C3}:0", f"e:{C2}:0"
