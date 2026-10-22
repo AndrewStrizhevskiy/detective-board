@@ -27,28 +27,55 @@ COLLECTIONS: dict[str, list[tuple[str, str, str]]] = {
         ("scandal-in-bohemia", "A Scandal in Bohemia", "I. A SCANDAL IN BOHEMIA"),
         ("red-headed-league", "The Red-Headed League", "II. THE RED-HEADED LEAGUE"),
         ("case-of-identity", "A Case of Identity", "III. A CASE OF IDENTITY"),
-        ("boscombe-valley-mystery", "The Boscombe Valley Mystery",
-         "IV. THE BOSCOMBE VALLEY MYSTERY"),
+        (
+            "boscombe-valley-mystery",
+            "The Boscombe Valley Mystery",
+            "IV. THE BOSCOMBE VALLEY MYSTERY",
+        ),
         ("five-orange-pips", "The Five Orange Pips", "V. THE FIVE ORANGE PIPS"),
-        ("man-with-the-twisted-lip", "The Man with the Twisted Lip",
-         "VI. THE MAN WITH THE TWISTED LIP"),
-        ("blue-carbuncle", "The Adventure of the Blue Carbuncle",
-         "VII. THE ADVENTURE OF THE BLUE CARBUNCLE"),
-        ("speckled-band", "The Adventure of the Speckled Band",
-         "VIII. THE ADVENTURE OF THE SPECKLED BAND"),
-        ("engineers-thumb", "The Adventure of the Engineer's Thumb",
-         "IX. THE ADVENTURE OF THE ENGINEER’S THUMB"),
-        ("noble-bachelor", "The Adventure of the Noble Bachelor",
-         "X. THE ADVENTURE OF THE NOBLE BACHELOR"),
-        ("beryl-coronet", "The Adventure of the Beryl Coronet",
-         "XI. THE ADVENTURE OF THE BERYL CORONET"),
-        ("copper-beeches", "The Adventure of the Copper Beeches",
-         "XII. THE ADVENTURE OF THE COPPER BEECHES"),
+        (
+            "man-with-the-twisted-lip",
+            "The Man with the Twisted Lip",
+            "VI. THE MAN WITH THE TWISTED LIP",
+        ),
+        (
+            "blue-carbuncle",
+            "The Adventure of the Blue Carbuncle",
+            "VII. THE ADVENTURE OF THE BLUE CARBUNCLE",
+        ),
+        (
+            "speckled-band",
+            "The Adventure of the Speckled Band",
+            "VIII. THE ADVENTURE OF THE SPECKLED BAND",
+        ),
+        (
+            "engineers-thumb",
+            "The Adventure of the Engineer's Thumb",
+            "IX. THE ADVENTURE OF THE ENGINEER’S THUMB",
+        ),
+        (
+            "noble-bachelor",
+            "The Adventure of the Noble Bachelor",
+            "X. THE ADVENTURE OF THE NOBLE BACHELOR",
+        ),
+        (
+            "beryl-coronet",
+            "The Adventure of the Beryl Coronet",
+            "XI. THE ADVENTURE OF THE BERYL CORONET",
+        ),
+        (
+            "copper-beeches",
+            "The Adventure of the Copper Beeches",
+            "XII. THE ADVENTURE OF THE COPPER BEECHES",
+        ),
     ],
     "memoirs": [
         ("silver-blaze", "Silver Blaze", "I. Silver Blaze"),
-        ("cardboard-box", "The Adventure of the Cardboard Box",
-         "II. The Adventure of the Cardboard Box"),
+        (
+            "cardboard-box",
+            "The Adventure of the Cardboard Box",
+            "II. The Adventure of the Cardboard Box",
+        ),
         ("yellow-face", "The Yellow Face", "III. The Yellow Face"),
         ("stockbrokers-clerk", "The Stockbroker's Clerk", "IV. The Stockbroker’s Clerk"),
         ("gloria-scott", "The Gloria Scott", "V. The “_Gloria Scott_”"),
@@ -62,80 +89,150 @@ COLLECTIONS: dict[str, list[tuple[str, str, str]]] = {
     ],
     "return": [
         ("empty-house", "The Adventure of the Empty House", "THE ADVENTURE OF THE EMPTY HOUSE"),
-        ("norwood-builder", "The Adventure of the Norwood Builder",
-         "THE ADVENTURE OF THE NORWOOD BUILDER"),
+        (
+            "norwood-builder",
+            "The Adventure of the Norwood Builder",
+            "THE ADVENTURE OF THE NORWOOD BUILDER",
+        ),
         ("dancing-men", "The Adventure of the Dancing Men", "THE ADVENTURE OF THE DANCING MEN"),
-        ("solitary-cyclist", "The Adventure of the Solitary Cyclist",
-         "THE ADVENTURE OF THE SOLITARY CYCLIST"),
-        ("priory-school", "The Adventure of the Priory School",
-         "THE ADVENTURE OF THE PRIORY SCHOOL"),
+        (
+            "solitary-cyclist",
+            "The Adventure of the Solitary Cyclist",
+            "THE ADVENTURE OF THE SOLITARY CYCLIST",
+        ),
+        (
+            "priory-school",
+            "The Adventure of the Priory School",
+            "THE ADVENTURE OF THE PRIORY SCHOOL",
+        ),
         ("black-peter", "The Adventure of Black Peter", "THE ADVENTURE OF BLACK PETER"),
-        ("charles-augustus-milverton", "The Adventure of Charles Augustus Milverton",
-         "THE ADVENTURE OF CHARLES AUGUSTUS MILVERTON"),
-        ("six-napoleons", "The Adventure of the Six Napoleons",
-         "THE ADVENTURE OF THE SIX NAPOLEONS"),
-        ("three-students", "The Adventure of the Three Students",
-         "THE ADVENTURE OF THE THREE STUDENTS"),
-        ("golden-pince-nez", "The Adventure of the Golden Pince-Nez",
-         "THE ADVENTURE OF THE GOLDEN PINCE-NEZ"),
-        ("missing-three-quarter", "The Adventure of the Missing Three-Quarter",
-         "THE ADVENTURE OF THE MISSING THREE-QUARTER"),
-        ("abbey-grange", "The Adventure of the Abbey Grange",
-         "THE ADVENTURE OF THE ABBEY GRANGE"),
-        ("second-stain", "The Adventure of the Second Stain",
-         "THE ADVENTURE OF THE SECOND STAIN"),
+        (
+            "charles-augustus-milverton",
+            "The Adventure of Charles Augustus Milverton",
+            "THE ADVENTURE OF CHARLES AUGUSTUS MILVERTON",
+        ),
+        (
+            "six-napoleons",
+            "The Adventure of the Six Napoleons",
+            "THE ADVENTURE OF THE SIX NAPOLEONS",
+        ),
+        (
+            "three-students",
+            "The Adventure of the Three Students",
+            "THE ADVENTURE OF THE THREE STUDENTS",
+        ),
+        (
+            "golden-pince-nez",
+            "The Adventure of the Golden Pince-Nez",
+            "THE ADVENTURE OF THE GOLDEN PINCE-NEZ",
+        ),
+        (
+            "missing-three-quarter",
+            "The Adventure of the Missing Three-Quarter",
+            "THE ADVENTURE OF THE MISSING THREE-QUARTER",
+        ),
+        ("abbey-grange", "The Adventure of the Abbey Grange", "THE ADVENTURE OF THE ABBEY GRANGE"),
+        ("second-stain", "The Adventure of the Second Stain", "THE ADVENTURE OF THE SECOND STAIN"),
     ],
     "last_bow": [
         ("wisteria-lodge", "The Adventure of Wisteria Lodge", "The Adventure of Wisteria Lodge"),
-        ("bruce-partington-plans", "The Adventure of the Bruce-Partington Plans",
-         "The Adventure of the Bruce-Partington Plans"),
-        ("devils-foot", "The Adventure of the Devil's Foot",
-         "The Adventure of the Devil’s Foot"),
+        (
+            "bruce-partington-plans",
+            "The Adventure of the Bruce-Partington Plans",
+            "The Adventure of the Bruce-Partington Plans",
+        ),
+        ("devils-foot", "The Adventure of the Devil's Foot", "The Adventure of the Devil’s Foot"),
         ("red-circle", "The Adventure of the Red Circle", "The Adventure of the Red Circle"),
-        ("lady-frances-carfax", "The Disappearance of Lady Frances Carfax",
-         "The Disappearance of Lady Frances Carfax"),
-        ("dying-detective", "The Adventure of the Dying Detective",
-         "The Adventure of the Dying Detective"),
+        (
+            "lady-frances-carfax",
+            "The Disappearance of Lady Frances Carfax",
+            "The Disappearance of Lady Frances Carfax",
+        ),
+        (
+            "dying-detective",
+            "The Adventure of the Dying Detective",
+            "The Adventure of the Dying Detective",
+        ),
         ("his-last-bow", "His Last Bow", "His Last Bow: The War Service of Sherlock Holmes"),
     ],
     "casebook": [
-        ("illustrious-client", "The Adventure of the Illustrious Client",
-         "THE ADVENTURE OF THE ILLUSTRIOUS CLIENT"),
-        ("blanched-soldier", "The Adventure of the Blanched Soldier",
-         "THE ADVENTURE OF THE BLANCHED SOLDIER"),
-        ("mazarin-stone", "The Adventure of the Mazarin Stone",
-         "THE ADVENTURE OF THE MAZARIN STONE"),
+        (
+            "illustrious-client",
+            "The Adventure of the Illustrious Client",
+            "THE ADVENTURE OF THE ILLUSTRIOUS CLIENT",
+        ),
+        (
+            "blanched-soldier",
+            "The Adventure of the Blanched Soldier",
+            "THE ADVENTURE OF THE BLANCHED SOLDIER",
+        ),
+        (
+            "mazarin-stone",
+            "The Adventure of the Mazarin Stone",
+            "THE ADVENTURE OF THE MAZARIN STONE",
+        ),
         ("three-gables", "The Adventure of the Three Gables", "THE ADVENTURE OF THE THREE GABLES"),
-        ("sussex-vampire", "The Adventure of the Sussex Vampire",
-         "THE ADVENTURE OF THE SUSSEX VAMPIRE"),
-        ("three-garridebs", "The Adventure of the Three Garridebs",
-         "THE ADVENTURE OF THE THREE GARRIDEBS"),
+        (
+            "sussex-vampire",
+            "The Adventure of the Sussex Vampire",
+            "THE ADVENTURE OF THE SUSSEX VAMPIRE",
+        ),
+        (
+            "three-garridebs",
+            "The Adventure of the Three Garridebs",
+            "THE ADVENTURE OF THE THREE GARRIDEBS",
+        ),
         ("thor-bridge", "The Problem of Thor Bridge", "THE PROBLEM OF THOR BRIDGE"),
-        ("creeping-man", "The Adventure of the Creeping Man",
-         "THE ADVENTURE OF THE CREEPING MAN"),
+        ("creeping-man", "The Adventure of the Creeping Man", "THE ADVENTURE OF THE CREEPING MAN"),
         ("lions-mane", "The Adventure of the Lion's Mane", "THE ADVENTURE OF THE LION'S MANE"),
-        ("veiled-lodger", "The Adventure of the Veiled Lodger",
-         "THE ADVENTURE OF THE VEILED LODGER"),
-        ("shoscombe-old-place", "The Adventure of Shoscombe Old Place",
-         "THE ADVENTURE OF SHOSCOMBE OLD PLACE"),
-        ("retired-colourman", "The Adventure of the Retired Colourman",
-         "THE ADVENTURE OF THE RETIRED COLOURMAN"),
+        (
+            "veiled-lodger",
+            "The Adventure of the Veiled Lodger",
+            "THE ADVENTURE OF THE VEILED LODGER",
+        ),
+        (
+            "shoscombe-old-place",
+            "The Adventure of Shoscombe Old Place",
+            "THE ADVENTURE OF SHOSCOMBE OLD PLACE",
+        ),
+        (
+            "retired-colourman",
+            "The Adventure of the Retired Colourman",
+            "THE ADVENTURE OF THE RETIRED COLOURMAN",
+        ),
     ],
 }
 
 # Stories kept in the corpus (witness testimony / alibi / inquest heavy).
 KEEP = {
-    "scandal-in-bohemia", "red-headed-league", "boscombe-valley-mystery",
-    "man-with-the-twisted-lip", "blue-carbuncle", "speckled-band", "beryl-coronet",
-    "copper-beeches", "silver-blaze", "musgrave-ritual", "reigate-squires", "crooked-man",
-    "resident-patient", "naval-treaty", "norwood-builder", "priory-school", "black-peter",
-    "abbey-grange", "wisteria-lodge", "thor-bridge",
+    "scandal-in-bohemia",
+    "red-headed-league",
+    "boscombe-valley-mystery",
+    "man-with-the-twisted-lip",
+    "blue-carbuncle",
+    "speckled-band",
+    "beryl-coronet",
+    "copper-beeches",
+    "silver-blaze",
+    "musgrave-ritual",
+    "reigate-squires",
+    "crooked-man",
+    "resident-patient",
+    "naval-treaty",
+    "norwood-builder",
+    "priory-school",
+    "black-peter",
+    "abbey-grange",
+    "wisteria-lodge",
+    "thor-bridge",
 }
 
 # Section markers: bare roman numeral ("I", "II.") or numbered sub-title ("1. The Tiger of San Pedro").
 SECTION_RE = re.compile(r"^(?:[IVX]+\.?|\d+\.(?: .{1,80})?)$")
 # Per-story leading lines (sub-title echoes of the table of contents) removed from the story.
-LEADING_JUNK = {"wisteria-lodge": "The Singular Experience of Mr. John Scott Eccles The Tiger of San Pedro"}
+LEADING_JUNK = {
+    "wisteria-lodge": "The Singular Experience of Mr. John Scott Eccles The Tiger of San Pedro"
+}
 MIN_FLUSH_WORDS = 150
 START_RE = re.compile(r"^\*\*\* START OF .*\*\*\*\s*$", re.M)
 END_RE = re.compile(r"^\*\*\* END OF .*\*\*\*\s*$", re.M)
@@ -156,7 +253,7 @@ def strip_gutenberg(raw: str) -> str:
     end = END_RE.search(raw)
     if not start or not end:
         raise ValueError("Gutenberg START/END markers not found")
-    return raw[start.end():end.start()]
+    return raw[start.end() : end.start()]
 
 
 def split_stories(body: str, entries: list[tuple[str, str, str]]) -> dict[str, str]:
@@ -173,7 +270,7 @@ def split_stories(body: str, entries: list[tuple[str, str, str]]) -> dict[str, s
     out: dict[str, str] = {}
     for n, (i, slug) in enumerate(starts):
         j = starts[n + 1][0] if n + 1 < len(starts) else len(lines)
-        out[slug] = "\n".join(lines[i + 1:j])  # drop the heading line itself
+        out[slug] = "\n".join(lines[i + 1 : j])  # drop the heading line itself
     return out
 
 
@@ -238,16 +335,18 @@ def build_chunks(slug: str, clean: str) -> list[dict]:
     rows = []
     for n, grp in enumerate(chunk_paragraphs(paras)):
         a, b = grp[0], grp[-1]
-        rows.append({
-            "chunk_id": f"{slug}-{n:04d}",
-            "story": slug,
-            "section": a.section,
-            "para_start": index[id(a)],
-            "para_end": index[id(b)],
-            "char_start": a.start,
-            "char_end": b.end,
-            "text": clean[a.start:b.end],
-        })
+        rows.append(
+            {
+                "chunk_id": f"{slug}-{n:04d}",
+                "story": slug,
+                "section": a.section,
+                "para_start": index[id(a)],
+                "para_end": index[id(b)],
+                "char_start": a.start,
+                "char_end": b.end,
+                "text": clean[a.start : b.end],
+            }
+        )
     return rows
 
 

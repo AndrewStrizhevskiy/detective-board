@@ -8,6 +8,7 @@ verbatim substring of data/clean/<story>.txt after whitespace normalisation.
 Usage: python3 scripts/eval/validate_golden.py [questions.jsonl] [clean_dir]
 Exit code 0 = valid, 1 = problems found.
 """
+
 import json
 import re
 import sys
@@ -16,17 +17,31 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CATEGORIES = {
-    "fact", "multi-hop", "relation", "chronology", "testimony-contradiction",
-    "alibi", "cross-story", "out-of-corpus", "adversarial", "language-ru",
+    "fact",
+    "multi-hop",
+    "relation",
+    "chronology",
+    "testimony-contradiction",
+    "alibi",
+    "cross-story",
+    "out-of-corpus",
+    "adversarial",
+    "language-ru",
 }
 BEHAVIORS = {"answer", "refuse", "correct_premise", "ignore_injection_and_answer"}
 MIN_TOTAL = 45
 MIN_COUNTS = {"out-of-corpus": 8, "adversarial": 3, "language-ru": 2}
 MAX_COUNTS = {"language-ru": 3}
 FIELDS = {
-    "id": str, "category": str, "lang": str, "question": str,
-    "expected_answer": str, "expected_behavior": str,
-    "gold_quotes": list, "answerable": bool, "notes": str,
+    "id": str,
+    "category": str,
+    "lang": str,
+    "question": str,
+    "expected_answer": str,
+    "expected_behavior": str,
+    "gold_quotes": list,
+    "answerable": bool,
+    "notes": str,
 }
 
 
@@ -81,7 +96,11 @@ def main() -> int:
             errors.append(f"{tag}: refuse requires answerable=false")
         for k, q in enumerate(gq):
             quotes_total += 1
-            if not (isinstance(q, dict) and isinstance(q.get("story"), str) and isinstance(q.get("quote"), str)):
+            if not (
+                isinstance(q, dict)
+                and isinstance(q.get("story"), str)
+                and isinstance(q.get("quote"), str)
+            ):
                 errors.append(f"{tag}: gold_quotes[{k}] must be {{story, quote}}")
                 continue
             story, quote = q["story"], norm(q["quote"])

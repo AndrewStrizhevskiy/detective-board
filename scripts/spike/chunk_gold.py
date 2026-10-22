@@ -9,6 +9,7 @@ straddling a chunk boundary yield every chunk they touch. Quotes with no occurre
 and the exit code is 1. Output: eval/spike_chunk_gold.json.
 No network, no models.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -28,9 +29,11 @@ OUT = ROOT / "eval" / "spike_chunk_gold.json"
 def quote_regex(quote: str) -> re.Pattern:
     parts = []
     for tok in quote.split():
-        parts.append("".join(
-            "['‘’]" if ch in "'‘’" else '["“”]' if ch in '"“”'
-            else re.escape(ch) for ch in tok))
+        parts.append(
+            "".join(
+                "['‘’]" if ch in "'‘’" else '["“”]' if ch in '"“”' else re.escape(ch) for ch in tok
+            )
+        )
     return re.compile(r"\s+".join(parts))
 
 
@@ -66,8 +69,16 @@ def load_questions(old_path=OLD_Q, hard_path=HARD_Q) -> list[dict]:
                 group = "cross" if len(set(exp)) > 1 else "hard"
             if len(sts) != len(ev):
                 raise ValueError(f"{r['id']}: evidence_stories length != evidence length")
-            qs.append({"id": r["id"], "lang": r["lang"], "group": group, "question": r["question"],
-                       "expected_stories": exp, "quotes": list(zip(sts, ev))})
+            qs.append(
+                {
+                    "id": r["id"],
+                    "lang": r["lang"],
+                    "group": group,
+                    "question": r["question"],
+                    "expected_stories": exp,
+                    "quotes": list(zip(sts, ev)),
+                }
+            )
     return qs
 
 
@@ -89,8 +100,12 @@ def build_gold(questions: list[dict], chunks: list[dict], clean_dir=CLEAN):
             if not cids:
                 missing.append({"id": q["id"], "story": story, "quote": quote})
             ids += [c for c in cids if c not in ids]
-        gold[q["id"]] = {"group": q["group"], "expected_stories": q["expected_stories"],
-                         "chunks": ids, "quotes": entries}
+        gold[q["id"]] = {
+            "group": q["group"],
+            "expected_stories": q["expected_stories"],
+            "chunks": ids,
+            "quotes": entries,
+        }
     return gold, missing
 
 

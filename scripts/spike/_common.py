@@ -1,4 +1,5 @@
 """Shared helpers for the Phase 0 spike benchmarks (stdlib only)."""
+
 from __future__ import annotations
 
 import datetime as dt
@@ -77,7 +78,9 @@ class Http:
             with urllib.request.urlopen(self._req(path, payload), timeout=self.timeout) as r:
                 return json.load(r)
         except urllib.error.HTTPError as e:
-            raise RuntimeError(f"HTTP {e.code} {path}: {e.read().decode(errors='replace')[:300]}") from e
+            raise RuntimeError(
+                f"HTTP {e.code} {path}: {e.read().decode(errors='replace')[:300]}"
+            ) from e
 
     def stream(self, path, payload):
         """Yield (t_seconds_since_send, parsed_json_line)."""
@@ -85,7 +88,9 @@ class Http:
         try:
             r = urllib.request.urlopen(self._req(path, payload), timeout=self.timeout)
         except urllib.error.HTTPError as e:
-            raise RuntimeError(f"HTTP {e.code} {path}: {e.read().decode(errors='replace')[:300]}") from e
+            raise RuntimeError(
+                f"HTTP {e.code} {path}: {e.read().decode(errors='replace')[:300]}"
+            ) from e
         with r:
             for line in r:
                 line = line.strip()
@@ -116,7 +121,9 @@ def _ollama_pids() -> dict[int, str]:
         if base == "llama-server":  # Ollama 0.35 runs the model in this child process
             out[int(d)] = "runner"
         elif base == "ollama":
-            out[int(d)] = "runner" if "runner" in rest else ("serve" if "serve" in rest else "other")
+            out[int(d)] = (
+                "runner" if "runner" in rest else ("serve" if "serve" in rest else "other")
+            )
     return out
 
 

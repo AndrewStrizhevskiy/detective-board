@@ -6,6 +6,7 @@ scripts/spike/score_extraction.py reads. Uses Ollama /api/generate with `format`
 (constrained decoding), temperature 0, fixed seed. One model per invocation.
 Run: uv run --with pydantic python scripts/spike/run_extraction.py MODEL [--limit N]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -54,7 +55,9 @@ def main():
     http = Http(a.host)
     assert http.available(a.model), f"{a.model} not installed"
     for m in http.get("/api/ps").get("models", []):
-        http.post("/api/generate", {"model": m["name"], "prompt": "", "keep_alive": 0, "stream": False})
+        http.post(
+            "/api/generate", {"model": m["name"], "prompt": "", "keep_alive": 0, "stream": False}
+        )
     time.sleep(3)
     caps = http.post("/api/show", {"model": a.model}).get("capabilities", [])
     schema = ollama_format_schema()
@@ -65,10 +68,19 @@ def main():
     with RssSampler(0.5) as rss, open(path, "w", encoding="utf-8") as out:
         for f in files:
             g = json.loads(f.read_text(encoding="utf-8"))
-            payload = {"model": a.model, "prompt": PROMPT.format(chunk=g["text"]), "stream": False,
-                       "format": schema, "keep_alive": "10m",
-                       "options": {"temperature": 0, "seed": a.seed, "num_ctx": a.num_ctx,
-                                   "num_predict": a.num_predict}}
+            payload = {
+                "model": a.model,
+                "prompt": PROMPT.format(chunk=g["text"]),
+                "stream": False,
+                "format": schema,
+                "keep_alive": "10m",
+                "options": {
+                    "temperature": 0,
+                    "seed": a.seed,
+                    "num_ctx": a.num_ctx,
+                    "num_predict": a.num_predict,
+                },
+            }
             if "thinking" in caps:
                 payload["think"] = False
             t0 = time.perf_counter()
@@ -77,13 +89,24 @@ def main():
             except Exception as e:  # keep going: a failed chunk counts as invalid output
                 r = {"response": "", "error": str(e)[:200]}
             dt = time.perf_counter() - t0
-            rec = {"chunk_id": g["chunk_id"], "output": r.get("response", ""), "wall_s": round(dt, 1),
-                   "gen_tokens": r.get("eval_count"), "prompt_tokens": r.get("prompt_eval_count"),
-                   "done_reason": r.get("done_reason"), "error": r.get("error"), "model": a.model,
-                   "num_predict": a.num_predict, "mem_available_mib": round(mem_available_mib())}
+            rec = {
+                "chunk_id": g["chunk_id"],
+                "output": r.get("response", ""),
+                "wall_s": round(dt, 1),
+                "gen_tokens": r.get("eval_count"),
+                "prompt_tokens": r.get("prompt_eval_count"),
+                "done_reason": r.get("done_reason"),
+                "error": r.get("error"),
+                "model": a.model,
+                "num_predict": a.num_predict,
+                "mem_available_mib": round(mem_available_mib()),
+            }
             out.write(json.dumps(rec, ensure_ascii=False) + "\n")
             out.flush()
-            print(f"  {g['chunk_id']}: {dt:.0f}s gen={rec['gen_tokens']} {rec['done_reason']}", file=sys.stderr)
+            print(
+                f"  {g['chunk_id']}: {dt:.0f}s gen={rec['gen_tokens']} {rec['done_reason']}",
+                file=sys.stderr,
+            )
     print(json.dumps({"model": a.model, "rss": rss.result(), "file": path.name}))
 
 

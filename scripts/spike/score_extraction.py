@@ -24,7 +24,20 @@ from pydantic import ValidationError  # noqa: E402
 
 from detective_board.extract.schema import Extraction  # noqa: E402
 
-TITLES = {"mr", "mrs", "miss", "dr", "sir", "colonel", "inspector", "the", "a", "an", "old", "young"}
+TITLES = {
+    "mr",
+    "mrs",
+    "miss",
+    "dr",
+    "sir",
+    "colonel",
+    "inspector",
+    "the",
+    "a",
+    "an",
+    "old",
+    "young",
+}
 MATCH_THRESHOLD = 0.5
 
 

@@ -3,8 +3,20 @@ name = "detective-board"
 version = "0.0.1"
 description = "Local GraphRAG investigator agent over Sherlock Holmes stories"
 requires-python = ">=3.12"
-# Runtime deps intentionally empty: retrieval/graph deps wait for the spike ADR.
-dependencies = []
+dependencies = [
+    "pydantic>=2.9,<3",
+    "sqlite-vec==0.1.9",
+    "mcp>=2.3,<3",
+    "starlette==1.9.0",
+    "uvicorn==0.54.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/detective_board"]
 
 [dependency-groups]
 dev = [
@@ -12,6 +24,7 @@ dev = [
     "pyright==1.1.414",
     "pytest==9.1.1",
     "pytest-cov==7.1.0",
+    "httpx2==2.16.0",
 ]
 # E2E (UI) only, installed on demand: uv sync --group e2e && uv run playwright install chromium
 e2e = [
@@ -28,15 +41,16 @@ select = ["E", "F", "W", "I", "UP", "B"]
 
 [tool.ruff.lint.per-file-ignores]
 # Spike scripts are throwaway research code: long lines / multi-import lines tolerated.
-"scripts/spike/*" = ["E501", "E401", "E402", "E701", "E702", "E741", "B905", "I001"]
+"scripts/spike/*" = ["E731", "F401", "E501", "E401", "E402", "E701", "E702", "E741", "B905", "I001"]
 "scripts/corpus/*" = ["E501"]
+"scripts/eval/*" = ["E501"]
 "tests/*" = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"
 
 [tool.pyright]
-include = ["src", "tests"]
+include = ["src"]
 pythonVersion = "3.12"
 typeCheckingMode = "standard"
 

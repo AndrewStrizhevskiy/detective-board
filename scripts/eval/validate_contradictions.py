@@ -9,6 +9,7 @@ whitespace normalisation, positives cite >= 2 quotes, and minimum counts per kin
 Usage: python3 scripts/eval/validate_contradictions.py [contradictions.jsonl] [clean_dir]
 Exit code 0 = valid, 1 = problems found.
 """
+
 import json
 import re
 import sys
@@ -17,8 +18,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 KINDS = {
-    "R1_place_conflict", "R2_order_cycle_or_inconsistency",
-    "R3_claim_vs_fact", "consistent_control",
+    "R1_place_conflict",
+    "R2_order_cycle_or_inconsistency",
+    "R3_claim_vs_fact",
+    "consistent_control",
 }
 STRENGTHS = {"explicit", "inferred"}
 MIN_TOTAL = 24
@@ -31,10 +34,16 @@ MIN_COUNTS = {
     "consistent_control": 8,
 }
 FIELDS = {
-    "id": str, "story": str, "kind": str, "question": str,
-    "expected_finding": bool, "expected_description": str,
-    "involved_claims": list, "evidence_strength": str,
-    "needs_time_normalisation": bool, "notes": str,
+    "id": str,
+    "story": str,
+    "kind": str,
+    "question": str,
+    "expected_finding": bool,
+    "expected_description": str,
+    "involved_claims": list,
+    "evidence_strength": str,
+    "needs_time_normalisation": bool,
+    "notes": str,
 }
 MIN_QUOTE_CHARS = 12
 
@@ -92,9 +101,15 @@ def main() -> int:
         seen = set()
         for k, c in enumerate(claims):
             quotes_total += 1
-            if not (isinstance(c, dict) and all(isinstance(c.get(x), str) and c.get(x).strip()
-                                                for x in ("who", "what", "quote"))):
-                errors.append(f"{tag}: involved_claims[{k}] must be {{who, what, quote}} non-empty strings")
+            if not (
+                isinstance(c, dict)
+                and all(
+                    isinstance(c.get(x), str) and c.get(x).strip() for x in ("who", "what", "quote")
+                )
+            ):
+                errors.append(
+                    f"{tag}: involved_claims[{k}] must be {{who, what, quote}} non-empty strings"
+                )
                 continue
             quote = norm(c["quote"])
             if len(quote) < MIN_QUOTE_CHARS:
@@ -105,7 +120,9 @@ def main() -> int:
             if story in corpus:
                 cnt = corpus[story].count(quote)
                 if cnt == 0:
-                    errors.append(f"{tag}: involved_claims[{k}] NOT FOUND in {story}: {quote[:80]!r}")
+                    errors.append(
+                        f"{tag}: involved_claims[{k}] NOT FOUND in {story}: {quote[:80]!r}"
+                    )
                 else:
                     quotes_ok += 1
 
@@ -122,7 +139,9 @@ def main() -> int:
     pos = sum(1 for _, it in items if it.get("expected_finding") is True)
     tn = sum(1 for _, it in items if it.get("needs_time_normalisation") is True)
     inferred = sum(1 for _, it in items if it.get("evidence_strength") == "inferred")
-    print(f"positives: {pos}, controls: {len(items) - pos}, needs_time_normalisation: {tn}, inferred: {inferred}")
+    print(
+        f"positives: {pos}, controls: {len(items) - pos}, needs_time_normalisation: {tn}, inferred: {inferred}"
+    )
     if errors:
         print(f"FAIL: {len(errors)} problem(s)")
         for e in errors:

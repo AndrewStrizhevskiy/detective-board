@@ -16,6 +16,7 @@ Thinking policy (--think auto|off|none):
 
 Run (see --help). Do not run while RAM-sensitive work is ongoing.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -26,7 +27,15 @@ import uuid
 
 sys.path.insert(0, __import__("os").path.dirname(__file__))
 from _common import (  # noqa: E402
-    CHUNKS, Http, RssSampler, fmt, load_jsonl, mem_available_mib, rate, stats, write_results,
+    CHUNKS,
+    Http,
+    RssSampler,
+    fmt,
+    load_jsonl,
+    mem_available_mib,
+    rate,
+    stats,
+    write_results,
 )
 
 QA_PROMPT = (
@@ -47,8 +56,13 @@ def pick_chunk(chunks: list[dict], target_words: int = 300) -> dict:
 def build_prompts(chunks: list[dict], num_predict_sum: int, num_predict_qa: int) -> list[dict]:
     c = pick_chunk(chunks)
     return [
-        {"name": "summarize_chunk", "body": SUM_TEMPLATE.format(chunk=c["text"]),
-         "num_predict": num_predict_sum, "chunk_id": c["chunk_id"], "chunk_words": len(c["text"].split())},
+        {
+            "name": "summarize_chunk",
+            "body": SUM_TEMPLATE.format(chunk=c["text"]),
+            "num_predict": num_predict_sum,
+            "chunk_id": c["chunk_id"],
+            "chunk_words": len(c["text"].split()),
+        },
         {"name": "short_qa", "body": QA_PROMPT, "num_predict": num_predict_qa},
     ]
 
@@ -72,8 +86,12 @@ def one_run(http, model, prompt, think, args, nonce):
         "prompt": f"[req {nonce}]\n{prompt['body']}",
         "stream": True,
         "keep_alive": args.keep_alive,
-        "options": {"temperature": 0, "seed": args.seed, "num_ctx": args.num_ctx,
-                    "num_predict": prompt["num_predict"]},
+        "options": {
+            "temperature": 0,
+            "seed": args.seed,
+            "num_ctx": args.num_ctx,
+            "num_predict": prompt["num_predict"],
+        },
     }
     if think is not None:
         payload["think"] = think
@@ -116,7 +134,10 @@ def bench_model(http, model, prompts, args):
     res["think_mode"] = desc
     if not args.no_unload:
         for loaded in http.get("/api/ps").get("models", []):  # no other model may stay resident
-            http.post("/api/generate", {"model": loaded["name"], "prompt": "", "keep_alive": 0, "stream": False})
+            http.post(
+                "/api/generate",
+                {"model": loaded["name"], "prompt": "", "keep_alive": 0, "stream": False},
+            )
         time.sleep(3.0)
     res["mem_available_before_mib"] = round(mem_available_mib(), 1)
     per_prompt = {}
@@ -127,9 +148,12 @@ def bench_model(http, model, prompts, args):
                 r = one_run(http, model, p, think, args, uuid.uuid4().hex[:8])
                 r["warmup"] = i < args.warmup
                 runs.append(r)
-                print(f"  {model} {p['name']} {'warmup' if r['warmup'] else 'run'} {i}: "
-                      f"ttft={r['ttft_s']:.2f}s gen={r['gen_tps'] or 0:.2f} tok/s "
-                      f"load={r['load_s']:.2f}s", file=sys.stderr)
+                print(
+                    f"  {model} {p['name']} {'warmup' if r['warmup'] else 'run'} {i}: "
+                    f"ttft={r['ttft_s']:.2f}s gen={r['gen_tps'] or 0:.2f} tok/s "
+                    f"load={r['load_s']:.2f}s",
+                    file=sys.stderr,
+                )
             meas = [r for r in runs if not r["warmup"]]
             per_prompt[p["name"]] = {
                 "runs": runs,
@@ -140,7 +164,9 @@ def bench_model(http, model, prompts, args):
                     "gen_tokens": stats([r["gen_tokens"] for r in meas]),
                     "prompt_tokens": stats([r["prompt_tokens"] for r in meas]),
                     "wall_s": stats([r["wall_s"] for r in meas]),
-                    "thinking_leaks": sum(1 for r in meas if r["thinking_chars"] or r["think_tag_in_response"]),
+                    "thinking_leaks": sum(
+                        1 for r in meas if r["thinking_chars"] or r["think_tag_in_response"]
+                    ),
                 },
             }
     res["rss"] = rss.result()
@@ -154,19 +180,28 @@ def bench_model(http, model, prompts, args):
 
 def to_markdown(data: dict) -> str:
     a = data["args"]
-    L = [f"# LLM benchmark ({data['timestamp']})", "",
-         f"Ollama {data['ollama_version']}; temperature 0, seed {a['seed']}, num_ctx {a['num_ctx']}, "
-         f"stream=true; {a['warmup']} warmup + {a['runs']} measured runs per prompt (mean ± stdev). "
-         f"RSS sampled every {a['sample_interval']}s from /proc over all `ollama` processes "
-         "(VmRSS incl. mmap'd weights; anon = RssAnon only).", ""]
+    L = [
+        f"# LLM benchmark ({data['timestamp']})",
+        "",
+        f"Ollama {data['ollama_version']}; temperature 0, seed {a['seed']}, num_ctx {a['num_ctx']}, "
+        f"stream=true; {a['warmup']} warmup + {a['runs']} measured runs per prompt (mean ± stdev). "
+        f"RSS sampled every {a['sample_interval']}s from /proc over all `ollama` processes "
+        "(VmRSS incl. mmap'd weights; anon = RssAnon only).",
+        "",
+    ]
     for p in data["prompts"]:
-        L.append(f"- prompt `{p['name']}`: num_predict={p['num_predict']}"
-                 + (f", chunk `{p['chunk_id']}` ({p['chunk_words']} words)" if "chunk_id" in p else ""))
+        L.append(
+            f"- prompt `{p['name']}`: num_predict={p['num_predict']}"
+            + (f", chunk `{p['chunk_id']}` ({p['chunk_words']} words)" if "chunk_id" in p else "")
+        )
     L.append("")
     for pname in [p["name"] for p in data["prompts"]]:
-        L += [f"## {pname}", "",
-              "| model | think | TTFT s | gen tok/s | prompt tok/s | gen toks | prompt toks | cold load s | peak RSS MiB (total / anon) | MemAvail before→after MiB | think leaks |",
-              "|---|---|---|---|---|---|---|---|---|---|---|"]
+        L += [
+            f"## {pname}",
+            "",
+            "| model | think | TTFT s | gen tok/s | prompt tok/s | gen toks | prompt toks | cold load s | peak RSS MiB (total / anon) | MemAvail before→after MiB | think leaks |",
+            "|---|---|---|---|---|---|---|---|---|---|---|",
+        ]
         for m in data["models"]:
             if "error" in m:
                 L.append(f"| {m['model']} | {m['error']} |" + " |" * 9)
@@ -177,14 +212,17 @@ def to_markdown(data: dict) -> str:
                 f"| {m['model']} | {m['think_mode']} | {fmt(s['ttft_s'])} | {fmt(s['gen_tps'])} | "
                 f"{fmt(s['prompt_tps'], 1)} | {fmt(s['gen_tokens'], 0)} | {fmt(s['prompt_tokens'], 0)} | {cl} | "
                 f"{m['rss']['peak_rss_total_mib']} / {m['rss']['peak_rss_anon_mib']} | "
-                f"{m['mem_available_before_mib']}→{m['mem_available_after_mib']} | {s['thinking_leaks']} |")
+                f"{m['mem_available_before_mib']}→{m['mem_available_after_mib']} | {s['thinking_leaks']} |"
+            )
         L.append("")
     return "\n".join(L)
 
 
 def parse_args(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("models", nargs="+", help="Ollama model tags, e.g. qwen3:4b-instruct qwen2.5:7b")
+    ap.add_argument(
+        "models", nargs="+", help="Ollama model tags, e.g. qwen3:4b-instruct qwen2.5:7b"
+    )
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--runs", type=int, default=3, help="measured runs per prompt (default 3)")
     ap.add_argument("--warmup", type=int, default=1, help="warmup runs per prompt (default 1)")
@@ -194,10 +232,22 @@ def parse_args(argv=None):
     ap.add_argument("--num-predict-qa", type=int, default=100)
     ap.add_argument("--keep-alive", default="10m")
     ap.add_argument("--sample-interval", type=float, default=0.5)
-    ap.add_argument("--think", choices=["auto", "off", "none"], default="auto",
-                    help="auto: think=false only if /api/show lists 'thinking' capability")
-    ap.add_argument("--no-unload", action="store_true", help="skip unloading before each model (no cold-load number)")
-    ap.add_argument("--dry-run", action="store_true", help="validate args and prompts; no Ollama calls, no files written")
+    ap.add_argument(
+        "--think",
+        choices=["auto", "off", "none"],
+        default="auto",
+        help="auto: think=false only if /api/show lists 'thinking' capability",
+    )
+    ap.add_argument(
+        "--no-unload",
+        action="store_true",
+        help="skip unloading before each model (no cold-load number)",
+    )
+    ap.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="validate args and prompts; no Ollama calls, no files written",
+    )
     a = ap.parse_args(argv)
     if a.runs < 1 or a.warmup < 0 or a.num_ctx < 512 or a.sample_interval <= 0:
         ap.error("need runs>=1, warmup>=0, num-ctx>=512, sample-interval>0")
@@ -209,22 +259,33 @@ def parse_args(argv=None):
 def host_env() -> dict:
     """Conditions that affect CPU speed; recorded with every result."""
     import glob, subprocess
+
     def rd(path):
         try:
             return open(path).read().strip()
         except OSError:
             return None
-    mem = {l.split(":")[0]: int(l.split()[1]) // 1024 for l in open("/proc/meminfo")
-           if l.split(":")[0] in ("MemAvailable", "SwapFree", "SwapTotal")}
+
+    mem = {
+        l.split(":")[0]: int(l.split()[1]) // 1024
+        for l in open("/proc/meminfo")
+        if l.split(":")[0] in ("MemAvailable", "SwapFree", "SwapTotal")
+    }
     try:
-        prof = subprocess.run(["powerprofilesctl", "get"], capture_output=True, text=True, timeout=3).stdout.strip()
+        prof = subprocess.run(
+            ["powerprofilesctl", "get"], capture_output=True, text=True, timeout=3
+        ).stdout.strip()
     except Exception:
         prof = None
     temps = [int(rd(f) or 0) // 1000 for f in glob.glob("/sys/class/thermal/thermal_zone*/temp")]
-    return {"governor": rd("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"),
-            "power_profile": prof, "loadavg": rd("/proc/loadavg"),
-            "mem_mib": mem, "max_temp_c": max(temps) if temps else None,
-            "ac_online": [rd(f) for f in glob.glob("/sys/class/power_supply/A*/online")]}
+    return {
+        "governor": rd("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"),
+        "power_profile": prof,
+        "loadavg": rd("/proc/loadavg"),
+        "mem_mib": mem,
+        "max_temp_c": max(temps) if temps else None,
+        "ac_online": [rd(f) for f in glob.glob("/sys/class/power_supply/A*/online")],
+    }
 
 
 def main(argv=None):
@@ -233,18 +294,32 @@ def main(argv=None):
     prompts = build_prompts(chunks, a.num_predict_summary, a.num_predict_qa)
     est = int(len(prompts[0]["body"].split()) * 1.4)
     if est + a.num_predict_summary > a.num_ctx:
-        sys.exit(f"num_ctx {a.num_ctx} too small for summary prompt (~{est} tok + {a.num_predict_summary})")
+        sys.exit(
+            f"num_ctx {a.num_ctx} too small for summary prompt (~{est} tok + {a.num_predict_summary})"
+        )
     if a.dry_run:
-        print(f"[dry-run] models={a.models} runs={a.runs} warmup={a.warmup} seed={a.seed} num_ctx={a.num_ctx} think={a.think}")
+        print(
+            f"[dry-run] models={a.models} runs={a.runs} warmup={a.warmup} seed={a.seed} num_ctx={a.num_ctx} think={a.think}"
+        )
         for p in prompts:
-            print(f"[dry-run] prompt {p['name']}: {len(p['body'].split())} words, num_predict={p['num_predict']}"
-                  + (f", chunk={p['chunk_id']} ({p['chunk_words']} words)" if "chunk_id" in p else ""))
-        print(f"[dry-run] est. calls: {len(a.models) * len(prompts) * (a.runs + a.warmup)}; no network used. OK")
+            print(
+                f"[dry-run] prompt {p['name']}: {len(p['body'].split())} words, num_predict={p['num_predict']}"
+                + (f", chunk={p['chunk_id']} ({p['chunk_words']} words)" if "chunk_id" in p else "")
+            )
+        print(
+            f"[dry-run] est. calls: {len(a.models) * len(prompts) * (a.runs + a.warmup)}; no network used. OK"
+        )
         return 0
     http = Http(a.host)
     version = http.get("/api/version")["version"]
-    data = {"timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"), "ollama_version": version,
-            "env_start": host_env(), "args": vars(a), "prompts": [{k: v for k, v in p.items() if k != "body"} for p in prompts], "models": []}
+    data = {
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "ollama_version": version,
+        "env_start": host_env(),
+        "args": vars(a),
+        "prompts": [{k: v for k, v in p.items() if k != "body"} for p in prompts],
+        "models": [],
+    }
     for m in a.models:
         print(f"== {m}", file=sys.stderr)
         data["models"].append(bench_model(http, m, prompts, a))
