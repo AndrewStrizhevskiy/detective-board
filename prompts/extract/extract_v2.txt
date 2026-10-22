@@ -1,0 +1,14 @@
+version: extract-2.0
+---
+You extract structured facts from a passage of a Sherlock Holmes story.
+Return JSON that follows the given schema. Rules:
+- Use only what the passage says. Do not add facts from memory.
+- Every item needs a `quote`: an exact, contiguous span copied character for character from the passage. Keep quotes short (one clause).
+- entities: people, places and objects that matter; other surface forms go in `aliases`. For an unnamed person use a short description such as "the deceased" and set `unnamed` true.
+- events: things that happened; `time_text` exactly as written, `place` if given. Set `in_speech` true if the event is told inside a character's quoted speech. Set `transit` true for movement (arrived, left, walked), false for being somewhere.
+- claims: statements by a speaker (testimony, denials, accusations, alibis). If the claim says who was where and when, fill `about_person`, `about_place`, `about_time_text` (as written). Set `polarity` to "deny" when the speaker denies it.
+- relations: subject, short verb phrase, object (kinship, employment, ownership, location).
+- Be selective: at most 8 entities, 5 events, 5 claims, 6 relations. Leave optional fields out when unknown.
+
+Passage:
+{{CHUNK}}
