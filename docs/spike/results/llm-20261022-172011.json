@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-10-22T17:17:39",
+  "ollama_version": "0.35.0",
+  "env_start": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "1.91 3.39 3.49 1/992 12366",
+    "mem_mib": {
+      "MemAvailable": 8718,
+      "SwapTotal": 4095,
+      "SwapFree": 3571
+    },
+    "max_temp_c": 81,
+    "ac_online": [
+      "1"
+    ]
+  },
+  "args": {
+    "models": [
+      "gemma3:4b"
+    ],
+    "host": "http://localhost:11434",
+    "runs": 3,
+    "warmup": 1,
+    "seed": 42,
+    "num_ctx": 4096,
+    "num_predict_summary": 200,
+    "num_predict_qa": 100,
+    "keep_alive": "10m",
+    "sample_interval": 0.5,
+    "think": "auto",
+    "no_unload": false,
+    "dry_run": false
+  },
+  "prompts": [
+    {
+      "name": "summarize_chunk",
+      "num_predict": 200,
+      "chunk_id": "norwood-builder-0013",
+      "chunk_words": 300
+    },
+    {
+      "name": "short_qa",
+      "num_predict": 100
+    }
+  ],
+  "models": [
+    {
+      "model": "gemma3:4b",
+      "think_mode": "not sent (no 'thinking' capability)",
+      "mem_available_before_mib": 12219.8,
+      "rss": {
+        "samples": 293,
+        "interval_s": 0.5,
+        "peak_rss_total_mib": 4127.1,
+        "peak_rss_anon_mib": 4093.3,
+        "peak_rss_runner_mib": 4095.1,
+        "peak_rss_serve_mib": 32.6
+      },
+      "mem_available_after_mib": 8085.3,
+      "cold_load_s": 15.618242063,
+      "prompts": {
+        "summarize_chunk": {
+          "runs": [
+            {
+              "ttft_s": 28.221871954000108,
+              "wall_s": 37.53570287799994,
+              "load_s": 15.618242063,
+              "prompt_tokens": 403,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 31.993448249882963,
+              "gen_tokens": 77,
+              "gen_tps": 8.270592297930365,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Holmes believes the key to solving the case lies in understanding the initial, seemingly minor incident involving a sudden heir. Watson, frustrated by Inspector",
+              "warmup": true
+            },
+            {
+              "ttft_s": 14.763269814000068,
+              "wall_s": 25.75045279799997,
+              "load_s": 0.001489839,
+              "prompt_tokens": 404,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 27.48101718128159,
+              "gen_tokens": 83,
+              "gen_tps": 7.5571213668228525,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Holmes believes the key to solving the case lies in understanding the initial, seemingly insignificant incident alongside the unexpected heir. His friend, Watso",
+              "warmup": false
+            },
+            {
+              "ttft_s": 15.676723020999816,
+              "wall_s": 24.744279625999752,
+              "load_s": 0.001719554,
+              "prompt_tokens": 404,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 25.89434019586761,
+              "gen_tokens": 71,
+              "gen_tps": 7.833311543487842,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Holmes believes the key to solving the case lies in understanding the initial, seemingly minor incident alongside the more obvious crime. His friend, Watson, is",
+              "warmup": false
+            },
+            {
+              "ttft_s": 15.474653557999773,
+              "wall_s": 26.623262991000047,
+              "load_s": 0.001713721,
+              "prompt_tokens": 403,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 26.166975692372983,
+              "gen_tokens": 87,
+              "gen_tps": 7.806537140363153,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Here’s a three-sentence summary of the passage:\n\nHolmes believes the key to solving the case lies in understanding the initial, seemingly minor incident involvi",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 15.304882130999886,
+              "stdev": 0.47980823608366124,
+              "min": 14.763269814000068,
+              "max": 15.676723020999816
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 7.732323350224616,
+              "stdev": 0.15231880516405277,
+              "min": 7.5571213668228525,
+              "max": 7.833311543487842
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 26.514111023174063,
+              "stdev": 0.8483885710147088,
+              "min": 25.89434019586761,
+              "max": 27.48101718128159
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 80.33333333333333,
+              "stdev": 8.32666399786453,
+              "min": 71,
+              "max": 87
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 403.6666666666667,
+              "stdev": 0.5773502691896257,
+              "min": 403,
+              "max": 404
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 25.70599847166659,
+              "stdev": 0.9402801507180047,
+              "min": 24.744279625999752,
+              "max": 26.623262991000047
+            },
+            "thinking_leaks": 0
+          }
+        },
+        "short_qa": {
+          "runs": [
+            {
+              "ttft_s": 2.0062231479996626,
+              "wall_s": 9.941898586999741,
+              "load_s": 0.002482138,
+              "prompt_tokens": 48,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 24.805188832083857,
+              "gen_tokens": 65,
+              "gen_tps": 8.192277027015106,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes’s loyal friend, roommate, and chronicler, acting as his voice and providing a grounding influence to the detective’s eccentri",
+              "warmup": true
+            },
+            {
+              "ttft_s": 1.8806296089996977,
+              "wall_s": 6.9632959859995935,
+              "load_s": 0.001762366,
+              "prompt_tokens": 46,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 24.62629595882483,
+              "gen_tokens": 42,
+              "gen_tps": 8.26515075930169,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes’s loyal friend, roommate, and chronicler, documenting Holmes’s extraordinary cases. The two men reside together at 221B Baker",
+              "warmup": false
+            },
+            {
+              "ttft_s": 1.9500939680001466,
+              "wall_s": 9.248380397999881,
+              "load_s": 0.001745413,
+              "prompt_tokens": 48,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 24.807893871830018,
+              "gen_tokens": 60,
+              "gen_tps": 8.222566230030129,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes’s loyal friend, biographer, and medical partner, providing a grounding influence and documenting Holmes’s extraordinary cases",
+              "warmup": false
+            },
+            {
+              "ttft_s": 1.886428125999828,
+              "wall_s": 7.697193780999896,
+              "load_s": 0.001685973,
+              "prompt_tokens": 46,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 24.600535436001707,
+              "gen_tokens": 48,
+              "gen_tps": 8.262237923534364,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes’s loyal friend, roommate, and chronicler, documenting Holmes’s extraordinary cases. Together, the two men reside at 221B Bake",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 1.905717234333224,
+              "stdev": 0.03854058339022556,
+              "min": 1.8806296089996977,
+              "max": 1.9500939680001466
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 8.249984970955394,
+              "stdev": 0.023789948896476894,
+              "min": 8.222566230030129,
+              "max": 8.26515075930169
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 24.678241755552182,
+              "stdev": 0.11301838158246973,
+              "min": 24.600535436001707,
+              "max": 24.807893871830018
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 50.0,
+              "stdev": 9.16515138991168,
+              "min": 42,
+              "max": 60
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 46.666666666666664,
+              "stdev": 1.1547005383792515,
+              "min": 46,
+              "max": 48
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 7.969623388333123,
+              "stdev": 1.16664738061913,
+              "min": 6.9632959859995935,
+              "max": 9.248380397999881
+            },
+            "thinking_leaks": 0
+          }
+        }
+      }
+    }
+  ],
+  "env_end": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "3.83 3.57 3.54 4/984 12616",
+    "mem_mib": {
+      "MemAvailable": 8085,
+      "SwapTotal": 4095,
+      "SwapFree": 3571
+    },
+    "max_temp_c": 86,
+    "ac_online": [
+      "1"
+    ]
+  }
+}

@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-10-22T17:09:13",
+  "ollama_version": "0.35.0",
+  "env_start": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "2.91 4.43 3.59 1/1102 10992",
+    "mem_mib": {
+      "MemAvailable": 3320,
+      "SwapTotal": 4095,
+      "SwapFree": 1041
+    },
+    "max_temp_c": 88,
+    "ac_online": [
+      "1"
+    ]
+  },
+  "args": {
+    "models": [
+      "qwen3:4b-instruct"
+    ],
+    "host": "http://localhost:11434",
+    "runs": 3,
+    "warmup": 1,
+    "seed": 42,
+    "num_ctx": 4096,
+    "num_predict_summary": 200,
+    "num_predict_qa": 100,
+    "keep_alive": "10m",
+    "sample_interval": 0.5,
+    "think": "auto",
+    "no_unload": false,
+    "dry_run": false
+  },
+  "prompts": [
+    {
+      "name": "summarize_chunk",
+      "num_predict": 200,
+      "chunk_id": "norwood-builder-0013",
+      "chunk_words": 300
+    },
+    {
+      "name": "short_qa",
+      "num_predict": 100
+    }
+  ],
+  "models": [
+    {
+      "model": "qwen3:4b-instruct",
+      "think_mode": "think=false (capabilities include 'thinking')",
+      "mem_available_before_mib": 11963.8,
+      "rss": {
+        "samples": 326,
+        "interval_s": 0.5,
+        "peak_rss_total_mib": 3195.3,
+        "peak_rss_anon_mib": 3162.2,
+        "peak_rss_runner_mib": 3162.6,
+        "peak_rss_serve_mib": 33.2
+      },
+      "mem_available_after_mib": 9097.0,
+      "cold_load_s": 8.094978225,
+      "prompts": {
+        "summarize_chunk": {
+          "runs": [
+            {
+              "ttft_s": 22.69320024800004,
+              "wall_s": 35.52791488499997,
+              "load_s": 8.094978225,
+              "prompt_tokens": 396,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 27.151586691416664,
+              "gen_tokens": 91,
+              "gen_tps": 7.092000706394444,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes suggests that the first unusual event—a sudden and unexpected will—should be examined first, as it may clarify the subsequent criminal incident.",
+              "warmup": true
+            },
+            {
+              "ttft_s": 17.617057913000053,
+              "wall_s": 30.176268904000153,
+              "load_s": 0.001980366,
+              "prompt_tokens": 398,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 22.674534236296335,
+              "gen_tokens": 89,
+              "gen_tps": 7.088459756544062,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes suggests that the first unusual event—a sudden and unexpected will—should be examined first, as it may clarify the subsequent criminal incident.",
+              "warmup": false
+            },
+            {
+              "ttft_s": 22.006650790000094,
+              "wall_s": 33.65225732199997,
+              "load_s": 4.289695732,
+              "prompt_tokens": 398,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 22.482056296989544,
+              "gen_tokens": 84,
+              "gen_tps": 7.214981186936555,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes suggests that the first unusual event—a sudden and unexpected will—should be examined first, as it may clarify the subsequent criminal incident.",
+              "warmup": false
+            },
+            {
+              "ttft_s": 18.762301968999964,
+              "wall_s": 31.677771470000152,
+              "load_s": 0.001738236,
+              "prompt_tokens": 399,
+              "prompt_cached_tokens": 6,
+              "prompt_tps": 21.33458695865357,
+              "gen_tokens": 88,
+              "gen_tps": 6.815215650461219,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes suggests that the first unusual event—a sudden and unexpected will—should be examined first, as it may clarify the subsequent criminal incident.",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 19.46200355733337,
+              "stdev": 2.2769097788427177,
+              "min": 17.617057913000053,
+              "max": 22.006650790000094
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 7.039552197980612,
+              "stdev": 0.2043210292697039,
+              "min": 6.815215650461219,
+              "max": 7.214981186936555
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 22.163725830646484,
+              "stdev": 0.7244759423660712,
+              "min": 21.33458695865357,
+              "max": 22.674534236296335
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 87.0,
+              "stdev": 2.6457513110645907,
+              "min": 84,
+              "max": 89
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 398.3333333333333,
+              "stdev": 0.5773502691896257,
+              "min": 398,
+              "max": 399
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 31.835432565333424,
+              "stdev": 1.7433492582536294,
+              "min": 30.176268904000153,
+              "max": 33.65225732199997
+            },
+            "thinking_leaks": 0
+          }
+        },
+        "short_qa": {
+          "runs": [
+            {
+              "ttft_s": 6.496529022000004,
+              "wall_s": 11.479182460000175,
+              "load_s": 4.54182171,
+              "prompt_tokens": 44,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 22.63260391194271,
+              "gen_tokens": 41,
+              "gen_tps": 8.230147028565636,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's loyal friend, companion, and chronicler, serving as the narrator of many of Holmes's stories. They live together in a flat ",
+              "warmup": true
+            },
+            {
+              "ttft_s": 1.7031569759999456,
+              "wall_s": 7.564887960000078,
+              "load_s": 0.001681584,
+              "prompt_tokens": 43,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 25.542162090560627,
+              "gen_tokens": 47,
+              "gen_tps": 8.019508905749953,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's loyal friend, companion, and chronicler, serving as the narrator of many of Holmes's stories. They live together in London,",
+              "warmup": false
+            },
+            {
+              "ttft_s": 1.791494149999835,
+              "wall_s": 6.749150134999809,
+              "load_s": 0.001749241,
+              "prompt_tokens": 44,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 24.91317193372643,
+              "gen_tokens": 41,
+              "gen_tps": 8.271817574545722,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's loyal friend, companion, and chronicler, serving as the narrator of many of Holmes's stories. They live together in a flat ",
+              "warmup": false
+            },
+            {
+              "ttft_s": 1.6390594780000356,
+              "wall_s": 8.440395527999954,
+              "load_s": 0.002514542,
+              "prompt_tokens": 42,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 26.03509654991579,
+              "gen_tokens": 56,
+              "gen_tps": 8.235146369432783,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is a close friend and biographical companion of Sherlock Holmes, serving as both a physician and a chronicler of Holmes's adventures. The two me",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 1.7112368679999388,
+              "stdev": 0.07653787165822071,
+              "min": 1.6390594780000356,
+              "max": 1.791494149999835
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 8.175490949909486,
+              "stdev": 0.13632311944878836,
+              "min": 8.019508905749953,
+              "max": 8.271817574545722
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 25.49681019140095,
+              "stdev": 0.5623355823446986,
+              "min": 24.91317193372643,
+              "max": 26.03509654991579
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 48.0,
+              "stdev": 7.54983443527075,
+              "min": 41,
+              "max": 56
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 43.0,
+              "stdev": 1.0,
+              "min": 42,
+              "max": 44
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 7.584811207666614,
+              "stdev": 0.845798703406573,
+              "min": 6.749150134999809,
+              "max": 8.440395527999954
+            },
+            "thinking_leaks": 0
+          }
+        }
+      }
+    }
+  ],
+  "env_end": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "4.29 4.39 3.72 4/996 11864",
+    "mem_mib": {
+      "MemAvailable": 9097,
+      "SwapTotal": 4095,
+      "SwapFree": 3568
+    },
+    "max_temp_c": 81,
+    "ac_online": [
+      "1"
+    ]
+  }
+}

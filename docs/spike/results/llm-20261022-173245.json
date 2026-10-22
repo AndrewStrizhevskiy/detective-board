@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-10-22T17:28:53",
+  "ollama_version": "0.35.0",
+  "env_start": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "1.96 2.97 3.25 1/990 13406",
+    "mem_mib": {
+      "MemAvailable": 7194,
+      "SwapTotal": 4095,
+      "SwapFree": 3571
+    },
+    "max_temp_c": 84,
+    "ac_online": [
+      "1"
+    ]
+  },
+  "args": {
+    "models": [
+      "qwen3:8b"
+    ],
+    "host": "http://localhost:11434",
+    "runs": 3,
+    "warmup": 1,
+    "seed": 42,
+    "num_ctx": 4096,
+    "num_predict_summary": 200,
+    "num_predict_qa": 100,
+    "keep_alive": "10m",
+    "sample_interval": 0.5,
+    "think": "auto",
+    "no_unload": false,
+    "dry_run": false
+  },
+  "prompts": [
+    {
+      "name": "summarize_chunk",
+      "num_predict": 200,
+      "chunk_id": "norwood-builder-0013",
+      "chunk_words": 300
+    },
+    {
+      "name": "short_qa",
+      "num_predict": 100
+    }
+  ],
+  "models": [
+    {
+      "model": "qwen3:8b",
+      "think_mode": "think=false (capabilities include 'thinking')",
+      "mem_available_before_mib": 12191.1,
+      "rss": {
+        "samples": 452,
+        "interval_s": 0.5,
+        "peak_rss_total_mib": 6033.3,
+        "peak_rss_anon_mib": 5999.5,
+        "peak_rss_runner_mib": 6001.4,
+        "peak_rss_serve_mib": 32.4
+      },
+      "mem_available_after_mib": 6218.6,
+      "cold_load_s": 15.367253784,
+      "prompts": {
+        "summarize_chunk": {
+          "runs": [
+            {
+              "ttft_s": 43.624372709,
+              "wall_s": 57.73038544400015,
+              "load_s": 15.367253784,
+              "prompt_tokens": 407,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 14.406643621936398,
+              "gen_tokens": 62,
+              "gen_tps": 4.396263601383689,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes emphasizes the importance of investigating the unusual will and its unexpected heir before focusing on the criminal incident. He expresses disap",
+              "warmup": true
+            },
+            {
+              "ttft_s": 29.25865885600024,
+              "wall_s": 43.52565073100004,
+              "load_s": 0.001760042,
+              "prompt_tokens": 406,
+              "prompt_cached_tokens": 6,
+              "prompt_tps": 13.896824226532202,
+              "gen_tokens": 62,
+              "gen_tps": 4.3467384878734405,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes emphasizes the importance of investigating the unusual will and its unexpected heir before focusing on the criminal incident. He expresses disap",
+              "warmup": false
+            },
+            {
+              "ttft_s": 29.5577962440002,
+              "wall_s": 43.8185454190002,
+              "load_s": 0.001768391,
+              "prompt_tokens": 406,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 13.757099900332184,
+              "gen_tokens": 62,
+              "gen_tps": 4.348467074178816,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes emphasizes the importance of investigating the unusual will and its unexpected heir before focusing on the criminal incident. He expresses disap",
+              "warmup": false
+            },
+            {
+              "ttft_s": 29.66010183599974,
+              "wall_s": 44.005167077999886,
+              "load_s": 0.0018306,
+              "prompt_tokens": 405,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 13.674916310356311,
+              "gen_tokens": 62,
+              "gen_tps": 4.322932543566096,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes emphasizes the importance of investigating the unusual will and its unexpected heir before focusing on the criminal incident. He expresses disap",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 29.492185645333393,
+              "stdev": 0.2086089152955423,
+              "min": 29.25865885600024,
+              "max": 29.66010183599974
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 4.339379368539451,
+              "stdev": 0.014269566967217798,
+              "min": 4.322932543566096,
+              "max": 4.348467074178816
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 13.776280145740232,
+              "stdev": 0.11219042818269405,
+              "min": 13.674916310356311,
+              "max": 13.896824226532202
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 62.0,
+              "stdev": 0.0,
+              "min": 62,
+              "max": 62
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 405.6666666666667,
+              "stdev": 0.5773502691896257,
+              "min": 405,
+              "max": 406
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 43.78312107600004,
+              "stdev": 0.2417129388712227,
+              "min": 43.52565073100004,
+              "max": 44.005167077999886
+            },
+            "thinking_leaks": 0
+          }
+        },
+        "short_qa": {
+          "runs": [
+            {
+              "ttft_s": 3.7418070499998066,
+              "wall_s": 9.9714556429999,
+              "load_s": 0.001638273,
+              "prompt_tokens": 51,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 13.783210104228095,
+              "gen_tokens": 29,
+              "gen_tps": 4.655830568867039,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's loyal friend and biographer. They both live at 221B Baker Street in London.",
+              "warmup": true
+            },
+            {
+              "ttft_s": 3.8305258939999476,
+              "wall_s": 10.055398046999926,
+              "load_s": 0.001862573,
+              "prompt_tokens": 52,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 13.598504164541902,
+              "gen_tokens": 29,
+              "gen_tps": 4.659583671019254,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's loyal friend and biographer. They both live at 221B Baker Street in London.",
+              "warmup": false
+            },
+            {
+              "ttft_s": 3.7446211269998457,
+              "wall_s": 9.982308488999934,
+              "load_s": 0.001960166,
+              "prompt_tokens": 52,
+              "prompt_cached_tokens": 6,
+              "prompt_tps": 13.91327428040278,
+              "gen_tokens": 29,
+              "gen_tps": 4.64988379299038,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's loyal friend and biographer. They both live at 221B Baker Street in London.",
+              "warmup": false
+            },
+            {
+              "ttft_s": 3.8756204189999153,
+              "wall_s": 10.125037152000004,
+              "load_s": 0.003402706,
+              "prompt_tokens": 52,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 13.460612048852703,
+              "gen_tokens": 29,
+              "gen_tps": 4.6411710602819305,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's loyal friend and biographer. They both live at 221B Baker Street in London.",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 3.816922479999903,
+              "stdev": 0.06655068204362996,
+              "min": 3.7446211269998457,
+              "max": 3.8756204189999153
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 4.6502128414305215,
+              "stdev": 0.009210714586720164,
+              "min": 4.6411710602819305,
+              "max": 4.659583671019254
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 13.657463497932461,
+              "stdev": 0.23201923673128536,
+              "min": 13.460612048852703,
+              "max": 13.91327428040278
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 29.0,
+              "stdev": 0.0,
+              "min": 29,
+              "max": 29
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 52.0,
+              "stdev": 0.0,
+              "min": 52,
+              "max": 52
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 10.054247895999955,
+              "stdev": 0.07137128236159833,
+              "min": 9.982308488999934,
+              "max": 10.125037152000004
+            },
+            "thinking_leaks": 0
+          }
+        }
+      }
+    }
+  ],
+  "env_end": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "4.00 3.55 3.42 4/983 13766",
+    "mem_mib": {
+      "MemAvailable": 6218,
+      "SwapTotal": 4095,
+      "SwapFree": 3571
+    },
+    "max_temp_c": 96,
+    "ac_online": [
+      "1"
+    ]
+  }
+}

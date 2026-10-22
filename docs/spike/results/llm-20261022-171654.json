@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-10-22T17:12:47",
+  "ollama_version": "0.35.0",
+  "env_start": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "2.14 3.81 3.55 1/987 11920",
+    "mem_mib": {
+      "MemAvailable": 9112,
+      "SwapTotal": 4095,
+      "SwapFree": 3568
+    },
+    "max_temp_c": 78,
+    "ac_online": [
+      "1"
+    ]
+  },
+  "args": {
+    "models": [
+      "qwen3:4b"
+    ],
+    "host": "http://localhost:11434",
+    "runs": 3,
+    "warmup": 1,
+    "seed": 42,
+    "num_ctx": 4096,
+    "num_predict_summary": 200,
+    "num_predict_qa": 100,
+    "keep_alive": "10m",
+    "sample_interval": 0.5,
+    "think": "auto",
+    "no_unload": false,
+    "dry_run": false
+  },
+  "prompts": [
+    {
+      "name": "summarize_chunk",
+      "num_predict": 200,
+      "chunk_id": "norwood-builder-0013",
+      "chunk_words": 300
+    },
+    {
+      "name": "short_qa",
+      "num_predict": 100
+    }
+  ],
+  "models": [
+    {
+      "model": "qwen3:4b",
+      "think_mode": "think=false (capabilities include 'thinking')",
+      "mem_available_before_mib": 12171.1,
+      "rss": {
+        "samples": 481,
+        "interval_s": 0.5,
+        "peak_rss_total_mib": 3525.5,
+        "peak_rss_anon_mib": 3491.9,
+        "peak_rss_runner_mib": 3493.5,
+        "peak_rss_serve_mib": 32.8
+      },
+      "mem_available_after_mib": 8711.9,
+      "cold_load_s": 9.342326565,
+      "prompts": {
+        "summarize_chunk": {
+          "runs": [
+            {
+              "ttft_s": 23.416517641999917,
+              "wall_s": 51.10552035599994,
+              "load_s": 9.342326565,
+              "prompt_tokens": 398,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 28.290911892859615,
+              "gen_tokens": 200,
+              "gen_tps": 7.224148942879449,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user wants me to summarize a Sherlock Holmes passage in exactly three sentences. They've provided the passage text and specified that I need to be prec",
+              "warmup": true
+            },
+            {
+              "ttft_s": 17.223677025999905,
+              "wall_s": 45.93083396199995,
+              "load_s": 0.002158649,
+              "prompt_tokens": 400,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 23.30713029210244,
+              "gen_tokens": 200,
+              "gen_tps": 6.967996514608143,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user wants me to summarize a Sherlock Holmes passage in exactly three sentences. They've provided a specific passage from a Sherlock Holmes story and w",
+              "warmup": false
+            },
+            {
+              "ttft_s": 17.219081196999923,
+              "wall_s": 45.363842315000056,
+              "load_s": 0.002072875,
+              "prompt_tokens": 400,
+              "prompt_cached_tokens": 6,
+              "prompt_tps": 23.31265617294074,
+              "gen_tokens": 200,
+              "gen_tps": 7.10713616882007,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user wants me to summarize a Sherlock Holmes passage in exactly three sentences. They've provided a specific passage from what seems to be a Sherlock H",
+              "warmup": false
+            },
+            {
+              "ttft_s": 17.112703014999852,
+              "wall_s": 45.17666458099984,
+              "load_s": 0.001783002,
+              "prompt_tokens": 400,
+              "prompt_cached_tokens": 6,
+              "prompt_tps": 23.457193963666448,
+              "gen_tokens": 200,
+              "gen_tps": 7.127665033956196,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user wants me to summarize a Sherlock Holmes passage in exactly three sentences. They've provided a specific passage from a Holmes story and want me to",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 17.185153745999894,
+              "stdev": 0.06278623836382892,
+              "min": 17.112703014999852,
+              "max": 17.223677025999905
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 7.067599239128136,
+              "stdev": 0.08686705718969981,
+              "min": 6.967996514608143,
+              "max": 7.127665033956196
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 23.358993476236545,
+              "stdev": 0.08508898658676706,
+              "min": 23.30713029210244,
+              "max": 23.457193963666448
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 200.0,
+              "stdev": 0.0,
+              "min": 200,
+              "max": 200
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 400.0,
+              "stdev": 0.0,
+              "min": 400,
+              "max": 400
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 45.490446952666616,
+              "stdev": 0.39270143177550704,
+              "min": 45.17666458099984,
+              "max": 45.93083396199995
+            },
+            "thinking_leaks": 0
+          }
+        },
+        "short_qa": {
+          "runs": [
+            {
+              "ttft_s": 1.801002237000148,
+              "wall_s": 14.089324766000118,
+              "load_s": 0.002031429,
+              "prompt_tokens": 46,
+              "prompt_cached_tokens": 6,
+              "prompt_tps": 26.39002273557828,
+              "gen_tokens": 100,
+              "gen_tps": 8.138640106485967,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user is asking about Dr. John Watson in relation to Sherlock Holmes and where they live. They specified it's for request [req 14c4b7cc] and want the an",
+              "warmup": true
+            },
+            {
+              "ttft_s": 1.7536092769998959,
+              "wall_s": 14.078190776000156,
+              "load_s": 0.001763842,
+              "prompt_tokens": 47,
+              "prompt_cached_tokens": 8,
+              "prompt_tps": 27.082547027114238,
+              "gen_tokens": 100,
+              "gen_tps": 8.115021667919356,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user is asking about Dr. John Watson in relation to Sherlock Holmes and where they live. They specified it's for [req 1:40c6f58] and want the answer in",
+              "warmup": false
+            },
+            {
+              "ttft_s": 1.7701310279999234,
+              "wall_s": 14.085843772999851,
+              "load_s": 0.003691675,
+              "prompt_tokens": 46,
+              "prompt_cached_tokens": 6,
+              "prompt_tps": 26.28177952786497,
+              "gen_tokens": 100,
+              "gen_tps": 8.120667268732939,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user is asking about Dr. John Watson in relation to Sherlock Holmes and where they live. They want the answer in exactly two sentences. \n\nThis seems li",
+              "warmup": false
+            },
+            {
+              "ttft_s": 1.770135282999945,
+              "wall_s": 14.065891009000097,
+              "load_s": 0.002094465,
+              "prompt_tokens": 45,
+              "prompt_cached_tokens": 5,
+              "prompt_tps": 25.694787041605,
+              "gen_tokens": 100,
+              "gen_tps": 8.133832783201553,
+              "done_reason": "length",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Hmm, the user is asking about Dr. John Watson in relation to Sherlock Holmes and where they live. They want the answer in exactly two sentences. \n\nThis seems li",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 1.7646251959999215,
+              "stdev": 0.00954006593727734,
+              "min": 1.7536092769998959,
+              "max": 1.770135282999945
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 8.12317390661795,
+              "stdev": 0.009652820295382987,
+              "min": 8.115021667919356,
+              "max": 8.133832783201553
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 26.35303786552807,
+              "stdev": 0.6966188034786537,
+              "min": 25.694787041605,
+              "max": 27.082547027114238
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 100.0,
+              "stdev": 0.0,
+              "min": 100,
+              "max": 100
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 46.0,
+              "stdev": 1.0,
+              "min": 45,
+              "max": 47
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 14.076641852666702,
+              "stdev": 0.010066159666285867,
+              "min": 14.065891009000097,
+              "max": 14.085843772999851
+            },
+            "thinking_leaks": 0
+          }
+        }
+      }
+    }
+  ],
+  "env_end": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "4.04 3.95 3.67 4/984 12308",
+    "mem_mib": {
+      "MemAvailable": 8711,
+      "SwapTotal": 4095,
+      "SwapFree": 3571
+    },
+    "max_temp_c": 83,
+    "ac_online": [
+      "1"
+    ]
+  }
+}

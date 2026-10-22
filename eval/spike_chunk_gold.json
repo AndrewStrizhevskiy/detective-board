@@ -1,0 +1,893 @@
+{
+ "en-01": {
+  "group": "old-en",
+  "expected_stories": [
+   "red-headed-league"
+  ],
+  "chunks": [
+   "red-headed-league-0027"
+  ],
+  "quotes": [
+   {
+    "story": "red-headed-league",
+    "quote": "the City and Suburban Bank abutted on our friend",
+    "spans": [
+     [
+      47872,
+      47920
+     ]
+    ],
+    "chunks": [
+     "red-headed-league-0027"
+    ]
+   }
+  ]
+ },
+ "en-02": {
+  "group": "old-en",
+  "expected_stories": [
+   "speckled-band"
+  ],
+  "chunks": [
+   "speckled-band-0030"
+  ],
+  "quotes": [
+   {
+    "story": "speckled-band",
+    "quote": "It is a swamp adder",
+    "spans": [
+     [
+      48440,
+      48459
+     ]
+    ],
+    "chunks": [
+     "speckled-band-0030"
+    ]
+   }
+  ]
+ },
+ "en-03": {
+  "group": "old-en",
+  "expected_stories": [
+   "blue-carbuncle"
+  ],
+  "chunks": [
+   "blue-carbuncle-0006"
+  ],
+  "quotes": [
+   {
+    "story": "blue-carbuncle",
+    "quote": "See what my wife found in its crop",
+    "spans": [
+     [
+      11356,
+      11390
+     ]
+    ],
+    "chunks": [
+     "blue-carbuncle-0006"
+    ]
+   }
+  ]
+ },
+ "en-04": {
+  "group": "old-en",
+  "expected_stories": [
+   "silver-blaze"
+  ],
+  "chunks": [
+   "silver-blaze-0022"
+  ],
+  "quotes": [
+   {
+    "story": "silver-blaze",
+    "quote": "To the curious incident of the dog in the night-time",
+    "spans": [
+     [
+      40312,
+      40364
+     ]
+    ],
+    "chunks": [
+     "silver-blaze-0022"
+    ]
+   }
+  ]
+ },
+ "en-05": {
+  "group": "old-en",
+  "expected_stories": [
+   "scandal-in-bohemia"
+  ],
+  "chunks": [
+   "scandal-in-bohemia-0008"
+  ],
+  "quotes": [
+   {
+    "story": "scandal-in-bohemia",
+    "quote": "hereditary King of Bohemia",
+    "spans": [
+     [
+      14158,
+      14184
+     ]
+    ],
+    "chunks": [
+     "scandal-in-bohemia-0008"
+    ]
+   }
+  ]
+ },
+ "en-06": {
+  "group": "old-en",
+  "expected_stories": [
+   "copper-beeches"
+  ],
+  "chunks": [
+   "copper-beeches-0006"
+  ],
+  "quotes": [
+   {
+    "story": "copper-beeches",
+    "quote": "Or to cut your hair quite short before you come to us",
+    "spans": [
+     [
+      10814,
+      10867
+     ]
+    ],
+    "chunks": [
+     "copper-beeches-0006"
+    ]
+   }
+  ]
+ },
+ "en-07": {
+  "group": "old-en",
+  "expected_stories": [
+   "boscombe-valley-mystery"
+  ],
+  "chunks": [
+   "boscombe-valley-mystery-0023"
+  ],
+  "quotes": [
+   {
+    "story": "boscombe-valley-mystery",
+    "quote": "So and so, of Ballarat",
+    "spans": [
+     [
+      40089,
+      40111
+     ]
+    ],
+    "chunks": [
+     "boscombe-valley-mystery-0023"
+    ]
+   }
+  ]
+ },
+ "en-08": {
+  "group": "old-en",
+  "expected_stories": [
+   "man-with-the-twisted-lip"
+  ],
+  "chunks": [
+   "man-with-the-twisted-lip-0012"
+  ],
+  "quotes": [
+   {
+    "story": "man-with-the-twisted-lip",
+    "quote": "He is a professional beggar",
+    "spans": [
+     [
+      19817,
+      19844
+     ]
+    ],
+    "chunks": [
+     "man-with-the-twisted-lip-0012"
+    ]
+   }
+  ]
+ },
+ "en-09": {
+  "group": "old-en",
+  "expected_stories": [
+   "norwood-builder"
+  ],
+  "chunks": [
+   "norwood-builder-0020"
+  ],
+  "quotes": [
+   {
+    "story": "norwood-builder",
+    "quote": "It was the well-marked print of a thumb",
+    "spans": [
+     [
+      34676,
+      34715
+     ]
+    ],
+    "chunks": [
+     "norwood-builder-0020"
+    ]
+   }
+  ]
+ },
+ "en-10": {
+  "group": "old-en",
+  "expected_stories": [
+   "priory-school"
+  ],
+  "chunks": [
+   "priory-school-0002"
+  ],
+  "quotes": [
+   {
+    "story": "priory-school",
+    "quote": "young Lord Saltire, ten years old, his only son and heir",
+    "spans": [
+     [
+      5255,
+      5311
+     ]
+    ],
+    "chunks": [
+     "priory-school-0002"
+    ]
+   }
+  ]
+ },
+ "en-11": {
+  "group": "old-en",
+  "expected_stories": [
+   "black-peter"
+  ],
+  "chunks": [
+   "black-peter-0006"
+  ],
+  "quotes": [
+   {
+    "story": "black-peter",
+    "quote": "Right through his broad breast a steel harpoon had been driven",
+    "spans": [
+     [
+      10328,
+      10390
+     ]
+    ],
+    "chunks": [
+     "black-peter-0006"
+    ]
+   }
+  ]
+ },
+ "en-12": {
+  "group": "old-en",
+  "expected_stories": [
+   "crooked-man"
+  ],
+  "chunks": [
+   "crooked-man-0023"
+  ],
+  "quotes": [
+   {
+    "story": "crooked-man",
+    "quote": "Snake-catcher is what I call them",
+    "spans": [
+     [
+      36261,
+      36294
+     ]
+    ],
+    "chunks": [
+     "crooked-man-0023"
+    ]
+   }
+  ]
+ },
+ "en-13": {
+  "group": "old-en",
+  "expected_stories": [
+   "abbey-grange"
+  ],
+  "chunks": [
+   "abbey-grange-0002"
+  ],
+  "quotes": [
+   {
+    "story": "abbey-grange",
+    "quote": "his head was knocked in with his own poker",
+    "spans": [
+     [
+      4761,
+      4803
+     ]
+    ],
+    "chunks": [
+     "abbey-grange-0002"
+    ]
+   }
+  ]
+ },
+ "en-14": {
+  "group": "old-en",
+  "expected_stories": [
+   "musgrave-ritual"
+  ],
+  "chunks": [
+   "musgrave-ritual-0013",
+   "musgrave-ritual-0024"
+  ],
+  "quotes": [
+   {
+    "story": "musgrave-ritual",
+    "quote": "He who will come",
+    "spans": [
+     [
+      21714,
+      21730
+     ],
+     [
+      39081,
+      39097
+     ]
+    ],
+    "chunks": [
+     "musgrave-ritual-0013",
+     "musgrave-ritual-0024"
+    ]
+   }
+  ]
+ },
+ "en-15": {
+  "group": "old-en",
+  "expected_stories": [
+   "thor-bridge"
+  ],
+  "chunks": [
+   "thor-bridge-0001"
+  ],
+  "quotes": [
+   {
+    "story": "thor-bridge",
+    "quote": "You have heard of Neil Gibson, the Gold King",
+    "spans": [
+     [
+      3479,
+      3523
+     ]
+    ],
+    "chunks": [
+     "thor-bridge-0001"
+    ]
+   }
+  ]
+ },
+ "ru-01": {
+  "group": "old-ru",
+  "expected_stories": [
+   "red-headed-league"
+  ],
+  "chunks": [
+   "red-headed-league-0027"
+  ],
+  "quotes": [
+   {
+    "story": "red-headed-league",
+    "quote": "the City and Suburban Bank abutted on our friend",
+    "spans": [
+     [
+      47872,
+      47920
+     ]
+    ],
+    "chunks": [
+     "red-headed-league-0027"
+    ]
+   }
+  ]
+ },
+ "ru-04": {
+  "group": "old-ru",
+  "expected_stories": [
+   "silver-blaze"
+  ],
+  "chunks": [
+   "silver-blaze-0022"
+  ],
+  "quotes": [
+   {
+    "story": "silver-blaze",
+    "quote": "To the curious incident of the dog in the night-time",
+    "spans": [
+     [
+      40312,
+      40364
+     ]
+    ],
+    "chunks": [
+     "silver-blaze-0022"
+    ]
+   }
+  ]
+ },
+ "ru-06": {
+  "group": "old-ru",
+  "expected_stories": [
+   "copper-beeches"
+  ],
+  "chunks": [
+   "copper-beeches-0006"
+  ],
+  "quotes": [
+   {
+    "story": "copper-beeches",
+    "quote": "Or to cut your hair quite short before you come to us",
+    "spans": [
+     [
+      10814,
+      10867
+     ]
+    ],
+    "chunks": [
+     "copper-beeches-0006"
+    ]
+   }
+  ]
+ },
+ "ru-11": {
+  "group": "old-ru",
+  "expected_stories": [
+   "black-peter"
+  ],
+  "chunks": [
+   "black-peter-0006"
+  ],
+  "quotes": [
+   {
+    "story": "black-peter",
+    "quote": "Right through his broad breast a steel harpoon had been driven",
+    "spans": [
+     [
+      10328,
+      10390
+     ]
+    ],
+    "chunks": [
+     "black-peter-0006"
+    ]
+   }
+  ]
+ },
+ "ru-15": {
+  "group": "old-ru",
+  "expected_stories": [
+   "thor-bridge"
+  ],
+  "chunks": [
+   "thor-bridge-0001"
+  ],
+  "quotes": [
+   {
+    "story": "thor-bridge",
+    "quote": "You have heard of Neil Gibson, the Gold King",
+    "spans": [
+     [
+      3479,
+      3523
+     ]
+    ],
+    "chunks": [
+     "thor-bridge-0001"
+    ]
+   }
+  ]
+ },
+ "hard-01": {
+  "group": "hard",
+  "expected_stories": [
+   "silver-blaze"
+  ],
+  "chunks": [
+   "silver-blaze-0026"
+  ],
+  "quotes": [
+   {
+    "story": "silver-blaze",
+    "quote": "A curry was exactly the medium which would disguise this taste.",
+    "spans": [
+     [
+      46831,
+      46894
+     ]
+    ],
+    "chunks": [
+     "silver-blaze-0026"
+    ]
+   }
+  ]
+ },
+ "hard-02": {
+  "group": "hard",
+  "expected_stories": [
+   "speckled-band"
+  ],
+  "chunks": [
+   "speckled-band-0031"
+  ],
+  "quotes": [
+   {
+    "story": "speckled-band",
+    "quote": "Of course he must recall the snake before the morning light revealed it to the victim.",
+    "spans": [
+     [
+      51294,
+      51380
+     ]
+    ],
+    "chunks": [
+     "speckled-band-0031"
+    ]
+   }
+  ]
+ },
+ "hard-03": {
+  "group": "hard",
+  "expected_stories": [
+   "red-headed-league"
+  ],
+  "chunks": [
+   "red-headed-league-0026"
+  ],
+  "quotes": [
+   {
+    "story": "red-headed-league",
+    "quote": "The £ 4 a week was a lure which must draw him, and what was it to them, who were playing for thousands?",
+    "spans": [
+     [
+      45891,
+      45994
+     ]
+    ],
+    "chunks": [
+     "red-headed-league-0026"
+    ]
+   }
+  ]
+ },
+ "hard-04": {
+  "group": "hard",
+  "expected_stories": [
+   "scandal-in-bohemia"
+  ],
+  "chunks": [
+   "scandal-in-bohemia-0026"
+  ],
+  "quotes": [
+   {
+    "story": "scandal-in-bohemia",
+    "quote": "I have been trained as an actress myself. Male costume is nothing new to me.",
+    "spans": [
+     [
+      43520,
+      43596
+     ]
+    ],
+    "chunks": [
+     "scandal-in-bohemia-0026"
+    ]
+   }
+  ]
+ },
+ "hard-05": {
+  "group": "hard",
+  "expected_stories": [
+   "blue-carbuncle"
+  ],
+  "chunks": [
+   "blue-carbuncle-0012"
+  ],
+  "quotes": [
+   {
+    "story": "blue-carbuncle",
+    "quote": "This year our good host, Windigate by name, instituted a goose club",
+    "spans": [
+     [
+      22036,
+      22103
+     ]
+    ],
+    "chunks": [
+     "blue-carbuncle-0012"
+    ]
+   }
+  ]
+ },
+ "hard-06": {
+  "group": "hard",
+  "expected_stories": [
+   "man-with-the-twisted-lip"
+  ],
+  "chunks": [
+   "man-with-the-twisted-lip-0000"
+  ],
+  "quotes": [
+   {
+    "story": "man-with-the-twisted-lip",
+    "quote": "having read De Quincey’s description of his dreams and sensations, he had drenched his tobacco with laudanum",
+    "spans": [
+     [
+      230,
+      338
+     ]
+    ],
+    "chunks": [
+     "man-with-the-twisted-lip-0000"
+    ]
+   }
+  ]
+ },
+ "hard-07": {
+  "group": "hard",
+  "expected_stories": [
+   "naval-treaty"
+  ],
+  "chunks": [
+   "naval-treaty-0039"
+  ],
+  "quotes": [
+   {
+    "story": "naval-treaty",
+    "quote": "this Joseph Harrison entered the office through the Charles Street door",
+    "spans": [
+     [
+      65389,
+      65460
+     ]
+    ],
+    "chunks": [
+     "naval-treaty-0039"
+    ]
+   }
+  ]
+ },
+ "hard-08": {
+  "group": "hard",
+  "expected_stories": [
+   "priory-school"
+  ],
+  "chunks": [
+   "priory-school-0013"
+  ],
+  "quotes": [
+   {
+    "story": "priory-school",
+    "quote": "On the south of the house is, as you perceive, a large district of arable land, cut up into small fields, with stone walls between them. There, I admit that a bicycle is impossible.",
+    "spans": [
+     [
+      22165,
+      22346
+     ]
+    ],
+    "chunks": [
+     "priory-school-0013"
+    ]
+   }
+  ]
+ },
+ "hard-09": {
+  "group": "hard",
+  "expected_stories": [
+   "reigate-squires"
+  ],
+  "chunks": [
+   "reigate-squires-0004"
+  ],
+  "quotes": [
+   {
+    "story": "reigate-squires",
+    "quote": "It was quarter to twelve when the alarm broke out.",
+    "spans": [
+     [
+      8026,
+      8076
+     ]
+    ],
+    "chunks": [
+     "reigate-squires-0004"
+    ]
+   }
+  ]
+ },
+ "hard-10": {
+  "group": "hard",
+  "expected_stories": [
+   "musgrave-ritual"
+  ],
+  "chunks": [
+   "musgrave-ritual-0000"
+  ],
+  "quotes": [
+   {
+    "story": "musgrave-ritual",
+    "quote": "keeps his cigars in the coal-scuttle, his tobacco in the toe end of a Persian slipper",
+    "spans": [
+     [
+      635,
+      720
+     ]
+    ],
+    "chunks": [
+     "musgrave-ritual-0000"
+    ]
+   }
+  ]
+ },
+ "hard-11": {
+  "group": "hard",
+  "expected_stories": [
+   "thor-bridge"
+  ],
+  "chunks": [
+   "thor-bridge-0004"
+  ],
+  "quotes": [
+   {
+    "story": "thor-bridge",
+    "quote": "A revolver with one discharged chamber and a calibre which corresponded with the bullet was found on the floor of her wardrobe.",
+    "spans": [
+     [
+      7312,
+      7439
+     ]
+    ],
+    "chunks": [
+     "thor-bridge-0004"
+    ]
+   }
+  ]
+ },
+ "hard-12": {
+  "group": "hard",
+  "expected_stories": [
+   "wisteria-lodge"
+  ],
+  "chunks": [
+   "wisteria-lodge-0002"
+  ],
+  "quotes": [
+   {
+    "story": "wisteria-lodge",
+    "quote": "introduced his comrade as Inspector Baynes, of the Surrey Constabulary",
+    "spans": [
+     [
+      5096,
+      5166
+     ]
+    ],
+    "chunks": [
+     "wisteria-lodge-0002"
+    ]
+   }
+  ]
+ },
+ "hard-13": {
+  "group": "cross",
+  "expected_stories": [
+   "speckled-band",
+   "crooked-man"
+  ],
+  "chunks": [
+   "speckled-band-0031",
+   "crooked-man-0023"
+  ],
+  "quotes": [
+   {
+    "story": "speckled-band",
+    "quote": "He had trained it, probably by the use of the milk which we saw, to return to him when summoned.",
+    "spans": [
+     [
+      51381,
+      51477
+     ]
+    ],
+    "chunks": [
+     "speckled-band-0031"
+    ]
+   },
+   {
+    "story": "crooked-man",
+    "quote": "Teddy is amazing quick on cobras.",
+    "spans": [
+     [
+      36300,
+      36333
+     ]
+    ],
+    "chunks": [
+     "crooked-man-0023"
+    ]
+   }
+  ]
+ },
+ "hard-14": {
+  "group": "cross",
+  "expected_stories": [
+   "blue-carbuncle",
+   "naval-treaty"
+  ],
+  "chunks": [
+   "blue-carbuncle-0006",
+   "naval-treaty-0039"
+  ],
+  "quotes": [
+   {
+    "story": "blue-carbuncle",
+    "quote": "Peterson, the commissionaire, rushed into the apartment",
+    "spans": [
+     [
+      10972,
+      11027
+     ]
+    ],
+    "chunks": [
+     "blue-carbuncle-0006"
+    ]
+   },
+   {
+    "story": "naval-treaty",
+    "quote": "the sleepy commissionnaire drew your attention to the bell",
+    "spans": [
+     [
+      65869,
+      65927
+     ]
+    ],
+    "chunks": [
+     "naval-treaty-0039"
+    ]
+   }
+  ]
+ },
+ "hard-15": {
+  "group": "cross",
+  "expected_stories": [
+   "silver-blaze",
+   "man-with-the-twisted-lip"
+  ],
+  "chunks": [
+   "silver-blaze-0026",
+   "man-with-the-twisted-lip-0004"
+  ],
+  "quotes": [
+   {
+    "story": "silver-blaze",
+    "quote": "opium is by no means tasteless",
+    "spans": [
+     [
+      46635,
+      46665
+     ]
+    ],
+    "chunks": [
+     "silver-blaze-0026"
+    ]
+   },
+   {
+    "story": "man-with-the-twisted-lip",
+    "quote": "an opium pipe dangling down from between his knees",
+    "spans": [
+     [
+      7249,
+      7299
+     ]
+    ],
+    "chunks": [
+     "man-with-the-twisted-lip-0004"
+    ]
+   }
+  ]
+ }
+}

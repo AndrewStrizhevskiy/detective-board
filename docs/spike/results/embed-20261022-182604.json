@@ -1,0 +1,532 @@
+{
+  "timestamp": "2026-10-22T18:24:31",
+  "ollama_version": "0.35.0",
+  "args": {
+    "models": [
+      "all-minilm"
+    ],
+    "host": "http://localhost:11434",
+    "n_chunks": 50,
+    "batch": 10,
+    "runs": 3,
+    "warmup": 1,
+    "num_ctx": 2048,
+    "truncate": true,
+    "keep_alive": "10m",
+    "sample_interval": 0.5,
+    "retrieval_chunks": 0,
+    "skip_retrieval": false,
+    "query_prefix": {},
+    "doc_prefix": {},
+    "dry_run": false
+  },
+  "models": [
+    {
+      "model": "all-minilm",
+      "mem_available_before_mib": 11933.8,
+      "dim": 384,
+      "n_embedded": 50,
+      "runs": [
+        {
+          "warmup": true,
+          "seconds": 5.111803169000268,
+          "chunks_per_s": 9.781284284030573,
+          "load_s": 0.26581076699999995,
+          "prompt_tokens": 19881
+        },
+        {
+          "warmup": false,
+          "seconds": 5.216102896999473,
+          "chunks_per_s": 9.585700471660969,
+          "load_s": 0.007621664,
+          "prompt_tokens": 19881
+        },
+        {
+          "warmup": false,
+          "seconds": 5.407000305999645,
+          "chunks_per_s": 9.2472715314108,
+          "load_s": 0.009490229999999999,
+          "prompt_tokens": 19881
+        },
+        {
+          "warmup": false,
+          "seconds": 5.402106807000564,
+          "chunks_per_s": 9.25564817326552,
+          "load_s": 0.009764430000000001,
+          "prompt_tokens": 19881
+        }
+      ],
+      "chunks_per_s": {
+        "n": 3,
+        "mean": 9.362873392112428,
+        "stdev": 0.19301935801180395,
+        "min": 9.2472715314108,
+        "max": 9.585700471660969
+      },
+      "prompt_tokens_per_pass": {
+        "n": 3,
+        "mean": 19881.0,
+        "stdev": 0.0,
+        "min": 19881,
+        "max": 19881
+      },
+      "first_pass_load_s": 0.26581076699999995,
+      "retrieval": {
+        "corpus_chunks": 596,
+        "embed_corpus_s": 65.6495729090002,
+        "summary": {
+          "en_all": {
+            "n": 15,
+            "hit@5": 0.9333333333333333,
+            "hit@1": 0.6666666666666666
+          },
+          "ru": {
+            "n": 5,
+            "hit@5": 0.0,
+            "hit@1": 0.0
+          },
+          "en_paired_with_ru": {
+            "n": 5,
+            "hit@5": 1.0,
+            "hit@1": 0.4
+          }
+        },
+        "per_question": [
+          {
+            "id": "en-01",
+            "lang": "en",
+            "expected": "red-headed-league",
+            "top5_stories": [
+              "blue-carbuncle",
+              "red-headed-league",
+              "black-peter",
+              "norwood-builder",
+              "red-headed-league"
+            ],
+            "top5_chunks": [
+              "blue-carbuncle-0007",
+              "red-headed-league-0026",
+              "black-peter-0008",
+              "norwood-builder-0018",
+              "red-headed-league-0025"
+            ],
+            "hit1": false,
+            "hit5": true
+          },
+          {
+            "id": "en-02",
+            "lang": "en",
+            "expected": "speckled-band",
+            "top5_stories": [
+              "speckled-band",
+              "speckled-band",
+              "speckled-band",
+              "boscombe-valley-mystery",
+              "scandal-in-bohemia"
+            ],
+            "top5_chunks": [
+              "speckled-band-0030",
+              "speckled-band-0029",
+              "speckled-band-0031",
+              "boscombe-valley-mystery-0024",
+              "scandal-in-bohemia-0006"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-03",
+            "lang": "en",
+            "expected": "blue-carbuncle",
+            "top5_stories": [
+              "blue-carbuncle",
+              "blue-carbuncle",
+              "beryl-coronet",
+              "blue-carbuncle",
+              "naval-treaty"
+            ],
+            "top5_chunks": [
+              "blue-carbuncle-0007",
+              "blue-carbuncle-0006",
+              "beryl-coronet-0020",
+              "blue-carbuncle-0009",
+              "naval-treaty-0020"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-04",
+            "lang": "en",
+            "expected": "silver-blaze",
+            "top5_stories": [
+              "speckled-band",
+              "naval-treaty",
+              "silver-blaze",
+              "priory-school",
+              "black-peter"
+            ],
+            "top5_chunks": [
+              "speckled-band-0026",
+              "naval-treaty-0036",
+              "silver-blaze-0022",
+              "priory-school-0025",
+              "black-peter-0012"
+            ],
+            "hit1": false,
+            "hit5": true
+          },
+          {
+            "id": "en-05",
+            "lang": "en",
+            "expected": "scandal-in-bohemia",
+            "top5_stories": [
+              "scandal-in-bohemia",
+              "scandal-in-bohemia",
+              "norwood-builder",
+              "wisteria-lodge",
+              "crooked-man"
+            ],
+            "top5_chunks": [
+              "scandal-in-bohemia-0001",
+              "scandal-in-bohemia-0018",
+              "norwood-builder-0003",
+              "wisteria-lodge-0011",
+              "crooked-man-0022"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-06",
+            "lang": "en",
+            "expected": "copper-beeches",
+            "top5_stories": [
+              "copper-beeches",
+              "blue-carbuncle",
+              "abbey-grange",
+              "boscombe-valley-mystery",
+              "scandal-in-bohemia"
+            ],
+            "top5_chunks": [
+              "copper-beeches-0006",
+              "blue-carbuncle-0005",
+              "abbey-grange-0017",
+              "boscombe-valley-mystery-0005",
+              "scandal-in-bohemia-0019"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-07",
+            "lang": "en",
+            "expected": "boscombe-valley-mystery",
+            "top5_stories": [
+              "speckled-band",
+              "scandal-in-bohemia",
+              "reigate-squires",
+              "wisteria-lodge",
+              "beryl-coronet"
+            ],
+            "top5_chunks": [
+              "speckled-band-0029",
+              "scandal-in-bohemia-0001",
+              "reigate-squires-0013",
+              "wisteria-lodge-0003",
+              "beryl-coronet-0001"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "en-08",
+            "lang": "en",
+            "expected": "man-with-the-twisted-lip",
+            "top5_stories": [
+              "man-with-the-twisted-lip",
+              "man-with-the-twisted-lip",
+              "beryl-coronet",
+              "beryl-coronet",
+              "copper-beeches"
+            ],
+            "top5_chunks": [
+              "man-with-the-twisted-lip-0012",
+              "man-with-the-twisted-lip-0026",
+              "beryl-coronet-0002",
+              "beryl-coronet-0000",
+              "copper-beeches-0007"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-09",
+            "lang": "en",
+            "expected": "norwood-builder",
+            "top5_stories": [
+              "norwood-builder",
+              "norwood-builder",
+              "norwood-builder",
+              "boscombe-valley-mystery",
+              "beryl-coronet"
+            ],
+            "top5_chunks": [
+              "norwood-builder-0016",
+              "norwood-builder-0004",
+              "norwood-builder-0021",
+              "boscombe-valley-mystery-0004",
+              "beryl-coronet-0014"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-10",
+            "lang": "en",
+            "expected": "priory-school",
+            "top5_stories": [
+              "priory-school",
+              "speckled-band",
+              "priory-school",
+              "priory-school",
+              "priory-school"
+            ],
+            "top5_chunks": [
+              "priory-school-0003",
+              "speckled-band-0005",
+              "priory-school-0007",
+              "priory-school-0035",
+              "priory-school-0026"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-11",
+            "lang": "en",
+            "expected": "black-peter",
+            "top5_stories": [
+              "black-peter",
+              "black-peter",
+              "black-peter",
+              "black-peter",
+              "black-peter"
+            ],
+            "top5_chunks": [
+              "black-peter-0024",
+              "black-peter-0003",
+              "black-peter-0016",
+              "black-peter-0007",
+              "black-peter-0006"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-12",
+            "lang": "en",
+            "expected": "crooked-man",
+            "top5_stories": [
+              "crooked-man",
+              "black-peter",
+              "crooked-man",
+              "speckled-band",
+              "wisteria-lodge"
+            ],
+            "top5_chunks": [
+              "crooked-man-0011",
+              "black-peter-0012",
+              "crooked-man-0016",
+              "speckled-band-0030",
+              "wisteria-lodge-0037"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-13",
+            "lang": "en",
+            "expected": "abbey-grange",
+            "top5_stories": [
+              "speckled-band",
+              "black-peter",
+              "crooked-man",
+              "norwood-builder",
+              "abbey-grange"
+            ],
+            "top5_chunks": [
+              "speckled-band-0005",
+              "black-peter-0010",
+              "crooked-man-0009",
+              "norwood-builder-0004",
+              "abbey-grange-0004"
+            ],
+            "hit1": false,
+            "hit5": true
+          },
+          {
+            "id": "en-14",
+            "lang": "en",
+            "expected": "musgrave-ritual",
+            "top5_stories": [
+              "musgrave-ritual",
+              "musgrave-ritual",
+              "musgrave-ritual",
+              "speckled-band",
+              "silver-blaze"
+            ],
+            "top5_chunks": [
+              "musgrave-ritual-0013",
+              "musgrave-ritual-0005",
+              "musgrave-ritual-0015",
+              "speckled-band-0007",
+              "silver-blaze-0004"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-15",
+            "lang": "en",
+            "expected": "thor-bridge",
+            "top5_stories": [
+              "black-peter",
+              "silver-blaze",
+              "beryl-coronet",
+              "thor-bridge",
+              "black-peter"
+            ],
+            "top5_chunks": [
+              "black-peter-0003",
+              "silver-blaze-0003",
+              "beryl-coronet-0032",
+              "thor-bridge-0006",
+              "black-peter-0015"
+            ],
+            "hit1": false,
+            "hit5": true
+          },
+          {
+            "id": "ru-01",
+            "lang": "ru",
+            "expected": "red-headed-league",
+            "top5_stories": [
+              "resident-patient",
+              "resident-patient",
+              "resident-patient",
+              "resident-patient",
+              "beryl-coronet"
+            ],
+            "top5_chunks": [
+              "resident-patient-0007",
+              "resident-patient-0013",
+              "resident-patient-0008",
+              "resident-patient-0006",
+              "beryl-coronet-0027"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-04",
+            "lang": "ru",
+            "expected": "silver-blaze",
+            "top5_stories": [
+              "resident-patient",
+              "resident-patient",
+              "resident-patient",
+              "resident-patient",
+              "naval-treaty"
+            ],
+            "top5_chunks": [
+              "resident-patient-0007",
+              "resident-patient-0008",
+              "resident-patient-0013",
+              "resident-patient-0006",
+              "naval-treaty-0006"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-06",
+            "lang": "ru",
+            "expected": "copper-beeches",
+            "top5_stories": [
+              "resident-patient",
+              "resident-patient",
+              "resident-patient",
+              "naval-treaty",
+              "reigate-squires"
+            ],
+            "top5_chunks": [
+              "resident-patient-0007",
+              "resident-patient-0008",
+              "resident-patient-0006",
+              "naval-treaty-0006",
+              "reigate-squires-0000"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-11",
+            "lang": "ru",
+            "expected": "black-peter",
+            "top5_stories": [
+              "resident-patient",
+              "resident-patient",
+              "resident-patient",
+              "resident-patient",
+              "beryl-coronet"
+            ],
+            "top5_chunks": [
+              "resident-patient-0007",
+              "resident-patient-0006",
+              "resident-patient-0008",
+              "resident-patient-0013",
+              "beryl-coronet-0027"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-15",
+            "lang": "ru",
+            "expected": "thor-bridge",
+            "top5_stories": [
+              "resident-patient",
+              "resident-patient",
+              "naval-treaty",
+              "resident-patient",
+              "resident-patient"
+            ],
+            "top5_chunks": [
+              "resident-patient-0007",
+              "resident-patient-0006",
+              "naval-treaty-0006",
+              "resident-patient-0013",
+              "resident-patient-0008"
+            ],
+            "hit1": false,
+            "hit5": false
+          }
+        ]
+      },
+      "rss": {
+        "samples": 173,
+        "interval_s": 0.5,
+        "peak_rss_total_mib": 171.5,
+        "peak_rss_anon_mib": 137.8,
+        "peak_rss_runner_mib": 137.1,
+        "peak_rss_serve_mib": 34.5
+      },
+      "mem_available_after_mib": 11789.2,
+      "prefixes": {
+        "query": "",
+        "doc": ""
+      }
+    }
+  ]
+}

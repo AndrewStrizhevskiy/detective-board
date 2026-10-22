@@ -1,0 +1,298 @@
+{
+  "timestamp": "2026-10-22T17:24:15",
+  "ollama_version": "0.35.0",
+  "env_start": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "1.81 2.88 3.26 1/990 13008",
+    "mem_mib": {
+      "MemAvailable": 8895,
+      "SwapTotal": 4095,
+      "SwapFree": 3571
+    },
+    "max_temp_c": 84,
+    "ac_online": [
+      "1"
+    ]
+  },
+  "args": {
+    "models": [
+      "qwen2.5:7b"
+    ],
+    "host": "http://localhost:11434",
+    "runs": 3,
+    "warmup": 1,
+    "seed": 42,
+    "num_ctx": 4096,
+    "num_predict_summary": 200,
+    "num_predict_qa": 100,
+    "keep_alive": "10m",
+    "sample_interval": 0.5,
+    "think": "auto",
+    "no_unload": false,
+    "dry_run": false
+  },
+  "prompts": [
+    {
+      "name": "summarize_chunk",
+      "num_predict": 200,
+      "chunk_id": "norwood-builder-0013",
+      "chunk_words": 300
+    },
+    {
+      "name": "short_qa",
+      "num_predict": 100
+    }
+  ],
+  "models": [
+    {
+      "model": "qwen2.5:7b",
+      "think_mode": "not sent (no 'thinking' capability)",
+      "mem_available_before_mib": 12203.1,
+      "rss": {
+        "samples": 454,
+        "interval_s": 0.5,
+        "peak_rss_total_mib": 5029.4,
+        "peak_rss_anon_mib": 4995.6,
+        "peak_rss_runner_mib": 4997.6,
+        "peak_rss_serve_mib": 32.9
+      },
+      "mem_available_after_mib": 7183.8,
+      "cold_load_s": 14.606566103,
+      "prompts": {
+        "summarize_chunk": {
+          "runs": [
+            {
+              "ttft_s": 41.51555070600034,
+              "wall_s": 58.660850909000146,
+              "load_s": 14.606566103,
+              "prompt_tokens": 420,
+              "prompt_cached_tokens": 0,
+              "prompt_tps": 15.61196911684875,
+              "gen_tokens": 86,
+              "gen_tps": 5.016880051298181,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes discusses his approach to a case involving two singular incidents, focusing on the first, a curious will, to understand the second, which is cri",
+              "warmup": true
+            },
+            {
+              "ttft_s": 26.594971612000336,
+              "wall_s": 45.258203416000015,
+              "load_s": 0.001706991,
+              "prompt_tokens": 418,
+              "prompt_cached_tokens": 26,
+              "prompt_tps": 15.729773627860425,
+              "gen_tokens": 92,
+              "gen_tps": 4.930271491830486,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes discusses with Dr. Watson the strategy for solving a case involving a curious will that benefited an unexpected heir, suggesting they should foc",
+              "warmup": false
+            },
+            {
+              "ttft_s": 27.32136811700002,
+              "wall_s": 43.35230518399976,
+              "load_s": 0.002645484,
+              "prompt_tokens": 420,
+              "prompt_cached_tokens": 26,
+              "prompt_tps": 15.385716618691315,
+              "gen_tokens": 79,
+              "gen_tps": 4.928951965054604,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes discusses his approach to a case involving two singular incidents, focusing on the first, a curious will, to understand the second, which is cri",
+              "warmup": false
+            },
+            {
+              "ttft_s": 27.070615631000237,
+              "wall_s": 45.23176237300004,
+              "load_s": 0.001848114,
+              "prompt_tokens": 419,
+              "prompt_cached_tokens": 27,
+              "prompt_tps": 15.49075564201788,
+              "gen_tokens": 89,
+              "gen_tps": 4.901501302312374,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Sherlock Holmes discusses his approach to a case involving two singular incidents, focusing on the initial mysterious will that may shed light on the subsequent",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 26.995651786666865,
+              "stdev": 0.36895481306911776,
+              "min": 26.594971612000336,
+              "max": 27.32136811700002
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 4.920241586399155,
+              "stdev": 0.01624296689241227,
+              "min": 4.901501302312374,
+              "max": 4.930271491830486
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 15.535415296189873,
+              "stdev": 0.1763226302057386,
+              "min": 15.385716618691315,
+              "max": 15.729773627860425
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 86.66666666666667,
+              "stdev": 6.8068592855540455,
+              "min": 79,
+              "max": 92
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 419.0,
+              "stdev": 1.0,
+              "min": 418,
+              "max": 420
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 44.61409032433327,
+              "stdev": 1.0928179571472891,
+              "min": 43.35230518399976,
+              "max": 45.258203416000015
+            },
+            "thinking_leaks": 0
+          }
+        },
+        "short_qa": {
+          "runs": [
+            {
+              "ttft_s": 2.8588253210000403,
+              "wall_s": 10.660395342999891,
+              "load_s": 0.001724296,
+              "prompt_tokens": 65,
+              "prompt_cached_tokens": 27,
+              "prompt_tps": 22.890217460587447,
+              "gen_tokens": 40,
+              "gen_tps": 5.127876418178322,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes' trusted friend and roommate, often serving as the narrator in many of the Sherlock Holmes stories. They live at 221B Baker S",
+              "warmup": true
+            },
+            {
+              "ttft_s": 2.9818303750002997,
+              "wall_s": 9.160670553000273,
+              "load_s": 0.001712845,
+              "prompt_tokens": 66,
+              "prompt_cached_tokens": 27,
+              "prompt_tps": 22.17268828727741,
+              "gen_tokens": 32,
+              "gen_tps": 5.179985894250912,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes' trusted friend and medical companion, and together they live at 221B Baker Street in London, England.",
+              "warmup": false
+            },
+            {
+              "ttft_s": 2.611487259999649,
+              "wall_s": 8.818048964999889,
+              "load_s": 0.001732919,
+              "prompt_tokens": 62,
+              "prompt_cached_tokens": 26,
+              "prompt_tps": 23.803024596586724,
+              "gen_tokens": 32,
+              "gen_tps": 5.1566618027528515,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes' trusted friend and medical companion, and together they live at 221B Baker Street in London, England.",
+              "warmup": false
+            },
+            {
+              "ttft_s": 2.8670909450002,
+              "wall_s": 8.660567807999996,
+              "load_s": 0.00170515,
+              "prompt_tokens": 64,
+              "prompt_cached_tokens": 26,
+              "prompt_tps": 22.376965152072454,
+              "gen_tokens": 30,
+              "gen_tps": 5.179150260269564,
+              "done_reason": "stop",
+              "thinking_chars": 0,
+              "think_tag_in_response": false,
+              "output_preview": "Dr. John Watson is Sherlock Holmes's trusted friend and medical companion. The two men live in 221B Baker Street, London.",
+              "warmup": false
+            }
+          ],
+          "summary": {
+            "ttft_s": {
+              "n": 3,
+              "mean": 2.820136193333383,
+              "stdev": 0.18958393190132353,
+              "min": 2.611487259999649,
+              "max": 2.9818303750002997
+            },
+            "gen_tps": {
+              "n": 3,
+              "mean": 5.1719326524244424,
+              "stdev": 0.013231542174173936,
+              "min": 5.1566618027528515,
+              "max": 5.179985894250912
+            },
+            "prompt_tps": {
+              "n": 3,
+              "mean": 22.784226011978863,
+              "stdev": 0.8881977124333631,
+              "min": 22.17268828727741,
+              "max": 23.803024596586724
+            },
+            "gen_tokens": {
+              "n": 3,
+              "mean": 31.333333333333332,
+              "stdev": 1.1547005383792515,
+              "min": 30,
+              "max": 32
+            },
+            "prompt_tokens": {
+              "n": 3,
+              "mean": 64.0,
+              "stdev": 2.0,
+              "min": 62,
+              "max": 66
+            },
+            "wall_s": {
+              "n": 3,
+              "mean": 8.879762442000052,
+              "stdev": 0.2556992448596402,
+              "min": 8.660567807999996,
+              "max": 9.160670553000273
+            },
+            "thinking_leaks": 0
+          }
+        }
+      }
+    }
+  ],
+  "env_end": {
+    "governor": "powersave",
+    "power_profile": "performance",
+    "loadavg": "3.98 3.44 3.40 4/985 13359",
+    "mem_mib": {
+      "MemAvailable": 7183,
+      "SwapTotal": 4095,
+      "SwapFree": 3571
+    },
+    "max_temp_c": 96,
+    "ac_online": [
+      "1"
+    ]
+  }
+}

@@ -1,0 +1,532 @@
+{
+  "timestamp": "2026-10-22T18:14:10",
+  "ollama_version": "0.35.0",
+  "args": {
+    "models": [
+      "nomic-embed-text"
+    ],
+    "host": "http://localhost:11434",
+    "n_chunks": 50,
+    "batch": 10,
+    "runs": 3,
+    "warmup": 1,
+    "num_ctx": 2048,
+    "truncate": true,
+    "keep_alive": "10m",
+    "sample_interval": 0.5,
+    "retrieval_chunks": 0,
+    "skip_retrieval": false,
+    "query_prefix": {},
+    "doc_prefix": {},
+    "dry_run": false
+  },
+  "models": [
+    {
+      "model": "nomic-embed-text",
+      "mem_available_before_mib": 12073.8,
+      "dim": 768,
+      "n_embedded": 50,
+      "runs": [
+        {
+          "warmup": true,
+          "seconds": 37.69586181199975,
+          "chunks_per_s": 1.326405541525077,
+          "load_s": 0.26723488399999995,
+          "prompt_tokens": 19988
+        },
+        {
+          "warmup": false,
+          "seconds": 38.09406529499938,
+          "chunks_per_s": 1.3125404078772216,
+          "load_s": 0.009220926,
+          "prompt_tokens": 19988
+        },
+        {
+          "warmup": false,
+          "seconds": 38.057623421000244,
+          "chunks_per_s": 1.313797223933062,
+          "load_s": 0.009754244,
+          "prompt_tokens": 19988
+        },
+        {
+          "warmup": false,
+          "seconds": 38.034493812999244,
+          "chunks_per_s": 1.3145961727749154,
+          "load_s": 0.009247356,
+          "prompt_tokens": 19988
+        }
+      ],
+      "chunks_per_s": {
+        "n": 3,
+        "mean": 1.3136446015283996,
+        "stdev": 0.0010363457567101589,
+        "min": 1.3125404078772216,
+        "max": 1.3145961727749154
+      },
+      "prompt_tokens_per_pass": {
+        "n": 3,
+        "mean": 19988.0,
+        "stdev": 0.0,
+        "min": 19988,
+        "max": 19988
+      },
+      "first_pass_load_s": 0.26723488399999995,
+      "retrieval": {
+        "corpus_chunks": 596,
+        "embed_corpus_s": 461.20443038100075,
+        "summary": {
+          "en_all": {
+            "n": 15,
+            "hit@5": 0.9333333333333333,
+            "hit@1": 0.8666666666666667
+          },
+          "ru": {
+            "n": 5,
+            "hit@5": 0.0,
+            "hit@1": 0.0
+          },
+          "en_paired_with_ru": {
+            "n": 5,
+            "hit@5": 0.8,
+            "hit@1": 0.8
+          }
+        },
+        "per_question": [
+          {
+            "id": "en-01",
+            "lang": "en",
+            "expected": "red-headed-league",
+            "top5_stories": [
+              "red-headed-league",
+              "beryl-coronet",
+              "red-headed-league",
+              "beryl-coronet",
+              "musgrave-ritual"
+            ],
+            "top5_chunks": [
+              "red-headed-league-0027",
+              "beryl-coronet-0019",
+              "red-headed-league-0022",
+              "beryl-coronet-0026",
+              "musgrave-ritual-0019"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-02",
+            "lang": "en",
+            "expected": "speckled-band",
+            "top5_stories": [
+              "speckled-band",
+              "speckled-band",
+              "crooked-man",
+              "silver-blaze",
+              "crooked-man"
+            ],
+            "top5_chunks": [
+              "speckled-band-0030",
+              "speckled-band-0031",
+              "crooked-man-0023",
+              "silver-blaze-0011",
+              "crooked-man-0018"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-03",
+            "lang": "en",
+            "expected": "blue-carbuncle",
+            "top5_stories": [
+              "blue-carbuncle",
+              "blue-carbuncle",
+              "beryl-coronet",
+              "blue-carbuncle",
+              "beryl-coronet"
+            ],
+            "top5_chunks": [
+              "blue-carbuncle-0009",
+              "blue-carbuncle-0006",
+              "beryl-coronet-0021",
+              "blue-carbuncle-0007",
+              "beryl-coronet-0020"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-04",
+            "lang": "en",
+            "expected": "silver-blaze",
+            "top5_stories": [
+              "speckled-band",
+              "speckled-band",
+              "copper-beeches",
+              "speckled-band",
+              "priory-school"
+            ],
+            "top5_chunks": [
+              "speckled-band-0026",
+              "speckled-band-0028",
+              "copper-beeches-0020",
+              "speckled-band-0027",
+              "priory-school-0025"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "en-05",
+            "lang": "en",
+            "expected": "scandal-in-bohemia",
+            "top5_stories": [
+              "scandal-in-bohemia",
+              "blue-carbuncle",
+              "black-peter",
+              "priory-school",
+              "boscombe-valley-mystery"
+            ],
+            "top5_chunks": [
+              "scandal-in-bohemia-0008",
+              "blue-carbuncle-0017",
+              "black-peter-0014",
+              "priory-school-0001",
+              "boscombe-valley-mystery-0025"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-06",
+            "lang": "en",
+            "expected": "copper-beeches",
+            "top5_stories": [
+              "copper-beeches",
+              "copper-beeches",
+              "red-headed-league",
+              "copper-beeches",
+              "blue-carbuncle"
+            ],
+            "top5_chunks": [
+              "copper-beeches-0006",
+              "copper-beeches-0014",
+              "red-headed-league-0008",
+              "copper-beeches-0003",
+              "blue-carbuncle-0005"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-07",
+            "lang": "en",
+            "expected": "boscombe-valley-mystery",
+            "top5_stories": [
+              "boscombe-valley-mystery",
+              "boscombe-valley-mystery",
+              "crooked-man",
+              "scandal-in-bohemia",
+              "priory-school"
+            ],
+            "top5_chunks": [
+              "boscombe-valley-mystery-0022",
+              "boscombe-valley-mystery-0016",
+              "crooked-man-0022",
+              "scandal-in-bohemia-0001",
+              "priory-school-0011"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-08",
+            "lang": "en",
+            "expected": "man-with-the-twisted-lip",
+            "top5_stories": [
+              "man-with-the-twisted-lip",
+              "man-with-the-twisted-lip",
+              "beryl-coronet",
+              "man-with-the-twisted-lip",
+              "norwood-builder"
+            ],
+            "top5_chunks": [
+              "man-with-the-twisted-lip-0012",
+              "man-with-the-twisted-lip-0026",
+              "beryl-coronet-0000",
+              "man-with-the-twisted-lip-0025",
+              "norwood-builder-0028"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-09",
+            "lang": "en",
+            "expected": "norwood-builder",
+            "top5_stories": [
+              "thor-bridge",
+              "norwood-builder",
+              "thor-bridge",
+              "norwood-builder",
+              "thor-bridge"
+            ],
+            "top5_chunks": [
+              "thor-bridge-0004",
+              "norwood-builder-0021",
+              "thor-bridge-0016",
+              "norwood-builder-0004",
+              "thor-bridge-0027"
+            ],
+            "hit1": false,
+            "hit5": true
+          },
+          {
+            "id": "en-10",
+            "lang": "en",
+            "expected": "priory-school",
+            "top5_stories": [
+              "priory-school",
+              "priory-school",
+              "priory-school",
+              "priory-school",
+              "naval-treaty"
+            ],
+            "top5_chunks": [
+              "priory-school-0003",
+              "priory-school-0007",
+              "priory-school-0004",
+              "priory-school-0002",
+              "naval-treaty-0001"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-11",
+            "lang": "en",
+            "expected": "black-peter",
+            "top5_stories": [
+              "black-peter",
+              "crooked-man",
+              "black-peter",
+              "abbey-grange",
+              "abbey-grange"
+            ],
+            "top5_chunks": [
+              "black-peter-0016",
+              "crooked-man-0007",
+              "black-peter-0003",
+              "abbey-grange-0008",
+              "abbey-grange-0016"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-12",
+            "lang": "en",
+            "expected": "crooked-man",
+            "top5_stories": [
+              "crooked-man",
+              "crooked-man",
+              "wisteria-lodge",
+              "speckled-band",
+              "blue-carbuncle"
+            ],
+            "top5_chunks": [
+              "crooked-man-0011",
+              "crooked-man-0023",
+              "wisteria-lodge-0019",
+              "speckled-band-0030",
+              "blue-carbuncle-0009"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-13",
+            "lang": "en",
+            "expected": "abbey-grange",
+            "top5_stories": [
+              "abbey-grange",
+              "abbey-grange",
+              "abbey-grange",
+              "abbey-grange",
+              "black-peter"
+            ],
+            "top5_chunks": [
+              "abbey-grange-0005",
+              "abbey-grange-0003",
+              "abbey-grange-0002",
+              "abbey-grange-0004",
+              "black-peter-0010"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-14",
+            "lang": "en",
+            "expected": "musgrave-ritual",
+            "top5_stories": [
+              "musgrave-ritual",
+              "norwood-builder",
+              "wisteria-lodge",
+              "crooked-man",
+              "beryl-coronet"
+            ],
+            "top5_chunks": [
+              "musgrave-ritual-0013",
+              "norwood-builder-0014",
+              "wisteria-lodge-0037",
+              "crooked-man-0005",
+              "beryl-coronet-0031"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "en-15",
+            "lang": "en",
+            "expected": "thor-bridge",
+            "top5_stories": [
+              "thor-bridge",
+              "thor-bridge",
+              "thor-bridge",
+              "boscombe-valley-mystery",
+              "thor-bridge"
+            ],
+            "top5_chunks": [
+              "thor-bridge-0001",
+              "thor-bridge-0012",
+              "thor-bridge-0006",
+              "boscombe-valley-mystery-0027",
+              "thor-bridge-0010"
+            ],
+            "hit1": true,
+            "hit5": true
+          },
+          {
+            "id": "ru-01",
+            "lang": "ru",
+            "expected": "red-headed-league",
+            "top5_stories": [
+              "resident-patient",
+              "resident-patient",
+              "man-with-the-twisted-lip",
+              "man-with-the-twisted-lip",
+              "beryl-coronet"
+            ],
+            "top5_chunks": [
+              "resident-patient-0007",
+              "resident-patient-0006",
+              "man-with-the-twisted-lip-0013",
+              "man-with-the-twisted-lip-0012",
+              "beryl-coronet-0030"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-04",
+            "lang": "ru",
+            "expected": "silver-blaze",
+            "top5_stories": [
+              "crooked-man",
+              "man-with-the-twisted-lip",
+              "beryl-coronet",
+              "speckled-band",
+              "boscombe-valley-mystery"
+            ],
+            "top5_chunks": [
+              "crooked-man-0005",
+              "man-with-the-twisted-lip-0010",
+              "beryl-coronet-0030",
+              "speckled-band-0028",
+              "boscombe-valley-mystery-0002"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-06",
+            "lang": "ru",
+            "expected": "copper-beeches",
+            "top5_stories": [
+              "wisteria-lodge",
+              "beryl-coronet",
+              "crooked-man",
+              "crooked-man",
+              "resident-patient"
+            ],
+            "top5_chunks": [
+              "wisteria-lodge-0033",
+              "beryl-coronet-0030",
+              "crooked-man-0005",
+              "crooked-man-0010",
+              "resident-patient-0006"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-11",
+            "lang": "ru",
+            "expected": "black-peter",
+            "top5_stories": [
+              "crooked-man",
+              "man-with-the-twisted-lip",
+              "crooked-man",
+              "man-with-the-twisted-lip",
+              "naval-treaty"
+            ],
+            "top5_chunks": [
+              "crooked-man-0006",
+              "man-with-the-twisted-lip-0013",
+              "crooked-man-0010",
+              "man-with-the-twisted-lip-0010",
+              "naval-treaty-0011"
+            ],
+            "hit1": false,
+            "hit5": false
+          },
+          {
+            "id": "ru-15",
+            "lang": "ru",
+            "expected": "thor-bridge",
+            "top5_stories": [
+              "wisteria-lodge",
+              "wisteria-lodge",
+              "priory-school",
+              "man-with-the-twisted-lip",
+              "silver-blaze"
+            ],
+            "top5_chunks": [
+              "wisteria-lodge-0033",
+              "wisteria-lodge-0031",
+              "priory-school-0006",
+              "man-with-the-twisted-lip-0010",
+              "silver-blaze-0026"
+            ],
+            "hit1": false,
+            "hit5": false
+          }
+        ]
+      },
+      "rss": {
+        "samples": 1205,
+        "interval_s": 0.5,
+        "peak_rss_total_mib": 456.9,
+        "peak_rss_anon_mib": 423.2,
+        "peak_rss_runner_mib": 422.7,
+        "peak_rss_serve_mib": 34.8
+      },
+      "mem_available_after_mib": 11473.0,
+      "prefixes": {
+        "query": "",
+        "doc": ""
+      }
+    }
+  ]
+}
