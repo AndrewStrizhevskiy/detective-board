@@ -60,3 +60,11 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 ## Requests from graph-engineer (2026-10-22)
 - [ ] R-07 | nlp-extraction-engineer | Schema changes wanted in `extract/schema.py` (not made by graph-engineer): (a) structured claim proposition (`PresenceProp`/`OrderProp` per docs/symbolic-layer.md 1.2) with confidence; today `GraphStore.set_claim_prop` takes it from a normaliser; (b) `Event.in_speech: bool` (event reported inside a quotation), now approximated by claim-span containment; (c) `Event.transit: bool` (presence vs motion), now a motion-verb list in symbolic; (d) optional `Entity.unnamed` flag; (e) optional model confidence per item, otherwise confidence stays derived (anchor ambiguity, implicit/unresolved references, time guesses) | R3/R1 stop depending on curation overlays and heuristics | P1
 - [ ] R-08 | data-engineer / graph-engineer | Story day (`story_day`) for events is not derivable from `time_text`; needs a day-resolution step ("last Monday", "the next morning" with a reference event) writing `GraphStore.set_event_day`. Until then R1/R3 return `unknown` unless `SqliteFactSource(assume_day=...)` is used (always low confidence). Also `same_occurrence` event dedup across chunks (symbolic `EventRec.occurrence_id`) is not produced | R1/R3 produce definite verdicts on real extractions | P1
+
+## Decisions and follow-ups (night of 2026-10-22, orchestrator)
+- D-01 Raw corpus passages shown in the UI carry the label `source_text` (verbatim quote of the corpus), next to `extracted`, `derived`, `conditional`. Add to AC-20 wording and the UI badge set.
+- R-09 | agent-engineer | Self-check quote matching must normalise whitespace/curly quotes (reuse extract/ground normaliser) | P1
+- R-10 | backend-engineer | Sync ToolClient adapter over the async MCP session; SSE endpoint streaming Agent.ask events (DOC_TYPE mapping in agent/events.py) | P0
+- R-11 | graph-engineer | Store schema-v2 fields (claim about_*/polarity, event in_speech/transit, entity unnamed); day-resolution + claim-prop normaliser owned by extract pipeline, consumed by graph/symbolic | P0
+- R-12 | agent-engineer | Entity linking for MCP args (story/person ids) instead of top-hit heuristic | P1
+- R-13 | eval-engineer | Tune min_score (0.018) and min_support (0.25) on the golden set | P1
