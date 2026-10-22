@@ -1,0 +1,12 @@
+[project]
+name = "detective-board"
+version = "0.0.1"
+description = "Local GraphRAG investigator agent over Sherlock Holmes stories"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+markers = ["live: needs a running Ollama and real models"]
