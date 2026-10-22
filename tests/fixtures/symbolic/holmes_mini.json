@@ -1,0 +1,436 @@
+{
+ "claims": [
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-c1",
+     "quote": "Quote of c1.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "content": "claim c1",
+   "id": "c1",
+   "prop": {
+    "kind": "presence",
+    "person_id": "W",
+    "place_ref": "B",
+    "time": {
+     "confidence": "high",
+     "day": 1,
+     "exact": true,
+     "hi": 1320,
+     "lo": 1260,
+     "ref_event_id": null,
+     "rel": null,
+     "time_text": null
+    }
+   },
+   "speaker_id": "S"
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-c2",
+     "quote": "Quote of c2.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "content": "claim c2",
+   "id": "c2",
+   "prop": {
+    "after_event_id": "e6",
+    "before_event_id": "e7",
+    "kind": "order"
+   },
+   "speaker_id": "S"
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-c3",
+     "quote": "Quote of c3.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "content": "claim c3",
+   "id": "c3",
+   "prop": null,
+   "speaker_id": "S"
+  }
+ ],
+ "events": [
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e1",
+     "quote": "Quote of e1.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": "W at B",
+   "id": "e1",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [
+    "W"
+   ],
+   "place_ref": "B",
+   "time": {
+    "confidence": "high",
+    "day": 1,
+    "exact": true,
+    "hi": 1320,
+    "lo": 1260,
+    "ref_event_id": null,
+    "rel": null,
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1016,
+     "char_start": 1003,
+     "chunk_id": "s-e10",
+     "quote": "Quote of e10.",
+     "rel_end": 16,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": " at None",
+   "id": "e10",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [],
+   "place_ref": null,
+   "time": {
+    "confidence": "low",
+    "day": null,
+    "exact": false,
+    "hi": null,
+    "lo": null,
+    "ref_event_id": "e9",
+    "rel": "after",
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e2",
+     "quote": "Quote of e2.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "low",
+   "description": "W at D",
+   "id": "e2",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [
+    "W"
+   ],
+   "place_ref": "D",
+   "time": {
+    "confidence": "high",
+    "day": 1,
+    "exact": true,
+    "hi": 1350,
+    "lo": 1290,
+    "ref_event_id": null,
+    "rel": null,
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e3",
+     "quote": "Quote of e3.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": "W/H1 at H",
+   "id": "e3",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [
+    "H1",
+    "W"
+   ],
+   "place_ref": "H",
+   "time": {
+    "confidence": "high",
+    "day": 1,
+    "exact": true,
+    "hi": 1275,
+    "lo": 1275,
+    "ref_event_id": null,
+    "rel": null,
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e4",
+     "quote": "Quote of e4.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": "H1 at X",
+   "id": "e4",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [
+    "H1"
+   ],
+   "place_ref": "X",
+   "time": {
+    "confidence": "high",
+    "day": 1,
+    "exact": true,
+    "hi": 1320,
+    "lo": 1260,
+    "ref_event_id": null,
+    "rel": null,
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e5",
+     "quote": "Quote of e5.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": "W at L",
+   "id": "e5",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [
+    "W"
+   ],
+   "place_ref": "L",
+   "time": {
+    "confidence": "high",
+    "day": null,
+    "exact": true,
+    "hi": 1260,
+    "lo": 1260,
+    "ref_event_id": null,
+    "rel": null,
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e6",
+     "quote": "Quote of e6.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": "W at D",
+   "id": "e6",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [
+    "W"
+   ],
+   "place_ref": "D",
+   "time": {
+    "confidence": "high",
+    "day": 2,
+    "exact": true,
+    "hi": 480,
+    "lo": 480,
+    "ref_event_id": null,
+    "rel": null,
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e7",
+     "quote": "Quote of e7.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": " at None",
+   "id": "e7",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [],
+   "place_ref": null,
+   "time": {
+    "confidence": "high",
+    "day": null,
+    "exact": false,
+    "hi": null,
+    "lo": null,
+    "ref_event_id": "e6",
+    "rel": "after",
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e8",
+     "quote": "Quote of e8.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": " at None",
+   "id": "e8",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [],
+   "place_ref": null,
+   "time": {
+    "confidence": "high",
+    "day": null,
+    "exact": false,
+    "hi": null,
+    "lo": null,
+    "ref_event_id": "e8",
+    "rel": "after",
+    "time_text": null
+   }
+  },
+  {
+   "anchors": [
+    {
+     "ambiguous": false,
+     "char_end": 1015,
+     "char_start": 1003,
+     "chunk_id": "s-e9",
+     "quote": "Quote of e9.",
+     "rel_end": 15,
+     "rel_start": 3,
+     "story": "s"
+    }
+   ],
+   "confidence": "high",
+   "description": " at None",
+   "id": "e9",
+   "narrator": true,
+   "occurrence_id": null,
+   "participants": [],
+   "place_ref": null,
+   "time": {
+    "confidence": "high",
+    "day": null,
+    "exact": false,
+    "hi": null,
+    "lo": null,
+    "ref_event_id": "e10",
+    "rel": "after",
+    "time_text": null
+   }
+  }
+ ],
+ "places": [
+  {
+   "aliases": [
+    "Baker St",
+    "X"
+   ],
+   "id": "B",
+   "name": "Baker Street",
+   "parent_id": null
+  },
+  {
+   "aliases": [
+    "X"
+   ],
+   "id": "D",
+   "name": "Docks",
+   "parent_id": null
+  },
+  {
+   "aliases": [],
+   "id": "H",
+   "name": "221B",
+   "parent_id": "B"
+  },
+  {
+   "aliases": [],
+   "id": "L",
+   "name": "London",
+   "parent_id": null
+  }
+ ],
+ "story": "s"
+}
