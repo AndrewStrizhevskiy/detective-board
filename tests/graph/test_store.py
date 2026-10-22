@@ -1,7 +1,7 @@
 import sqlite3
 
 import pytest
-from conftest import C2, C3, C7, STORY, boscombe_extractions, build_boscombe, person, synth
+from .conftest import C2, C3, C7, STORY, boscombe_extractions, build_boscombe, person, synth
 
 from detective_board.extract.schema import Event, Extraction
 from detective_board.graph import GraphStore, migrate

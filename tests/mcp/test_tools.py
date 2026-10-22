@@ -1,5 +1,5 @@
 import pytest
-from conftest import FIXTURE, FIXTURE_DIR
+from .conftest import FIXTURE, FIXTURE_DIR
 
 from detective_board.mcp import tools
 from detective_board.mcp.errors import ToolError

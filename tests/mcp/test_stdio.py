@@ -1,7 +1,7 @@
 """End to end: real server child over stdio. No Ollama, no network."""
 
 import anyio
-from conftest import FIXTURE, FIXTURE_DIR
+from .conftest import FIXTURE, FIXTURE_DIR
 
 from detective_board.mcp.client import McpSession, open_session, server_params
 

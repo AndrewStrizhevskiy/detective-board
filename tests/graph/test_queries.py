@@ -1,4 +1,4 @@
-from conftest import C2, C3, STORY
+from .conftest import C2, C3, STORY
 
 P = f"p:{STORY}:"
 
@@ -34,7 +34,7 @@ def test_claims_by_speaker(bv):
 
 
 def test_neighbours_khop_and_determinism(bv, chunks):
-    from conftest import build_boscombe
+    from .conftest import build_boscombe
 
     r1 = bv.neighbours("James McCarthy", k=1)
     assert {n.id for n in r1.nodes if n.hops == 1} == {

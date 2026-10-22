@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from conftest import FIXTURE, FIXTURE_DIR
+from .conftest import FIXTURE, FIXTURE_DIR
 
 from detective_board.mcp.errors import ToolError
 from detective_board.mcp.sandbox import SandboxError, parse_roots, resolve_in_allowlist

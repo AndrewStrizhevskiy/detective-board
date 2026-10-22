@@ -1,4 +1,4 @@
-from conftest import C2, C3, STORY, boscombe_extractions, build_boscombe, synth
+from .conftest import C2, C3, STORY, boscombe_extractions, build_boscombe, synth
 
 from detective_board.extract.schema import Event, Extraction
 from detective_board.graph import ALL_STORIES, GraphStore, SqliteFactSource
