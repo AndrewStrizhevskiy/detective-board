@@ -1,0 +1,59 @@
+# PRD: Detective Board
+
+Status: draft 1, 2026-10-22. Numeric targets are TBD until the spike (docs/spike/) and the first eval run.
+
+## 1. Problem
+Long-form fiction is hard to interrogate. A reader asking "who could not have been at the scene?" must re-read dozens of stories. Plain LLM chat invents facts and quotes. We need an agent that investigates a fixed corpus, shows its evidence, and says "not in the corpus" when it is not.
+
+## 2. Users
+- Competition jury: judges engineering quality, honesty of answers, measured quality, and fit to the brief (agent, RAG/GraphRAG, MCP).
+- Demo audience (live, 7 minutes): must see in seconds what the agent does and why it can be trusted.
+- Secondary: developers running the repo from a clean checkout.
+
+## 3. Goals
+1. Answer questions about ~20 Sherlock Holmes stories using only the corpus, every claim with a verbatim quote and story reference.
+2. Find contradictions between claims and check alibis, each finding with a confidence value and its supporting quotes.
+3. Refuse honestly when the corpus does not support an answer.
+4. Show the investigation: live graph of persons, places, items, events, claims, plus a trace of every step and tool call.
+5. Expose capabilities as MCP tools (own server(s) plus a standard third-party/filesystem-style tool where useful).
+6. Measure quality: A/B eval of baseline RAG vs hybrid vs GraphRAG vs full agent.
+
+## 4. Non-goals
+- Other corpora, user uploads, multi-user, auth, cloud or hosted models.
+- Fine-tuning or training models.
+- Chat of general knowledge about Holmes outside the corpus text.
+- Mobile UI, i18n, persistence of sessions beyond the demo.
+- Temporal-graph subtleties beyond what alibi checks need.
+
+## 5. Product description
+- Corpus: 20 stories, 596 chunks, 183k words (see docs/spike/).
+- Knowledge graph: nodes Person, Place, Item, Event, Claim; edges link to source chunk and quote span. Claims carry speaker, subject, time/place if stated.
+- Investigator agent: router picks a path (plain retrieval, graph traversal, contradiction/alibi tools, refusal), then a self-check verifies that each quote exists in the retrieved text and supports the claim before the answer is shown.
+- Retrieval: hybrid (lexical plus embeddings) with graph expansion.
+- Answers: short text, inline quotes with story/chunk reference, confidence for findings. If evidence is insufficient: explicit refusal stating what was searched.
+- Contradiction/alibi detection: pairs of claims about the same actor/time/place judged and scored; output lists both quotes.
+- UI (investigation board): question box, live graph that grows as the agent works, trace panel (steps, tool calls, retrieved chunks, timings), answer panel with quotes.
+- MCP tools: corpus search, graph query, contradiction check, alibi check, plus a sandboxed file/tool server. Tool calls visible in trace.
+- Corpus text is data, never instructions.
+
+## 6. Constraints
+- Hardware: laptop i7-8665U, 4 cores, 15 GiB RAM, CPU only.
+- Models: Ollama, at most 8B parameters, fully offline at run time.
+- Measured generation speed here: gemma3:4b, phi4-mini, qwen3:4b about 7-7.8 tok/s; qwen2.5:7b 4.9 tok/s; qwen3:8b 4.3 tok/s. Time to first token 15-30 s for a 300-word prompt. Consequence: few LLM calls per question, short prompts and outputs, stream progress to the UI, precompute graph extraction offline, cache demo questions.
+- One-command run (via `just`), no network needed after setup.
+- Show date 2026-10-30; talk 7 minutes; freeze 2026-10-28/29.
+- Never cut: working demo, citations, honest refusals, quality measurements.
+
+## 7. Success metrics (targets TBD)
+| Metric | Definition | Target |
+|---|---|---|
+| Citation validity | share of answer quotes found verbatim in cited chunk | TBD |
+| Answer correctness | on eval set (spike_questions plus gold), judged per rubric | TBD |
+| Refusal precision/recall | out-of-corpus refused; in-corpus not refused | TBD |
+| Contradiction/alibi quality | precision/recall vs gold cases | TBD |
+| A/B lift | agent vs baseline RAG on same set | TBD |
+| Latency | time to first visible trace event; time to final answer | TBD |
+| Cold start | one command to usable UI | TBD |
+| Demo reliability | rehearsal runs completed without intervention | TBD |
+
+Targets are set after the spike and first eval; results are reported as measured, including bad ones.

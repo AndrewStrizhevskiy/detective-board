@@ -1,0 +1,185 @@
+/* Detective Board design tokens. Light is the default; dark follows the OS
+ * (prefers-color-scheme) unless data-theme="light" is set, and data-theme="dark" forces dark.
+ * Contrast ratios for every pair are computed by docs/design/contrast_check.py
+ * (it parses this file), see docs/design/board-design.md section 6.
+ * Naming: --db-<group>-<name>. Entity colours come in three roles:
+ *   -fg   stroke, icon and label-on-board colour (>= 4.5:1 on --db-bg-board)
+ *   -fill node body (text --db-text-on-fill must reach >= 4.5:1 on it)
+ */
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --db-bg-board: #f4efe4;      /* corkboard-paper, graph canvas */
+  --db-bg-surface: #ffffff;    /* panels: trace, answer, quote */
+  --db-bg-surface-2: #ece6d6;  /* panel headers, chips */
+  --db-border: #7d7868;        /* UI component edges, >= 3:1 */
+  --db-border-subtle: #cfc8b4; /* decorative dividers only */
+
+  /* text */
+  --db-text: #1b1f24;
+  --db-text-muted: #4a5058;
+  --db-text-on-fill: #1b1f24;
+  --db-link: #0b4fb3;
+
+  /* entity types: stroke/label and body fill */
+  --db-person-fg: #1f5fa8;  --db-person-fill: #d6e5f8;
+  --db-place-fg:  #2a6f48;  --db-place-fill:  #d3ecdc;
+  --db-item-fg:   #8a5a00;  --db-item-fill:   #f6e3b8;
+  --db-event-fg:  #7a3e9d;  --db-event-fill:  #e8d8f3;
+  --db-claim-fg:  #a03a6b;  --db-claim-fill:  #f7d9e6;
+
+  /* edge semantics */
+  --db-edge: #5d6068;            /* neutral relation / evidence link */
+  --db-edge-support: #2a6f48;    /* claim supports / alibi supported */
+  --db-edge-conflict: #b3261e;   /* contradiction / alibi contradicted */
+  --db-edge-unknown: #6b6f78;    /* unknown / insufficient evidence (dotted) */
+
+  /* answer status and confidence (always shown with text and a bar, never colour alone) */
+  --db-conf-high: #1b6b3f;
+  --db-conf-mid: #8a5a00;
+  --db-conf-low: #b3261e;
+  --db-conf-track: #d9d3c0;
+  --db-refusal: #4a3f8f;         /* honest refusal banner accent, distinct from error */
+  --db-error: #b3261e;
+  --db-ok: #1b6b3f;
+  --db-warn: #8a5a00;
+
+  /* quote highlight */
+  --db-quote-bg: #ffe9a8;
+  --db-quote-text: #1b1f24;
+  --db-quote-bg-conflict: #f9d0cc;   /* second quote of a contradiction pair */
+
+  /* focus and selection */
+  --db-focus: #0b57d0;
+  --db-selected-ring: #1b1f24;
+
+  /* "replay" badge for cached steps (honesty marker) */
+  --db-replay-bg: #1b1f24;
+  --db-replay-text: #f4efe4;
+
+  /* typography */
+  --db-font-ui: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --db-font-quote: Georgia, "Times New Roman", serif;
+  --db-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --db-text-xs: 12px;
+  --db-text-sm: 14px;
+  --db-text-md: 16px;
+  --db-text-lg: 20px;
+  --db-text-xl: 28px;   /* projector: answer headline */
+  --db-line: 1.45;
+
+  /* spacing, radii, stroke */
+  --db-space-1: 4px;
+  --db-space-2: 8px;
+  --db-space-3: 12px;
+  --db-space-4: 16px;
+  --db-space-5: 24px;
+  --db-space-6: 32px;
+  --db-radius: 6px;
+  --db-stroke: 2px;
+  --db-stroke-edge: 2px;
+  --db-focus-width: 3px;
+
+  /* motion (all cuttable; see board-design.md section 5) */
+  --db-dur-fast: 120ms;
+  --db-dur-node: 350ms;
+  --db-dur-pulse: 900ms;
+  --db-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --db-bg-board: #12151a;
+    --db-bg-surface: #1b2027;
+    --db-bg-surface-2: #252b34;
+    --db-border: #8a919c;
+    --db-border-subtle: #353c47;
+
+    --db-text: #e8e6e1;
+    --db-text-muted: #b4b8bf;
+    --db-text-on-fill: #f2f0ea;
+    --db-link: #8ab4f8;
+
+    --db-person-fg: #7db2f0;  --db-person-fill: #1f3552;
+    --db-place-fg:  #6cc28e;  --db-place-fill:  #1d4130;
+    --db-item-fg:   #e0b15a;  --db-item-fill:   #4a3812;
+    --db-event-fg:  #c79be6;  --db-event-fill:  #3d2650;
+    --db-claim-fg:  #ee92bb;  --db-claim-fill:  #51243a;
+
+    --db-edge: #a3a8b1;
+    --db-edge-support: #6cc28e;
+    --db-edge-conflict: #ff8a80;
+    --db-edge-unknown: #9aa0aa;
+
+    --db-conf-high: #6cc28e;
+    --db-conf-mid: #e0b15a;
+    --db-conf-low: #ff8a80;
+    --db-conf-track: #353c47;
+    --db-refusal: #b5a9ff;
+    --db-error: #ff8a80;
+    --db-ok: #6cc28e;
+    --db-warn: #e0b15a;
+
+    --db-quote-bg: #5b4a12;
+    --db-quote-text: #f4ebd0;
+    --db-quote-bg-conflict: #5e2623;
+
+    --db-focus: #8ab4f8;
+    --db-selected-ring: #f2f0ea;
+
+    --db-replay-bg: #e8e6e1;
+    --db-replay-text: #12151a;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --db-bg-board: #12151a;
+  --db-bg-surface: #1b2027;
+  --db-bg-surface-2: #252b34;
+  --db-border: #8a919c;
+  --db-border-subtle: #353c47;
+
+  --db-text: #e8e6e1;
+  --db-text-muted: #b4b8bf;
+  --db-text-on-fill: #f2f0ea;
+  --db-link: #8ab4f8;
+
+  --db-person-fg: #7db2f0;  --db-person-fill: #1f3552;
+  --db-place-fg:  #6cc28e;  --db-place-fill:  #1d4130;
+  --db-item-fg:   #e0b15a;  --db-item-fill:   #4a3812;
+  --db-event-fg:  #c79be6;  --db-event-fill:  #3d2650;
+  --db-claim-fg:  #ee92bb;  --db-claim-fill:  #51243a;
+
+  --db-edge: #a3a8b1;
+  --db-edge-support: #6cc28e;
+  --db-edge-conflict: #ff8a80;
+  --db-edge-unknown: #9aa0aa;
+
+  --db-conf-high: #6cc28e;
+  --db-conf-mid: #e0b15a;
+  --db-conf-low: #ff8a80;
+  --db-conf-track: #353c47;
+  --db-refusal: #b5a9ff;
+  --db-error: #ff8a80;
+  --db-ok: #6cc28e;
+  --db-warn: #e0b15a;
+
+  --db-quote-bg: #5b4a12;
+  --db-quote-text: #f4ebd0;
+  --db-quote-bg-conflict: #5e2623;
+
+  --db-focus: #8ab4f8;
+  --db-selected-ring: #f2f0ea;
+
+  --db-replay-bg: #e8e6e1;
+  --db-replay-text: #12151a;
+}
+
+/* Cut switch: <html data-motion="off"> or OS setting disables every animation in the spec. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --db-dur-fast: 0ms; --db-dur-node: 0ms; --db-dur-pulse: 0ms; }
+}
+:root[data-motion="off"] { --db-dur-fast: 0ms; --db-dur-node: 0ms; --db-dur-pulse: 0ms; }
