@@ -2,6 +2,8 @@
 
 Status: DRAFT, Phase 0. Contracts are a design proposal; no server exists yet. SDK facts come only from `docs/spike/db-research.md` section 5 (desk research of `mcp` 2.3.0, nothing installed or run). Marks: **[U]** unverified, must be checked against current SDK docs before coding (mcp-engineer rule). Data model references: `docs/data-schema.md`.
 
+Neuro-symbolic note (planned, not built): `check_alibi`, `find_overlaps` and the contradiction tool do not contain logic of their own. They parse input, load facts from the store, call the rules module (`src/detective_board/rules/`, rules R1-R3, `docs/symbolic-layer.md`) and map its result to the output below. The agent calls the same module in-process, so both paths give the same answer. `build_timeline` orders events with R2's order relation.
+
 ## 1. SDK facts used (from db-research.md)
 
 - Package `mcp`, pin `>=2.3,<3` (ADR-0003); v1 `FastMCP` snippets are stale: v2 uses `from mcp.server import MCPServer` (README) / `mcp.server.mcpserver` (`MCPServer`, `Context`).
@@ -13,6 +15,7 @@ Status: DRAFT, Phase 0. Contracts are a design proposal; no server exists yet. S
 
 - Transport: stdio, one child process per server, spawned by the agent's MCP client.
 - Read-only store access: `timeline-alibi` opens the index read-only; it never calls an LLM and never touches the network.
+- Every derived result carries an `explanation` object (shared definition below) and `provenance: "derived"`; a result that rests on a low-confidence extracted fact has `provenance: "conditional"` and `explanation.conditional: true` and `explanation.depends_on_extracted[]` listing those facts. Facts echoed from the graph are `provenance: "extracted"` with their confidence. No `explanation`, no conclusion.
 - Every result carries `anchors[]` (the anchor object from data-schema.md 3.3) for each fact returned, so the answer can quote it. A tool must not return a conclusion without at least one anchor, except `status: "insufficient_evidence"`.
 - Time model: `time_norm` from data-schema.md 3.1. Times are intervals `{start_min, end_min}` in minutes of the story day plus `story_day` (int or null); `null` = unknown. Tools never guess unknown times.
 - IDs are node ids from the graph (`p:...`, `e:...`).
@@ -27,6 +30,24 @@ Shared definitions (referenced as `$defs`):
     "properties": {"story": {"type":"string"}, "chunk_id": {"type":"string"},
       "char_start": {"type":"integer","minimum":0}, "char_end": {"type":"integer","minimum":0},
       "rel_start": {"type":"integer"}, "rel_end": {"type":"integer"}, "quote": {"type":"string"}}},
+  "Explanation": {"description": "Mirror of detective_board.symbolic.api.Explanation (single source of truth: docs/symbolic-layer.md section 'Python interface'). Do not diverge.",
+    "type": "object", "required": ["rule_id","rule_version","verdict","conditional","reason_code","facts","edges","derivation","anchors"],
+    "properties": {"rule_id": {"enum": ["R1","R2","R3"]}, "rule_version": {"type":"string"},
+      "verdict": {"enum": ["violated","consistent","unknown"]}, "conditional": {"type":"boolean"},
+      "reason_code": {"type":"string"},
+      "facts": {"type":"array","items":{"type":"object","required":["fact_id","kind","provenance","summary","anchors"],
+        "properties":{"fact_id":{"type":"string"},"kind":{"enum":["event","claim","entity","order","relation","derived"]},
+          "provenance":{"enum":["extracted","derived"]},"confidence":{"enum":["high","low",null]},
+          "summary":{"type":"string"},"anchors":{"type":"array","items":{"$ref":"#/$defs/Anchor"}}}}},
+      "edges": {"type":"array","items":{"type":"object","required":["edge_id","rel","src","dst","anchors"],
+        "properties":{"edge_id":{"type":["integer","string"]},"rel":{"type":"string"},"src":{"type":"string"},"dst":{"type":"string"},
+          "anchors":{"type":"array","items":{"$ref":"#/$defs/Anchor"}}}}},
+      "derivation": {"type":"array","items":{"type":"object","required":["step","op","inputs","output"],
+        "properties":{"step":{"type":"integer"},"op":{"type":"string"},"inputs":{"type":"array","items":{"type":"string"}},"output":{"type":"string"}}}},
+      "anchors": {"type":"array","items":{"$ref":"#/$defs/Anchor"}},
+      "depends_on_extracted": {"type":"array","items":{"type":"object"}, "description": "FactRef list: extracted facts the conclusion rests on"},
+      "weak": {"type":"array","items":{"type":"string"}}, "missing": {"type":"array","items":{"type":"string"}},
+      "notes": {"type":"array","items":{"type":"string"}}, "subject": {"type":"object","additionalProperties":{"type":"string"}}}},
   "Interval": {"type": "object", "required": ["start_min","end_min"],
     "properties": {"story_day": {"type":["integer","null"]},
       "start_min": {"type":"integer","minimum":0,"maximum":1440}, "end_min": {"type":"integer","minimum":0,"maximum":1440},
@@ -80,9 +101,10 @@ Output:
     "properties":{"kind":{"enum":["places_person_at_claimed","places_person_elsewhere","claim_by_person","claim_by_other"]},
       "event_id":{"type":"string"},"place_id":{"type":["string","null"]},"speaker_id":{"type":["string","null"]},
       "overlap":{"$ref":"#/$defs/Interval"},"anchors":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/Anchor"}}}}},
-  "notes":{"type":"array","items":{"type":"string"}}}}
+  "notes":{"type":"array","items":{"type":"string"}},
+  "provenance":{"enum":["derived","conditional"]},"explanation":{"$ref":"#/$defs/Explanation"}}}
 ```
-Semantics (proposal): `contradicted` if some dated event with the person as participant overlaps the window at a place different from `claimed_place_id` with confidence `high`; `supported` if the overlap is at the claimed place; `unknown` if only low-confidence or claim-only (speaker-asserted, i.e. unverified) evidence; `insufficient_evidence` if the person has no dated events. A `Claim` is evidence of what was asserted, not of what happened; `claim_by_*` kinds exist so the LLM can say "X said so" rather than "so it was".
+`explanation` is present when `status` is `supported` or `contradicted` (R1); for `unknown` and `insufficient_evidence` it may be omitted. Semantics (proposal; the rule itself is R1 in the rules module, this text only describes it): `contradicted` if some dated event with the person as participant overlaps the window at a place different from `claimed_place_id` with confidence `high`; `supported` if the overlap is at the claimed place; `unknown` if only low-confidence or claim-only (speaker-asserted, i.e. unverified) evidence; `insufficient_evidence` if the person has no dated events. A `Claim` is evidence of what was asserted, not of what happened; `claim_by_*` kinds exist so the LLM can say "X said so" rather than "so it was".
 
 ### 3.3 `find_overlaps`
 
@@ -106,6 +128,11 @@ Output:
       "anchors":{"type":"array","minItems":2,"items":{"$ref":"#/$defs/Anchor"}}}}},
   "truncated":{"type":"boolean"}}}
 ```
+Each overlap item also carries `provenance` and `explanation` (rule R1). 
+
+### 3.3a `find_contradictions` (planned)
+
+Description: run R1, R2 and R3 on a story (optionally one person) and list violations. Input: `{story, person_id?, rules?: ("R1"|"R2"|"R3")[], limit?}`. Output: `{status: "ok"|"insufficient_evidence", findings: [{rule, provenance, explanation, anchors}], truncated}`. An empty `findings` with `status: "ok"` means the rules found none on the facts available, not that the story is consistent.
 
 ### 3.4 Entity lookup helper (needed to get ids)
 
@@ -169,4 +196,4 @@ Design (the allowlist is enforced in two places, so a server misconfiguration al
 4. Env: stdio children get a minimal env (SDK behaviour per db-research.md); we add nothing secret via `env=`.
 5. Content returned by any server is data, never instructions: it enters the prompt only inside delimited evidence blocks and is subject to the same self-check as corpus text.
 
-Test plan (for mcp-engineer, not run here): spawn each server through `Client(StdioServerParameters(...))`; assert a path outside the allowlist, a `..` traversal and a symlink escape are all rejected by the client gate; assert a write tool is not listed to the model.
+Test plan (for mcp-engineer, not run here): for each rules-backed tool, assert the tool output equals the direct rules-module output on the same mini graph (AC-25); spawn each server through `Client(StdioServerParameters(...))`; assert a path outside the allowlist, a `..` traversal and a symlink escape are all rejected by the client gate; assert a write tool is not listed to the model.

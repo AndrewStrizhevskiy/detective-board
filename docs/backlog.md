@@ -5,10 +5,12 @@ Priority: P0 = never cut, P1 = needed for plan, P2 = cut first (see order). Days
 ## Cut order (first to cut)
 1. UI animations (T-33)
 2. Second own MCP server (T-22)
-3. Temporal graph subtleties (T-14)
+3. Temporal graph subtleties beyond rules R1-R3 (T-14)
 Never cut: working demo, citations, honest refusals, quality measurements.
 
 ## Tasks
+- [ ] T-36 | graph-engineer | Rules module `src/detective_board/symbolic/` in pure Python (no LLM, no I/O, no network): R1 one person in two places in overlapping intervals; R2 before/after transitive, cycle detection; R3 witness claim vs established fact. Every result is a `derived` finding with an explanation object (rule id, fact/edge ids, source quotes) and `conditional` when an input is a low-confidence `extracted` fact. Design: docs/adr/0004-symbolic-layer.md, docs/symbolic-layer.md | rules importable and callable on an in-memory graph; AC-21, AC-22, AC-24 (module level) | P0 | 10-23 (first task of Phase 1)
+- [ ] T-37 | test-automation-engineer | Deterministic unit tests for R1-R3 on hand-built mini graphs with known answers and boundary cases (touching intervals, equal endpoints, unknown times, 2- and 3-cycles, self-order, empty graph, claim vs unknown fact), run twice with identical output; no Ollama, no network | AC-23; 100% green in `just test` | P0 | 10-23
 - [ ] T-01 | data-engineer | Chunk and index corpus (596 chunks), store with story/chunk ids | AC-01 prerequisite; reindex reproducible by one command | P0 | 10-23
 - [ ] T-02 | devops-engineer | One-command run and offline setup via justfile | AC-13 | P0 | 10-23
 - [ ] T-03 | retrieval-engineer | Baseline RAG: embeddings retrieval plus answer with quotes | AC-01, AC-02 | P0 | 10-23
@@ -21,9 +23,9 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 - [ ] T-10 | graph-engineer | GraphRAG retrieval (graph expansion on top of hybrid) | A/B row in eval | P0 | 10-25
 - [ ] T-11 | agent-engineer | Router (retrieval/graph/tools/refusal) | AC-09 | P0 | 10-25
 - [ ] T-12 | agent-engineer | Self-check: quote verification and refusal gate | AC-02, AC-03, AC-04 | P0 | 10-25
-- [ ] T-13 | mcp-engineer | MCP server 1: corpus search, graph query, contradiction, alibi tools | AC-07 | P0 | 10-25
-- [ ] T-14 | graph-engineer | Temporal graph subtleties for alibis (ordering, durations) | AC-07 on harder cases | P2 | 10-27
-- [ ] T-15 | agent-engineer | Contradiction detection with confidence | AC-05, AC-06 | P0 | 10-26
+- [ ] T-13 | mcp-engineer | MCP server 1: corpus search, graph query; `check_alibi`, `find_overlaps` and contradiction tools are thin wrappers over the rules module (T-36), no rule logic in the server, explanation object in outputs (docs/mcp-contracts.md) | AC-07, AC-25 | P0 | 10-25
+- [ ] T-14 | graph-engineer | Temporal subtleties beyond R1-R3: durations, relative times ("an hour later"), fuzzy intervals. The core rules are T-36 and are not cut | AC-07 on harder cases | P2 | 10-27
+- [ ] T-15 | agent-engineer | Contradiction detection: the agent calls the rules (R1, R3) via the rules module or MCP and phrases the explanation; the LLM does not decide whether a contradiction exists. Confidence is carried from the extracted inputs | AC-05, AC-06, AC-24 | P0 | 10-26
 - [ ] T-16 | agent-engineer | Multi-tool orchestration | AC-08 | P1 | 10-26
 - [ ] T-17 | frontend-engineer | Board UI: question box, answer panel, trace panel | AC-10 | P0 | 10-25
 - [ ] T-18 | frontend-engineer | Live graph view with click-to-quote | AC-11 | P0 | 10-26
@@ -43,6 +45,8 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 - [ ] T-32 | demo-director | Rehearsals on target laptop (timed) | AC-18 | P0 | 10-28, 10-29
 - [ ] T-33 | frontend-engineer | UI animations | none; cosmetic | P2 | 10-27
 - [ ] T-34 | demo-director | Fallback plan (recorded run, cached answers) | demo survives model hang | P1 | 10-29
+- [ ] T-38 | frontend-engineer | UI provenance badges `extracted` / `derived` / `conditional` and explanation panel (rule, facts, edges, quotes) | AC-20, AC-21, AC-22; docs/design/board-design.md 1.6 | P0 | 10-26
+- [ ] T-39 | eval-engineer | Separate eval for contradiction detection by the rules (precision/recall on gold cases, incl. cases lost to extraction errors), reported apart from answer quality | AC-14, AC-15, AC-24; own table in the report | P0 | 10-27
 - [ ] T-35 | product-owner | Daily STATUS, scope control, final go/no-go | STATUS.md updated daily | P0 | 10-23..29
 
 ## Requests from ux-designer / demo-director (2026-10-22)

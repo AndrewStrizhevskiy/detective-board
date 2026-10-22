@@ -84,6 +84,20 @@ Evidence cards appear **before** the model text: retrieved quotes are placed on 
 - Two-quote mode (contradiction): two stacked passages, A and B, each with its own highlight; A uses `--db-quote-bg`, B uses `--db-quote-bg-conflict`. The shape cue is a left border: solid for A, double for B.
 - Shared selection: selecting a trace row, graph node/edge, citation marker or evidence card selects the same underlying object everywhere (outline ring on the node `--db-selected-ring`, row highlighted, card highlighted, passage shown). Selecting never starts a run.
 
+### 1.6 Provenance: extracted, derived, conditional (planned)
+
+Every fact and finding on the board and in the answer carries one of three labels, shown as a badge with a word and a shape, never colour only:
+
+| Label | Meaning | Badge | Node / edge treatment |
+|---|---|---|---|
+| `extracted` | model output, probabilistic; shows confidence (`high`/`low`) | outlined chip with a "~" glyph | normal stroke as in section 2; low confidence adds a dashed outer ring |
+| `derived` | rule output (R1/R2/R3), deterministic, explanation available | filled chip with a "=" glyph | rule-made edges are drawn double-line (two parallel 1 px strokes) so they differ from extracted edges (solid 2 px) at a glance |
+| `conditional` | derived, but resting on a doubtful extracted fact | half-filled chip with a "=?" glyph | double-line edge, dashed; the doubtful input is ringed in the same dashed style |
+
+Colour tokens (`--db-prov-extracted`, `--db-prov-derived`, `--db-prov-conditional`) are added to the token set and checked by `docs/design/contrast_check.py` like the others; values are chosen then. Conflict, support and unknown edges (section 2) keep their meaning; provenance is an independent second axis (a conflict edge made by a rule is red and double-line).
+
+**Explanation panel.** Selecting a `derived` or `conditional` edge, node or answer sentence opens an "Why?" panel in the quote panel area (section 1.5): rule id and one-line statement ("R1: one person, one place, one interval"), then the numbered inputs, each with its label, confidence and verbatim quote (story, chunk, highlighted span), then the deterministic steps ("overlap 20:00-21:00"). For `conditional`, the doubtful input is listed first with the words "this depends on a low-confidence extraction". Selecting an input selects the same object everywhere (shared selection). A `derived` item with no explanation is a bug and is not drawn.
+
 ## 2. Visual language: nodes and edges
 
 Colour is a second channel; **shape and an icon letter carry entity type** so the board survives colour-blindness, a washed-out projector and greyscale print.
@@ -109,7 +123,7 @@ Edges (2 px; arrowhead = direction; label on hover/focus, always on for conflict
 | Conflicts (contradiction, alibi `contradicted`) | derived from tool/agent result | solid 3 px with a "!" badge at the midpoint, label "conflicts" | `--db-edge-conflict` |
 | Unknown / insufficient evidence | `unknown`, `insufficient_evidence` | dotted, "?" badge | `--db-edge-unknown` |
 
-Each edge has an anchor; clicking it opens the quote that justifies it. An edge without an anchor is a bug and is not drawn.
+Each edge has an anchor and a provenance label (section 1.6); clicking it opens the quote that justifies it. An edge without an anchor is a bug and is not drawn.
 
 States of a node: `new` (animated in, section 5), `active` (in the current evidence set, full opacity), `context` (from an earlier question on the board, 55 percent opacity and a dashed stroke; contrast of context nodes is intentionally lower and they are decorative, never the only carrier of information), `dimmed` (not related to the current selection, 40 percent opacity, only while a selection exists).
 

@@ -9,11 +9,11 @@ Thresholds marked TBD are fixed in docs/PRD.md after the spike and eval.
 
 **AC-04 Partial evidence.** Given a question only partly supported, when answered, then the supported part is quoted and the unsupported part is explicitly marked unknown.
 
-**AC-05 Contradiction finding.** Given two claims in the corpus that conflict, when the user asks for contradictions about an actor or event, then both quotes are shown with a confidence value and a one-line reason.
+**AC-05 Contradiction finding.** Given two claims in the corpus that conflict, when the user asks for contradictions about an actor or event, then both quotes are shown with a one-line reason and the label `derived` (rule R3 or R1, AC-21); the confidence value applies to the extracted facts it rests on.
 
 **AC-06 No false contradiction.** Given consistent claims, when contradictions are requested, then the agent reports none found rather than fabricating one.
 
-**AC-07 Alibi via MCP.** Given a suspect and time/event, when the user asks whether the alibi holds, then the agent calls the alibi MCP tool, and the result with quotes and confidence appears in the answer and trace.
+**AC-07 Alibi via MCP.** Given a suspect and time/event, when the user asks whether the alibi holds, then the agent calls the alibi MCP tool (which delegates to the rules module, AC-25), and the result with quotes, explanation and label appears in the answer and trace.
 
 **AC-08 Multi-tool answer.** Given a question needing search plus graph query plus contradiction check, when asked, then the trace shows at least two distinct tools used and the answer combines their evidence.
 
@@ -38,3 +38,17 @@ Thresholds marked TBD are fixed in docs/PRD.md after the spike and eval.
 **AC-18 Demo script.** Given the frozen build, when the 7-minute demo script is run on the target laptop, then all scripted questions complete without manual fixes (rehearsals count TBD).
 
 **AC-19 Determinism of demo.** Given the scripted demo questions, when run twice, then answers are cached or stable enough that quotes and refusals match.
+
+## Symbolic layer (neuro-symbolic; design in docs/adr/0004-symbolic-layer.md and docs/symbolic-layer.md, not built yet)
+
+**AC-20 Provenance label.** Given an answer that mixes model-extracted facts and rule conclusions, when it is shown, then every fact or finding carries a visible label `extracted` (with confidence) or `derived` (with explanation), and no statement is unlabelled.
+
+**AC-21 Explanation with sources.** Given a `derived` finding (R1, R2 or R3), when the user opens its explanation, then it names the rule, lists every fact and edge used, and shows a verbatim source quote with story and chunk reference for each input; a finding without a complete explanation is not shown.
+
+**AC-22 Conditional marking.** Given a `derived` finding that rests on at least one `extracted` fact below the confidence threshold (TBD), when it is shown, then it is marked `conditional` and the explanation names the doubtful input; a finding resting only on confident facts is not marked.
+
+**AC-23 Rules deterministic and green.** Given the rule test suite on hand-built mini graphs with known answers (including boundary cases), when it runs twice on a machine without Ollama or network, then 100% of tests pass and both runs give identical results.
+
+**AC-24 Contradiction found with explanation.** Given a graph where one person is placed in two places in overlapping intervals (R1), or a witness claim conflicts with an established fact (R3), or the order of events contains a cycle (R2), when contradictions are requested, then the finding is reported with the rule id and the explanation of AC-21; given a consistent graph, none is reported (cf. AC-06).
+
+**AC-25 Single source of truth.** Given the same graph and input, when the agent and the `timeline-alibi` MCP tool evaluate a rule, then both return the same result because the tool calls the rules module; the MCP server contains no rule logic of its own.

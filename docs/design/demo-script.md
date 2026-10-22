@@ -161,6 +161,15 @@ Narrative: "A chat model will tell you anything about Sherlock Holmes. Our agent
 - **Say:** "What we measured: [A/B table: baseline RAG vs hybrid vs GraphRAG vs agent; numbers TBD until T-23/T-30, state them as measured, including the ones that are bad]. What we did not solve: [list from jury-faq]. Everything you saw ran offline on this laptop."
 - **Fallback:** if numbers are not final, show only the structure and say "the final report is in the repository" (no invented numbers, ever).
 
+### Segment 5b: where the agent guesses and where it proves (inside Step 3 or Step 6, about 40 s)  recording unless the Step 3 tool call is live
+
+- **Screen:** the Step 3 (alibi) or Step 2 (contradiction) board, with the provenance legend open (board-design 1.6) and the "Why?" panel on the finding.
+- **Do:** point at an `extracted` fact (chip "~", confidence shown), then at the `derived` finding (chip "="); click the finding to open its explanation: rule id, the facts used, the source quote of each. If the rehearsal produced a `conditional` finding, show its doubtful input.
+- **Say:** "Two kinds of statements on this board. The model guesses: it reads the story and extracts facts, with a confidence; it can be wrong. The rules prove: given those facts, a rule such as 'one person cannot be in two places at once' gives the same answer every time, and here is exactly which facts and quotes it used. If the proof leans on a shaky guess, the board says conditional. The honest limit: if the model misread the story, the rule faithfully proves something from the misreading; that is why every input shows its quote."
+- **Honesty:** the rule tests are deterministic and can be run on stage (`just test`, rules subset) only if they exist and are green by the freeze; otherwise do not mention them. Do not present a finding as true of the story, only as following from the stated facts.
+- **Cut:** first thing to drop if running late after Step 1 (saves 40 s); never claim "proof" in slides without the explanation panel on screen.
+- **Fallback:** if no `conditional` finding exists, skip it and say so rather than staging one.
+
 ## 3. Time budget and cuts
 
 | Step | Start | Length | If running late |
@@ -169,6 +178,7 @@ Narrative: "A chat model will tell you anything about Sherlock Holmes. Our agent
 | 1 Dog | 0:35 | 1:00 | **cut first** (saves 60 s); the router-path message moves into Step 2 |
 | 2 Contradiction | 1:35 | 1:30 | never cut |
 | 3 Alibi (MCP) | 3:05 | 1:20 | never cut (MCP requirement) |
+| 5b Guess vs prove | inside Step 3 | 0:40 (taken from the Step 3 wait, total stays 7:00) | cut first after Step 1 |
 | 4 Refusal | 4:25 | 0:50 | never cut (PRD: honest refusals) |
 | 5 Bare vs agent | 5:15 | 1:15 | cut step 3 sub-action (b) first |
 | 6 Close | 6:30 | 0:30 | 15 s minimum |
@@ -193,10 +203,12 @@ Acceptance (AC-18/19): all scripted questions complete without manual fixes; the
 
 ## 6. Data dependencies to verify before the freeze (blocking for this script)
 
+0. Rules module (T-36), provenance badges and explanation panel (T-38) exist; otherwise segment 5b is dropped and the words "neuro-symbolic", "derived" and "proof" are not used on stage.
+
 1. Graph contains Person nodes for Grace Dunbar, James McCarthy, William Crowder, Patience Moran with anchors in the chunks quoted above (extraction quality is not measured yet; gold set is 12 chunks labelled by an agent, not a human).
 2. `check_alibi` returns anchors for Thor Bridge; time normalisation for "nine o'clock" / "late in the evening" exists (T-14 is P2, so possibly not).
 3. Refusal path works without an LLM call, or Step 4 is REPLAY.
-4. A contradiction detector exists (T-15) and finds the Crowder/James pair; otherwise Step 2 falls back to "show both quotes, agent compares" and the word "contradiction" is not claimed from the graph.
+4. A contradiction detector exists (T-15, calling rule R1/R3) and finds the Crowder/James pair; otherwise Step 2 falls back to "show both quotes, agent compares" and the word "contradiction" is not claimed from the graph.
 5. `c` key, REPLAY badge, `cached` flag, bare-model command: requests filed in `docs/backlog.md`.
 
 ## Decisions of 2026-10-22 (customer)

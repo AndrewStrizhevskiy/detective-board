@@ -1,10 +1,10 @@
-# Jury FAQ (20 questions)
+# Jury FAQ (24 questions)
 
 Status: DRAFT 1, 2026-10-22. Written from the repository as it is today. **Re-check every status tag at the freeze (2026-10-28).**
 
 Tags: **[BUILT]** exists in the repo and was run/tested on 2026-10-22. **[DESIGNED]** only in docs (PRD, ADR, c4, data-schema, mcp-contracts); not implemented at the time of writing. **[TBD]** depends on a measurement that does not exist yet; the number is not stated here and must not be improvised on stage. If a [DESIGNED] item is still not built at the freeze, change the answer to "planned, not done".
 
-What exists today (2026-10-22): corpus fetch/ingest scripts, 20 cleaned stories, 596 chunks, a chunk-level extraction schema (v1) with a grounding rule, a 12-chunk extraction gold set labelled by an agent (not a human, not reviewed), latency and embedding benchmarks, 20 spike questions, unit tests for ingest and extraction scoring, ADRs 0001-0003, and design documents. Not built yet: retrieval layer, graph layer, agent, MCP servers, UI, eval runner.
+What exists today (2026-10-22): corpus fetch/ingest scripts, 20 cleaned stories, 596 chunks, a chunk-level extraction schema (v1) with a grounding rule, a 12-chunk extraction gold set labelled by an agent (not a human, not reviewed), latency and embedding benchmarks, 20 spike questions, unit tests for ingest and extraction scoring, ADRs 0001-0003, and design documents. Not built yet: the symbolic layer (rules R1-R3, provenance labels), retrieval layer, graph layer, agent, MCP servers, UI, eval runner.
 
 ---
 
@@ -39,10 +39,10 @@ Relational and multi-hop questions: who said what about whom, which claims confl
 Unknown. There is a schema with a grounding rule (a quote not found verbatim in the chunk is dropped) and a 12-chunk gold set, but the gold labels were written by an agent, were not reviewed by a human, and are not exhaustive; scoring code exists with unit tests. No extraction run with a model has produced reported numbers. [BUILT: schema, gold, scorer; quality [TBD]]
 
 **11. How do you detect a contradiction? Is it reliable?**
-The agent pairs claims about the same actor/event from the graph and from retrieval, has them judged, and shows both quotes with a confidence and a one-line reason. When claims are consistent it must report none found. [DESIGNED; AC-05, AC-06.] The demo case is James McCarthy vs the gamekeeper in The Boscombe Valley Mystery. Reliability (precision/recall on gold cases): [TBD], and the gold cases are few. The confidence is the system's own score, not a calibrated probability, unless calibration is measured. [TBD]
+By rules, not by asking the model: the model extracts claims and times into the graph, and deterministic rules (R1 one person in two places at once, R3 a witness claim against an established fact) find the conflict; the answer shows both quotes and the explanation. See questions 21-24. When claims are consistent it must report none found. [DESIGNED; AC-05, AC-06.] The demo case is James McCarthy vs the gamekeeper in The Boscombe Valley Mystery. Reliability (precision/recall on gold cases): [TBD], and the gold cases are few. The confidence is the system's own score, not a calibrated probability, unless calibration is measured. [TBD]
 
 **12. What is MCP doing in this project? Is it just decoration?**
-The alibi/timeline logic is deterministic interval reasoning over dated events with source anchors, which small models do badly, so it lives in a separate tool server (`timeline-alibi`: `check_alibi`, `find_overlaps`, `build_timeline`) that never calls an LLM and reads the index read-only. The agent calls it over MCP stdio and the call appears in the trace. A second, off-the-shelf server (filesystem) is planned with an allowlist. [DESIGNED; ADR-0003 and `docs/mcp-contracts.md`, SDK details unverified.] Works on the demo story only if time normalisation covers it: [TBD].
+The alibi/timeline logic is deterministic interval reasoning (rules R1/R2 in a pure Python module that the MCP tool wraps, planned) over dated events with source anchors, which small models do badly, so it lives in a separate tool server (`timeline-alibi`: `check_alibi`, `find_overlaps`, `build_timeline`) that never calls an LLM and reads the index read-only. The agent calls it over MCP stdio and the call appears in the trace. A second, off-the-shelf server (filesystem) is planned with an allowlist. [DESIGNED; ADR-0003 and `docs/mcp-contracts.md`, SDK details unverified.] Works on the demo story only if time normalisation covers it: [TBD].
 
 **13. How reliable is the alibi check?**
 Limited by how well times are extracted. Temporal subtleties (ordering, durations) are priority P2 and may be cut (backlog T-14); vague times ("late in the evening") yield `unknown` or low confidence by design, and the tool returns `insufficient_evidence` rather than guessing. A statement by a character is evidence of what was said, not of what happened. [DESIGNED] Precision/recall: [TBD].
@@ -67,3 +67,17 @@ CPU-only speed; only 20 stories; extraction quality unmeasured; entities are sco
 
 **20. What would you do with another month?**
 Human-labelled gold set for extraction and contradictions; calibrate confidence; test larger/multilingual embedders and a reranker; cross-story entity merge; stronger temporal reasoning; measure the same pipeline on a stronger local model if hardware allows. These are ideas, not commitments or results. [PLANNED, no measurements]
+
+---
+
+**21. What does "neuro-symbolic" mean here, concretely?**
+Two parts with different guarantees. The LLM reads the text and extracts facts (persons, places, times, claims) with verbatim quotes: probabilistic, label `extracted`, with confidence. A small set of explicit rules then reasons over the graph: R1 one person cannot be in two places in overlapping intervals; R2 event order (before/after) is transitive and must have no cycle; R3 a witness claim incompatible with an established fact is a contradiction. Their output is deterministic, label `derived`, with an explanation listing the facts, edges and source quotes used. [DESIGNED; ADR-0004, `docs/symbolic-layer.md`; not built yet. Do not say "built" until T-36/T-37 are done.]
+
+**22. If the model extracts a wrong fact, does the rule layer catch it?**
+No. Extraction errors pass through the rules: a misread time yields a wrong but well-explained finding. We limit the damage three ways: every input in the explanation shows its quote so a human can check it; findings that rest on a low-confidence extracted fact are marked `conditional`; extraction quality is measured separately on a gold set that is small and agent-labelled today. We claim "follows from the stated facts", not "true in the story". [DESIGNED; PRD section 6; extraction quality [TBD]]
+
+**23. What is actually proven, and how do you know the rules are right?**
+Only that the rule conclusion follows from the facts given, by explicit code. The rules are a pure Python module tested on hand-built mini graphs with answers worked out by hand, including boundary cases (touching intervals, cycles, unknown times); the target is 100% green and identical results on repeated runs. The MCP alibi tool calls the same module, so there is one implementation. [DESIGNED; AC-23, AC-25; tests not written yet. Rules are correct relative to their written definition, not relative to every reading of a novel.]
+
+**24. How do you measure the contradiction finder, and is it better than asking the model?**
+It is measured separately from answer quality: precision and recall of rule-found contradictions on gold cases, including cases lost because extraction missed a fact (T-39). Whether it beats a model judging pairs directly is not measured; no number is stated here. Gold cases are few, so one case is noise. [TBD]

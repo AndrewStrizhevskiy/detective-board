@@ -15,6 +15,18 @@ Status 2026-10-22: Phase 0. Only spike scripts and `tests/test_ingest.py`, `test
 
 Rule: a bug found in a higher layer gets a regression test in the lowest layer that can reproduce it.
 
+### 1.1 Rule tests (symbolic layer, planned, not written yet)
+
+The rules R1-R3 (`src/detective_board/symbolic/`, `docs/symbolic-layer.md`) are the part of the product that claims exactness, so they get the strictest tests. Backlog T-37.
+
+- Inputs are hand-built mini graphs (3-8 nodes) written in the test file or `tests/fixtures/symbolic/*.json`, each with the answer worked out by hand and a one-line comment saying why. No corpus text, no LLM, no `FakeLLM`, no network, no clock, no randomness.
+- Required cases per rule. R1: clear overlap; disjoint; touching endpoints (end == start, decide and document whether this is an overlap); identical intervals; one interval inside another; unknown time (no finding, not an error); same place twice (no finding); different story days. R2: chain a<b<c implies a<c; 2-cycle; 3-cycle; self-order; duplicate edges; disconnected parts; empty graph; contradictory pair given as before and after. R3: claim equal to the fact; claim incompatible with the fact; claim about an unknown fact (no finding); fact itself low confidence (finding is `conditional`); two witnesses disagreeing.
+- Each test asserts the finding, the rule id, the exact fact and edge ids in the explanation, the provenance label (`derived` / `conditional`) and that every explained input has an anchor.
+- Determinism: each case runs twice in one test and the serialised results must be identical; iteration order of sets and dicts must not leak into output (sorted ids).
+- Gate: **100% of rule tests green** and a branch-coverage floor on `symbolic/` higher than the global 80 (value fixed when the module lands). A red rule test blocks merge; no `skip`, no retry.
+- MCP parity test: the `timeline-alibi` tool output equals the direct rules-module output on the same mini graph (AC-25).
+- Contradiction detection quality on real text is not a unit test; it is a separate eval (T-39), reported apart from answer quality.
+
 ## 2. Deterministic LLM mock strategy
 
 CI has no Ollama and no GPU/models; tests must be bit-reproducible.
@@ -72,6 +84,7 @@ Scope: ask a canned question against the app backed by `FakeLLM`, assert answer,
 
 ## 9. Risk-based priorities
 
+0. Wrong or non-deterministic rule results (a `derived` label promises exactness): covered by section 1.1.
 1. Citation/evidence correctness (hallucinated or wrong-source claims): highest user-visible risk. Tests: every claim in an answer maps to an existing chunk id; negative cases.
 2. Structured extraction validity and gold-set scoring (`eval/extraction_gold`, `score_extraction.py`).
 3. Retrieval recall on the question set (multi-hop across stories).
