@@ -8,7 +8,7 @@ and polarity) instead of free text, `in_speech`/`transit` flags on events, `unna
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal, cast
 
 from pydantic import Field
 
@@ -62,7 +62,7 @@ ITEM_MODELS: dict[str, type] = {
 def ollama_format_schema() -> dict:
     """JSON schema for Ollama's `format` parameter (v2), with $defs/$ref inlined."""
     s = Extraction.model_json_schema()
-    return _inline_refs(s, s.get("$defs", {}))
+    return cast("dict[Any, Any]", _inline_refs(s, s.get("$defs", {})))
 
 
 def to_v1(ex: Extraction) -> v1.Extraction:

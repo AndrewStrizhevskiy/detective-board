@@ -50,7 +50,8 @@ def search_entities(
 ) -> dict[str, Any]:
     """Entities whose name or alias contains `q` (case-insensitive); exact matches first.
     Empty `q` lists entities by number of mentions."""
-    where, args = [f"n.kind IN ({','.join('?' * len(ENTITY_KINDS))})"], list(ENTITY_KINDS)
+    where = [f"n.kind IN ({','.join('?' * len(ENTITY_KINDS))})"]
+    args: list[str] = list(ENTITY_KINDS)
     if kind:
         where.append("n.kind=?")
         args.append(kind)

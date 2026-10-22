@@ -237,6 +237,7 @@ def build_app(
     # ---------------------------------------------------------------- graph
     async def subgraph(request: Request) -> Response:
         entity = _qstr(request, "entity", 200, required=True)
+        assert entity is not None  # required=True raises ApiError instead of returning None
         hops = _qint(request, "hops", 1, 0, cfg.max_hops)
         story = _story_param(request)
         out = await rt.read(
@@ -377,7 +378,7 @@ def build_app(
             }
         )
 
-    async def config(request: Request) -> Response:
+    async def config_view(request: Request) -> Response:
         return JSONResponse(
             {
                 "fake": cfg.fake,
@@ -420,7 +421,7 @@ def build_app(
         Route("/api/graph/entities", entities, methods=["GET"]),
         Route("/api/source/{chunk_id}", source, methods=["GET"]),
         Route("/api/health", health, methods=["GET"]),
-        Route("/api/config", config, methods=["GET"]),
+        Route("/api/config", config_view, methods=["GET"], name="config"),
     ]
     web = cfg.resolve(cfg.web_dir)
     if web.is_dir():

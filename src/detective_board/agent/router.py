@@ -68,7 +68,7 @@ class Router:
         matched: list[str] = []
         why: list[str] = []
         if m := _ALIBI.search(q):
-            routes += ["mcp", "graph"]
+            routes.extend(("mcp", "graph"))
             tools.append("check_alibi")
             matched.append(m.group(0))
             why.append("alibi/time question -> MCP check_alibi + graph events")

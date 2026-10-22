@@ -87,8 +87,10 @@ def _pair(person: str, e1: EventRec, e2: EventRec, idx: PlaceIndex, digest: str)
     else:
         verdict, reason = Verdict.UNKNOWN, "TIME_UNDECIDED"
         missing += [
-            f"exact_time:{e.id}" for e in (e1, e2) if abs_bounds(e.time) is None or not e.time.exact
-        ]  # type: ignore[union-attr]
+            f"exact_time:{e.id}"
+            for e in (e1, e2)
+            if abs_bounds(e.time) is None or e.time is None or not e.time.exact
+        ]
         if c.possible_overlap and prel is PlaceRel.DISTINCT:
             notes.append("possible_overlap")
     steps = [

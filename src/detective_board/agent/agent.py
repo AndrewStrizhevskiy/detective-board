@@ -363,6 +363,7 @@ class Agent:
             ToolCall(step_id=step, tool=tool, arguments=args, timeout_s=self.cfg.tool_timeout_s)
         )
         t0 = self._mono()
+        payload: dict[str, Any]
         try:
             payload = self.tools.call(tool, args, timeout=self.cfg.tool_timeout_s)  # type: ignore[union-attr]
         except Exception as e:

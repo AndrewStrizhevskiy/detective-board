@@ -8,7 +8,7 @@ Deliberately flat and small so a 4-8B model can fill it under constrained decodi
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -57,7 +57,7 @@ class Extraction(_Base):
     relations: list[Relation] = Field(default_factory=list)
 
 
-def _inline_refs(node, defs):
+def _inline_refs(node: Any, defs: dict[str, Any]) -> Any:
     if isinstance(node, dict):
         if "$ref" in node:
             return _inline_refs(defs[node["$ref"].rsplit("/", 1)[-1]], defs)
@@ -70,4 +70,4 @@ def _inline_refs(node, defs):
 def ollama_format_schema() -> dict:
     """JSON schema for Ollama's `format` parameter, with $defs/$ref inlined."""
     s = Extraction.model_json_schema()
-    return _inline_refs(s, s.get("$defs", {}))
+    return cast("dict[Any, Any]", _inline_refs(s, s.get("$defs", {})))

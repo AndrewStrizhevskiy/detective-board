@@ -5,9 +5,9 @@ from __future__ import annotations
 import asyncio
 import logging
 import threading
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any
+from typing import Any, cast
 
 from detective_board.api.config import ApiConfig
 from detective_board.api.services import RunCancelled, Services, build_services
@@ -83,11 +83,11 @@ class Runtime:
 
     def _produce(self, question, history, cancel, put) -> None:
         self._tls.cancel = cancel
-        gen = None
+        gen: Generator[Any, None, None] | None = None
         try:
             svc = self._ask_services()
             assert svc.agent is not None
-            gen = svc.agent.ask(question, history)
+            gen = cast("Generator[Any, None, None]", svc.agent.ask(question, history))
             for ev in gen:
                 if cancel.is_set():
                     break
