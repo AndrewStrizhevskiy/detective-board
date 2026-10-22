@@ -197,3 +197,21 @@ Design (the allowlist is enforced in two places, so a server misconfiguration al
 5. Content returned by any server is data, never instructions: it enters the prompt only inside delimited evidence blocks and is subject to the same self-check as corpus text.
 
 Test plan (for mcp-engineer, not run here): for each rules-backed tool, assert the tool output equals the direct rules-module output on the same mini graph (AC-25); spawn each server through `Client(StdioServerParameters(...))`; assert a path outside the allowlist, a `..` traversal and a symlink escape are all rejected by the client gate; assert a write tool is not listed to the model.
+
+## 8. Implementation notes (Phase 1, `src/detective_board/mcp/`, tests in `tests/mcp/`)
+
+Verified against installed `mcp` 2.3.0 (introspection plus a spawned stdio server), resolving the [U] marks of section 1:
+
+- `from mcp.server.mcpserver import MCPServer`; `@mcp.tool()` derives the input JSON Schema from type hints (pydantic models as parameters work, `Field` limits become schema limits). Unknown top-level properties are silently ignored by the SDK, so `additionalProperties: false` is not enforced at the top level (nested pydantic models with `extra="forbid"` are). A return annotation of `dict[str, Any]` yields `structured_content` plus a text copy; a bare `dict` yields text only.
+- Client: `Client(StdioServerParameters(command, args, env))`; `call_tool(name, arguments, read_timeout_seconds=...)` exists, but we also wrap the call in `anyio.fail_after` and map expiry to the `timeout` error object. Results are `CallToolResult(content, structured_content, is_error)`. A raised exception in a tool becomes `is_error=True` with a generic text ("Error executing tool X", no trace); SDK argument validation errors are `is_error=True` with a pydantic message. Our tools return `CallToolResult` themselves, so no output schema is advertised (`output_schema` is `None`).
+- The stdio child gets a minimal env; `server_params()` passes `DETECTIVE_BOARD_FACTS`, `DETECTIVE_BOARD_FACTS_ALLOW` and `PYTHONPATH` (the package is not installed, src layout) via `env=`.
+
+Deviations from sections 3 and 5:
+
+- Fact source: `JsonFileFactSource` (a serialised `FactBase`, one file inside an allowlisted dir, 8 MB cap, `..` / outside-absolute / escaping-symlink rejected, error text never echoes the path). The server serves exactly one story (`FactBase.story`); other story ids give `not_found`. No index, no `resolve_entity` yet.
+- Errors are returned as `CallToolResult(is_error=True)` whose structured content is the section 5 object. SDK-level validation failures are mapped to `invalid_input` by the client helper, not by the server.
+- `check_alibi`: `explanation` is always present (the API always returns one); extra fields `reason_code`, evidence `summary`/`confidence`; evidence kinds are derived from the finding (`claim_by_person` is not distinguished from `claim_by_other`). The input window is built as an exact, high-confidence `TimeSpec`.
+- `find_overlaps`: R1 compares events of the same person, so an item is a pair of one person's events (`shared_person_ids` has that person). `same_place_only=true` lists `PLACE_COMPATIBLE`; false adds `OVERLAP_DIFFERENT_PLACES`. `window` is not implemented (omitted from the input). `overlap` can be `null` when times are partial. `PLACE_COMPATIBLE` does not imply a proven time overlap (rule precedence, symbolic-layer.md section 11).
+- `build_timeline`: `when` fields may be `null` for partial times; result adds `provenance: "derived"` and `rule_id: "R2"` (no `Explanation`: the API returns facts only). `undated_count` counts events matching the filters.
+- `find_contradictions` is implemented (violated findings only; `person_id` filters R1 by person and R3 by speaker, R2 ignores it). Unknown person/place ids give `not_found`.
+- Response cap: payload lists are halved until under 64 KB and `truncated: true` is set.
