@@ -1,0 +1,327 @@
+{
+ "meta": {
+  "question": "What was the speckled band?",
+  "note": "Real event stream of the --fake server (canned FakeLLM answer), saved unchanged."
+ },
+ "events": [
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 0,
+   "ts": "2026-10-22T20:20:06.592+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "vector"
+   ],
+   "tools": [],
+   "method": "rules",
+   "reason": "no special pattern: plain fact question -> hybrid retrieval",
+   "matched": [],
+   "confidence": 0.5
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 1,
+   "ts": "2026-10-22T20:20:06.592+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "What was the speckled band?",
+   "k": 5,
+   "attempt": 1
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 2,
+   "ts": "2026-10-22T20:20:06.593+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 1,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "speckled-band-0001",
+     "story": "speckled-band",
+     "rank": 1,
+     "rrf": 0.03278688524590164,
+     "ranks": {
+      "bm25": 1,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -1.0932087279038711,
+      "vec": 0.6726731657981873
+     }
+    },
+    {
+     "chunk_id": "speckled-band-0002",
+     "story": "speckled-band",
+     "rank": 2,
+     "rrf": 0.03225806451612903,
+     "ranks": {
+      "bm25": 2,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -1.8487394957983196e-06,
+      "vec": 1.0
+     }
+    },
+    {
+     "chunk_id": "speckled-band-0003",
+     "story": "speckled-band",
+     "rank": 3,
+     "rrf": 0.031746031746031744,
+     "ranks": {
+      "bm25": 3,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -1.0166358595194087e-06,
+      "vec": 1.387298345565796
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03278688524590164,
+    "threshold": 0.018,
+    "support": 1.0,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "speckled-band-0001",
+    "speckled-band-0002",
+    "speckled-band-0003"
+   ]
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 3,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "speckled-band-0001",
+     "story": "speckled-band",
+     "char_start": 1000,
+     "char_end": 1075,
+     "origin": "vector",
+     "label": "source_text"
+    },
+    {
+     "n": 2,
+     "chunk_id": "speckled-band-0002",
+     "story": "speckled-band",
+     "char_start": 2000,
+     "char_end": 2114,
+     "origin": "vector",
+     "label": "source_text"
+    },
+    {
+     "n": 3,
+     "chunk_id": "speckled-band-0003",
+     "story": "speckled-band",
+     "char_start": 3000,
+     "char_end": 3086,
+     "origin": "vector",
+     "label": "source_text"
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 0,
+   "memory_chars": 0,
+   "prompt_chars": 2005,
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 4,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "The "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 5,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "band "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 6,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 7,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 8,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "snake. "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 9,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[1: "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 10,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"a "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 11,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "deadly "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 12,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "snake "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 13,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 14,
+   "ts": "2026-10-22T20:20:06.594+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "India\"]"
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 15,
+   "ts": "2026-10-22T20:20:06.595+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+   "seq": 16,
+   "ts": "2026-10-22T20:20:06.596+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "The band was a snake. [1: \"a deadly snake from India\"]",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "a deadly snake from India",
+     "anchor": {
+      "story": "speckled-band",
+      "chunk_id": "speckled-band-0001",
+      "char_start": 1049,
+      "char_end": 1074,
+      "quote": "a deadly snake from India"
+     },
+     "label": "source_text"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "source_text",
+     "origin": "vector",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "retrieved chunk (rrf 0.0328)"
+    }
+   ],
+   "route": {
+    "run_id": "dded77d7-4f78-4a44-bd86-190ebb11d2d3",
+    "seq": 0,
+    "ts": "2026-10-22T20:20:06.592+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "vector"
+    ],
+    "tools": [],
+    "method": "rules",
+    "reason": "no special pattern: plain fact question -> hybrid retrieval",
+    "matched": [],
+    "confidence": 0.5
+   },
+   "attempts": 1,
+   "refusal_code": null
+  }
+ ]
+}

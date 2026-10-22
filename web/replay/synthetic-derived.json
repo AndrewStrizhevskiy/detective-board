@@ -1,0 +1,529 @@
+{
+ "meta": {
+  "question": "SYNTHETIC: does Helen Stoner's alibi hold?",
+  "note": "Hand-written events to exercise the derived/conditional UI, the Why? panel and retry handling. Not a real agent run."
+ },
+ "events": [
+  {
+   "type": "route_decided",
+   "routes": [
+    "graph"
+   ],
+   "tools": [
+    "check_alibi"
+   ],
+   "method": "rules",
+   "reason": "synthetic: relational question",
+   "matched": [
+    "alibi"
+   ],
+   "confidence": 0.9,
+   "run_id": "synthetic",
+   "seq": 0,
+   "ts": "2026-10-22T20:30:00.000+00:00"
+  },
+  {
+   "type": "graph_query",
+   "query_kind": "neighbours",
+   "args": {
+    "entity": "Helen Stoner"
+   },
+   "step_id": "graph-1",
+   "run_id": "synthetic",
+   "seq": 1,
+   "ts": "2026-10-22T20:30:00.200+00:00"
+  },
+  {
+   "type": "graph_results",
+   "query_kind": "neighbours",
+   "step_id": "graph-1",
+   "duration_ms": 3,
+   "seeds": [
+    "p:demo:helen"
+   ],
+   "node_ids": [],
+   "edge_ids": [],
+   "nodes": [
+    {
+     "id": "p:demo:helen",
+     "kind": "person",
+     "name": "Helen Stoner"
+    },
+    {
+     "id": "pl:a",
+     "kind": "place",
+     "name": "Stoke Moran"
+    },
+    {
+     "id": "pl:b",
+     "kind": "place",
+     "name": "Leatherhead"
+    },
+    {
+     "id": "ev:1",
+     "kind": "event",
+     "name": "Evening of the death"
+    },
+    {
+     "id": "c:1",
+     "kind": "claim",
+     "name": "Stoner: I was at home"
+    }
+   ],
+   "edges": [
+    {
+     "id": "1",
+     "rel": "OCCURRED_AT",
+     "src": "ev:1",
+     "dst": "pl:a",
+     "provenance": "extracted",
+     "confidence": "high",
+     "anchor": {
+      "story": "demo",
+      "chunk_id": "speckled-band-0002",
+      "char_start": 2080,
+      "char_end": 2113,
+      "quote": "Helen Stoner was his stepdaughter",
+      "rel_start": 80,
+      "rel_end": 113,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": "2",
+     "rel": "PARTICIPATED_IN",
+     "src": "p:demo:helen",
+     "dst": "ev:1",
+     "provenance": "extracted",
+     "confidence": "high",
+     "anchor": {
+      "story": "demo",
+      "chunk_id": "speckled-band-0002",
+      "char_start": 2080,
+      "char_end": 2113,
+      "quote": "Helen Stoner was his stepdaughter",
+      "rel_start": 80,
+      "rel_end": 113,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": "3",
+     "rel": "CONTRADICTS",
+     "src": "c:1",
+     "dst": "pl:b",
+     "provenance": "conditional",
+     "confidence": "low",
+     "anchor": {
+      "story": "demo",
+      "chunk_id": "speckled-band-0001",
+      "char_start": 1049,
+      "char_end": 1074,
+      "quote": "a deadly snake from India",
+      "rel_start": 49,
+      "rel_end": 74,
+      "ambiguous": false
+     },
+     "explanation": {
+      "rule_id": "R1",
+      "rule_version": "1",
+      "verdict": "violated",
+      "conditional": true,
+      "reason_code": "OVERLAP_DIFFERENT_PLACES",
+      "subject": {
+       "person_id": "p:demo:helen"
+      },
+      "facts": [
+       {
+        "fact_id": "e:demo:1",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "Helen at Stoke Moran, evening",
+        "anchors": [
+         {
+          "story": "demo",
+          "chunk_id": "speckled-band-0002",
+          "char_start": 2080,
+          "char_end": 2113,
+          "quote": "Helen Stoner was his stepdaughter",
+          "rel_start": 80,
+          "rel_end": 113,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "fact_id": "e:demo:2",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Helen elsewhere, same evening",
+        "anchors": [
+         {
+          "story": "demo",
+          "chunk_id": "speckled-band-0001",
+          "char_start": 1049,
+          "char_end": 1074,
+          "quote": "a deadly snake from India",
+          "rel_start": 49,
+          "rel_end": 74,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "edges": [],
+      "derivation": [
+       {
+        "step": 1,
+        "op": "interval_overlap",
+        "inputs": [
+         "e:demo:1",
+         "e:demo:2"
+        ],
+        "output": "overlap [21:30,22:00)"
+       },
+       {
+        "step": 2,
+        "op": "place_distinct",
+        "inputs": [
+         "pl:a",
+         "pl:b"
+        ],
+        "output": "DISTINCT"
+       }
+      ],
+      "anchors": [
+       {
+        "story": "demo",
+        "chunk_id": "speckled-band-0001",
+        "char_start": 1049,
+        "char_end": 1074,
+        "quote": "a deadly snake from India",
+        "rel_start": 49,
+        "rel_end": 74,
+        "ambiguous": false
+       },
+       {
+        "story": "demo",
+        "chunk_id": "speckled-band-0002",
+        "char_start": 2080,
+        "char_end": 2113,
+        "quote": "Helen Stoner was his stepdaughter",
+        "rel_start": 80,
+        "rel_end": 113,
+        "ambiguous": false
+       }
+      ],
+      "depends_on_extracted": [
+       {
+        "fact_id": "e:demo:1",
+        "confidence": "high"
+       },
+       {
+        "fact_id": "e:demo:2",
+        "confidence": "low"
+       }
+      ],
+      "weak": [
+       "e:demo:2"
+      ],
+      "missing": [],
+      "notes": [
+       "SYNTHETIC EXAMPLE for UI development"
+      ]
+     }
+    },
+    {
+     "id": "4",
+     "rel": "ASSERTS",
+     "src": "p:demo:helen",
+     "dst": "c:1",
+     "provenance": "extracted",
+     "confidence": "low",
+     "anchor": {
+      "story": "demo",
+      "chunk_id": "speckled-band-0001",
+      "char_start": 1049,
+      "char_end": 1074,
+      "quote": "a deadly snake from India",
+      "rel_start": 49,
+      "rel_end": 74,
+      "ambiguous": false
+     }
+    }
+   ],
+   "truncated": false,
+   "run_id": "synthetic",
+   "seq": 2,
+   "ts": "2026-10-22T20:30:00.500+00:00"
+  },
+  {
+   "type": "tool_call",
+   "tool": "check_alibi",
+   "arguments": {
+    "person": "Helen Stoner"
+   },
+   "timeout_s": 5.0,
+   "step_id": "tool-1",
+   "run_id": "synthetic",
+   "seq": 3,
+   "ts": "2026-10-22T20:30:00.600+00:00"
+  },
+  {
+   "type": "tool_result",
+   "tool": "check_alibi",
+   "ok": true,
+   "summary": "contradicted (conditional), 2 anchors",
+   "provenance": "conditional",
+   "explanation": {
+    "rule_id": "R1",
+    "rule_version": "1",
+    "verdict": "violated",
+    "conditional": true,
+    "reason_code": "OVERLAP_DIFFERENT_PLACES",
+    "subject": {
+     "person_id": "p:demo:helen"
+    },
+    "facts": [
+     {
+      "fact_id": "e:demo:1",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "high",
+      "summary": "Helen at Stoke Moran, evening",
+      "anchors": [
+       {
+        "story": "demo",
+        "chunk_id": "speckled-band-0002",
+        "char_start": 2080,
+        "char_end": 2113,
+        "quote": "Helen Stoner was his stepdaughter",
+        "rel_start": 80,
+        "rel_end": 113,
+        "ambiguous": false
+       }
+      ]
+     },
+     {
+      "fact_id": "e:demo:2",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "low",
+      "summary": "Helen elsewhere, same evening",
+      "anchors": [
+       {
+        "story": "demo",
+        "chunk_id": "speckled-band-0001",
+        "char_start": 1049,
+        "char_end": 1074,
+        "quote": "a deadly snake from India",
+        "rel_start": 49,
+        "rel_end": 74,
+        "ambiguous": false
+       }
+      ]
+     }
+    ],
+    "edges": [],
+    "derivation": [
+     {
+      "step": 1,
+      "op": "interval_overlap",
+      "inputs": [
+       "e:demo:1",
+       "e:demo:2"
+      ],
+      "output": "overlap [21:30,22:00)"
+     },
+     {
+      "step": 2,
+      "op": "place_distinct",
+      "inputs": [
+       "pl:a",
+       "pl:b"
+      ],
+      "output": "DISTINCT"
+     }
+    ],
+    "anchors": [
+     {
+      "story": "demo",
+      "chunk_id": "speckled-band-0001",
+      "char_start": 1049,
+      "char_end": 1074,
+      "quote": "a deadly snake from India",
+      "rel_start": 49,
+      "rel_end": 74,
+      "ambiguous": false
+     },
+     {
+      "story": "demo",
+      "chunk_id": "speckled-band-0002",
+      "char_start": 2080,
+      "char_end": 2113,
+      "quote": "Helen Stoner was his stepdaughter",
+      "rel_start": 80,
+      "rel_end": 113,
+      "ambiguous": false
+     }
+    ],
+    "depends_on_extracted": [
+     {
+      "fact_id": "e:demo:1",
+      "confidence": "high"
+     },
+     {
+      "fact_id": "e:demo:2",
+      "confidence": "low"
+     }
+    ],
+    "weak": [
+     "e:demo:2"
+    ],
+    "missing": [],
+    "notes": [
+     "SYNTHETIC EXAMPLE for UI development"
+    ]
+   },
+   "step_id": "tool-1",
+   "duration_ms": 12,
+   "run_id": "synthetic",
+   "seq": 4,
+   "ts": "2026-10-22T20:30:01.000+00:00"
+  },
+  {
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "speckled-band-0001",
+     "story": "demo",
+     "char_start": 1049,
+     "char_end": 1074,
+     "origin": "tool",
+     "label": "conditional"
+    }
+   ],
+   "graph_facts": 4,
+   "rule_facts": 1,
+   "memory_chars": 0,
+   "prompt_chars": 900,
+   "data_marked": true,
+   "injection_suspects": [],
+   "run_id": "synthetic",
+   "seq": 5,
+   "ts": "2026-10-22T20:30:01.300+00:00"
+  },
+  {
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Failed attempt text ",
+   "run_id": "synthetic",
+   "seq": 6,
+   "ts": "2026-10-22T20:30:01.500+00:00"
+  },
+  {
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": false,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": false,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [
+    "quote 1 not verbatim"
+   ],
+   "action": "retry",
+   "run_id": "synthetic",
+   "seq": 7,
+   "ts": "2026-10-22T20:30:02.100+00:00"
+  },
+  {
+   "type": "answer_token",
+   "attempt": 2,
+   "text": "The alibi conflicts ",
+   "run_id": "synthetic",
+   "seq": 8,
+   "ts": "2026-10-22T20:30:02.200+00:00"
+  },
+  {
+   "type": "answer_token",
+   "attempt": 2,
+   "text": "with another event ",
+   "run_id": "synthetic",
+   "seq": 9,
+   "ts": "2026-10-22T20:30:02.350+00:00"
+  },
+  {
+   "type": "answer_token",
+   "attempt": 2,
+   "text": "[1: \"a deadly snake from India\"].",
+   "run_id": "synthetic",
+   "seq": 10,
+   "ts": "2026-10-22T20:30:02.500+00:00"
+  },
+  {
+   "type": "citation_check",
+   "attempt": 2,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept",
+   "run_id": "synthetic",
+   "seq": 11,
+   "ts": "2026-10-22T20:30:02.600+00:00"
+  },
+  {
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "The alibi conflicts with another event [1: \"a deadly snake from India\"].",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "a deadly snake from India",
+     "anchor": {
+      "story": "demo",
+      "chunk_id": "speckled-band-0001",
+      "char_start": 1049,
+      "char_end": 1074,
+      "quote": "a deadly snake from India",
+      "rel_start": 49,
+      "rel_end": 74,
+      "ambiguous": false
+     },
+     "label": "conditional"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "conditional",
+     "origin": "tool",
+     "confidence": "low",
+     "rule_id": "R1",
+     "summary": "R1 overlap in different places (rests on a low-confidence event)"
+    }
+   ],
+   "attempts": 2,
+   "refusal_code": null,
+   "run_id": "synthetic",
+   "seq": 12,
+   "ts": "2026-10-22T20:30:02.700+00:00"
+  }
+ ]
+}

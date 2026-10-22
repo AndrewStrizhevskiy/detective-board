@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detective Board</title>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<a class="skip" href="#question">Skip to the question box</a>
+<header class="bar">
+  <div class="bar-row">
+    <h1>Detective Board</h1>
+    <form id="ask-form" class="ask" autocomplete="off">
+      <label for="question" class="sr">Question about the Sherlock Holmes stories</label>
+      <input id="question" name="question" type="text" maxlength="1000" placeholder="Ask about the Holmes stories  ( / to focus )" required>
+      <button id="ask-btn" type="submit" class="primary">Ask</button>
+      <button id="stop-btn" type="button" hidden>Stop</button>
+    </form>
+    <div class="chips" aria-label="Run status">
+      <span id="route-chips" class="chip-group"></span>
+      <span id="run-badge" class="badge badge-idle" role="status">IDLE</span>
+      <span id="rec-badge" class="badge badge-rec" hidden>RECORDING</span>
+      <span id="clock" class="mono" aria-label="Elapsed time">0.0 s</span>
+      <button id="health" class="health" type="button" aria-expanded="false" aria-controls="health-pop"><span id="health-icon" aria-hidden="true">?</span> <span id="health-text">checking API</span></button>
+      <button id="theme-btn" type="button" aria-label="Theme: auto">Theme: auto</button>
+      <button id="motion-btn" type="button" aria-pressed="true">Motion: on</button>
+    </div>
+  </div>
+  <div class="bar-row sub">
+    <details id="history" class="history"><summary>History <span id="history-count">(0)</span></summary>
+      <div class="history-pop">
+        <label class="inline"><input type="checkbox" id="use-history"> Send answered questions as context for follow-ups</label>
+        <ol id="history-list"></ol>
+        <button id="history-clear" type="button">Clear history</button>
+      </div>
+    </details>
+    <button id="save-run" type="button" hidden>Save run as JSON</button>
+    <label class="inline"><input type="checkbox" id="keep-graph"> Keep previous graph</label>
+    <span id="replay-note" class="muted" hidden></span>
+  </div>
+  <div id="health-pop" class="pop" hidden></div>
+  <div id="banner" class="banner" role="alert" hidden></div>
+</header>
+
+<nav class="tabs" aria-label="Panels (narrow screens)">
+  <button data-tab="trace" aria-pressed="true">Trace</button>
+  <button data-tab="board" aria-pressed="false">Board</button>
+  <button data-tab="answer" aria-pressed="false">Answer</button>
+</nav>
+
+<main class="cols" data-tab="trace">
+  <section id="panel-trace" class="panel" aria-labelledby="h-trace">
+    <h2 id="h-trace">Trace <span id="trace-count" class="muted"></span></h2>
+    <div id="working" class="working" hidden></div>
+    <ol id="trace" class="trace" role="log" aria-live="polite" aria-relevant="additions" aria-label="Agent steps"></ol>
+    <p id="trace-empty" class="empty">No steps yet. Ask a question and every step the agent takes appears here.</p>
+    <button id="jump-latest" type="button" class="pill" hidden>Jump to latest (t)</button>
+  </section>
+
+  <section id="panel-board" class="panel board" aria-labelledby="h-board">
+    <div class="panel-head">
+      <h2 id="h-board">Board <span id="graph-count" class="muted"></span></h2>
+      <div class="search">
+        <label for="entity-q" class="sr">Search entities</label>
+        <input id="entity-q" type="search" placeholder="Find an entity" role="combobox" aria-expanded="false" aria-controls="entity-list" aria-autocomplete="list" autocomplete="off">
+        <ul id="entity-list" role="listbox" hidden></ul>
+      </div>
+      <button id="view-toggle" type="button" aria-pressed="false">List view (g)</button>
+      <button id="fit-btn" type="button">Fit</button>
+      <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+      <button id="zoom-out" type="button" aria-label="Zoom out">&minus;</button>
+    </div>
+    <div class="canvas-wrap">
+      <div id="cy" tabindex="0" role="application" aria-label="Evidence graph. Arrow keys move between nodes, Enter selects, Escape clears, plus and minus zoom. Press g for the list view."></div>
+      <p id="board-empty" class="empty overlay-msg">Ask a question. Nodes appear as the agent finds evidence.</p>
+      <div id="list-view" class="list-view" hidden></div>
+      <details class="legend" id="legend">
+        <summary>Legend</summary>
+        <ul>
+          <li><span class="sw sw-person"></span> P Person (circle)</li>
+          <li><span class="sw sw-place"></span> L Place (rounded box)</li>
+          <li><span class="sw sw-item"></span> I Item (diamond)</li>
+          <li><span class="sw sw-event"></span> E Event (hexagon)</li>
+          <li><span class="sw sw-claim"></span> C Claim (tag)</li>
+          <li><span class="ln ln-rel"></span> relation (solid)</li>
+          <li><span class="ln ln-dbl"></span> derived by a rule (double line)</li>
+          <li><span class="ln ln-dbl-dash"></span> conditional (double, dashed)</li>
+          <li><span class="ln ln-conf"></span> conflict (thick, labelled)</li>
+          <li><span class="ln ln-unk"></span> unknown (dotted)</li>
+          <li><span class="sw sw-cited"></span> cited by the answer (halo)</li>
+          <li><span class="sw sw-low"></span> low confidence (dashed outline)</li>
+        </ul>
+      </details>
+    </div>
+  </section>
+
+  <section id="panel-answer" class="side" aria-labelledby="h-answer">
+    <div class="panel answer-panel">
+      <h2 id="h-answer">Answer</h2>
+      <div id="status-line" class="status-line" role="status"></div>
+      <div id="answer-note" class="muted"></div>
+      <p id="answer" class="answer"></p>
+      <div id="evidence" class="evidence"></div>
+      <div id="refusal" class="refusal" hidden></div>
+    </div>
+    <div class="panel source-panel" aria-live="polite">
+      <h2 id="h-source">Source <span class="tag">corpus text = data</span></h2>
+      <div id="source"><p class="empty">Click a citation marker, a graph node or edge, or a trace hit to see the quote in its source chunk.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="strip" aria-label="Status strip">
+  <span id="strip-graph">graph: 0 nodes / 0 edges</span>
+  <span id="strip-rate">~tok/s: -</span>
+  <span id="strip-api">API: -</span>
+  <span class="muted">Keys: / question &middot; g list view &middot; t latest step &middot; Esc stop or clear</span>
+</footer>
+<div id="sr-announce" class="sr" role="status" aria-live="polite"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
