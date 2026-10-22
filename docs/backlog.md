@@ -68,3 +68,5 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 - R-11 | graph-engineer | Store schema-v2 fields (claim about_*/polarity, event in_speech/transit, entity unnamed); day-resolution + claim-prop normaliser owned by extract pipeline, consumed by graph/symbolic | P0
 - R-12 | agent-engineer | Entity linking for MCP args (story/person ids) instead of top-hit heuristic | P1
 - R-13 | eval-engineer | Tune min_score (0.018) and min_support (0.25) on the golden set | P1
+- R-14 | backend-engineer + agent-engineer | Carry the symbolic `Explanation` object on `tool_result` and on graph edges of trace events so the UI 'Why?' panel works on real data (UI currently shows 'none attached') | P0
+- R-15 | frontend-engineer | Unverified UI items: dark theme view + contrast re-run, narrow layout, screen reader, entity search/expand clicks, 429/degraded states in browser, record/save-run; missing: 25-node cap with '+N more', A/B contradiction quotes, prefill wait estimate | P1
