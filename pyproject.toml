@@ -44,6 +44,7 @@ select = ["E", "F", "W", "I", "UP", "B"]
 "scripts/spike/*" = ["E731", "F401", "E501", "E401", "E402", "E701", "E702", "E741", "B905", "I001"]
 "scripts/corpus/*" = ["E501"]
 "scripts/eval/*" = ["E501"]
+"eval/*" = ["E501"]
 "tests/*" = ["E501"]
 
 [tool.ruff.format]

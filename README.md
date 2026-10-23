@@ -2,7 +2,9 @@
 
 A local, CPU-only **neuro-symbolic system** that investigates 20 Sherlock Holmes stories. The LLM extracts knowledge from text (probabilistic). A graph stores it with verbatim source quotes. Deterministic rules draw verifiable inferences (alibi conflicts, event-order contradictions, witness claims against facts), each with an explanation: which facts and edges, with which quotes. Answers cite the text, and the agent refuses when the corpus does not support an answer.
 
-Status: Phase 0 done (spike, corpus, schema, design docs). Product code is **planned**, not built; see "What exists" below. Show date 2026-10-30.
+Status: Phase 0 done; Phase 1 code exists and is tested on fake and small real data (retrieval, extraction pipeline, graph, rules, MCP, agent, API, UI). Full-corpus extraction and real-data wiring are open; see "What exists" below and docs/HANDOFF.md.
+
+> **Handoff:** read [docs/HANDOFF.md](docs/HANDOFF.md) for the current state and next steps.
 
 ## Provenance labels
 

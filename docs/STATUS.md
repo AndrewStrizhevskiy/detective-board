@@ -1,24 +1,23 @@
 # STATUS
 
-## 2026-10-22 (evening) - Phase 0 almost done, Phase 1 started
+## 2026-10-23 13:00 - orchestrator stopped, handed over to the team
 
-Done
-- Corpus: 20 stories, 596 chunks with source anchors (data/chunks.jsonl), licence notes in data/LICENSES.md.
-- LLM speed (clean runs, CPU only): 4B models 7.0-7.8 tok/s, qwen2.5:7b 4.9, qwen3:8b 4.3; 15-30 s to first token on a 300-word prompt.
-- Embeddings: bge-m3 is the only one that answers Russian questions (story-level hit@5 1.00 vs 0.00-0.20); chunk-level comparison pending.
-- Extraction pilot (12 hand-labelled chunks, labels by a Claude agent): qwen3:4b-instruct, gemma3:4b, qwen3:8b scored; qwen2.5:7b, phi4-mini, qwen3:4b running.
-- Docs: PRD, acceptance, architecture, ADR 0001-0004, symbolic layer spec, test plan, demo script, jury FAQ.
-- Eval: golden questions (64), hard retrieval questions (15), contradiction/alibi set (43).
-- Code: retrieval store (SQLite FTS5 + sqlite-vec, hybrid RRF), 20 tests green.
+Read `docs/HANDOFF.md` first. Everything is committed and pushed; no background jobs are running.
 
-In progress
-- symbolic rules module (R1-R3) with 45 deterministic mini-graph tests.
-- extraction pilot tail, then chunk-level embedding comparison, then answer-model check.
+Done since 2026-10-22: Phase 0 report and ADRs 0001-0008 (`docs/spike/REPORT.md`), retrieval, index builder,
+extraction pipeline, graph store, symbolic rules, MCP server, agent, API, UI (redesigned board), golden sets
+(64 questions, 43 contradiction cases), security review and quick fixes, team tooling (shards, merge,
+CONTRIBUTING, assignments). 424 Python tests + 42 UI logic tests green.
 
-Risks
-- Relations/claims extraction is weak on small models (F1 0.2-0.5 depending on metric); schema may need simplification.
-- Gold sets were written by a Claude agent; human spot-check needed (see eval/*/README.md).
-- Only 4 genuine R1 and 3 R2 cases exist in the corpus; R3 dominates.
-- Benchmarks must run alone; timings taken under load are marked as such.
+Decisions: bge-m3 (embeddings), qwen3:4b-instruct (answers), qwen3:4b think-off (extraction, prompt v2.1),
+hybrid RRF retrieval, SQLite graph.
 
-Decisions needed from the customer: none pending (carte blanche given for the night).
+In progress when stopped: extraction wave 1 on the laptop (26 of 31 chunks of boscombe-valley-mystery done;
+cache in `data/extraction/`). Not started: full-corpus extraction, real-data wiring of graph/MCP/rules,
+`eval/run_eval.py`, human review of the gold sets, packaging/clean-machine test, slides.
+
+Top risks: full extraction is 24-30 h of CPU (needs strong machines); claims/relations quality is weak;
+answers reach the evidence in only about 66-69% of questions (retrieval ceiling); gold sets are AI-written;
+demo latency on the laptop is about 40 s to first token.
+
+Deadline: freeze 2026-10-28, show 2026-10-30.

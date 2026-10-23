@@ -16,7 +16,7 @@ CFG = ExtractConfig("fake:1b")
 def test_prompt_has_version_and_renders():
     p = load_prompt()
     assert (
-        p.version == "extract-2.0"
+        p.version == "extract-2.1"
         and "{{CHUNK}}" not in p.render("XYZ")
         and "XYZ" in p.render("XYZ")
     )

@@ -13,7 +13,7 @@ from detective_board.extract.llm import GenRequest, LLMClient
 from detective_board.extract.parse import parse_output, validate_items
 
 PROMPT_DIR = Path(__file__).resolve().parents[3] / "prompts" / "extract"
-DEFAULT_PROMPT = PROMPT_DIR / "extract_v2.txt"
+DEFAULT_PROMPT = PROMPT_DIR / "extract_v2_1.txt"
 CHUNK_MARK = "{{CHUNK}}"
 
 

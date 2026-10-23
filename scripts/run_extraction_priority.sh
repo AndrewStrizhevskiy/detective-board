@@ -13,7 +13,7 @@ STORIES=(boscombe-valley-mystery silver-blaze black-peter blue-carbuncle reigate
 mkdir -p data/cache data/graph
 for s in "${STORIES[@]:0:$N}"; do
   echo "== story $s $(date +%H:%M)"
-  uv run python -m detective_board.extract.run --model "$MODEL" --chunks data/chunks.jsonl \
+  uv run python -m detective_board.extract.run --model "$MODEL" --prompt "${PROMPT:-prompts/extract/extract_v2_1.txt}" --chunks data/chunks.jsonl \
     --story "$s" --cache data/cache/extract-cache.sqlite --out "data/cache/extract-$s.jsonl" \
     --graph-db data/graph/graph.sqlite || echo "FAILED $s"
 done
