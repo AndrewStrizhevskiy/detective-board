@@ -9,20 +9,36 @@ from detective_board.extract.ground import normalise
 
 from .context import REFUSAL_TEXT, Source
 from .events import Anchor, Citation, CitationTrace, ProvenanceLabel
+from .window import content_words
 
 CITATION = re.compile(r'\[(\d+)(?:\s*:\s*"(.+?)")?\s*\]', re.S)
 _EXEMPT = re.compile(r"^\W*(unknown\b|not (stated|found|mentioned|covered)\b)", re.I)
 _MARK = "\x00{}\x00"
 DEFAULT_MIN_OVERLAP = 0.3  # [P] share of the claim's content words that the cited quotes must hold
-_WORD = re.compile(r"[^\W_]{3,}")
-_STOP = frozenset(
-    "the and for are was were has have had not but with from that this these those its his her "
-    "their they them she him you your our out who whom what when where which while into onto "
-    "than then there here been being will would could should can may might did does done also "
-    "any all one two per via about after before over under upon very more most some such only "
-    "because said says say".split()
+
+_THINK = re.compile(r"<think>.*?</think>", re.S | re.I)
+_PREAMBLE = re.compile(
+    r"^\W*(okay|ok|alright|hmm|wait)\b[,.!:]?\s+(let|so|i|the|first|we|now)\b"
+    r"|^\W*let me\b|^\W*let's\b|^\W*first,?\s+i\b|^\W*(so,?\s+)?the user (is|asks|wants)\b"
+    r"|^\W*i need to\b|^\W*i should\b|^\W*i'll start\b",
+    re.I,
 )
-_SUFFIX = ("ing", "ed", "es", "s")
+REASONING_CODE = "reasoning_leak"
+REASONING_PROBLEM = f"{REASONING_CODE}: answer directly, no reasoning"
+
+
+def strip_reasoning(text: str) -> str:
+    """Remove <think>...</think> blocks; an unclosed <think> drops everything after it."""
+    out = _THINK.sub("", text)
+    i = out.lower().find("<think>")
+    if i >= 0:
+        out = out[:i]
+    out = re.sub(r"</think>", "", out, flags=re.I)
+    return out.strip()
+
+
+def leaks_reasoning(text: str) -> bool:
+    return bool(_PREAMBLE.match(text.strip()))
 
 
 @dataclass
@@ -67,17 +83,6 @@ def split_claims(answer: str) -> list[Claim]:
     return claims
 
 
-def _stem(w: str) -> str:
-    for suf in _SUFFIX:
-        if w.endswith(suf) and len(w) - len(suf) >= 3:
-            return w[: -len(suf)]
-    return w
-
-
-def content_words(text: str) -> set[str]:
-    return {_stem(w) for w in _WORD.findall(text.lower()) if w not in _STOP}
-
-
 def _supported(claim: str, quotes: list[str], min_overlap: float) -> bool:
     """Lexical support: the cited quotes together hold at least `min_overlap` of the claim's
     content words. A claim without content words (only stopwords) has nothing to compare and
@@ -102,6 +107,9 @@ def self_check(
     min_quote_chars: int = 6,
     min_overlap: float = DEFAULT_MIN_OVERLAP,
 ) -> CheckResult:
+    answer = strip_reasoning(answer)
+    if leaks_reasoning(answer):
+        return CheckResult(False, [], [], [], [REASONING_PROBLEM])
     if REFUSAL_TEXT.lower() in answer.lower() and not CITATION.search(answer):
         return CheckResult(False, [], [], [], ["model declined to answer"], refusal_like=True)
     by_n = {s.n: s for s in sources}
@@ -118,7 +126,9 @@ def self_check(
         for n, quote in c.cites:
             src = by_n.get(n)
             nq = _norm(quote) if quote else ""
-            ok = bool(src and nq and len(nq) >= min_quote_chars and nq in normalise(src.text).text)
+            long_enough = bool(src and nq and len(nq) >= min_quote_chars)
+            in_full = bool(src and long_enough and nq in normalise(src.text).text)
+            ok = bool(in_full and src and nq in normalise(src.window).text)  # only what was shown
             if (n, quote) not in seen:
                 seen.add((n, quote))
                 traces.append(CitationTrace(n=n, verbatim=ok, source_exists=src is not None))
@@ -131,6 +141,8 @@ def self_check(
                     if not quote
                     else "quote too short"
                     if len(nq) < min_quote_chars
+                    else "quote is not in the shown excerpt of the source"
+                    if in_full
                     else "quote is not verbatim in the source"
                 )
                 problems.append(f"[{n}] {why}: {(quote or '')[:60]!r}")
@@ -169,18 +181,18 @@ def citations_for(
         if not s or not quote or (n, quote) in seen:
             continue
         nq = _norm(quote)
-        sn = normalise(s.text)
+        sn = normalise(s.window)
         j = sn.text.find(nq) if nq else -1
         if j < 0:
             continue
         seen.add((n, quote))
         i, end = sn.idx[j], sn.ends[j + len(nq) - 1]
-        quote = s.text[i:end]  # the source's own characters
+        quote = s.window[i:end]  # the source's own characters
         a = Anchor(
             story=s.story,
             chunk_id=s.chunk_id,
-            char_start=s.char_start + i,
-            char_end=s.char_start + end,
+            char_start=s.char_start + s.win_start + i,
+            char_end=s.char_start + s.win_start + end,
             quote=quote,
         )
         cites.append(Citation(n=n, quote=quote, anchor=a, label=s.label))

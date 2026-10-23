@@ -14,7 +14,7 @@ from typing import Any
 from detective_board.symbolic.api import Explanation
 
 from . import context as ctx
-from .answer import CheckResult, citations_for, self_check
+from .answer import CheckResult, citations_for, self_check, strip_reasoning
 from .backends import GraphBackend, Retriever, ToolClient
 from .config import AgentConfig
 from .events import (
@@ -128,7 +128,7 @@ class Agent:
                 tool_errors.append(f"{tool}: {err}")
 
         def assemble(h: list[Any], gs: list[ctx.Source], ts: list[ctx.Source]) -> list[ctx.Source]:
-            out = ctx.sources_from_hits(h)
+            out = ctx.sources_from_hits(h, question, cfg.window_words)
             n = len(out) + 1
             out += [_renum(s, n + i) for i, s in enumerate(gs)]
             n = len(out) + 1
@@ -169,12 +169,21 @@ class Agent:
                     if h2:
                         hits = h2
                 sources = assemble(hits, graph_sources, tool_sources)
-            msgs, nchars = ctx.build_messages(question, sources, headers, memory, feedback)
+            prompt = ctx.fit_prompt(
+                question, sources, headers, memory, feedback, cfg.max_prompt_tokens
+            )
+            msgs, nchars, sources = prompt.messages, prompt.chars, prompt.sources
+            # graph/tool facts were renumbered with the sources; keep the lists in step
+            graph_sources = [s for s in sources if s.origin == "graph"]
+            tool_sources = [s for s in sources if s.origin == "tool"]
             yield sink.emit(
                 EnrichedQuery(
                     attempt=attempt,
                     memory_chars=len(memory),
                     prompt_chars=nchars,
+                    prompt_tokens_estimate=prompt.tokens,
+                    max_prompt_tokens=cfg.max_prompt_tokens,
+                    dropped_chunks=prompt.dropped,
                     sources=[
                         SourceTrace(
                             n=s.n,
@@ -184,6 +193,10 @@ class Agent:
                             char_end=s.char_end,
                             origin=s.origin,
                             label=s.label,
+                            window_start=s.win_start,
+                            window_end=s.window_end,
+                            window_char_start=s.char_start + s.win_start,
+                            window_char_end=s.char_start + s.window_end,
                         )
                         for s in sources
                     ],
@@ -196,7 +209,7 @@ class Agent:
             for tok in self.llm.chat(msgs, temperature=cfg.temperature, seed=cfg.seed):
                 parts.append(tok)
                 yield sink.emit(AnswerToken(attempt=attempt, text=tok))
-            text = "".join(parts).strip()
+            text = strip_reasoning("".join(parts))
             last = self_check(text, sources, cfg.min_quote_chars, cfg.min_claim_overlap)
             if last.ok:
                 yield sink.emit(

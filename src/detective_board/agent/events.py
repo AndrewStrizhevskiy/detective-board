@@ -81,6 +81,10 @@ class SourceTrace(BaseModel):
     char_end: int
     origin: Literal["vector", "graph", "tool"]
     label: Label
+    window_start: int | None = None  # shown excerpt, offsets in the chunk text
+    window_end: int | None = None
+    window_char_start: int | None = None  # the same excerpt in story offsets
+    window_char_end: int | None = None
 
 
 class CitationTrace(BaseModel):
@@ -182,6 +186,9 @@ class EnrichedQuery(_Base):
     rule_facts: int = 0
     memory_chars: int = 0
     prompt_chars: int = 0
+    prompt_tokens_estimate: int = 0  # chars / 4
+    max_prompt_tokens: int = 0
+    dropped_chunks: list[str] = []  # chunk ids removed by the prompt budget, lowest rank first
     data_marked: bool = True  # corpus text is delimited and treated as data
     injection_suspects: list[int] = []  # source numbers whose text looks like instructions
 

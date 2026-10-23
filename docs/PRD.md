@@ -1,6 +1,6 @@
 # PRD: Detective Board
 
-Status: draft 1, 2026-10-22. Numeric targets are TBD until the spike (docs/spike/) and the first eval run.
+Status: draft 2, 2026-10-23. Phase 0 spike done except the answer-model check (docs/spike/REPORT.md). Numeric targets are filled in only where a spike measurement justifies them (latency); all others stay TBD until the first eval run.
 
 ## 0. Positioning
 Detective Board is a **neuro-symbolic system**. The LLM extracts knowledge from text (probabilistic, may err). The graph stores it with source quotes. Deterministic rules then draw inferences that can be verified: each inference comes with an explanation listing the facts and edges used and their source quotes. The model guesses; the rules prove, and say what they proved from. Design: `docs/adr/0004-symbolic-layer.md`, `docs/symbolic-layer.md` (planned, not built).
@@ -53,18 +53,22 @@ Long-form fiction is hard to interrogate. A reader asking "who could not have be
 - Never cut: working demo, citations, honest refusals, quality measurements.
 - **Limitation: extraction errors pass into the symbolic layer.** Rules are exact on the graph they get, not on the story. A wrongly extracted time, place or speaker yields a wrong but well-explained `derived` finding. Mitigations: explanations show the source quote of every input; findings built on low-confidence inputs are `conditional`; extraction quality is measured separately (gold set) and reported. We do not claim the output is true, only that it follows from the stated facts.
 
-## 7. Success metrics (targets TBD)
-| Metric | Definition | Target |
-|---|---|---|
-| Citation validity | share of answer quotes found verbatim in cited chunk | TBD |
-| Answer correctness | on eval set (spike_questions plus gold), judged per rubric | TBD |
-| Refusal precision/recall | out-of-corpus refused; in-corpus not refused | TBD |
-| Contradiction/alibi quality | precision/recall of rule-found contradictions vs gold cases, reported separately from answer quality | TBD |
-| Rule determinism | rule unit tests (hand-built mini graphs, boundary cases) pass, identical result on repeated runs | 100% green |
-| Explanation completeness | share of `derived` findings whose explanation lists every used fact with a verbatim source quote | TBD |
-| A/B lift | agent vs baseline RAG on same set | TBD |
-| Latency | time to first visible trace event; time to final answer | TBD |
-| Cold start | one command to usable UI | TBD |
-| Demo reliability | rehearsal runs completed without intervention | TBD |
+## 7. Success metrics (targets mostly TBD)
+Only the latency target and the rule-determinism target are numeric. Everything else stays TBD on purpose: the spike measured speed and retrieval, not answer quality, and its gold sets were written by an AI and not reviewed by a human. The right column gives the spike evidence, not a target.
 
-Targets are set after the spike and first eval; results are reported as measured, including bad ones.
+| Metric | Definition | Target | Spike evidence |
+|---|---|---|---|
+| Citation validity | share of answer quotes found verbatim in cited chunk | TBD | none yet; for extraction, 79-93 % of quotes were verbatim (REPORT section 6) |
+| Answer correctness | on eval set (spike_questions plus gold), judged per rubric | TBD | answer-model check PENDING (REPORT section 9) |
+| Refusal precision/recall | out-of-corpus refused; in-corpus not refused | TBD | none |
+| Contradiction/alibi quality | precision/recall of rule-found contradictions vs gold cases, reported separately from answer quality | TBD | none; only 4 R1 and 3 R2 real cases exist |
+| Rule determinism | rule unit tests (hand-built mini graphs, boundary cases) pass, identical result on repeated runs | 100% green | not a spike measurement |
+| Explanation completeness | share of `derived` findings whose explanation lists every used fact with a verbatim source quote | TBD | none |
+| Retrieval | chunk-level hit@5 of hybrid retrieval on the spike questions | TBD | 0.97 (n=35, parameters tuned on the same questions, so optimistic; vector-only 0.89) (`arms-20261023-080849.md`) |
+| A/B lift | agent vs baseline RAG on same set | TBD | none |
+| Latency, final answer | time from question to complete answer, 4B model, 150-token answer | provisional budget: at most 40 s | qwen3:4b: TTFT 17.2 s + 150 tokens / 7.07 tok/s = 38.4 s (`llm-20261022-171654.md`; the 150-token length is an assumption; an 8B model would take about 64 s) |
+| Latency, first visible trace event | time to first visible trace event | TBD | not measured |
+| Cold start | one command to usable UI | TBD | embedding index build is a one-off 22 min with bge-m3 (`embed-20261022-180354.md`: 0.46 chunks/s); graph extraction of 596 chunks is about 30 h with qwen3:4b, so both must ship precomputed |
+| Demo reliability | rehearsal runs completed without intervention | TBD | none |
+
+Targets are set after the first eval; results are reported as measured, including bad ones.

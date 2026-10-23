@@ -7,8 +7,10 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class AgentConfig:
-    top_k: int = 5  # chunks put into the prompt
-    retry_extra_k: int = 3  # extra chunks fetched on the re-retrieve attempt
+    top_k: int = 3  # chunks put into the prompt (prefill is ~11-23 tok/s on the target CPU)
+    window_words: int = 110  # query-focused window per chunk (90-130 words, whole sentences)
+    max_prompt_tokens: int = 1000  # estimate = chars/4, system prompt + facts + question included
+    retry_extra_k: int = 2  # extra chunks fetched on the re-retrieve attempt
     min_score: float = 0.018  # RRF score of the best hit; ~ "present in both arms"
     min_support: float = 0.25  # share of question terms found in the best top-3 chunk
     max_graph_facts: int = 8

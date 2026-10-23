@@ -1,9 +1,9 @@
 # ADR-0002: Storage (vectors, BM25, graph)
 
-- Status: **Proposed, pending measurement**
-- Date: 2026-10-22
+- Status: **Accepted for storage (SQLite FTS5 + sqlite-vec)**. Graph store: SQLite, as built; Ladybug deferred.
+- Date: 2026-10-22, updated 2026-10-23
 - Deciders: tech-lead
-- Provisional parts: ALL of it. Nothing below was installed or benchmarked; evidence is desk research only (`docs/spike/db-research.md`). Embedding model (vector dimension, quality) is undecided and is not covered here.
+- Provisional parts: Ladybug stays unverified and deferred (nothing installed). sqlite-vec was not benchmarked against an exact baseline for recall, only used in the retrieval benchmarks (`docs/spike/results/arms-20261023-080849.md`); it remains pre-v1 and pinned. Embedding model: see ADR-0006.
 
 ## Context
 
@@ -23,16 +23,19 @@ Graph:
 3. `kuzu==0.11.3` frozen: stable but unmaintained.
 4. FalkorDBLite (SSPL engine, Redis subprocess, beta) and DuckDB+DuckPGQ (online extension install): rejected.
 
-## Decision (provisional)
+## Decision
 
-- Retrieval: one SQLite file with FTS5 (BM25) and `sqlite-vec` pinned `==0.1.9`, RRF fusion in Python, behind `VectorStore` and `Bm25Store` interfaces. Fallback: LanceDB, triggered if sqlite-vec fails the recall/latency gate in the eval.
-- Graph: Ladybug behind a `GraphStore` adapter, with `networkx + SQLite` as the fallback and as the schema of record (`g_node`/`g_edge` in `docs/data-schema.md`). Because the SQLite form is the source of truth, the adapter can be swapped without re-extraction.
-- Kuzu is not selected; the tech-lead/graph-engineer agent text mentioning it as candidate should be updated when this ADR is accepted.
-- The decision is confirmed (status -> Accepted) only after Phase 1 measures: Ladybug install size/RAM and variable-length path queries on our schema; sqlite-vec recall@k and latency against an exact baseline on the eval set; sqlite-vec Python helper API; FTS5 vs `bm25s` retrieval quality. Measurements are blocked until the running benchmarks finish.
+Update 2026-10-23: confirmed by working code and tests.
+
+- Retrieval: one SQLite file with FTS5 (`chunks_fts`) and `sqlite-vec` pinned `==0.1.9` (`vec0` table `chunk_vec`), RRF fusion in Python (`src/detective_board/retrieval/store.py`, `search.py`; `pyproject.toml`). Hybrid retrieval on 35 questions with bge-m3 reaches hit@5 0.97 against 0.89 vector-only and 0.69 BM25-only (`arms-20261023-080849.md`; parameters tuned on the same questions). The LanceDB fallback was not needed and is not built. `bm25s` was not used as a comparison arm; FTS5 BM25 is the lexical arm.
+- Graph: **SQLite is the store, as built** (`src/detective_board/graph/store.py`, standard library `sqlite3`, `g_node`/`g_edge` per `docs/data-schema.md`). Neither Ladybug nor networkx is imported anywhere in `src/` or listed in `pyproject.toml`; graph queries and path searches are written against SQLite, and the symbolic rules (ADR-0004) read facts from it. **Ladybug is deferred**, not rejected: revisit only if SQLite graph queries become a measured bottleneck or Cypher is needed. The `GraphStore` seam from the original decision is kept so that a swap does not require re-extraction.
+- Kuzu is not selected. The agent text that names Kuzu as a candidate should be updated.
+
+What would reverse it: sqlite-vec failing a recall or latency gate on a larger corpus (then LanceDB), or SQLite graph queries failing to meet latency on the demo graph (then Ladybug).
 
 ## Consequences
 
 - Single-file index, trivially offline and reproducible; interface seams limit lock-in.
-- Risk concentrated in two young dependencies (sqlite-vec, Ladybug); both pinned, both with a named fallback.
-- Graph written as SQLite first costs a load step into Ladybug if chosen; accepted for the safety.
-- Reranker choice and embedding choice are separate decisions awaiting spike numbers; no ADR is written for them yet.
+- Risk is concentrated in one young dependency, sqlite-vec (pinned, with LanceDB as named fallback). The graph has no engine dependency.
+- Moving the graph to Ladybug later costs a load step from SQLite; accepted.
+- Embedding model: ADR-0006. No reranker is adopted (REPORT section 5).
