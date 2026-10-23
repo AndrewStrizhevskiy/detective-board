@@ -1,10 +1,10 @@
 // Detective Board UI: wiring between the pure modules, the DOM and the API.
 import { askStream, getHealth, getEntities, getSubgraph, getSource, friendlyError } from "./api.js";
-import { initialState, reduce, citedGraphIds, answerText, waitingStage, emptyGraph } from "./state.js";
+import { initialState, reduce, answerText, waitingStage, emptyGraph, boardGraph, citedBoard, progressSteps } from "./state.js";
 import { traceRows, TYPE_LABEL, fmtSeconds, healthSummary } from "./trace.js";
 import { splitHighlights, parseAnswer } from "./highlight.js";
 import { normaliseRecording, playReplay, safeReplayPath } from "./replay.js";
-import { createGraph, isDerived, KIND_GLYPH } from "./graph.js";
+import { createGraph, isDerived, KIND_GLYPH, KIND_WORD } from "./graph.js";
 
 // replaceChildren() would print the text "null" for skipped optional children; drop them.
 const _replace = Element.prototype.replaceChildren;
@@ -50,6 +50,7 @@ function dispatch(action) {
   state = reduce(state, action);
   if (action.type === "event") {
     if (action.event.type === "graph_results") for (const s of action.event.seeds || []) seeds.add(String(s));
+    if (action.event.type === "tool_result" && action.event.explanation) followEvidence(action.event.explanation, state.runId);
   }
   queueRender();
 }
@@ -111,6 +112,44 @@ async function expandNode(id) {
     banner(null);
   } catch (e) { banner(friendlyError(e)); }
 }
+
+// A rule finding names the people and facts it rests on. Pin their neighbourhood on the board
+// (the router does not run a graph query for a contradiction question), one card at a time.
+const factNeighbours = new Map();
+async function followEvidence(expl, runId) {
+  const speaker = expl.subject && expl.subject.speaker_id;
+  const jobs = [];
+  if (speaker) jobs.push([speaker, 2]);
+  for (const f of expl.facts || []) if (f.kind === "event") jobs.push([f.fact_id, 1]);
+  const done = new Set();
+  const run = async ([id, hops]) => {
+    if (done.has(id + hops)) return;
+    done.add(id + hops);
+    try {
+      const sub = await getSubgraph(id, hops);
+      if (state.runId !== runId) return; // a newer run owns the board now
+      if (speaker && id === speaker) seeds.add(speaker);
+      dispatch({ type: "graph_merge", nodes: sub.nodes, edges: sub.edges });
+      return sub;
+    } catch { return null; }
+  };
+  for (const j of jobs) await run(j);
+  // the other people who took part in the contradicting event (e.g. the witness)
+  for (const f of expl.facts || []) {
+    if (f.kind !== "event" || state.runId !== runId) continue;
+    for (const eid of state.graph.edgeOrder) {
+      const e = state.graph.edges[eid];
+      if (e.dst === f.fact_id && e.rel === "PARTICIPATED_IN" && e.src !== speaker) await run([e.src, 1]);
+    }
+  }
+}
+
+const DEMO_QUESTIONS = [
+  "Are there contradictions in James McCarthy's account?",
+  "What is a swamp adder?",
+  "What is the weather in Paris today?",
+];
+$("demo-chips").replaceChildren(...DEMO_QUESTIONS.map((q) => h("button", { type: "button", title: q, onclick: () => { if (state.phase === "running" || replayPath) return; $("question").value = q; runLive(q); } }, q.length > 38 ? q.slice(0, 36).trimEnd() + "\u2026" : q)));
 
 // ---------------------------------------------------------------- run control
 
@@ -198,8 +237,10 @@ function stop(silent) {
   if (!silent) onRunEnd();
 }
 
+let autoOpened = null;
 function resetBoard() {
   sel = null;
+  autoOpened = null;
   seeds = new Set();
   traceDom.clear();
   $("trace").replaceChildren();
@@ -244,6 +285,7 @@ function banner(b) {
 
 function render() {
   renderTop();
+  renderProgress();
   renderTrace();
   renderAnswer();
   renderGraphView();
@@ -255,17 +297,19 @@ function renderTop() {
   $("ask-btn").hidden = running;
   $("stop-btn").hidden = !running;
   $("question").disabled = !!replayPath;
+  for (const c of $("demo-chips").children) c.disabled = running || !!replayPath;
+  $("try-label").hidden = $("demo-chips").hidden = !!replayPath;
   const b = $("run-badge");
   const label = state.phase === "idle" && !replayRequested ? "IDLE" : state.mode === "replay" || (replayRequested && state.phase === "idle") ? "REPLAY" : "LIVE";
-  b.textContent = label;
+  b.textContent = label === "REPLAY" ? "RECORDING" : label;
   b.className = "badge " + (label === "REPLAY" ? "badge-replay" : label === "LIVE" ? "badge-live" : "badge-idle");
-  b.title = label === "REPLAY" ? "A stored run is being replayed, not computed now." : label === "LIVE" ? "This run is being computed now." : "No run yet.";
+  b.title = label === "REPLAY" ? "RECORDING: a stored run is being played back, it is not computed now." : label === "LIVE" ? "This run is being computed now." : "No run yet.";
   $("rec-badge").hidden = !(recordMode && state.mode === "live" && state.phase !== "idle");
   $("save-run").hidden = !(state.mode === "live" && recorded.length && !running);
   const rn = $("replay-note");
   rn.hidden = !replayRequested;
-  rn.textContent = replayRequested ? `Replay mode: ${replayPath || "invalid path"}${replayOpts.speed !== 1 ? ` at ${replayOpts.speed}x` : " at original timing"}. ` : "";
-  if (replayRequested && !running) { rn.append(h("button", { type: "button", onclick: () => replayPath && runReplay() }, "Replay again")); }
+  rn.textContent = replayRequested ? `Recording playback: ${replayPath || "invalid path"}${replayOpts.speed !== 1 ? ` at ${replayOpts.speed}x` : " at original timing"}. ` : "";
+  if (replayRequested && !running) { rn.append(h("button", { type: "button", onclick: () => replayPath && runReplay() }, "Play again")); }
   const chips = $("route-chips");
   const routes = state.route ? state.route.routes : [];
   chips.replaceChildren(...routes.map((r) => h("span", { class: "chip", title: state.route.reason }, `${r.toUpperCase()} (${state.route.method})`)));
@@ -305,24 +349,59 @@ function rate() {
   return secs > 0.2 ? `~${(state.answer.tokens / secs).toFixed(1)} tok/s` : "~ tok/s: -";
 }
 
-const GLYPH = { ok: "✓", running: "…", warn: "▲", error: "✖", info: "◆" };
+const GLYPH = { ok: "\u2713", running: "\u2026", warn: "\u25B2", error: "\u2716", info: "\u25C6" };
+// 24x24 line icons, one per kind of step (shape, not colour, tells the steps apart)
+const TICON = {
+  route_decided: "M5 4v6a4 4 0 0 0 4 4h6M5 4L3 6M5 4l2 2M15 14l-3-3M15 14l-3 3M19 20v-6",
+  retrieval_started: "M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM15 15l6 6",
+  retrieval_results: "M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM15 15l6 6M7 10l2 2 4-4",
+  graph_query: "M6 6h.01M18 8h.01M12 18h.01M6 6l6 12M18 8L6 6M18 8l-6 10",
+  graph_results: "M6 6h.01M18 8h.01M12 18h.01M6 6l6 12M18 8L6 6M18 8l-6 10",
+  tool_call: "M14 4a5 5 0 0 0-4 7l-7 7 3 3 7-7a5 5 0 0 0 7-4l-3 3-3-3 3-3z",
+  tool_result: "M14 4a5 5 0 0 0-4 7l-7 7 3 3 7-7a5 5 0 0 0 7-4l-3 3-3-3 3-3z",
+  enriched_query: "M12 3l9 5-9 5-9-5zM3 13l9 5 9-5M3 17l9 5 9-5",
+  answer_token: "M4 20l4-1L19 8l-3-3L5 16zM14 7l3 3",
+  citation_check: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5",
+  refusal: "M12 3l6 0 3 6v6l-3 6H6l-3-6V9l3-6zM8 12h8",
+  final: "M5 21V4M5 4h12l-2 4 2 4H5",
+  run_error: "M12 3l10 18H2zM12 10v5M12 18h.01",
+  parse_error: "M12 3l10 18H2zM12 10v5M12 18h.01",
+};
+function ticon(type) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24"); svg.setAttribute("class", "ticon"); svg.setAttribute("aria-hidden", "true");
+  const p = document.createElementNS(ns, "path");
+  p.setAttribute("d", TICON[type] || "M12 4v16M4 12h16");
+  p.setAttribute("fill", "none"); p.setAttribute("stroke", "currentColor"); p.setAttribute("stroke-width", "2"); p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round");
+  svg.append(p);
+  return svg;
+}
 function makeRow(r) {
   const li = h("li", { class: "new" });
   const det = h("details", null);
-  const sum = h("summary", null, h("span", { class: "glyph" }), h("span", { class: "type" }), h("span", { class: "sum" }), h("span", { class: "dur" }));
+  const sum = h("summary", null, h("span", { class: "glyph" }), h("span", { class: "ticon-box" }, ticon(r.type)), h("span", { class: "head" }, h("span", { class: "type" }), h("span", { class: "when" }), h("span", { class: "dur" })), h("span", { class: "sum" }));
   const body = h("div", { class: "body" });
   det.append(sum, body);
   li.append(det);
   return { li, det, sum, body, version: -1 };
 }
+function sinceStart(r) {
+  const t0 = state.events.length ? Date.parse(state.events[0].ts) : NaN;
+  const t = Date.parse(r.ts || (r.firstTs));
+  return Number.isFinite(t0) && Number.isFinite(t) ? `+${((t - t0) / 1000).toFixed(1)} s` : "";
+}
 function updateRow(e, r) {
-  const g = e.sum.children[0];
-  g.textContent = GLYPH[r.status] || "•";
+  const [g, , head, sm] = e.sum.children;
+  const when = head.children[1];
+  g.textContent = GLYPH[r.status] || "\u2022";
   g.className = "glyph " + r.status;
   g.setAttribute("aria-label", r.status);
-  e.sum.children[1].textContent = TYPE_LABEL[r.type] || r.type;
-  e.sum.children[2].textContent = r.summary;
-  e.sum.children[3].textContent = r.duration != null ? fmtSeconds(r.duration) : "";
+  e.li.dataset.status = r.status;
+  head.children[0].textContent = TYPE_LABEL[r.type] || r.type;
+  head.children[2].textContent = r.duration != null ? fmtSeconds(r.duration) : "";
+  sm.textContent = r.summary;
+  when.textContent = sinceStart(r);
   const v = r.raw.length + ":" + r.status + ":" + (r.count || 0);
   if (e.version === v) return;
   e.version = v;
@@ -341,10 +420,40 @@ $("panel-trace").addEventListener("scroll", () => {
 $("jump-latest").addEventListener("click", jumpLatest);
 function jumpLatest() { pinned = true; const p = $("panel-trace"); p.scrollTop = p.scrollHeight; $("jump-latest").hidden = true; }
 
+// ---------------------------------------------------------------- progress card
+
+function renderProgress() {
+  const box = $("progress");
+  const running = state.phase === "running";
+  const finished = state.phase === "done" && state.startedAt;
+  box.hidden = !(running || finished);
+  box.classList.toggle("done", !running);
+  if (box.hidden) return;
+  const steps = progressSteps(state, Date.now());
+  const elapsed = (((running ? Date.now() : state.endedAt || Date.now()) - state.startedAt) / 1000);
+  if (!running) {
+    const n = steps.filter((x) => x.status === "done").length;
+    box.replaceChildren(h("span", { class: "summary" }, `\u2713 Done in ${elapsed.toFixed(1)} s`), h("span", { class: "muted" }, ` / ${n} steps / ${state.mode === "replay" ? "recorded run" : "live run"}`));
+    return;
+  }
+  const active = steps.find((x) => x.status === "active");
+  const pre = steps.find((x) => x.key === "prefill");
+  const bar = active && active.key === "prefill" && pre.est ? Math.min(95, (pre.elapsed / pre.est) * 100) : null;
+  box.replaceChildren(
+    h("div", { class: "top" }, h("div", { class: "what" }, active ? active.label + "\u2026" : "Working\u2026"), h("div", { class: "elapsed", "aria-hidden": "true" }, `${elapsed.toFixed(1)} s`)),
+    bar !== null ? h("div", { class: "bar-track", role: "progressbar", "aria-label": "Estimated time the model needs to read the evidence", "aria-valuemin": 0, "aria-valuemax": 100, "aria-valuenow": Math.round(bar) }, fillBar(bar)) : null,
+    active && active.key === "prefill" ? h("p", { class: "note" }, `This CPU reads about ${PREFILL} evidence tokens a second before the first word. The evidence is already on the board and in the trace; the estimate is not a promise.`) : null,
+    h("ol", null, steps.map((x) => h("li", { "data-status": x.status }, h("span", { class: "mark", "aria-hidden": "true" }, x.status === "done" ? "\u2713" : x.status === "skipped" ? "\u2013" : x.status === "active" ? "" : "\u25CB"), h("span", null, x.label, h("span", { class: "sr" }, ` (${x.status})`)), h("span", { class: "det" }, x.detail)))));
+}
+const PREFILL = "14";
+// The page's CSP forbids a style attribute; the CSSOM is allowed.
+function fillBar(pct) { const f = h("div", { class: "bar-fill" }); f.style.width = `${pct.toFixed(0)}%`; return f; }
+
 // ---------------------------------------------------------------- answer panel
 
+const PROV_GLYPH = { extracted: "~", derived: "=", conditional: "=?", source_text: "\u201C\u201D" };
 export function provBadge(label, conf) {
-  const g = { extracted: "~", derived: "=", conditional: "=?", source_text: "“”" }[label] || "?";
+  const g = PROV_GLYPH[label] || "?";
   const t = { extracted: "extracted: model output, probabilistic", derived: "derived: produced by a deterministic rule", conditional: "conditional: derived, but rests on a doubtful extracted fact", source_text: "source text: verbatim from the book" }[label] || label;
   return h("span", { class: `prov prov-${label}`, title: t }, h("span", { "aria-hidden": "true" }, g), label + (conf ? ` (${conf})` : ""));
 }
@@ -383,13 +492,16 @@ function renderAnswer() {
   if (state.answer.discardedAttempts > 0) notes.push(`attempt ${state.answer.attempt}: ${state.answer.discardedTokens} tokens of a failed attempt were dropped`);
   if (state.phase === "error" && text && !finalDone) notes.push("the run failed; this partial draft is unverified");
   $("answer-note").textContent = notes.join(" / ");
+  $("answer-idle").hidden = state.phase !== "idle";
   ans.replaceChildren(...parseAnswer(text).map((seg) => {
     if (seg.t === "text") return document.createTextNode(seg.s);
     const wrap = document.createElement("span");
     seg.ns.forEach((n, i) => {
       const c = citationFor(n);
       const can = c || sourceFor(n);
-      const b = h("button", { type: "button", class: "cite" + (c ? "" : " unverified"), disabled: !can, "aria-label": `Citation ${n}${c ? `: ${c.anchor.chunk_id}` : " (not yet verified)"}`, title: c ? `${c.anchor.chunk_id}` : "unverified", onclick: () => openCitation(n) }, `[${n}]`);
+      const pv = state.final && state.final.provenance.find((x) => x.n === n);
+      const lab = (pv && pv.label) || (c && c.label) || "";
+      const b = h("button", { type: "button", class: "cite " + lab + (c ? "" : " unverified"), disabled: !can, "aria-label": `Citation ${n}${lab ? `, ${lab}` : ""}${c ? `: ${c.anchor.chunk_id}` : " (not yet verified)"}`, title: c ? `${c.anchor.chunk_id}${lab ? " / " + lab : ""}` : "unverified", onclick: () => openCitation(n) }, h("span", { class: "g", "aria-hidden": "true" }, PROV_GLYPH[lab] || ""), `${n}`);
       if (sel && sel.kind === "citation" && sel.id === n) b.style.outline = "3px solid var(--db-selected-ring)";
       wrap.append(b);
       if (i < seg.ns.length - 1) wrap.append(" ");
@@ -417,8 +529,9 @@ function renderEvidence() {
       const p = f.provenance.find((x) => x.n === c.n);
       const label = (p && p.label) || c.label;
       const expl = p && (label === "derived" || label === "conditional") ? explanationForProv(p) : null;
-      cards.push(h("div", { class: "card" + (sel && sel.kind === "citation" && sel.id === c.n ? " sel" : "") + (i === 1 && f.citations.length === 2 ? " b" : "") },
-        h("div", { class: "meta" }, h("strong", null, `[${c.n}]`), provBadge(label, p && p.confidence), h("span", null, `${c.anchor.story} / ${c.anchor.chunk_id}`),
+      const pair = f.citations.length === 2;
+      cards.push(h("div", { class: "card" + (sel && sel.kind === "citation" && sel.id === c.n ? " sel" : "") + (i === 1 && pair ? " b" : "") },
+        h("div", { class: "meta" }, pair ? h("span", { class: "ab " + (i ? "b" : "a"), title: i ? "B: second quote of the pair" : "A: first quote of the pair" }, i ? "B" : "A") : null, h("strong", null, `[${c.n}]`), provBadge(label, p && p.confidence), h("span", null, `${c.anchor.story} / ${c.anchor.chunk_id}`),
           state.checks.length ? h("span", { title: "checked against the chunk text" }, (state.checks.at(-1).citations.find((x) => x.n === c.n) || {}).verbatim ? "✓ verbatim" : "? not confirmed") : null),
         h("blockquote", null, c.quote),
         p && p.summary ? h("div", { class: "muted" }, p.summary) : null,
@@ -540,10 +653,16 @@ export function showWhy(expl, prov, cite) {
 
 async function renderSelection() {
   if (!sel) return;
+  if (sel.kind === "node" && sel.id.startsWith("chunk:")) {
+    const cid = sel.id.slice(6);
+    const c = state.final && state.final.citations.find((x) => x.anchor.chunk_id === cid);
+    showSources([h("h3", null, `${KIND_GLYPH.source} Source text`), h("div", { class: "meta" }, provBadge("source_text"), c ? " cited in the answer" : state.final && state.final.status === "refused" ? " retrieved, rejected as unrelated" : " retrieved")], [c ? anchorItem(c.anchor) : { chunk_id: cid }]);
+    return;
+  }
   if (sel.kind === "node") {
     const n = state.graph.nodes[sel.id];
     if (!n) return;
-    const hdr = [h("h3", null, `${KIND_GLYPH[n.kind] || ""} ${n.name}`), h("div", { class: "meta" }, `${n.kind}`, " ", provBadge(n.provenance || "extracted", n.confidence), n.story ? ` / ${n.story}` : "")];
+    const hdr = [h("h3", null, `${KIND_WORD[n.kind] || n.kind}: ${n.name}`), h("div", { class: "meta" }, n.confidence === "low" ? "tentative " : "", " ", provBadge(n.provenance || "extracted", n.confidence), n.story ? ` / ${n.story}` : "")];
     let anchors = n.anchors;
     if (!anchors || !anchors.length) {
       showSources(hdr, []);
@@ -571,21 +690,36 @@ async function renderSelection() {
 // ---------------------------------------------------------------- graph view and list view
 
 let lastGraphKey = "";
+function emptyMsg(big, small) {
+  const el = $("board-empty");
+  el.replaceChildren(h("span", { class: "pinhint", "aria-hidden": "true" }), h("span", { class: "big" }, big), small);
+}
 function renderGraphView() {
-  const g = state.graph;
-  const cited = citedGraphIds(g, state.final ? state.final.citations : []);
-  const key = `${g.nodeOrder.length}:${g.edgeOrder.length}:${cited.nodes.size}:${cited.edges.size}`;
-  $("board-empty").hidden = g.nodeOrder.length > 0 || !!state.final;
-  if (!g.nodeOrder.length && state.final) {
-    $("board-empty").hidden = false;
-    $("board-empty").textContent = state.final.status === "refused" ? "No graph nodes: the question was refused." : "This question was answered from text search only; no graph nodes were used.";
-  } else if (!g.nodeOrder.length) $("board-empty").textContent = "Ask a question. Nodes appear as the agent finds evidence.";
+  const g = boardGraph(state);
+  const cited = citedBoard(g, state.final ? state.final.citations : []);
+  const key = `${g.nodeOrder.length}:${g.edgeOrder.length}:${cited.nodes.size}:${cited.edges.size}:${state.final ? 1 : 0}`;
+  $("board-empty").hidden = g.nodeOrder.length > 0;
+  if (!g.nodeOrder.length && state.final) emptyMsg(state.final.status === "refused" ? "Nothing to pin" : "No cards for this answer", state.final.status === "refused" ? "The question is not covered by the corpus, so the board stays empty. The trace shows what was searched." : "It was answered from text search only; no graph nodes were used.");
+  else if (!g.nodeOrder.length && state.phase === "running") emptyMsg("Looking for evidence\u2026", "Cards are pinned here the moment the agent finds them.");
+  else if (!g.nodeOrder.length) emptyMsg("Ask a question", "Cards appear here, one by one, as the agent finds evidence.");
   $("graph-count").textContent = g.nodeOrder.length ? `(${g.nodeOrder.length} nodes / ${g.edgeOrder.length} edges)` : "";
   if (key !== lastGraphKey) {
     lastGraphKey = key;
     if (graph) graph.sync(g, cited, [...seeds]);
     renderListView();
+    maybeAutoOpen();
   }
+}
+
+// When the answer lands, show its quote(s) in the source panel so the proof is on screen without a click.
+function maybeAutoOpen() {
+  const f = state.final;
+  if (!f || sel || f.status === "refused" || !f.citations.length || autoOpened === state.runId) return;
+  autoOpened = state.runId;
+  if (f.citations.length === 2) {
+    sel = { kind: "citation", id: f.citations[0].n };
+    showSources([h("h3", null, "The two quotes side by side"), h("p", { class: "muted" }, "A and B come from different places in the story.")], f.citations.map((c, i) => anchorItem(c.anchor, i ? "B" : "A")));
+  } else openCitation(f.citations[0].n);
 }
 
 let listMode = false;
@@ -600,8 +734,8 @@ function setListMode(on) {
 $("view-toggle").addEventListener("click", () => setListMode(!listMode));
 function renderListView() {
   if (!listMode) return;
-  const g = state.graph;
-  const cited = citedGraphIds(g, state.final ? state.final.citations : []);
+  const g = boardGraph(state);
+  const cited = citedBoard(g, state.final ? state.final.citations : []);
   const nrows = g.nodeOrder.map((id) => { const n = g.nodes[id]; return h("tr", { "aria-selected": String(!!sel && sel.kind === "node" && sel.id === id) }, h("td", null, h("button", { type: "button", onclick: () => select({ kind: "node", id }) }, n.name)), h("td", null, n.kind), h("td", null, n.provenance || "extracted", n.confidence ? ` (${n.confidence})` : ""), h("td", null, cited.nodes.has(id) ? "cited" : ""), h("td", null, n.story || "")); });
   const erows = g.edgeOrder.map((id) => { const e = g.edges[id]; const s = g.nodes[e.src], d = g.nodes[e.dst]; return h("tr", { "aria-selected": String(!!sel && sel.kind === "edge" && sel.id === id) }, h("td", null, s ? s.name : e.src), h("td", null, h("button", { type: "button", onclick: () => select({ kind: "edge", id }) }, e.rel)), h("td", null, d ? d.name : e.dst), h("td", null, e.provenance || "extracted", isDerived(e) ? " (double line)" : ""), h("td", null, cited.edges.has(id) ? "cited" : ""), h("td", null, e.anchor ? e.anchor.chunk_id : "no anchor")); });
   $("list-view").replaceChildren(
@@ -683,7 +817,8 @@ async function refreshHealth() {
 $("health").addEventListener("click", () => { const pop = $("health-pop"); pop.hidden = !pop.hidden; $("health").setAttribute("aria-expanded", String(!pop.hidden)); if (!pop.hidden) refreshHealth(); });
 
 function renderStrip() {
-  $("strip-graph").textContent = `graph: ${state.graph.nodeOrder.length} nodes / ${state.graph.edgeOrder.length} edges`;
+  const bg = boardGraph(state);
+  $("strip-graph").textContent = `board: ${bg.nodeOrder.length} cards / ${bg.edgeOrder.length} strings`;
   $("strip-rate").textContent = rate();
 }
 
@@ -691,7 +826,7 @@ setInterval(() => {
   const running = state.phase === "running";
   const start = state.startedAt;
   $("clock").textContent = start ? `${(((running ? Date.now() : state.endedAt || Date.now()) - start) / 1000).toFixed(1)} s` : "0.0 s";
-  if (running) { renderTrace(); renderStrip(); }
+  if (running) { renderTrace(); renderStrip(); renderProgress(); }
 }, 250);
 
 setInterval(() => { if (!document.hidden) refreshHealth(); }, 20000);
@@ -746,4 +881,4 @@ if (replayRequested) {
   else runReplay();
 }
 // test hook for browser checks (read-only snapshot)
-window.__db = { get state() { return state; } };
+window.__db = { get state() { return state; }, get board() { return graph ? graph.counts() : null; }, get cy() { return graph ? graph.cy : null; } };

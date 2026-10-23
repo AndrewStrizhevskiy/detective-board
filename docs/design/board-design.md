@@ -217,3 +217,16 @@ Rules: no animation loops after the run ends; nothing blinks faster than 3 Hz; n
 2. backend: a `candidate_evidence` flag on the `retrieve.vector` event payload (or the UI reuses `fused`) so quotes can be shown before the LLM answer; and a `cached: true` field on `run.start` so the UI can show the REPLAY badge.
 3. frontend: add `python3 docs/design/contrast_check.py` to `just lint` or CI so token edits cannot regress contrast.
 4. agent-engineer: confidence band thresholds (high/medium/low) from eval calibration, currently provisional in 1.4.
+
+## 9. Board look and loading state (implemented 2026-10-23, web/)
+
+Status: implemented in `web/`; verified in the Browser pane on the `--fake` server only (no real model run).
+
+- **Pinned evidence cards.** Each node is a card with a red pin (`--db-pin`; a tape strip for claims), a line icon and the type shape from section 2 (person oval, place box, item diamond, event hexagon, claim speech note, source clipping). Claims are placed next to their speaker and labelled "J. McCarthy: ...". Low-confidence cards are dashed and say "(tentative)". Cards cited by the answer get an amber halo (`--db-halo`). Strings sag slightly; arrowheads give direction.
+- **Rule-derived edges** are a double line with an ink "= DERIVED R3" stamp at the midpoint ("=? CONDITIONAL" when dashed); conflicts are red with a "! CONFLICTS" label. Clicking a derived edge opens the "Why?" panel.
+- **Arrival.** Cards appear one by one in arrival order (about 130-340 ms apart, drop-in 350 ms), strings appear with their second card. The view is fitted to the final picture first so nothing jumps. `prefers-reduced-motion` and the Motion toggle set `--db-dur-node` to 0 and everything appears at once. Layout: deterministic force simulation per batch plus a rectangle-collision pass (`web/js/layout.js`); placed cards never move; 15 cards, 0 overlaps in the check run.
+- **Contradiction question.** The router runs no graph query for it, so the UI pins the neighbourhood of the rule finding itself: when `tool_result` carries an `explanation`, it fetches `/api/graph/subgraph` for the speaker (2 hops) and for the facts' events (1 hop). A text-only answer shows the retrieved chunks as source clippings (a refusal shows them dashed, "rejected: unrelated").
+- **Loading card** (answer panel, while running): large elapsed timer, eight steps with done / active / pending / skipped marks (glyph and word, not colour), and during the model's prefill a bar with an estimate `prompt_tokens_estimate / 13.8 tok/s` labelled as an estimate. After the run it collapses to "Done in N s".
+- **Badges.** `LIVE` (pulsing dot, text) versus `RECORDING` (play glyph, inverted colours; a stored run is played back). `CAPTURING` replaces the old red "RECORDING" badge of `?record=1`. Provenance badges and citation chips share one glyph set: `~` extracted, `=` derived, `=?` conditional, quote marks source_text.
+- New tokens `--db-pin`, `--db-halo` (both themes); `contrast_check.py` has four new pairs, 0 failures.
+- Not done: A/B passages keep the section 1.5 styling but the pair shows in the source panel automatically only for exactly two citations; no 25-node cap chip.

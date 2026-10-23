@@ -1,19 +1,27 @@
-"""Tiny deterministic fixture for `--fake` mode, UI development and tests.
+"""Deterministic fixture for `--fake` mode, UI development and tests.
 
-Own short paraphrase sentences (not corpus text), three chunks of one story, a hash embedder,
-a scripted FakeLLM. The graph quotes are verbatim substrings of the chunk texts."""
+Two flavours, chosen by `demo_mode()`:
+- lean (under pytest, or `DETECTIVE_BOARD_FIXTURE=lean`): own short paraphrase sentences, three
+  chunks of one story, a five-entity graph. Tests count these objects, so they never change.
+- demo (a real `--fake` server, or `DETECTIVE_BOARD_FIXTURE=demo`): the lean data plus real
+  passages of `data/clean` (verbatim, with the absolute offsets they have in that file) and a
+  Boscombe Valley graph (persons, places, an item, events and claims, one rule-derived R3 edge
+  with its Explanation) so the board is populated for the demo questions.
+Both use a hash embedder and a scripted FakeLLM; every graph quote is a verbatim substring of
+its chunk text."""
 
 from __future__ import annotations
 
 import json
 import os
 import re
+import sys
 import tempfile
 from collections.abc import Sequence
 from typing import Any
 
 from detective_board.agent import FakeLLM
-from detective_board.extract.schema import Entity, Extraction, Relation
+from detective_board.extract.schema import Claim, Entity, Event, Extraction, Relation
 from detective_board.graph import ChunkRef, GraphStore
 from detective_board.mcp.errors import error_payload
 from detective_board.retrieval import (
@@ -63,14 +71,81 @@ B_FACT_QUOTE = (
 )
 B_CLAIM_QUOTE = "he is mistaken in thinking that I was following my father"
 
+# ---- demo flavour: verbatim passages of data/clean/*.txt with their real absolute offsets ----
+S_ADDER_START = 48201
+S_ADDER = (
+    "\u201cThe band! the speckled band!\u201d whispered Holmes.\n\n"
+    "I took a step forward. In an instant his strange headgear began to move, and there reared "
+    "itself from among his hair the squat diamond-shaped head and puffed neck of a loathsome "
+    "serpent.\n\n"
+    "\u201cIt is a swamp adder!\u201d cried Holmes; \u201cthe deadliest snake in India. "
+    "He has died within ten seconds of being bitten."
+)
+S_ADDER_QUOTE = "the deadliest snake in India"
+B_DEMO_CHUNKS = [  # (chunk number, absolute start in boscombe-valley-mystery.txt, text)
+    (
+        3,
+        2872,
+        "The largest landed proprietor in that part is a Mr. John Turner, who made his money in "
+        "Australia and returned some years ago to the old country. One of the farms which he "
+        "held, that of Hatherley, was let to Mr. Charles McCarthy, who was also an ex-Australian.",
+    ),
+    (
+        4,
+        4004,
+        "On June 3rd, that is, on Monday last, McCarthy left his house at Hatherley about three "
+        "in the afternoon and walked down to the Boscombe Pool, which is a small lake formed by "
+        "the spreading out of the stream which runs down the Boscombe Valley.",
+    ),
+    (
+        5,
+        4459,
+        "From Hatherley Farmhouse to the Boscombe Pool is a quarter of a mile, and two people saw "
+        "him as he passed over this ground. One was an old woman, whose name is not mentioned, "
+        "and the other was William Crowder, a game-keeper in the employ of Mr. Turner. Both "
+        "these witnesses depose that Mr. McCarthy was walking alone.",
+    ),
+    (
+        6,
+        5347,
+        "A girl of fourteen, Patience Moran, who is the daughter of the lodge-keeper of the "
+        "Boscombe Valley estate, was in one of the woods picking flowers. She states that while "
+        "she was there she saw, at the border of the wood and close by the lake, Mr. McCarthy "
+        "and his son, and that they appeared to be having a violent quarrel.",
+    ),
+    (
+        7,
+        12960,
+        "I had no idea that he was in front of me. When about a hundred yards from the pool I "
+        "heard a cry of \u201cCooee!\u201d which was a usual signal between my father and myself.",
+    ),
+]
+
+
+def demo_mode() -> bool:
+    """True for the rich demo dataset. `DETECTIVE_BOARD_FIXTURE=demo|lean` forces a flavour;
+    otherwise tests (pytest loaded) get the lean one and a real server the demo one."""
+    forced = os.environ.get("DETECTIVE_BOARD_FIXTURE", "").strip().lower()
+    if forced in ("demo", "lean"):
+        return forced == "demo"
+    return "pytest" not in sys.modules
+
+
+def _speckled_chunks() -> list[tuple[int, int, str]]:
+    if not demo_mode():
+        return CHUNKS
+    return [(1, S_ADDER_START, S_ADDER), *CHUNKS[1:]]
+
 
 def chunk_id(n: int, story: str = STORY) -> str:
     return f"{story}-{n:04d}"
 
 
 def records() -> list[dict]:
-    rows = [(STORY, n, start, text) for n, start, text in CHUNKS]
+    rows = [(STORY, n, start, text) for n, start, text in _speckled_chunks()]
     rows += [(B_STORY, n, start, text) for n, start, text in B_CHUNKS]
+    if demo_mode():
+        rows += [(B_STORY, n, start, text) for n, start, text in B_DEMO_CHUNKS]
     return [
         {
             "chunk_id": chunk_id(n, story),
@@ -106,7 +181,7 @@ def _person(name: str, quote: str, aliases: tuple[str, ...] = ()) -> Entity:
 
 def build_graph(path: str = ":memory:") -> GraphStore:
     g = GraphStore(path)
-    refs = {n: ChunkRef(chunk_id(n), STORY, s, s + len(t), t) for n, s, t in CHUNKS}
+    refs = {n: ChunkRef(chunk_id(n), STORY, s, s + len(t), t) for n, s, t in _speckled_chunks()}
     g.ingest_many(
         [
             (
@@ -145,7 +220,199 @@ def build_graph(path: str = ":memory:") -> GraphStore:
             ),
         ]
     )
+    if demo_mode():
+        _add_boscombe(g)
     return g
+
+
+def _bref(n: int) -> ChunkRef:
+    rows = {k: (st, tx) for k, st, tx in B_CHUNKS + B_DEMO_CHUNKS}
+    start, text = rows[n]
+    return ChunkRef(chunk_id(n, B_STORY), B_STORY, start, start + len(text), text)
+
+
+def _ent(name: str, kind: str, quote: str, *aliases: str) -> Entity:
+    return Entity(name=name, type=kind, aliases=list(aliases), quote=quote)  # type: ignore[arg-type]
+
+
+def _add_boscombe(g: GraphStore) -> None:
+    """Boscombe Valley sub-graph for the demo question about James McCarthy's account."""
+    cm, jm, wc, pm = "Charles McCarthy", "James McCarthy", "William Crowder", "Patience Moran"
+    pool = "Boscombe Pool"
+    g.ingest_many(
+        [
+            (
+                _bref(3),
+                Extraction(
+                    entities=[
+                        _ent("John Turner", "person", "Mr. John Turner", "Turner"),
+                        _ent(cm, "person", "Mr. Charles McCarthy"),
+                        _ent("Hatherley", "place", "Hatherley"),
+                    ],
+                    relations=[
+                        Relation(
+                            subject=cm,
+                            predicate="tenant of",
+                            object="John Turner",
+                            quote="One of the farms which he held, that of Hatherley, "
+                            "was let to Mr. Charles McCarthy",
+                        )
+                    ],
+                ),
+            ),
+            (
+                _bref(4),
+                Extraction(
+                    entities=[_ent(cm, "person", "McCarthy"), _ent(pool, "place", pool)],
+                    events=[
+                        Event(
+                            description="Charles McCarthy walks down to Boscombe Pool",
+                            time_text="about three in the afternoon",
+                            place=pool,
+                            participants=[cm],
+                            quote="McCarthy left his house at Hatherley about three in the "
+                            "afternoon and walked down to the Boscombe Pool",
+                        )
+                    ],
+                ),
+            ),
+            (
+                _bref(5),
+                Extraction(
+                    entities=[
+                        _ent(wc, "person", wc, "the game-keeper"),
+                        _ent("an old woman", "person", "an old woman, whose name is not mentioned"),
+                    ],
+                    claims=[
+                        Claim(
+                            speaker=wc,
+                            content="Charles McCarthy was walking alone",
+                            about=cm,
+                            quote="Both these witnesses depose that Mr. McCarthy was walking alone",
+                        ),
+                        Claim(
+                            speaker="an old woman",
+                            content="Charles McCarthy was walking alone",
+                            about=cm,
+                            quote="Both these witnesses depose that Mr. McCarthy was walking alone",
+                        ),
+                    ],
+                ),
+            ),
+            (
+                _bref(1),
+                Extraction(
+                    entities=[
+                        _ent(jm, "person", "Mr. James McCarthy"),
+                        _ent("a gun", "item", "a gun"),
+                    ],
+                    events=[
+                        Event(
+                            description="William Crowder sees Charles McCarthy pass",
+                            participants=[wc, cm],
+                            quote="his seeing Mr. McCarthy pass",
+                        ),
+                        Event(
+                            description="William Crowder sees James McCarthy going the same way "
+                            "with a gun",
+                            participants=[wc, jm],
+                            quote=B_FACT_QUOTE,
+                        ),
+                    ],
+                    relations=[
+                        Relation(
+                            subject=jm,
+                            predicate="carries",
+                            object="a gun",
+                            quote="Mr. James McCarthy, going the same way with a gun",
+                        )
+                    ],
+                ),
+            ),
+            (
+                _bref(6),
+                Extraction(
+                    entities=[_ent(pm, "person", pm)],
+                    events=[
+                        Event(
+                            description="Charles and James McCarthy quarrel near the pool",
+                            place=pool,
+                            participants=[cm, jm],
+                            quote="Mr. McCarthy and his son, and that they appeared to be "
+                            "having a violent quarrel",
+                        )
+                    ],
+                    claims=[
+                        Claim(
+                            speaker=pm,
+                            content="the two McCarthys were quarrelling violently",
+                            about=cm,
+                            quote="she saw, at the border of the wood and close by the lake, "
+                            "Mr. McCarthy and his son, and that they appeared to be having "
+                            "a violent quarrel",
+                        )
+                    ],
+                ),
+            ),
+            (
+                _bref(2),
+                Extraction(
+                    entities=[_ent(wc, "person", wc)],
+                    claims=[
+                        Claim(
+                            speaker=jm,
+                            content="he was not following his father",
+                            about=cm,
+                            quote=B_CLAIM_QUOTE,
+                        )
+                    ],
+                ),
+            ),
+            (
+                _bref(7),
+                Extraction(
+                    entities=[_ent(pool, "place", "the pool")],
+                    events=[
+                        Event(
+                            description="James McCarthy hears a cry of Cooee near the pool",
+                            place=pool,
+                            participants=[jm],
+                            quote="When about a hundred yards from the pool I heard a cry of "
+                            "\u201cCooee!\u201d",
+                        )
+                    ],
+                    claims=[
+                        Claim(
+                            speaker=jm,
+                            content="he did not know his father was ahead of him",
+                            about=cm,
+                            quote="I had no idea that he was in front of me",
+                        )
+                    ],
+                ),
+            ),
+        ]
+    )
+    exp = boscombe_explanation()
+    a = exp.anchors[1]  # the claim's anchor: the derived edge is justified by that quote
+    g.conn.execute(
+        "INSERT INTO g_edge(src,dst,rel,props_json,provenance,confidence,chunk_id,char_start,"
+        "char_end,rel_start,rel_end,quote,ambiguous) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,0)",
+        (
+            exp.facts[0].fact_id,
+            exp.facts[1].fact_id,
+            "CONTRADICTS",
+            json.dumps({"explanation": exp.model_dump(mode="json"), "rule": exp.rule_id}),
+            "derived",
+            "high",
+            a.chunk_id,
+            a.char_start,
+            a.char_end,
+            a.rel_start,
+            a.rel_end,
+            a.quote,
+        ),
+    )
 
 
 def _anchor(chunk_n: int, start: int, text: str, quote: str) -> SymAnchor:
@@ -166,7 +433,7 @@ def boscombe_explanation() -> Explanation:
     fact_a = _anchor(1, B_CHUNKS[0][1], B_FACT, B_FACT_QUOTE)
     claim_a = _anchor(2, B_CHUNKS[1][1], B_CLAIM, B_CLAIM_QUOTE)
     claim = FactRef(
-        fact_id="c:boscombe-valley-mystery-0002:1",
+        fact_id="c:boscombe-valley-mystery-0002:0",
         kind="claim",
         provenance="extracted",
         confidence="high",
@@ -174,7 +441,7 @@ def boscombe_explanation() -> Explanation:
         anchors=[claim_a],
     )
     event = FactRef(
-        fact_id="e:boscombe-valley-mystery-0001:2",
+        fact_id="e:boscombe-valley-mystery-0001:1",
         kind="event",
         provenance="extracted",
         confidence="high",
@@ -190,7 +457,7 @@ def boscombe_explanation() -> Explanation:
         facts=[claim, event],
         edges=[
             EdgeRef(
-                edge_id="asserts:c:boscombe-valley-mystery-0002:1",
+                edge_id="asserts:c:boscombe-valley-mystery-0002:0",
                 rel="ASSERTS",
                 src="p:boscombe-valley-mystery:james-mccarthy",
                 dst=claim.fact_id,
@@ -252,19 +519,33 @@ class FakeToolClient:
 
 
 _TOOL_SRC = re.compile(r"n=(\d+) [^>\n]*origin=tool[^>\n]*>>>\n(.*?)\n<<<END", re.S)
+_VEC_SRC = re.compile(r"n=(\d+) [^>\n]*origin=vector[^>\n]*>>>\n(.*?)\n<<<END", re.S)
 
 
 def _answer(messages: Sequence[dict[str, str]]) -> str:
     """Canned answer; when a rule result is in the prompt, cite its anchored quotes."""
     user = messages[-1]["content"]
     found = _TOOL_SRC.findall(user)
-    if "RULE RESULT" not in user or not found:
-        return FAKE_ANSWER
-    cites = " ".join(f'[{n}: "{text}"]' for n, text in found)
-    return (
-        f"The rule engine finds James McCarthy going the same way with a gun, a contradiction. "
-        f"{cites}"
-    )
+    if "RULE RESULT" in user and found:
+        found.sort(key=lambda f: "mistaken" not in f[1])  # A = his account, B = what was seen
+        cites = " ".join(f'[{n}: "{text}"]' for n, text in found)
+        if demo_mode():
+            return (
+                "James McCarthy told the inquest that he was not following his father, yet the "
+                f"game-keeper saw him going the same way with a gun. {cites}"
+            )
+        return (
+            f"The rule engine finds James McCarthy going the same way with a gun, a "
+            f"contradiction. {cites}"
+        )
+    if demo_mode():
+        for n, text in _VEC_SRC.findall(user):
+            if S_ADDER_QUOTE in text:
+                return (
+                    "Holmes says the speckled band is a swamp adder, "
+                    f'"{S_ADDER_QUOTE}". [{n}: "{S_ADDER_QUOTE}"]'
+                )
+    return FAKE_ANSWER
 
 
 def build_llm() -> FakeLLM:

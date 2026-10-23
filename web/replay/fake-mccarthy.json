@@ -1,0 +1,1375 @@
+{
+ "meta": {
+  "question": "Are there contradictions in James McCarthy's account?",
+  "note": "Event stream of the --fake server (demo fixture, canned FakeLLM), Boscombe Valley, derived R3 finding. Event order and payloads unchanged; only ts values were rewritten to a realistic pace (9 s CPU prefill before the first token)."
+ },
+ "events": [
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 0,
+   "ts": "2026-10-23T09:00:00.000+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "mcp",
+    "vector"
+   ],
+   "tools": [
+    "find_contradictions"
+   ],
+   "method": "rules",
+   "reason": "contradiction question -> symbolic rules via MCP find_contradictions; hybrid retrieval adds source text",
+   "matched": [
+    "contradict"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 1,
+   "ts": "2026-10-23T09:00:00.350+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "Are there contradictions in James McCarthy's account?",
+   "k": 4,
+   "attempt": 1
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 2,
+   "ts": "2026-10-23T09:00:00.850+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 0,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "boscombe-valley-mystery-0001",
+     "story": "boscombe-valley-mystery",
+     "rank": 1,
+     "rrf": 0.03278688524590164,
+     "ranks": {
+      "bm25": 1,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -2.005948051018823,
+      "vec": 0.7731953859329224
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0003",
+     "story": "boscombe-valley-mystery",
+     "rank": 2,
+     "rrf": 0.03149801587301587,
+     "ranks": {
+      "bm25": 4,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -2.2295462368399187e-06,
+      "vec": 0.8787322044372559
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0002",
+     "story": "boscombe-valley-mystery",
+     "rank": 3,
+     "rrf": 0.031054405392392875,
+     "ranks": {
+      "bm25": 7,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -1.4983388704318937e-06,
+      "vec": 0.8456966876983643
+     }
+    },
+    {
+     "chunk_id": "speckled-band-0001",
+     "story": "speckled-band",
+     "rank": 4,
+     "rrf": 0.031024531024531024,
+     "ranks": {
+      "bm25": 3,
+      "vec": 6
+     },
+     "scores": {
+      "bm25": -1.0117752067445691,
+      "vec": 0.9285258650779724
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03278688524590164,
+    "threshold": 0.018,
+    "support": 0.5,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "boscombe-valley-mystery-0001",
+    "boscombe-valley-mystery-0003",
+    "boscombe-valley-mystery-0002",
+    "speckled-band-0001"
+   ]
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 3,
+   "ts": "2026-10-23T09:00:01.150+00:00",
+   "step_id": "tool-find_contradictions",
+   "duration_ms": null,
+   "type": "tool_call",
+   "server": "timeline-alibi",
+   "tool": "find_contradictions",
+   "arguments": {
+    "story": "boscombe-valley-mystery"
+   },
+   "timeout_s": 5.0
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 4,
+   "ts": "2026-10-23T09:00:01.750+00:00",
+   "step_id": "tool-find_contradictions",
+   "duration_ms": 0,
+   "type": "tool_result",
+   "server": "timeline-alibi",
+   "tool": "find_contradictions",
+   "ok": true,
+   "summary": "status=ok items=2",
+   "provenance": "derived",
+   "explanation": {
+    "rule_id": "R3",
+    "rule_version": "1",
+    "verdict": "violated",
+    "conditional": false,
+    "reason_code": "CLAIM_INCOMPATIBLE_WITH_FACT",
+    "facts": [
+     {
+      "fact_id": "c:boscombe-valley-mystery-0002:0",
+      "kind": "claim",
+      "provenance": "extracted",
+      "confidence": "high",
+      "summary": "James McCarthy: he was not following his father",
+      "anchors": [
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0002",
+        "char_start": 12901,
+        "char_end": 12958,
+        "quote": "he is mistaken in thinking that I was following my father",
+        "rel_start": 88,
+        "rel_end": 145,
+        "ambiguous": false
+       }
+      ]
+     },
+     {
+      "fact_id": "e:boscombe-valley-mystery-0001:1",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "high",
+      "summary": "Crowder saw James McCarthy going the same way, after his father",
+      "anchors": [
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0001",
+        "char_start": 4856,
+        "char_end": 4940,
+        "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+        "rel_start": 79,
+        "rel_end": 163,
+        "ambiguous": false
+       }
+      ]
+     }
+    ],
+    "edges": [
+     {
+      "edge_id": "asserts:c:boscombe-valley-mystery-0002:0",
+      "rel": "ASSERTS",
+      "src": "p:boscombe-valley-mystery:james-mccarthy",
+      "dst": "c:boscombe-valley-mystery-0002:0",
+      "anchors": [
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0002",
+        "char_start": 12901,
+        "char_end": 12958,
+        "quote": "he is mistaken in thinking that I was following my father",
+        "rel_start": 88,
+        "rel_end": 145,
+        "ambiguous": false
+       }
+      ]
+     }
+    ],
+    "derivation": [
+     {
+      "step": 1,
+      "op": "order_edge",
+      "inputs": [
+       "e:boscombe-valley-mystery-0001:1"
+      ],
+      "output": "father < son (narrator-stated order)"
+     },
+     {
+      "step": 2,
+      "op": "claim_vs_fact",
+      "inputs": [
+       "c:boscombe-valley-mystery-0002:0",
+       "e:boscombe-valley-mystery-0001:1"
+      ],
+      "output": "claim 'son not following father' contradicts the stated order"
+     }
+    ],
+    "anchors": [
+     {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0001",
+      "char_start": 4856,
+      "char_end": 4940,
+      "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+      "rel_start": 79,
+      "rel_end": 163,
+      "ambiguous": false
+     },
+     {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0002",
+      "char_start": 12901,
+      "char_end": 12958,
+      "quote": "he is mistaken in thinking that I was following my father",
+      "rel_start": 88,
+      "rel_end": 145,
+      "ambiguous": false
+     }
+    ],
+    "depends_on_extracted": [
+     {
+      "fact_id": "c:boscombe-valley-mystery-0002:0",
+      "kind": "claim",
+      "provenance": "extracted",
+      "confidence": "high",
+      "summary": "James McCarthy: he was not following his father",
+      "anchors": [
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0002",
+        "char_start": 12901,
+        "char_end": 12958,
+        "quote": "he is mistaken in thinking that I was following my father",
+        "rel_start": 88,
+        "rel_end": 145,
+        "ambiguous": false
+       }
+      ]
+     },
+     {
+      "fact_id": "e:boscombe-valley-mystery-0001:1",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "high",
+      "summary": "Crowder saw James McCarthy going the same way, after his father",
+      "anchors": [
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0001",
+        "char_start": 4856,
+        "char_end": 4940,
+        "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+        "rel_start": 79,
+        "rel_end": 163,
+        "ambiguous": false
+       }
+      ]
+     }
+    ],
+    "weak": [],
+    "missing": [],
+    "notes": [
+     "fake-mode fixture: the witness is not called a liar; narrator voice may be partial"
+    ],
+    "subject": {
+     "claim_id": "c:boscombe-valley-mystery-0002:0",
+     "speaker_id": "p:boscombe-valley-mystery:james-mccarthy"
+    },
+    "suspects": []
+   },
+   "error": null
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 5,
+   "ts": "2026-10-23T09:00:02.250+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "boscombe-valley-mystery-0001",
+     "story": "boscombe-valley-mystery",
+     "char_start": 4777,
+     "char_end": 4941,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 164,
+     "window_char_start": 4777,
+     "window_char_end": 4941
+    },
+    {
+     "n": 2,
+     "chunk_id": "boscombe-valley-mystery-0003",
+     "story": "boscombe-valley-mystery",
+     "char_start": 2872,
+     "char_end": 3131,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 259,
+     "window_char_start": 2872,
+     "window_char_end": 3131
+    },
+    {
+     "n": 3,
+     "chunk_id": "boscombe-valley-mystery-0002",
+     "story": "boscombe-valley-mystery",
+     "char_start": 12813,
+     "char_end": 12959,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 146,
+     "window_char_start": 12813,
+     "window_char_end": 12959
+    },
+    {
+     "n": 4,
+     "chunk_id": "speckled-band-0001",
+     "story": "speckled-band",
+     "char_start": 48201,
+     "char_end": 48554,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 353,
+     "window_char_start": 48201,
+     "window_char_end": 48554
+    },
+    {
+     "n": 5,
+     "chunk_id": "boscombe-valley-mystery-0001",
+     "story": "boscombe-valley-mystery",
+     "char_start": 4856,
+     "char_end": 4940,
+     "origin": "tool",
+     "label": "derived",
+     "window_start": 0,
+     "window_end": 84,
+     "window_char_start": 4856,
+     "window_char_end": 4940
+    },
+    {
+     "n": 6,
+     "chunk_id": "boscombe-valley-mystery-0002",
+     "story": "boscombe-valley-mystery",
+     "char_start": 12901,
+     "char_end": 12958,
+     "origin": "tool",
+     "label": "derived",
+     "window_start": 0,
+     "window_end": 57,
+     "window_char_start": 12901,
+     "window_char_end": 12958
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 2,
+   "memory_chars": 0,
+   "prompt_chars": 3168,
+   "prompt_tokens_estimate": 792,
+   "max_prompt_tokens": 1200,
+   "strategy": "rank_full",
+   "window_words": 60,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 6,
+   "ts": "2026-10-23T09:00:11.250+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "James "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 7,
+   "ts": "2026-10-23T09:00:11.470+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "McCarthy "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 8,
+   "ts": "2026-10-23T09:00:11.690+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "told "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 9,
+   "ts": "2026-10-23T09:00:11.910+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 10,
+   "ts": "2026-10-23T09:00:12.130+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "inquest "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 11,
+   "ts": "2026-10-23T09:00:12.350+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 12,
+   "ts": "2026-10-23T09:00:12.570+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "he "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 13,
+   "ts": "2026-10-23T09:00:12.790+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 14,
+   "ts": "2026-10-23T09:00:13.010+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 15,
+   "ts": "2026-10-23T09:00:13.230+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "following "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 16,
+   "ts": "2026-10-23T09:00:13.450+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "his "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 17,
+   "ts": "2026-10-23T09:00:13.670+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "father, "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 18,
+   "ts": "2026-10-23T09:00:13.890+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "yet "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 19,
+   "ts": "2026-10-23T09:00:14.110+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 20,
+   "ts": "2026-10-23T09:00:14.330+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "game-keeper "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 21,
+   "ts": "2026-10-23T09:00:14.550+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "saw "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 22,
+   "ts": "2026-10-23T09:00:14.770+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "him "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 23,
+   "ts": "2026-10-23T09:00:14.990+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "going "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 24,
+   "ts": "2026-10-23T09:00:15.210+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 25,
+   "ts": "2026-10-23T09:00:15.430+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "same "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 26,
+   "ts": "2026-10-23T09:00:15.650+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "way "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 27,
+   "ts": "2026-10-23T09:00:15.870+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 28,
+   "ts": "2026-10-23T09:00:16.090+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 29,
+   "ts": "2026-10-23T09:00:16.310+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "gun. "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 30,
+   "ts": "2026-10-23T09:00:16.530+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[6: "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 31,
+   "ts": "2026-10-23T09:00:16.750+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"he "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 32,
+   "ts": "2026-10-23T09:00:16.970+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 33,
+   "ts": "2026-10-23T09:00:17.190+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "mistaken "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 34,
+   "ts": "2026-10-23T09:00:17.410+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 35,
+   "ts": "2026-10-23T09:00:17.630+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "thinking "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 36,
+   "ts": "2026-10-23T09:00:17.850+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 37,
+   "ts": "2026-10-23T09:00:18.070+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 38,
+   "ts": "2026-10-23T09:00:18.290+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 39,
+   "ts": "2026-10-23T09:00:18.510+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "following "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 40,
+   "ts": "2026-10-23T09:00:18.730+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 41,
+   "ts": "2026-10-23T09:00:18.950+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "father\"] "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 42,
+   "ts": "2026-10-23T09:00:19.170+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[5: "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 43,
+   "ts": "2026-10-23T09:00:19.390+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"he "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 44,
+   "ts": "2026-10-23T09:00:19.610+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 45,
+   "ts": "2026-10-23T09:00:19.830+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "seen "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 46,
+   "ts": "2026-10-23T09:00:20.050+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "his "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 47,
+   "ts": "2026-10-23T09:00:20.270+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "son, "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 48,
+   "ts": "2026-10-23T09:00:20.490+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Mr. "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 49,
+   "ts": "2026-10-23T09:00:20.710+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "James "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 50,
+   "ts": "2026-10-23T09:00:20.930+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "McCarthy, "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 51,
+   "ts": "2026-10-23T09:00:21.150+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "going "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 52,
+   "ts": "2026-10-23T09:00:21.370+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 53,
+   "ts": "2026-10-23T09:00:21.590+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "same "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 54,
+   "ts": "2026-10-23T09:00:21.810+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "way "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 55,
+   "ts": "2026-10-23T09:00:22.030+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 56,
+   "ts": "2026-10-23T09:00:22.250+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 57,
+   "ts": "2026-10-23T09:00:22.470+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "gun "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 58,
+   "ts": "2026-10-23T09:00:22.690+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "under "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 59,
+   "ts": "2026-10-23T09:00:22.910+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "his "
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 60,
+   "ts": "2026-10-23T09:00:23.130+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "arm\"]"
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 61,
+   "ts": "2026-10-23T09:00:23.530+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 6,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 5,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+   "seq": 62,
+   "ts": "2026-10-23T09:00:23.830+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "James McCarthy told the inquest that he was not following his father, yet the game-keeper saw him going the same way with a gun. [6: \"he is mistaken in thinking that I was following my father\"] [5: \"he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm\"]",
+   "citations": [
+    {
+     "n": 6,
+     "quote": "he is mistaken in thinking that I was following my father",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0002",
+      "char_start": 12901,
+      "char_end": 12958,
+      "quote": "he is mistaken in thinking that I was following my father"
+     },
+     "label": "derived"
+    },
+    {
+     "n": 5,
+     "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0001",
+      "char_start": 4856,
+      "char_end": 4940,
+      "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm"
+     },
+     "label": "derived"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 5,
+     "label": "derived",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R3",
+     "summary": "R3 CLAIM_INCOMPATIBLE_WITH_FACT",
+     "explanation": {
+      "rule_id": "R3",
+      "rule_version": "1",
+      "verdict": "violated",
+      "conditional": false,
+      "reason_code": "CLAIM_INCOMPATIBLE_WITH_FACT",
+      "facts": [
+       {
+        "fact_id": "c:boscombe-valley-mystery-0002:0",
+        "kind": "claim",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "James McCarthy: he was not following his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0002",
+          "char_start": 12901,
+          "char_end": 12958,
+          "quote": "he is mistaken in thinking that I was following my father",
+          "rel_start": 88,
+          "rel_end": 145,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "fact_id": "e:boscombe-valley-mystery-0001:1",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "Crowder saw James McCarthy going the same way, after his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0001",
+          "char_start": 4856,
+          "char_end": 4940,
+          "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+          "rel_start": 79,
+          "rel_end": 163,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "edges": [
+       {
+        "edge_id": "asserts:c:boscombe-valley-mystery-0002:0",
+        "rel": "ASSERTS",
+        "src": "p:boscombe-valley-mystery:james-mccarthy",
+        "dst": "c:boscombe-valley-mystery-0002:0",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0002",
+          "char_start": 12901,
+          "char_end": 12958,
+          "quote": "he is mistaken in thinking that I was following my father",
+          "rel_start": 88,
+          "rel_end": 145,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "derivation": [
+       {
+        "step": 1,
+        "op": "order_edge",
+        "inputs": [
+         "e:boscombe-valley-mystery-0001:1"
+        ],
+        "output": "father < son (narrator-stated order)"
+       },
+       {
+        "step": 2,
+        "op": "claim_vs_fact",
+        "inputs": [
+         "c:boscombe-valley-mystery-0002:0",
+         "e:boscombe-valley-mystery-0001:1"
+        ],
+        "output": "claim 'son not following father' contradicts the stated order"
+       }
+      ],
+      "anchors": [
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0001",
+        "char_start": 4856,
+        "char_end": 4940,
+        "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+        "rel_start": 79,
+        "rel_end": 163,
+        "ambiguous": false
+       },
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0002",
+        "char_start": 12901,
+        "char_end": 12958,
+        "quote": "he is mistaken in thinking that I was following my father",
+        "rel_start": 88,
+        "rel_end": 145,
+        "ambiguous": false
+       }
+      ],
+      "depends_on_extracted": [
+       {
+        "fact_id": "c:boscombe-valley-mystery-0002:0",
+        "kind": "claim",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "James McCarthy: he was not following his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0002",
+          "char_start": 12901,
+          "char_end": 12958,
+          "quote": "he is mistaken in thinking that I was following my father",
+          "rel_start": 88,
+          "rel_end": 145,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "fact_id": "e:boscombe-valley-mystery-0001:1",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "Crowder saw James McCarthy going the same way, after his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0001",
+          "char_start": 4856,
+          "char_end": 4940,
+          "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+          "rel_start": 79,
+          "rel_end": 163,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "weak": [],
+      "missing": [],
+      "notes": [
+       "fake-mode fixture: the witness is not called a liar; narrator voice may be partial"
+      ],
+      "subject": {
+       "claim_id": "c:boscombe-valley-mystery-0002:0",
+       "speaker_id": "p:boscombe-valley-mystery:james-mccarthy"
+      },
+      "suspects": []
+     }
+    },
+    {
+     "n": 6,
+     "label": "derived",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R3",
+     "summary": "R3 CLAIM_INCOMPATIBLE_WITH_FACT",
+     "explanation": {
+      "rule_id": "R3",
+      "rule_version": "1",
+      "verdict": "violated",
+      "conditional": false,
+      "reason_code": "CLAIM_INCOMPATIBLE_WITH_FACT",
+      "facts": [
+       {
+        "fact_id": "c:boscombe-valley-mystery-0002:0",
+        "kind": "claim",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "James McCarthy: he was not following his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0002",
+          "char_start": 12901,
+          "char_end": 12958,
+          "quote": "he is mistaken in thinking that I was following my father",
+          "rel_start": 88,
+          "rel_end": 145,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "fact_id": "e:boscombe-valley-mystery-0001:1",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "Crowder saw James McCarthy going the same way, after his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0001",
+          "char_start": 4856,
+          "char_end": 4940,
+          "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+          "rel_start": 79,
+          "rel_end": 163,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "edges": [
+       {
+        "edge_id": "asserts:c:boscombe-valley-mystery-0002:0",
+        "rel": "ASSERTS",
+        "src": "p:boscombe-valley-mystery:james-mccarthy",
+        "dst": "c:boscombe-valley-mystery-0002:0",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0002",
+          "char_start": 12901,
+          "char_end": 12958,
+          "quote": "he is mistaken in thinking that I was following my father",
+          "rel_start": 88,
+          "rel_end": 145,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "derivation": [
+       {
+        "step": 1,
+        "op": "order_edge",
+        "inputs": [
+         "e:boscombe-valley-mystery-0001:1"
+        ],
+        "output": "father < son (narrator-stated order)"
+       },
+       {
+        "step": 2,
+        "op": "claim_vs_fact",
+        "inputs": [
+         "c:boscombe-valley-mystery-0002:0",
+         "e:boscombe-valley-mystery-0001:1"
+        ],
+        "output": "claim 'son not following father' contradicts the stated order"
+       }
+      ],
+      "anchors": [
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0001",
+        "char_start": 4856,
+        "char_end": 4940,
+        "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+        "rel_start": 79,
+        "rel_end": 163,
+        "ambiguous": false
+       },
+       {
+        "story": "boscombe-valley-mystery",
+        "chunk_id": "boscombe-valley-mystery-0002",
+        "char_start": 12901,
+        "char_end": 12958,
+        "quote": "he is mistaken in thinking that I was following my father",
+        "rel_start": 88,
+        "rel_end": 145,
+        "ambiguous": false
+       }
+      ],
+      "depends_on_extracted": [
+       {
+        "fact_id": "c:boscombe-valley-mystery-0002:0",
+        "kind": "claim",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "James McCarthy: he was not following his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0002",
+          "char_start": 12901,
+          "char_end": 12958,
+          "quote": "he is mistaken in thinking that I was following my father",
+          "rel_start": 88,
+          "rel_end": 145,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "fact_id": "e:boscombe-valley-mystery-0001:1",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "high",
+        "summary": "Crowder saw James McCarthy going the same way, after his father",
+        "anchors": [
+         {
+          "story": "boscombe-valley-mystery",
+          "chunk_id": "boscombe-valley-mystery-0001",
+          "char_start": 4856,
+          "char_end": 4940,
+          "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+          "rel_start": 79,
+          "rel_end": 163,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "weak": [],
+      "missing": [],
+      "notes": [
+       "fake-mode fixture: the witness is not called a liar; narrator voice may be partial"
+      ],
+      "subject": {
+       "claim_id": "c:boscombe-valley-mystery-0002:0",
+       "speaker_id": "p:boscombe-valley-mystery:james-mccarthy"
+      },
+      "suspects": []
+     }
+    }
+   ],
+   "route": {
+    "run_id": "7dab4cac-9116-47a5-b142-392071ed4c61",
+    "seq": 0,
+    "ts": "2026-10-23T08:24:12.375+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "mcp",
+     "vector"
+    ],
+    "tools": [
+     "find_contradictions"
+    ],
+    "method": "rules",
+    "reason": "contradiction question -> symbolic rules via MCP find_contradictions; hybrid retrieval adds source text",
+    "matched": [
+     "contradict"
+    ],
+    "confidence": 0.8
+   },
+   "attempts": 1,
+   "refusal_code": null
+  }
+ ]
+}

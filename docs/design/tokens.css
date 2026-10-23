@@ -50,6 +50,10 @@
   --db-quote-text: #1b1f24;
   --db-quote-bg-conflict: #f9d0cc;   /* second quote of a contradiction pair */
 
+  /* investigation board: pin head on every card, halo behind cards the answer cites */
+  --db-pin: #b3261e;
+  --db-halo: #b87400;
+
   /* focus and selection */
   --db-focus: #0b57d0;
   --db-selected-ring: #1b1f24;
@@ -126,6 +130,9 @@
     --db-quote-text: #f4ebd0;
     --db-quote-bg-conflict: #5e2623;
 
+    --db-pin: #ff8a80;
+    --db-halo: #ffc233;
+
     --db-focus: #8ab4f8;
     --db-selected-ring: #f2f0ea;
 
@@ -170,6 +177,9 @@
   --db-quote-bg: #5b4a12;
   --db-quote-text: #f4ebd0;
   --db-quote-bg-conflict: #5e2623;
+
+  --db-pin: #ff8a80;
+  --db-halo: #ffc233;
 
   --db-focus: #8ab4f8;
   --db-selected-ring: #f2f0ea;

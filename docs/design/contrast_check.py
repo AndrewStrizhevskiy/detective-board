@@ -69,6 +69,10 @@ PAIRS += [
     ("selected ring vs board", "db-selected-ring", "db-bg-board", UI),
     ("replay badge text", "db-replay-text", "db-replay-bg", TEXT),
     ("replay badge vs surface", "db-replay-bg", "db-bg-surface", UI),
+    ("card pin vs board", "db-pin", "db-bg-board", UI),
+    ("card pin vs person fill", "db-pin", "db-person-fill", UI),
+    ("cited halo vs board", "db-halo", "db-bg-board", UI),
+    ("cited halo vs surface", "db-halo", "db-bg-surface", UI),
 ]
 
 

@@ -193,3 +193,64 @@ export function waitingStage(state, now) {
   if (enrichedAt) return { kind: "first_token", seconds: since(state.lastEventAt) };
   return { kind: "working", seconds: since(state.lastEventAt) };
 }
+
+// ---- board extras: source clippings and the progress steps shown while the model is busy
+
+export const PREFILL_TOK_PER_S = 13.8; // measured for qwen3:8b in the spike; shown as an estimate
+
+const chunkNo = (id) => { const m = /-(\d+)$/.exec(String(id)); return m ? `#${Number(m[1])}` : ""; };
+
+// A question answered from text search only has no graph nodes. The board then shows the
+// retrieved chunks as pinned source clippings (a refusal shows the rejected ones, tentative).
+export function boardGraph(state) {
+  const routes = (state.route && state.route.routes) || [];
+  const textOnly = routes.length > 0 && !routes.includes("graph") && !routes.includes("mcp");
+  if (!textOnly || !state.hits.length) return state.graph;
+  const refused = !!(state.final && state.final.status === "refused") || !!state.refusal;
+  const nodes = state.hits.slice(0, 5).map((h) => ({
+    id: `chunk:${h.chunk_id}`, kind: "source", name: `${String(h.story).replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())} ${chunkNo(h.chunk_id)}`,
+    sub: refused ? "rejected: unrelated" : `rank ${h.rank}`, chunk_id: h.chunk_id, confidence: refused ? "low" : "high", provenance: "source_text", story: h.story,
+  }));
+  return mergeGraph(state.graph, nodes, []);
+}
+
+export function citedBoard(graph, citations) {
+  const c = citedGraphIds(graph, citations);
+  for (const x of citations || []) if (x.anchor && graph.nodes[`chunk:${x.anchor.chunk_id}`]) c.nodes.add(`chunk:${x.anchor.chunk_id}`);
+  return c;
+}
+
+// Ordered steps for the loading card. status: done | active | pending | skipped.
+export function progressSteps(state, now) {
+  const has = (t) => state.events.some((e) => e.type === t);
+  const routes = (state.route && state.route.routes) || [];
+  const tools = (state.route && state.route.tools) || [];
+  const refusing = !!state.refusal || routes.includes("refusal") || (state.final && state.final.status === "refused");
+  const since = (t) => (t == null ? 0 : Math.max(0, (now - t) / 1000));
+  const enriched = state.events.find((e) => e.type === "enriched_query");
+  const est = enriched && enriched.prompt_tokens_estimate ? enriched.prompt_tokens_estimate / PREFILL_TOK_PER_S : null;
+  const defs = [
+    { key: "route", label: "Decide how to search", on: true, done: has("route_decided") },
+    { key: "search", label: "Search the book text", on: routes.length === 0 || routes.includes("vector"), done: has("retrieval_results") },
+    { key: "graph", label: "Look up the graph", on: routes.includes("graph"), done: has("graph_results") },
+    { key: "rules", label: "Run the rule engine", on: tools.length > 0, done: has("tool_result") },
+    { key: "prompt", label: "Pick the evidence", on: !refusing, done: !!enriched },
+    { key: "prefill", label: "Model reads the evidence", on: !refusing, done: state.firstTokenAt !== null || has("citation_check") },
+    { key: "write", label: "Model writes the answer", on: !refusing, done: has("citation_check") || !!state.final },
+    { key: "verify", label: "Check every quote", on: !refusing, done: !!state.final },
+  ];
+  let activeSet = false;
+  return defs.map((d) => {
+    if (!d.on) return { key: d.key, label: d.label, status: "skipped", detail: "" };
+    if (d.done) return { key: d.key, label: d.label, status: "done", detail: "" };
+    const status = !activeSet && state.phase === "running" ? "active" : "pending";
+    if (status === "active") activeSet = true;
+    let detail = "";
+    if (status === "active" && d.key === "prefill") {
+      const s = since(enriched ? state.lastEventAt : state.startedAt);
+      detail = `${Math.floor(s)} s` + (est ? ` of ~${Math.max(1, Math.round(est))} s (estimate)` : "");
+    }
+    if (status === "active" && d.key === "write") detail = `${state.answer.tokens} tokens`;
+    return { key: d.key, label: d.label, status, detail, est: d.key === "prefill" ? est : null, elapsed: d.key === "prefill" ? since(enriched ? state.lastEventAt : state.startedAt) : null };
+  });
+}

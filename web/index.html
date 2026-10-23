@@ -11,7 +11,7 @@
 <a class="skip" href="#question">Skip to the question box</a>
 <header class="bar">
   <div class="bar-row">
-    <h1>Detective Board</h1>
+    <h1 class="brand"><svg class="brand-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>Detective Board</h1>
     <form id="ask-form" class="ask" autocomplete="off">
       <label for="question" class="sr">Question about the Sherlock Holmes stories</label>
       <input id="question" name="question" type="text" maxlength="1000" placeholder="Ask about the Holmes stories  ( / to focus )" required>
@@ -21,14 +21,16 @@
     <div class="chips" aria-label="Run status">
       <span id="route-chips" class="chip-group"></span>
       <span id="run-badge" class="badge badge-idle" role="status">IDLE</span>
-      <span id="rec-badge" class="badge badge-rec" hidden>RECORDING</span>
-      <span id="clock" class="mono" aria-label="Elapsed time">0.0 s</span>
+      <span id="rec-badge" class="badge badge-rec" hidden title="This live run is being captured; use Save run as JSON afterwards.">CAPTURING</span>
+      <span id="clock" class="clock mono" aria-label="Elapsed time">0.0 s</span>
       <button id="health" class="health" type="button" aria-expanded="false" aria-controls="health-pop"><span id="health-icon" aria-hidden="true">?</span> <span id="health-text">checking API</span></button>
       <button id="theme-btn" type="button" aria-label="Theme: auto">Theme: auto</button>
       <button id="motion-btn" type="button" aria-pressed="true">Motion: on</button>
     </div>
   </div>
   <div class="bar-row sub">
+    <span class="try muted" id="try-label">Try:</span>
+    <span id="demo-chips" class="demo-chips" aria-labelledby="try-label"></span>
     <details id="history" class="history"><summary>History <span id="history-count">(0)</span></summary>
       <div class="history-pop">
         <label class="inline"><input type="checkbox" id="use-history"> Send answered questions as context for follow-ups</label>
@@ -76,32 +78,38 @@
       <div id="cy" tabindex="0" role="application" aria-label="Evidence graph. Arrow keys move between nodes, Enter selects, Escape clears, plus and minus zoom. Press g for the list view."></div>
       <p id="board-empty" class="empty overlay-msg">Ask a question. Nodes appear as the agent finds evidence.</p>
       <div id="list-view" class="list-view" hidden></div>
-      <details class="legend" id="legend">
-        <summary>Legend</summary>
-        <ul>
-          <li><span class="sw sw-person"></span> P Person (circle)</li>
-          <li><span class="sw sw-place"></span> L Place (rounded box)</li>
-          <li><span class="sw sw-item"></span> I Item (diamond)</li>
-          <li><span class="sw sw-event"></span> E Event (hexagon)</li>
-          <li><span class="sw sw-claim"></span> C Claim (tag)</li>
-          <li><span class="ln ln-rel"></span> relation (solid)</li>
-          <li><span class="ln ln-dbl"></span> derived by a rule (double line)</li>
-          <li><span class="ln ln-dbl-dash"></span> conditional (double, dashed)</li>
-          <li><span class="ln ln-conf"></span> conflict (thick, labelled)</li>
-          <li><span class="ln ln-unk"></span> unknown (dotted)</li>
-          <li><span class="sw sw-cited"></span> cited by the answer (halo)</li>
-          <li><span class="sw sw-low"></span> low confidence (dashed outline)</li>
-        </ul>
-      </details>
     </div>
+    <details class="legend" id="legend">
+      <summary>Legend</summary>
+      <div class="legend-grid">
+        <ul aria-label="Card types">
+          <li><span class="sw sw-person"></span><b>Person</b> oval, silhouette</li>
+          <li><span class="sw sw-place"></span><b>Place</b> box, map pin</li>
+          <li><span class="sw sw-item"></span><b>Item</b> diamond, key</li>
+          <li><span class="sw sw-event"></span><b>Event</b> hexagon, clock</li>
+          <li><span class="sw sw-claim"></span><b>Claim</b> speech note on its speaker</li>
+          <li><span class="sw sw-source"></span><b>Source text</b> clipping</li>
+        </ul>
+        <ul aria-label="Strings and marks">
+          <li><span class="ln ln-rel"></span><b>string</b> relation</li>
+          <li><span class="ln ln-dbl"></span><b>double line + DERIVED stamp</b> made by a rule</li>
+          <li><span class="ln ln-dbl-dash"></span><b>double, dashed</b> conditional</li>
+          <li><span class="ln ln-conf"></span><b>red + !</b> conflict</li>
+          <li><span class="sw sw-low"></span><b>dashed card</b> tentative (low confidence)</li>
+          <li><span class="sw sw-cited"></span><b>amber halo</b> cited in the answer</li>
+        </ul>
+      </div>
+    </details>
   </section>
 
   <section id="panel-answer" class="side" aria-labelledby="h-answer">
     <div class="panel answer-panel">
       <h2 id="h-answer">Answer</h2>
       <div id="status-line" class="status-line" role="status"></div>
+      <section id="progress" class="progress" aria-label="Progress of this run" hidden></section>
       <div id="answer-note" class="muted"></div>
-      <p id="answer" class="answer"></p>
+      <p id="answer" class="answer" aria-live="off"></p>
+      <p id="answer-idle" class="empty answer-idle">Answers appear here with quotes and a confidence value. Ask a question, or pick one above.</p>
       <div id="evidence" class="evidence"></div>
       <div id="refusal" class="refusal" hidden></div>
     </div>
@@ -113,7 +121,7 @@
 </main>
 
 <footer class="strip" aria-label="Status strip">
-  <span id="strip-graph">graph: 0 nodes / 0 edges</span>
+  <span id="strip-graph">board: 0 cards / 0 strings</span>
   <span id="strip-rate">~tok/s: -</span>
   <span id="strip-api">API: -</span>
   <span class="muted">Keys: / question &middot; g list view &middot; t latest step &middot; Esc stop or clear</span>

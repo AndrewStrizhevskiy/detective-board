@@ -1,0 +1,463 @@
+{
+ "meta": {
+  "question": "What is a swamp adder?",
+  "note": "Event stream of the --fake server (demo fixture, canned FakeLLM), plain fact question, text search only. Event order and payloads unchanged; only ts values were rewritten to a realistic pace (9 s CPU prefill before the first token)."
+ },
+ "events": [
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 0,
+   "ts": "2026-10-23T09:00:00.000+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "vector"
+   ],
+   "tools": [],
+   "method": "rules",
+   "reason": "no special pattern: plain fact question -> hybrid retrieval",
+   "matched": [],
+   "confidence": 0.5
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 1,
+   "ts": "2026-10-23T09:00:00.350+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "What is a swamp adder?",
+   "k": 4,
+   "attempt": 1
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 2,
+   "ts": "2026-10-23T09:00:00.850+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 0,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "speckled-band-0001",
+     "story": "speckled-band",
+     "rank": 1,
+     "rrf": 0.03278688524590164,
+     "ranks": {
+      "bm25": 1,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -3.052129969320523,
+      "vec": 0.6967607736587524
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0005",
+     "story": "boscombe-valley-mystery",
+     "rank": 2,
+     "rrf": 0.03200204813108039,
+     "ranks": {
+      "bm25": 2,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -2.6601863294990017e-06,
+      "vec": 0.759807825088501
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0004",
+     "story": "boscombe-valley-mystery",
+     "rank": 3,
+     "rrf": 0.031024531024531024,
+     "ranks": {
+      "bm25": 3,
+      "vec": 6
+     },
+     "scores": {
+      "bm25": -2.2998994008338973e-06,
+      "vec": 0.8492442965507507
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0001",
+     "story": "boscombe-valley-mystery",
+     "rank": 4,
+     "rrf": 0.030834914611005692,
+     "ranks": {
+      "bm25": 8,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -1.4548387096774194e-06,
+      "vec": 0.7594373822212219
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03278688524590164,
+    "threshold": 0.018,
+    "support": 1.0,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "speckled-band-0001",
+    "boscombe-valley-mystery-0005",
+    "boscombe-valley-mystery-0004",
+    "boscombe-valley-mystery-0001"
+   ]
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 3,
+   "ts": "2026-10-23T09:00:01.350+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "speckled-band-0001",
+     "story": "speckled-band",
+     "char_start": 48201,
+     "char_end": 48554,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 353,
+     "window_char_start": 48201,
+     "window_char_end": 48554
+    },
+    {
+     "n": 2,
+     "chunk_id": "boscombe-valley-mystery-0005",
+     "story": "boscombe-valley-mystery",
+     "char_start": 4459,
+     "char_end": 4776,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 317,
+     "window_char_start": 4459,
+     "window_char_end": 4776
+    },
+    {
+     "n": 3,
+     "chunk_id": "boscombe-valley-mystery-0004",
+     "story": "boscombe-valley-mystery",
+     "char_start": 4004,
+     "char_end": 4246,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 242,
+     "window_char_start": 4004,
+     "window_char_end": 4246
+    },
+    {
+     "n": 4,
+     "chunk_id": "boscombe-valley-mystery-0001",
+     "story": "boscombe-valley-mystery",
+     "char_start": 4777,
+     "char_end": 4941,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 164,
+     "window_char_start": 4777,
+     "window_char_end": 4941
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 0,
+   "memory_chars": 0,
+   "prompt_chars": 2509,
+   "prompt_tokens_estimate": 628,
+   "max_prompt_tokens": 1200,
+   "strategy": "rank_full",
+   "window_words": 60,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 4,
+   "ts": "2026-10-23T09:00:10.350+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Holmes "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 5,
+   "ts": "2026-10-23T09:00:10.570+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "says "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 6,
+   "ts": "2026-10-23T09:00:10.790+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 7,
+   "ts": "2026-10-23T09:00:11.010+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "speckled "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 8,
+   "ts": "2026-10-23T09:00:11.230+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "band "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 9,
+   "ts": "2026-10-23T09:00:11.450+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 10,
+   "ts": "2026-10-23T09:00:11.670+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 11,
+   "ts": "2026-10-23T09:00:11.890+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "swamp "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 12,
+   "ts": "2026-10-23T09:00:12.110+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "adder, "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 13,
+   "ts": "2026-10-23T09:00:12.330+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"the "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 14,
+   "ts": "2026-10-23T09:00:12.550+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "deadliest "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 15,
+   "ts": "2026-10-23T09:00:12.770+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "snake "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 16,
+   "ts": "2026-10-23T09:00:12.990+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 17,
+   "ts": "2026-10-23T09:00:13.210+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "India\". "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 18,
+   "ts": "2026-10-23T09:00:13.430+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[1: "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 19,
+   "ts": "2026-10-23T09:00:13.650+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"the "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 20,
+   "ts": "2026-10-23T09:00:13.870+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "deadliest "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 21,
+   "ts": "2026-10-23T09:00:14.090+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "snake "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 22,
+   "ts": "2026-10-23T09:00:14.310+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 23,
+   "ts": "2026-10-23T09:00:14.530+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "India\"]"
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 24,
+   "ts": "2026-10-23T09:00:14.930+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+   "seq": 25,
+   "ts": "2026-10-23T09:00:15.230+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "Holmes says the speckled band is a swamp adder, \"the deadliest snake in India\". [1: \"the deadliest snake in India\"]",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "the deadliest snake in India",
+     "anchor": {
+      "story": "speckled-band",
+      "chunk_id": "speckled-band-0001",
+      "char_start": 48477,
+      "char_end": 48505,
+      "quote": "the deadliest snake in India"
+     },
+     "label": "source_text"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "source_text",
+     "origin": "vector",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "retrieved chunk (rrf 0.0328)",
+     "explanation": null
+    }
+   ],
+   "route": {
+    "run_id": "fc0cbbf7-222a-4f6d-aa36-647586518e16",
+    "seq": 0,
+    "ts": "2026-10-23T08:24:12.387+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "vector"
+    ],
+    "tools": [],
+    "method": "rules",
+    "reason": "no special pattern: plain fact question -> hybrid retrieval",
+    "matched": [],
+    "confidence": 0.5
+   },
+   "attempts": 1,
+   "refusal_code": null
+  }
+ ]
+}
