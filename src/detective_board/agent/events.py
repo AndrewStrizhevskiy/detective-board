@@ -188,6 +188,8 @@ class EnrichedQuery(_Base):
     prompt_chars: int = 0
     prompt_tokens_estimate: int = 0  # chars / 4
     max_prompt_tokens: int = 0
+    strategy: str = ""  # rank_full | uniform: how excerpts were allocated
+    window_words: int = 0
     dropped_chunks: list[str] = []  # chunk ids removed by the prompt budget, lowest rank first
     data_marked: bool = True  # corpus text is delimited and treated as data
     injection_suspects: list[int] = []  # source numbers whose text looks like instructions

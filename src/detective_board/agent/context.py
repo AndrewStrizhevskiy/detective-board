@@ -73,11 +73,17 @@ def sources_from_hits(
     window_words: int = 0,
     start: int = 1,
     idf: Mapping[str, float] | None = None,
+    full_top1: bool = False,
 ) -> list[Source]:
-    """One source per chunk. With `window_words` the model sees only the query-focused window."""
+    """One source per chunk. With `window_words` the model sees only the query-focused window;
+    `full_top1` shows the first chunk whole (rank_full strategy)."""
     out: list[Source] = []
     for i, h in enumerate(hits):
-        w = best_window(h.text, question, window_words, idf) if window_words > 0 else None
+        w = (
+            best_window(h.text, question, window_words, idf)
+            if window_words > 0 and not (full_top1 and i == 0)
+            else None
+        )
         out.append(
             Source(
                 start + i,

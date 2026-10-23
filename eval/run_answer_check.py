@@ -585,7 +585,7 @@ def summarize(stamp: str, models: list[str]) -> Path:
     L: list[str] = [f"# Answer-model check ({stamp})", ""]
     L += [
         "Real `Agent` (retrieval-only path: no graph, no MCP tools) over `data/index/db.sqlite`; "
-        "hybrid RRF k=30, weights bm25:vec 0.5:1, OR mode, top_k 5; 12 fixed golden questions "
+        "hybrid RRF k=30, weights bm25:vec 0.5:1, OR mode, agent defaults (top_k 4, rank_full, 60-word windows, 1200-token budget); 12 fixed golden questions "
         f"({', '.join(SELECTION)}); num_ctx {NUM_CTX} (reruns at {NUM_CTX_BIG} flagged), "
         f"num_predict {NUM_PREDICT}, temperature {TEMPERATURE}, seed {SEED}; qwen3 `think` off. "
         "CPU-only host (see the timing caveat).",

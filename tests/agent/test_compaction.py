@@ -91,7 +91,7 @@ def test_budget_drops_lowest_ranked_source_and_renumbers():
 
 def test_agent_reports_windows_budget_and_tokens():
     hits = [hit(i, LONG) for i in (1, 2, 3)]
-    cfg = AgentConfig(max_prompt_tokens=450, window_words=60)
+    cfg = AgentConfig(max_prompt_tokens=450, window_words=60, strategy="uniform")
     ev = list(make_agent(FakeLLM("x"), FakeRetriever(hits), config=cfg).ask("What snake?", ()))
     eq = next(e for e in ev if e.type == "enriched_query")
     assert eq.prompt_tokens_estimate == estimate_tokens(eq.prompt_chars) <= 450
@@ -101,10 +101,10 @@ def test_agent_reports_windows_budget_and_tokens():
         assert st.window_char_start == st.char_start + st.window_start
 
 
-def test_default_top_k_is_three():
+def test_default_top_k_is_four():
     r = FakeRetriever([hit(i, "A snake. ") for i in range(1, 8)])
     list(make_agent(FakeLLM("x"), r).ask("What snake?", ()))
-    assert r.calls[0][1] == 3 == AgentConfig().top_k
+    assert r.calls[0][1] == 4 == AgentConfig().top_k
 
 
 # ---- reasoning leak ---------------------------------------------------------
@@ -202,3 +202,73 @@ def test_abbreviation_does_not_split_claim():
     assert len(claims) == 1
     assert claims[0].text.startswith("The snake that killed Dr. Grimesby")
     assert claims[0].cites
+
+
+# ---- rank_full allocation -----------------------------------------------------
+def test_defaults_and_strategy_validation():
+    import pytest
+
+    c = AgentConfig()
+    assert (c.top_k, c.strategy, c.window_words, c.max_prompt_tokens) == (4, "rank_full", 60, 1200)
+    with pytest.raises(ValueError, match="strategy"):
+        AgentConfig(strategy="nope")
+
+
+def test_rank_full_top1_whole_others_windows():
+    hs = [hit(i, LONG) for i in (1, 2, 3)]
+    r = sources_from_hits(hs, "What kind of snake?", 60, full_top1=True)
+    assert r[0].window == LONG and r[0].win_start == 0 and r[0].window_end == len(LONG)
+    for s in r[1:]:
+        assert len(s.window) < len(LONG) and "swamp adder" in s.window
+    u = sources_from_hits(hs, "What kind of snake?", 60)
+    assert len(u[0].window) < len(LONG)  # uniform: all windows
+
+
+def test_trace_reports_strategy_and_full_top1_is_citable():
+    hs = [hit(i, LONG) for i in (1, 2, 3)]
+    quote = "Mist hid the Surrey lane"  # far from the answer: only the full top-1 shows it
+    llm = FakeLLM(f'Mist. [1: "{quote}"]')
+    ev = list(make_agent(llm, FakeRetriever(hs)).ask("What kind of snake?", ()))
+    eq = next(e for e in ev if e.type == "enriched_query")
+    assert eq.strategy == "rank_full" and eq.window_words == 60
+    assert (eq.sources[0].window_start, eq.sources[0].window_end) == (0, len(LONG))
+    assert ev[-1].status == "answered"
+    uni = list(
+        make_agent(
+            FakeLLM(f'Mist. [1: "{quote}"]'),
+            FakeRetriever(hs),
+            config=AgentConfig(strategy="uniform"),
+        ).ask("What kind of snake?", ())
+    )
+    assert next(e for e in uni if e.type == "enriched_query").strategy == "uniform"
+    assert uni[-1].status != "answered"  # quote outside the shown window
+
+
+def test_real_chunks_rank_full_budget_never_cuts_top1():
+    from detective_board.retrieval import Hit
+
+    chunks = _chunks()
+    qs = {
+        q["id"]: q
+        for q in map(json.loads, (ROOT / "eval/golden/questions.jsonl").read_text().splitlines())
+    }
+    cfg = AgentConfig()
+    for qid in ("g001", "g007", "g028"):
+        q = qs[qid]
+        quote = q["gold_quotes"][0]["quote"][:25]
+        gold = next(
+            c for c in chunks if c["story"] == q["gold_quotes"][0]["story"] and quote in c["text"]
+        )
+        rest = [c for c in chunks if c["story"] == gold["story"] and c is not gold][: cfg.top_k - 1]
+        hs = [
+            Hit(c["chunk_id"], c["story"], c["char_start"], c["char_end"], 0.03, {}, {}, c["text"])
+            for c in [gold, *rest]
+        ]
+        srcs = sources_from_hits(hs, q["question"], cfg.window_words, full_top1=True)
+        assert srcs[0].window == gold["text"]
+        p = fit_prompt(q["question"], srcs, [], "", "", cfg.max_prompt_tokens)
+        assert p.tokens <= cfg.max_prompt_tokens, (qid, p.tokens)
+        assert p.sources[0].window == gold["text"]
+        tight = fit_prompt(q["question"], srcs, [], "", "", 1)  # everything droppable is dropped
+        assert [s.chunk_id for s in tight.sources] == [gold["chunk_id"]]
+        assert tight.dropped == [s.chunk_id for s in reversed(srcs[1:])]  # lowest rank first

@@ -130,7 +130,9 @@ class Agent:
                 tool_errors.append(f"{tool}: {err}")
 
         def assemble(h: list[Any], gs: list[ctx.Source], ts: list[ctx.Source]) -> list[ctx.Source]:
-            out = ctx.sources_from_hits(h, question, cfg.window_words, idf=self.idf)
+            out = ctx.sources_from_hits(
+                h, question, cfg.window_words, idf=self.idf, full_top1=cfg.strategy == "rank_full"
+            )
             n = len(out) + 1
             out += [_renum(s, n + i) for i, s in enumerate(gs)]
             n = len(out) + 1
@@ -185,6 +187,8 @@ class Agent:
                     prompt_chars=nchars,
                     prompt_tokens_estimate=prompt.tokens,
                     max_prompt_tokens=cfg.max_prompt_tokens,
+                    strategy=cfg.strategy,
+                    window_words=cfg.window_words,
                     dropped_chunks=prompt.dropped,
                     sources=[
                         SourceTrace(
