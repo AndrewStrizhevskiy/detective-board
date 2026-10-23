@@ -1,6 +1,6 @@
 # ADR-0008: Answer model
 
-- Status: **Proposed**. It is finalised only after the answer-model check has run and its results are filled into `docs/spike/REPORT.md` section 9.
+- Status: **Accepted** (2026-10-23): qwen3:4b-instruct for answers, based on docs/spike/REPORT.md section 9 (n=12, medium-low confidence; revisit if retrieval or the prompt change materially).
 - Date: 2026-10-23
 - Deciders: tech-lead
 - Provisional parts: the choice itself. No answer-quality number exists yet. The check writes `docs/spike/results/answers-20261023-082109.md` and `docs/spike/results/answers-20261023-082109-<model>.jsonl`; both were absent when this ADR was written.
