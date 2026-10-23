@@ -261,7 +261,10 @@ def _answer(messages: Sequence[dict[str, str]]) -> str:
     if "RULE RESULT" not in user or not found:
         return FAKE_ANSWER
     cites = " ".join(f'[{n}: "{text}"]' for n, text in found)
-    return f"The rule engine finds a contradiction in James McCarthy's account. {cites}"
+    return (
+        f"The rule engine finds James McCarthy going the same way with a gun, a contradiction. "
+        f"{cites}"
+    )
 
 
 def build_llm() -> FakeLLM:

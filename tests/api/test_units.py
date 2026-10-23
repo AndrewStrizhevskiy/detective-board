@@ -95,6 +95,6 @@ def test_config_rejects_unknown(tmp_path):
 
 
 def test_allowed_hosts():
-    assert ApiConfig().allowed_hosts() == ["localhost", "127.0.0.1"]
+    assert ApiConfig().allowed_hosts() == ["localhost", "127.0.0.1", "[::1]"]
     assert ApiConfig(host="0.0.0.0").allowed_hosts() == ["*"]
     assert ApiConfig().host == "127.0.0.1"

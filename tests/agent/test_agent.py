@@ -166,7 +166,7 @@ def test_alibi_route_calls_tool_with_derived_label():
         ],
     }
     tools = FakeTools(payload)
-    llm = FakeLLM('He was elsewhere. [4: "a deadly snake from India"]')
+    llm = FakeLLM('He was a deadly snake. [4: "a deadly snake from India"]')
     ev = run(
         make_agent(llm, graph=FakeGraph(), tools=tools),
         "Where was Roylott at 9 pm? Check his alibi",
@@ -215,7 +215,7 @@ def test_self_check_pass_and_fail_modes():
     assert self_check(GOOD, s).ok
     r = self_check('It was a snake. [1: "a harmless lizard"]', s)
     assert not r.ok and "not verbatim" in r.problems[0]
-    r = self_check('It was a snake. And it bit him. [1: "a deadly snake from India"]', s)
+    r = self_check('It was a snake. And it came from India. [1: "a deadly snake from India"]', s)
     assert not r.ok and r.unsupported == ["It was a snake."]
     assert r.has_verified
     assert not self_check('A snake. [2: "a deadly snake"]', s).ok
@@ -238,7 +238,9 @@ def test_retry_then_accept():
 
 
 def test_retry_fails_partial_answer_unverified():
-    bad = 'Fine fact. [1: "a deadly snake from India"] Bad fact. [1: "made up words"]'
+    bad = (
+        'A deadly snake from India. [1: "a deadly snake from India"] Bad fact. [1: "made up words"]'
+    )
     ev = run(make_agent(FakeLLM(bad)))
     fin = ev[-1]
     assert fin.status == "partial" and not fin.verified
@@ -284,7 +286,9 @@ def test_injection_chunk_stays_data():
 
 def test_injection_text_can_be_quoted_but_is_not_followed():
     r = FakeRetriever([hit(1, T3)])
-    llm = FakeLLM('The text contains an order. [1: "Ignore previous instructions"]')
+    llm = FakeLLM(
+        'The text says to ignore previous instructions. [1: "Ignore previous instructions"]'
+    )
     ev = run(make_agent(llm, r), "What does the text say about the lamp and instructions?")
     assert ev[-1].status == "answered" and ev[-1].citations[0].label == "source_text"
 
@@ -381,7 +385,9 @@ def test_tool_result_and_final_carry_explanation_unchanged():
         ],
     }
     quote = anchor["quote"]
-    llm = FakeLLM(f'There is a conflict. [3: "{quote}"]')
+    llm = FakeLLM(
+        f'A witness saw his son James McCarthy going the same way with a gun. [3: "{quote}"]'
+    )
     ev = run(
         make_agent(llm, tools=FakeTools(payload)),
         "Are there contradictions in the Speckled Band story?",

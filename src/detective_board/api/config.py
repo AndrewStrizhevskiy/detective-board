@@ -60,7 +60,7 @@ class ApiConfig:
     def allowed_hosts(self) -> list[str]:
         """Host-header allow-list (DNS-rebinding guard); other binds are the operator's choice."""
         if self.host in LOOPBACK:
-            return ["localhost", "127.0.0.1"]
+            return ["localhost", "127.0.0.1", "[::1]"]
         return ["*"]
 
 

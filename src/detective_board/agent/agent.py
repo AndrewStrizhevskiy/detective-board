@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+import re
 import time
 import uuid
 from collections.abc import Callable, Iterator, Sequence
@@ -39,6 +41,15 @@ from .llm import LLM
 from .memory import Turn, retrieval_query, summarize
 from .retrieval_step import gate, hit_traces
 from .router import Router, extract_names, parse_time_window
+
+log = logging.getLogger(__name__)
+_CODE = re.compile(r"[a-z_]{1,40}")
+
+
+def _safe_code(code: str) -> str:
+    """Error codes are a closed vocabulary; anything else must not reach the UI or prompt."""
+    return code if _CODE.fullmatch(code) else "tool_error"
+
 
 SEARCHED = ["hybrid retrieval (BM25 + vector) over the Holmes corpus"]
 
@@ -186,7 +197,7 @@ class Agent:
                 parts.append(tok)
                 yield sink.emit(AnswerToken(attempt=attempt, text=tok))
             text = "".join(parts).strip()
-            last = self_check(text, sources, cfg.min_quote_chars)
+            last = self_check(text, sources, cfg.min_quote_chars, cfg.min_claim_overlap)
             if last.ok:
                 yield sink.emit(
                     CitationCheck(attempt=attempt, ok=True, citations=last.traces, action="accept")
@@ -371,13 +382,17 @@ class Agent:
         try:
             payload = self.tools.call(tool, args, timeout=self.cfg.tool_timeout_s)  # type: ignore[union-attr]
         except Exception as e:
-            payload = {"error": {"code": "internal", "message": f"{type(e).__name__}: {e}"}}
+            log.warning("tool %s failed: %s: %s", tool, type(e).__name__, e)
+            payload = {"error": {"code": "internal", "message": "internal tool error"}}
         err = payload.get("error")
+        if err and not (isinstance(err, dict) and isinstance(err.get("code"), str)):
+            log.warning("tool %s returned malformed error: %.200r", tool, err)
+            err = {"code": "tool_error", "message": "tool call failed"}
+        elif isinstance(err, dict):
+            err = {"code": _safe_code(err["code"]), "message": "tool call failed"}
         srcs, hdr = ctx.sources_from_tool(tool, payload, self.cfg.max_tool_facts, 1)
         summary = (
-            f"error {err.get('code') if isinstance(err, dict) else err}"
-            if err
-            else f"status={payload.get('status')} items={len(srcs)}"
+            f"error {err['code']}" if err else f"status={payload.get('status')} items={len(srcs)}"
         )
         yield sink.emit(
             ToolResult(
@@ -388,7 +403,7 @@ class Agent:
                 summary=summary,
                 provenance=_tool_provenance(payload),
                 explanation=_primary_explanation(payload),
-                error=err if isinstance(err, dict) else ({"message": str(err)} if err else None),
+                error=err or None,
             )
         )
         return srcs, hdr, (summary if err else None)

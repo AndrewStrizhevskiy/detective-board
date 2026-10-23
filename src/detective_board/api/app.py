@@ -17,9 +17,8 @@ import starlette
 from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
 from starlette.middleware import Middleware
-from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse, Response, StreamingResponse
+from starlette.responses import JSONResponse, PlainTextResponse, Response, StreamingResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
@@ -45,7 +44,18 @@ OllamaProbe = Callable[[], "list[str] | None"]
 class SecurityHeaders:
     """Pure ASGI (BaseHTTPMiddleware would interfere with streaming and disconnects)."""
 
-    HEADERS = ((b"x-content-type-options", b"nosniff"), (b"referrer-policy", b"no-referrer"))
+    # The page has no inline script/style/handlers (tested), so no 'unsafe-inline' anywhere.
+    CSP = (
+        "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
+        "connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; "
+        "frame-ancestors 'none'"
+    )
+    HEADERS = (
+        (b"x-content-type-options", b"nosniff"),
+        (b"referrer-policy", b"no-referrer"),
+        (b"x-frame-options", b"DENY"),
+        (b"content-security-policy", CSP.encode()),
+    )
 
     def __init__(self, app: Any) -> None:
         self.app = app
@@ -61,6 +71,45 @@ class SecurityHeaders:
             await send(message)
 
         await self.app(scope, receive, wrapped)
+
+
+def host_name(host: str) -> str:
+    """Host header -> lower-case host name without port; IPv6 literals keep their brackets."""
+    host = host.strip().lower()
+    if host.startswith("["):
+        return host[: host.find("]") + 1] if "]" in host else host
+    return host.split(":")[0]
+
+
+class HostGuard:
+    """DNS-rebinding guard: reject Host headers outside the allow-list ("*" allows all).
+    Replaces Starlette's TrustedHostMiddleware, which cannot parse `[::1]:8000`."""
+
+    def __init__(self, app: Any, allowed_hosts: list[str]) -> None:
+        self.app = app
+        self.allowed = {h.lower() for h in allowed_hosts}
+
+    async def __call__(self, scope: Any, receive: Any, send: Any) -> None:
+        if scope["type"] not in ("http", "websocket"):
+            await self.app(scope, receive, send)
+            return
+        host = dict(scope["headers"]).get(b"host", b"").decode("latin-1")
+        if "*" in self.allowed or host_name(host) in self.allowed:
+            await self.app(scope, receive, send)
+            return
+        await PlainTextResponse("Invalid host header", status_code=400)(scope, receive, send)
+
+
+def origin_allowed(headers: Any) -> bool:
+    """Second CSRF layer next to the JSON content-type rule: a browser-sent Origin must be the
+    page's own host (scheme-less host:port equal to Host); cross-site fetches are refused."""
+    if headers.get("sec-fetch-site", "").lower() == "cross-site":
+        return False
+    origin = headers.get("origin")
+    if origin is None:
+        return True  # non-browser client
+    netloc = origin.split("://", 1)[-1].rstrip("/").lower()
+    return "://" in origin and netloc == headers.get("host", "").strip().lower()
 
 
 class ApiError(Exception):
@@ -177,6 +226,8 @@ def build_app(
         return q.strip(), turns
 
     async def ask(request: Request) -> Response:
+        if not origin_allowed(request.headers):
+            raise ApiError(403, "forbidden_origin", "cross-origin requests are not allowed")
         question, history = parse_ask(await read_json(request))
         loop = asyncio.get_running_loop()
         queue: asyncio.Queue[tuple[str, Any]] = asyncio.Queue()
@@ -447,7 +498,7 @@ def build_app(
     app = Starlette(
         routes=routes,
         middleware=[
-            Middleware(TrustedHostMiddleware, allowed_hosts=cfg.allowed_hosts()),
+            Middleware(HostGuard, allowed_hosts=cfg.allowed_hosts()),
             Middleware(SecurityHeaders),
         ],
         exception_handlers={

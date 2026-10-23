@@ -15,6 +15,7 @@ class AgentConfig:
     max_tool_facts: int = 8
     max_retries: int = 1
     min_quote_chars: int = 6
+    min_claim_overlap: float = 0.3  # [P] content-word share of a claim held by its cited quotes
     memory_turns: int = 3
     memory_max_chars: int = 600
     use_llm_router: bool = False  # LLM classifier fallback when no rule matched

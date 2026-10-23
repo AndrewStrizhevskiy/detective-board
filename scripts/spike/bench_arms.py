@@ -77,7 +77,10 @@ def build_store(path: Path, chunks, cfg):
     store = Store(path, cfg)
     load_chunks(store, CHUNKS)
     cache = load_cache(cache_path(MODEL, "", 2048, True))
-    rid = {r["chunk_id"]: r["rowid_int"] for r in store.db.execute("SELECT chunk_id, rowid_int FROM chunks")}
+    rid = {
+        r["chunk_id"]: r["rowid_int"]
+        for r in store.db.execute("SELECT chunk_id, rowid_int FROM chunks")
+    }
     rows = []
     for c in chunks:
         e = cache.get(c["chunk_id"])
@@ -126,7 +129,11 @@ def summarize(rows):
         n = len(sel)
         if not n:
             continue
-        d = {"n": n, "mrr": sum(r["rr"] for r in sel) / n, "recall@10": sum(r["recall@10"] for r in sel) / n}
+        d = {
+            "n": n,
+            "mrr": sum(r["rr"] for r in sel) / n,
+            "recall@10": sum(r["recall@10"] for r in sel) / n,
+        }
         for k in KS:
             d[f"hit@{k}"] = sum(r[f"hit@{k}"] for r in sel) / n
         out[g] = d
@@ -166,7 +173,9 @@ def main(argv=None):
         q0 = next(q for q in questions if q["lang"] == "en")
         ref = hybrid_search(store, emb, q0["question"], limit=DEPTH, k=60, candidates=DEPTH)
         mine = rrf_fuse(
-            {"bm25": arm_out[q0["id"]]["bm25-or"], "vec": arm_out[q0["id"]]["vec"]}, k=60, limit=DEPTH
+            {"bm25": arm_out[q0["id"]]["bm25-or"], "vec": arm_out[q0["id"]]["vec"]},
+            k=60,
+            limit=DEPTH,
         )
         assert [h.chunk_id for h in ref] == [h.chunk_id for h in mine], "hybrid_search != rrf_fuse"
 
@@ -185,11 +194,16 @@ def main(argv=None):
         for bm in ("bm25-or", "bm25-or-stop"):
             for k in (10, 30, 60):
                 for wn, (wb, wv) in WS.items():
+
                     def fn(q, bm=bm, k=k, wb=wb, wv=wv):
                         arms = {"bm25": arm_out[q["id"]][bm], "vec": arm_out[q["id"]]["vec"]}
                         return rrf_fuse(arms, k=k, weights={"bm25": wb, "vec": wv}, limit=DEPTH)
 
-                    add(f"hyb[{bm[5:]}] k={k} w={wn}", fn, f"RRF k={k} bm25:vec={wn}, bm25 arm = {bm}")
+                    add(
+                        f"hyb[{bm[5:]}] k={k} w={wn}",
+                        fn,
+                        f"RRF k={k} bm25:vec={wn}, bm25 arm = {bm}",
+                    )
 
         # Russian: BM25 arm on Russian text vs English corpus
         ru_ids = [q["id"] for q in questions if q["lang"] == "ru"]
@@ -200,16 +214,32 @@ def main(argv=None):
 
         # best config by all hit@5, then MRR (hybrids and vec only)
         cand = [n for n in configs if n == "vec" or n.startswith("hyb")]
-        best = max(cand, key=lambda n: (configs[n]["summary"]["all"]["hit@5"], configs[n]["summary"]["all"]["mrr"]))
+        best = max(
+            cand,
+            key=lambda n: (
+                configs[n]["summary"]["all"]["hit@5"],
+                configs[n]["summary"]["all"]["mrr"],
+            ),
+        )
         best_en = max(
-            cand, key=lambda n: (configs[n]["summary"]["en"]["hit@5"], configs[n]["summary"]["en"]["mrr"])
+            cand,
+            key=lambda n: (
+                configs[n]["summary"]["en"]["hit@5"],
+                configs[n]["summary"]["en"]["mrr"],
+            ),
         )
 
         # rank bucket analysis of misses
         def buckets(name, k):
             rows = configs[name]["rows"]
             miss = [r for r in rows if not r[f"hit@{k}"]]
-            b = {"n_miss": len(miss), "rank_k+1..10": 0, "rank_11..50": 0, "rank_51..100": 0, "not_retrieved": 0}
+            b = {
+                "n_miss": len(miss),
+                "rank_k+1..10": 0,
+                "rank_11..50": 0,
+                "rank_51..100": 0,
+                "not_retrieved": 0,
+            }
             for r in miss:
                 x = r["rank"]
                 if x is None:
@@ -272,7 +302,11 @@ def main(argv=None):
             "depth": DEPTH,
             "best": best,
             "best_en": best_en,
-            "ru_bm25": {"n_ru": len(ru_ids), "empty_result": ru_bm25_empty, "result_counts": ru_bm25_hits},
+            "ru_bm25": {
+                "n_ru": len(ru_ids),
+                "empty_result": ru_bm25_empty,
+                "result_counts": ru_bm25_hits,
+            },
             "buckets": bucket,
             "tricks": trick,
             "failures_best_k5": fails,
@@ -332,10 +366,18 @@ def to_markdown(d):
             L.append(
                 f"| {n} | {k} | {b['n_miss']} | {b['rank_k+1..10']} | {b['rank_11..50']} | {b['rank_51..100']} | {b['not_retrieved']} |"
             )
-    L += ["", "## Query trick: BM25 arm on stop-word-stripped query (best hybrid parameters)", "", "| config | group | hit@1 | hit@5 | hit@10 | MRR |", "|---|---|---|---|---|---|"]
+    L += [
+        "",
+        "## Query trick: BM25 arm on stop-word-stripped query (best hybrid parameters)",
+        "",
+        "| config | group | hit@1 | hit@5 | hit@10 | MRR |",
+        "|---|---|---|---|---|---|",
+    ]
     for n, gs in d["tricks"].items():
         for g, s in gs.items():
-            L.append(f"| {n} | {g} | {p(s['hit@1'])} | {p(s['hit@5'])} | {p(s['hit@10'])} | {p(s['mrr'])} |")
+            L.append(
+                f"| {n} | {g} | {p(s['hit@1'])} | {p(s['hit@5'])} | {p(s['hit@10'])} | {p(s['mrr'])} |"
+            )
     L += ["", f"## Failures of best config `{d['best']}` at k=5 ({len(d['failures_best_k5'])})", ""]
     for f in d["failures_best_k5"]:
         L += [

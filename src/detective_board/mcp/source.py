@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import stat
 
 from pydantic import ValidationError
 
@@ -13,6 +14,33 @@ from detective_board.symbolic.api import FactBase
 ENV_FACTS = "DETECTIVE_BOARD_FACTS"
 ENV_ALLOW = "DETECTIVE_BOARD_FACTS_ALLOW"
 MAX_BYTES = 8 * 1024 * 1024
+
+
+def _read_regular(path: str) -> bytes:
+    """Open once (no symlink at the last component, no blocking on FIFOs), check the open fd
+    and read at most MAX_BYTES + 1 from it, so a swap or growth after the sandbox check is
+    neither followed nor unbounded. Parent components were resolved by the sandbox."""
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_CLOEXEC", 0)
+    fd = os.open(path, flags | getattr(os, "O_NONBLOCK", 0))
+    try:
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode):
+            raise OSError("not a regular file")
+        if st.st_size > MAX_BYTES:
+            raise ToolError("store_unavailable", "fact file too large")
+        chunks: list[bytes] = []
+        total = 0
+        while total <= MAX_BYTES:
+            b = os.read(fd, min(1 << 20, MAX_BYTES + 1 - total))
+            if not b:
+                break
+            chunks.append(b)
+            total += len(b)
+        if total > MAX_BYTES:
+            raise ToolError("store_unavailable", "fact file too large")
+        return b"".join(chunks)
+    finally:
+        os.close(fd)
 
 
 class JsonFileFactSource:
@@ -34,9 +62,7 @@ class JsonFileFactSource:
         except SandboxError as exc:
             raise ToolError("store_unavailable", str(exc)) from None
         try:
-            if real.stat().st_size > MAX_BYTES:
-                raise ToolError("store_unavailable", "fact file too large")
-            fb = FactBase.model_validate_json(real.read_bytes())
+            fb = FactBase.model_validate_json(_read_regular(os.fspath(real)))
         except OSError:
             raise ToolError("store_unavailable", "fact file unreadable") from None
         except ValidationError:

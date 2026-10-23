@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import threading
 from collections.abc import Callable
 from typing import Any, Literal
 
@@ -34,7 +35,19 @@ def _result(payload: dict[str, Any], is_error: bool = False) -> CallToolResult:
     )
 
 
-def _run(fn: Callable[[], dict[str, Any]]) -> CallToolResult:
+ENV_DEADLINE = "DETECTIVE_BOARD_TOOL_DEADLINE_S"
+DEFAULT_DEADLINE_S = 4.0  # below the client's default 5 s, so the server answers first
+
+
+def deadline_from_env() -> float:
+    try:
+        v = float(os.environ.get(ENV_DEADLINE, ""))
+    except ValueError:
+        return DEFAULT_DEADLINE_S
+    return v if 0 < v <= 60 else DEFAULT_DEADLINE_S
+
+
+def _call(fn: Callable[[], dict[str, Any]]) -> CallToolResult:
     """Normalise every failure to the shared error object; never leak a stack trace."""
     try:
         return _result(fn())
@@ -46,8 +59,39 @@ def _run(fn: Callable[[], dict[str, Any]]) -> CallToolResult:
         return _result(error_payload("internal", "internal error"), is_error=True)
 
 
-def build_server(source: FactSource) -> MCPServer:
+class DeadlineRunner:
+    """Runs each tool call in a daemon thread with a wall-clock deadline. A Python thread cannot
+    be killed, so a call that overruns is abandoned; while it still runs, new calls are refused
+    at once (`timeout`, retriable) instead of piling more CPU work onto the single stdio server."""
+
+    def __init__(self, deadline_s: float) -> None:
+        self.deadline_s = deadline_s
+        self._worker: threading.Thread | None = None
+
+    @property
+    def busy(self) -> bool:
+        return self._worker is not None and self._worker.is_alive()
+
+    def __call__(self, fn: Callable[[], dict[str, Any]]) -> CallToolResult:
+        if self.busy:
+            return _result(
+                error_payload("timeout", "a previous call is still running; retry later"), True
+            )
+        box: list[CallToolResult] = []
+        t = threading.Thread(target=lambda: box.append(_call(fn)), daemon=True)
+        self._worker = t
+        t.start()
+        t.join(self.deadline_s)
+        if box:
+            return box[0]
+        return _result(
+            error_payload("timeout", f"tool call exceeded {self.deadline_s:g}s"), is_error=True
+        )
+
+
+def build_server(source: FactSource, deadline_s: float | None = None) -> MCPServer:
     mcp = MCPServer("timeline-alibi")
+    _run = DeadlineRunner(deadline_s if deadline_s is not None else deadline_from_env())
 
     @mcp.tool()
     def build_timeline(

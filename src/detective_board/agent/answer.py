@@ -5,12 +5,24 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from detective_board.extract.ground import normalise
+
 from .context import REFUSAL_TEXT, Source
 from .events import Anchor, Citation, CitationTrace, ProvenanceLabel
 
 CITATION = re.compile(r'\[(\d+)(?:\s*:\s*"(.+?)")?\s*\]', re.S)
 _EXEMPT = re.compile(r"^\W*(unknown\b|not (stated|found|mentioned|covered)\b)", re.I)
 _MARK = "\x00{}\x00"
+DEFAULT_MIN_OVERLAP = 0.3  # [P] share of the claim's content words that the cited quotes must hold
+_WORD = re.compile(r"[^\W_]{3,}")
+_STOP = frozenset(
+    "the and for are was were has have had not but with from that this these those its his her "
+    "their they them she him you your our out who whom what when where which while into onto "
+    "than then there here been being will would could should can may might did does done also "
+    "any all one two per via about after before over under upon very more most some such only "
+    "because said says say".split()
+)
+_SUFFIX = ("ing", "ed", "es", "s")
 
 
 @dataclass
@@ -55,7 +67,41 @@ def split_claims(answer: str) -> list[Claim]:
     return claims
 
 
-def self_check(answer: str, sources: list[Source], min_quote_chars: int = 6) -> CheckResult:
+def _stem(w: str) -> str:
+    for suf in _SUFFIX:
+        if w.endswith(suf) and len(w) - len(suf) >= 3:
+            return w[: -len(suf)]
+    return w
+
+
+def content_words(text: str) -> set[str]:
+    return {_stem(w) for w in _WORD.findall(text.lower()) if w not in _STOP}
+
+
+def _supported(claim: str, quotes: list[str], min_overlap: float) -> bool:
+    """Lexical support: the cited quotes together hold at least `min_overlap` of the claim's
+    content words. A claim without content words (only stopwords) has nothing to compare and
+    is not rejected here."""
+    want = content_words(claim)
+    if not want:
+        return True
+    have: set[str] = set()
+    for q in quotes:
+        have |= content_words(q)
+    hit = want & have
+    return bool(hit) and len(hit) / len(want) >= min_overlap
+
+
+def _norm(s: str) -> str:
+    return normalise(s).text.strip()
+
+
+def self_check(
+    answer: str,
+    sources: list[Source],
+    min_quote_chars: int = 6,
+    min_overlap: float = DEFAULT_MIN_OVERLAP,
+) -> CheckResult:
     if REFUSAL_TEXT.lower() in answer.lower() and not CITATION.search(answer):
         return CheckResult(False, [], [], [], ["model declined to answer"], refusal_like=True)
     by_n = {s.n: s for s in sources}
@@ -71,7 +117,8 @@ def self_check(answer: str, sources: list[Source], min_quote_chars: int = 6) -> 
             problems.append(f"claim without citation: {c.text[:80]!r}")
         for n, quote in c.cites:
             src = by_n.get(n)
-            ok = bool(src and quote and len(quote) >= min_quote_chars and quote in src.text)
+            nq = _norm(quote) if quote else ""
+            ok = bool(src and nq and len(nq) >= min_quote_chars and nq in normalise(src.text).text)
             if (n, quote) not in seen:
                 seen.add((n, quote))
                 traces.append(CitationTrace(n=n, verbatim=ok, source_exists=src is not None))
@@ -83,10 +130,13 @@ def self_check(answer: str, sources: list[Source], min_quote_chars: int = 6) -> 
                     else "missing quote"
                     if not quote
                     else "quote too short"
-                    if len(quote) < min_quote_chars
+                    if len(nq) < min_quote_chars
                     else "quote is not verbatim in the source"
                 )
                 problems.append(f"[{n}] {why}: {(quote or '')[:60]!r}")
+        if valid and c.cites and not _supported(c.text, [q or "" for _, q in c.cites], min_overlap):
+            valid = False
+            problems.append(f"claim not supported by its quote: {c.text[:80]!r}")
         c.ok = valid
     if not claims:
         problems.append("no claims with citations")
@@ -118,15 +168,19 @@ def citations_for(
         s = by_n.get(n)
         if not s or not quote or (n, quote) in seen:
             continue
-        i = s.text.find(quote)
-        if i < 0:
+        nq = _norm(quote)
+        sn = normalise(s.text)
+        j = sn.text.find(nq) if nq else -1
+        if j < 0:
             continue
         seen.add((n, quote))
+        i, end = sn.idx[j], sn.ends[j + len(nq) - 1]
+        quote = s.text[i:end]  # the source's own characters
         a = Anchor(
             story=s.story,
             chunk_id=s.chunk_id,
             char_start=s.char_start + i,
-            char_end=s.char_start + i + len(quote),
+            char_end=s.char_start + end,
             quote=quote,
         )
         cites.append(Citation(n=n, quote=quote, anchor=a, label=s.label))
