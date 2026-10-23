@@ -98,7 +98,7 @@ def test_source_errors(client):
 def test_health_fake(client):
     d = client.get("/api/health").json()
     assert d["status"] == "ok" and d["fake"] is True
-    assert d["index"] == {"present": True, "chunks": 3, "vectors": 3}
+    assert d["index"] == {"present": True, "chunks": 5, "vectors": 5}
     assert d["graph"]["present"] and d["graph"]["counts"]["edges"] == 1
     assert d["ollama"]["reachable"] is None
     assert d["versions"]["starlette"] and d["versions"]["index_schema"]
@@ -140,7 +140,7 @@ def test_real_wiring_on_files(tmp_path):
     ) as c:
         d = c.get("/api/health").json()
         assert d["status"] == "ok", d
-        assert d["index"]["chunks"] == 3 and d["ollama"]["models"] == {
+        assert d["index"]["chunks"] == 5 and d["ollama"]["models"] == {
             "llm": True,
             "embedding": True,
         }
@@ -181,3 +181,24 @@ def test_no_cors_and_host_guard(cfg):
 @pytest.mark.parametrize("path", ["/api/graph/subgraph?entity=x&hops=1", "/api/graph/entities"])
 def test_graph_endpoints_do_not_block_on_busy_agent(client, path):
     assert client.get(path).status_code == 200
+
+
+def test_subgraph_derived_edge_exposes_explanation():
+    import json
+
+    from detective_board.api import graph_view
+
+    g = fixture.build_graph()
+    exp = fixture.boscombe_explanation().model_dump(mode="json")
+    g.conn.execute(
+        "UPDATE g_edge SET provenance='derived', props_json=?", (json.dumps({"explanation": exp}),)
+    )
+    d = graph_view.subgraph(g, "Helen Stoner", 1, story=None, max_nodes=50)
+    (e,) = d["edges"]
+    assert e["provenance"] == "derived" and e["explanation"] == exp
+    g.conn.execute("UPDATE g_edge SET props_json=?", (json.dumps({"explanation": {"bad": 1}}),))
+    (e,) = graph_view.subgraph(g, "Helen Stoner", 1, story=None, max_nodes=50)["edges"]
+    assert "explanation" not in e
+    g.conn.execute("UPDATE g_edge SET provenance='extracted'")
+    (e,) = graph_view.subgraph(g, "Helen Stoner", 1, story=None, max_nodes=50)["edges"]
+    assert "explanation" not in e

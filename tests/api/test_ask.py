@@ -209,3 +209,31 @@ def test_keepalive_comment_is_sent_while_waiting(cfg, monkeypatch):
         r = c.post("/api/ask", json=Q)
         assert ": keepalive" in r.text and r.text.rstrip().endswith("}")
         assert parse_sse(r.text)[-1]["event"] == "final"
+
+
+def test_fake_mode_derived_finding_has_explanation(client):
+    import json
+    from pathlib import Path
+
+    evs = ask(client, {"question": "Are there contradictions in James McCarthy's account?"})
+    by = {e["event"]: json.loads(e["data"]) for e in evs}
+    tr = by["tool_result"]
+    assert tr["ok"] and tr["provenance"] == "derived"
+    exp = tr["explanation"]
+    assert exp["rule_id"] == "R3" and exp["verdict"] == "violated" and exp["derivation"]
+    final = by["final"]
+    assert final["status"] == "answered" and final["verified"]
+    derived = [p for p in final["provenance"] if p["label"] == "derived"]
+    assert derived and all(p["rule_id"] == "R3" for p in derived)
+    assert any(p["explanation"] == exp for p in final["provenance"])
+    # quotes are verbatim in the real corpus text and resolvable through /api/source
+    clean = Path(__file__).resolve().parents[2] / "data" / "clean" / (exp["anchors"][0]["story"])
+    for a in exp["anchors"]:
+        r = client.get(f"/api/source/{a['chunk_id']}", params={"quote": a["quote"]})
+        assert r.status_code == 200 and r.json()["highlights"]
+        text = clean.with_suffix(".txt")
+        if text.exists():
+            assert text.read_text(encoding="utf-8")[a["char_start"] : a["char_end"]] == a["quote"]
+    ta = TypeAdapter(TraceEvent)
+    for e in evs:
+        assert ta.validate_json(e["data"]).model_dump_json() == e["data"]

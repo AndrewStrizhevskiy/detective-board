@@ -53,7 +53,7 @@ class Services:
     store: Store
     graph: GraphStore
     agent: Agent | None = None
-    tools: SyncToolClient | None = None
+    tools: SyncToolClient | fixture.FakeToolClient | None = None
     index_present: bool = True
     graph_present: bool = True
 
@@ -83,7 +83,7 @@ def build_services(
         store, emb = fixture.build_store()
         graph = fixture.build_graph()
         llm: LLM = fixture.build_llm()
-        tools: SyncToolClient | None = None
+        tools: SyncToolClient | fixture.FakeToolClient | None = fixture.FakeToolClient()
     else:
         emb_cfg = EmbeddingConfig(
             model=cfg.embed_model,

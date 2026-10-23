@@ -9,6 +9,8 @@ from dataclasses import replace
 from datetime import datetime
 from typing import Any
 
+from detective_board.symbolic.api import Explanation
+
 from . import context as ctx
 from .answer import CheckResult, citations_for, self_check
 from .backends import GraphBackend, Retriever, ToolClient
@@ -31,6 +33,7 @@ from .events import (
     TraceEvent,
     _Base,
     _utc_now,
+    parse_explanation,
 )
 from .llm import LLM
 from .memory import Turn, retrieval_query, summarize
@@ -301,6 +304,7 @@ class Agent:
             )
             return None
         p = res.trace_payload()
+        _mark_derived_edges(p["edges"], res.edges)
         yield sink.emit(
             GraphResults(
                 step_id=step,
@@ -382,7 +386,8 @@ class Agent:
                 tool=tool,
                 ok=not err,
                 summary=summary,
-                provenance=payload.get("provenance"),
+                provenance=_tool_provenance(payload),
+                explanation=_primary_explanation(payload),
                 error=err if isinstance(err, dict) else ({"message": str(err)} if err else None),
             )
         )
@@ -409,6 +414,44 @@ class Agent:
                 refusal_code=code,
             )
         )
+
+
+def _tool_provenance(payload: dict[str, Any]) -> str | None:
+    """The tool's label: top-level, else that of the first rule item (find_contradictions)."""
+    if payload.get("provenance"):
+        return payload["provenance"]
+    for key in ("findings", "overlaps"):
+        for it in payload.get(key) or []:
+            if isinstance(it, dict) and it.get("provenance"):
+                return it["provenance"]
+    return None
+
+
+def _primary_explanation(payload: dict[str, Any]) -> Explanation | None:
+    """The tool's own Explanation, unchanged: the top-level one (check_alibi), else the first
+    rule-derived item's. Every item's explanation also travels with its source in `final`."""
+    exp = parse_explanation(payload.get("explanation"))
+    if exp is not None:
+        return exp
+    for key in ("findings", "overlaps"):
+        for it in payload.get(key) or []:
+            exp = parse_explanation(it.get("explanation")) if isinstance(it, dict) else None
+            if exp is not None:
+                return exp
+    return None
+
+
+def _mark_derived_edges(rows: list[dict[str, Any]], hits: list[Any]) -> None:
+    """Rule-derived graph edges carry `provenance` and, when stored, their `explanation`."""
+    by_id = {e.id: e for e in hits}
+    for row in rows:
+        e = by_id.get(row["id"])
+        if e is None or e.provenance != "derived":
+            continue
+        row["provenance"] = "derived"
+        exp = parse_explanation(e.props.get("explanation"))
+        if exp is not None:
+            row["explanation"] = exp.model_dump(mode="json")
 
 
 def _renum(s: ctx.Source, n: int) -> ctx.Source:

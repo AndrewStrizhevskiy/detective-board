@@ -3,7 +3,7 @@
 Owner: backend-engineer. Stack: ADR-0005 (Starlette 1.9.0 + uvicorn 0.54.0). Code: `src/detective_board/api/`. Tests: `tests/api/`.
 
 Run: `PYTHONPATH=src python -m detective_board.api --host 127.0.0.1 --port 8000 [--config FILE] [--fake]`
-(`--fake`: FakeLLM and a 3-chunk in-memory fixture; no Ollama, no data files. The fake answer is canned: the question "What was the speckled band?" yields a verified answer citing `speckled-band-0001`; an off-topic question such as "What is the weather in Paris today?" yields a refusal.)
+(`--fake`: FakeLLM and a 3-chunk in-memory fixture; no Ollama, no data files. The fake answer is canned: the question "What was the speckled band?" yields a verified answer citing `speckled-band-0001`; an off-topic question such as "What is the weather in Paris today?" yields a refusal; "Are there contradictions in James McCarthy's account?" calls a fake `find_contradictions` and yields one derived R3 finding with a full `explanation`, so the 'Why?' panel works. The fixture holds two extra chunks of `boscombe-valley-mystery` whose quotes are verbatim in `data/clean`.)
 
 All JSON errors have the shape `{"error": {"code": str, "message": str}}`. No stack traces, no filesystem paths. Codes: `invalid_input` 400, `not_found` 404, `unsupported_media_type` 415, `too_large` 413, `busy` 429, `internal` 500.
 Same origin only: no CORS headers are sent. Requests whose `Host` is not `localhost`/`127.0.0.1` are rejected with 400 (when bound to loopback).
@@ -26,11 +26,16 @@ data: <JSON>
 
 Event types, in the order they occur: `route_decided`, `retrieval_started`, `retrieval_results` (hits with per-arm ranks/scores, gate), `graph_query`, `graph_results` (nodes, edges), `tool_call`, `tool_result`, `enriched_query` (numbered sources with labels), `answer_token` (`text`, `attempt`; a retry starts a new `attempt`, discard earlier tokens), `citation_check`, `refusal` (`code`, `message`, `missing`, `searched`), and finally `final`. Retrieval, graph and tool steps may be absent depending on the route; a refusal may skip `enriched_query`.
 
-`final` is the last agent event and carries: `status` (`answered`|`partial`|`refused`), `verified`, `answer`, `citations[]` (`n`, `quote`, `label`, `anchor{story, chunk_id, char_start, char_end, quote}`), `provenance[]` (`n`, `label` in `extracted|derived|conditional|source_text`, `origin`, `rule_id`, `summary`), `route`, `attempts`, `refusal_code`. After `final` the server closes the stream.
+`final` is the last agent event and carries: `status` (`answered`|`partial`|`refused`), `verified`, `answer`, `citations[]` (`n`, `quote`, `label`, `anchor{story, chunk_id, char_start, char_end, quote}`), `provenance[]` (`n`, `label` in `extracted|derived|conditional|source_text`, `origin`, `rule_id`, `summary`, `explanation`: the item's symbolic `Explanation`, present only for rule-derived items, else `null`), `route`, `attempts`, `refusal_code`. After `final` the server closes the stream.
 
 Extra event, not an agent model: `event: run_error`, `data: {"code": "internal"|"unavailable"|"timeout", "message": str}`. It replaces `final` when the run failed (LLM down, index missing, 600 s limit); trace events delivered before it are valid. Treat it as terminal.
 
 Keep-alive: a comment line `: keepalive` every 15 s of silence (ignore it). One run at a time: a second `POST` while a run is active returns `429 busy` (JSON, not a stream); retry shortly. Closing the connection cancels the run at the next streamed token (an in-flight prompt prefill is not interruptible).
+
+### Symbolic `Explanation` in the trace (R-14)
+
+`tool_result` has optional `provenance` (`derived`|`conditional`|`extracted`, as the MCP tool reported it; for `find_contradictions` the label of the first finding) and `explanation`: the `Explanation` object of docs/symbolic-layer.md section 3.1 (`rule_id`, `rule_version`, `verdict`, `conditional`, `reason_code`, `facts`, `edges`, `derivation`, `anchors`, `depends_on_extracted`, `weak`, `missing`, `notes`, `subject`, `suspects`). It is the tool's own object, validated and serialised, never rewritten by the agent: top-level `explanation` of the tool result (`check_alibi`), else that of the first finding/overlap. Findings after the first are reachable through `final.provenance[].explanation`. Both fields are `null` when the tool gave none or the object does not validate (it is dropped, not repaired). Models are `extra=forbid`; clients should still ignore unknown fields.
+`graph_results.edges[]` carry `provenance: "derived"` and `explanation` only for rule-derived edges (the explanation is read from the edge's stored `props.explanation`); extracted edges are unchanged.
 
 ## GET /api/graph/subgraph?entity=..&hops=..&story=..
 
@@ -40,7 +45,8 @@ Response:
 {"query_kind": "neighbours", "entity": str, "hops": int, "seeds": [node_id],
  "nodes": [{"id","kind": person|place|item|event|claim,"story","name","label","aliases","confidence": high|low,
             "provenance": extracted|derived,"props","anchors":[Anchor],"anchor_total","hops"}],
- "edges": [{"id","rel","src","dst","confidence","provenance","props","anchor": Anchor}],
+ "edges": [{"id","rel","src","dst","confidence","provenance","props","anchor": Anchor,
+            "explanation"?: Explanation  // only when provenance == "derived" and one is stored}],
  "anchors": [Anchor], "truncated": bool, "notes": [str]}
 Anchor = {"story","chunk_id","char_start","char_end","quote","rel_start","rel_end","ambiguous"}
 ```

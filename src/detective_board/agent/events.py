@@ -10,7 +10,9 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
+from detective_board.symbolic.api import Explanation
 
 Label = Literal["extracted", "derived", "conditional", "source_text"]
 RouteName = Literal["vector", "graph", "mcp", "refusal"]
@@ -29,6 +31,19 @@ DOC_TYPE = {
     "refusal": "refusal",
     "final": "answer + run.end",
 }
+
+
+def parse_explanation(obj: Any) -> Explanation | None:
+    """A symbolic `Explanation` from a tool/graph payload, or None when absent or malformed.
+    The object is validated, never rewritten: what the rule engine produced is what is shown."""
+    if isinstance(obj, Explanation):
+        return obj
+    if not isinstance(obj, dict) or not obj:
+        return None
+    try:
+        return Explanation.model_validate(obj)
+    except ValidationError:
+        return None
 
 
 class _Base(BaseModel):
@@ -96,6 +111,7 @@ class ProvenanceLabel(BaseModel):
     confidence: str | None = None
     rule_id: str | None = None
     summary: str = ""
+    explanation: Explanation | None = None  # rule-derived items only (docs/symbolic-layer.md 3.1)
 
 
 class RouteDecided(_Base):
@@ -153,7 +169,8 @@ class ToolResult(_Base):
     tool: str
     ok: bool
     summary: str
-    provenance: str | None = None
+    provenance: str | None = None  # derived | conditional | extracted, as the tool reported it
+    explanation: Explanation | None = None  # the tool's own Explanation, unchanged
     error: dict[str, Any] | None = None
 
 

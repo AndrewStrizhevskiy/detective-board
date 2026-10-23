@@ -505,6 +505,7 @@ function openCitation(n) {
 }
 
 function explanationForProv(p) {
+  if (p && p.explanation) return p.explanation;
   for (const f of state.findings) if (f.explanation && (!p.rule_id || f.explanation.rule_id === p.rule_id)) return f.explanation;
   for (const id of state.graph.edgeOrder) {
     const e = state.graph.edges[id];

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from detective_board.agent.events import parse_explanation
 from detective_board.graph import GraphResult, GraphStore, normalize_name
 
 ENTITY_KINDS = ("person", "place", "item")
@@ -16,7 +17,14 @@ def _node(n: Any) -> dict[str, Any]:
 
 
 def _edge(e: Any) -> dict[str, Any]:
-    return e.model_dump(mode="json")
+    """Edge JSON. A rule-derived edge with a stored symbolic Explanation (`props.explanation`)
+    also gets it as a top-level `explanation` (validated, otherwise omitted)."""
+    d = e.model_dump(mode="json")
+    if e.provenance == "derived":
+        exp = parse_explanation(e.props.get("explanation"))
+        if exp is not None:
+            d["explanation"] = exp.model_dump(mode="json")
+    return d
 
 
 def result_json(res: GraphResult, **extra: Any) -> dict[str, Any]:

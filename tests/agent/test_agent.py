@@ -355,3 +355,80 @@ def test_ollama_generate_and_error():
 
     with pytest.raises(RuntimeError, match="model not found"):
         list(OllamaLLM("m", transport=bad).chat([{"role": "user", "content": "x"}]))
+
+
+# ---- R-14: symbolic Explanation reaches the trace --------------------------
+def _expl(rule="R3"):
+    from detective_board.api.fixture import boscombe_explanation
+
+    return boscombe_explanation().model_copy(update={"rule_id": rule}).model_dump(mode="json")
+
+
+def test_tool_result_and_final_carry_explanation_unchanged():
+    exp = _expl()
+    anchor = exp["anchors"][0]
+    payload = {
+        "status": "ok",
+        "provenance": "derived",
+        "findings": [
+            {
+                "rule": "R3",
+                "reason_code": "CLAIM_INCOMPATIBLE_WITH_FACT",
+                "provenance": "derived",
+                "explanation": exp,
+                "anchors": exp["anchors"],
+            }
+        ],
+    }
+    quote = anchor["quote"]
+    llm = FakeLLM(f'There is a conflict. [3: "{quote}"]')
+    ev = run(
+        make_agent(llm, tools=FakeTools(payload)),
+        "Are there contradictions in the Speckled Band story?",
+    )
+    tr = next(e for e in ev if e.type == "tool_result")
+    assert tr.provenance == "derived" and tr.explanation is not None
+    assert tr.explanation.model_dump(mode="json") == exp  # no re-interpretation
+    assert json.loads(tr.model_dump_json())["explanation"] == exp
+    fin = ev[-1]
+    assert fin.status == "answered"
+    (lab,) = fin.provenance
+    assert lab.label == "derived" and lab.rule_id == "R3"
+    assert lab.explanation is not None and lab.explanation.model_dump(mode="json") == exp
+    vec = [p for p in fin.provenance if p.origin == "vector"]
+    assert all(p.explanation is None for p in vec)
+    import pytest
+    from pydantic import ValidationError
+
+    from detective_board.agent.events import ToolResult
+
+    with pytest.raises(ValidationError):
+        ToolResult(tool="t", ok=True, summary="", explanation={"rule_id": "R1", "x": 1})  # type: ignore[arg-type]
+
+
+def test_malformed_or_missing_explanation_is_dropped_not_invented():
+    tools = FakeTools({"status": "ok", "provenance": "derived", "findings": [{"rule": "R1"}]})
+    ev = run(
+        make_agent(FakeLLM("Unknown: x."), tools=tools), "Any contradictions in Speckled Band?"
+    )
+    tr = next(e for e in ev if e.type == "tool_result")
+    assert tr.explanation is None and tr.provenance == "derived"
+
+
+def test_derived_graph_edge_carries_explanation():
+    def derived(*a, **kw):
+        r = graph_result()
+        r.edges[0] = r.edges[0].model_copy(
+            update={"provenance": "derived", "props": {"explanation": _expl("R2")}}
+        )
+        return r
+
+    class G(FakeGraph):
+        neighbours = shortest_path = events_by_person = find_entities = derived
+
+    ev = run(make_agent(FakeLLM(GOOD), graph=G()), "How is Roylott connected to Helen?")
+    gr = next(e for e in ev if e.type == "graph_results")
+    (edge,) = gr.edges
+    assert edge["provenance"] == "derived" and edge["explanation"] == _expl("R2")
+    plain = run(make_agent(FakeLLM(GOOD), graph=FakeGraph()), "How is Roylott connected to Helen?")
+    assert "explanation" not in next(e for e in plain if e.type == "graph_results").edges[0]

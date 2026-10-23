@@ -139,6 +139,7 @@ def citations_for(
                 confidence=s.confidence,
                 rule_id=s.rule_id,
                 summary=s.summary,
+                explanation=s.explanation,
             ),
         )
     return cites, [labels[k] for k in sorted(labels)]

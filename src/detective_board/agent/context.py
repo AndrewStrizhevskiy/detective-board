@@ -9,8 +9,9 @@ from typing import Any, Literal
 
 from detective_board.graph.results import GraphResult
 from detective_board.retrieval import Hit
+from detective_board.symbolic.api import Explanation
 
-from .events import Label
+from .events import Label, parse_explanation
 
 SYSTEM_PROMPT = """\
 You are the answering component of a closed-corpus Q&A system about Sherlock Holmes stories.
@@ -53,6 +54,7 @@ class Source:
     confidence: str | None = None
     rule_id: str | None = None
     summary: str = ""
+    explanation: Explanation | None = None
 
     @property
     def suspect(self) -> bool:
@@ -156,6 +158,9 @@ def sources_from_tool(
             or exp.get("rule_id")
             or (payload.get("explanation") or {}).get("rule_id")
         )
+        expl = parse_explanation(it.get("explanation")) or parse_explanation(
+            payload.get("explanation")
+        )
         for a in _anchors_of(it)[:2]:
             if len(out) >= limit:
                 return out, headers
@@ -172,6 +177,7 @@ def sources_from_tool(
                     label,
                     rule_id=rule,
                     summary=f"{rule or ''} {summary}".strip(),
+                    explanation=expl if label != "extracted" else None,
                 )
             )
     return out, headers
