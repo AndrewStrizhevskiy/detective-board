@@ -63,6 +63,11 @@ class CheckResult:
         return bool(self.partial_text)
 
 
+_ABBREV = re.compile(
+    r"\b(?:Dr|Mr|Mrs|Ms|Messrs|St|Col|Capt|Maj|Gen|Lt|Sgt|Inspector|Prof|Rev|Hon|Jr|Sr|vs|etc)\.(?=\s+[A-Z0-9])"
+)
+
+
 def split_claims(answer: str) -> list[Claim]:
     marks: list[tuple[int, str | None]] = []
 
@@ -74,7 +79,9 @@ def split_claims(answer: str) -> list[Claim]:
     # a citation after the full stop belongs to the sentence before it
     s = re.sub(r'([.!?]+["”)]*)\s*((?:\x00\d+\x00\s*)*\x00\d+\x00)', r"\2\1", s)
     claims: list[Claim] = []
-    for sent in re.split(r"(?<=[.!?])\s+", s):
+    # protect abbreviations ("Dr. Watson", "Mr. Holmes", "St. Clair") from the sentence splitter
+    s = _ABBREV.sub(lambda m: m.group(0).replace(".", "\x01"), s)
+    for sent in (x.replace("\x01", ".") for x in re.split(r"(?<=[.!?])\s+", s)):
         ids = [int(i) for i in re.findall(r"\x00(\d+)\x00", sent)]
         text = re.sub(r"\x00\d+\x00", "", sent).strip()
         if not re.search(r"\w", text) or _EXEMPT.match(text):

@@ -506,7 +506,7 @@ def run_model(stamp: str, model: str, think: bool, questions, golds, vectors) ->
     log(f"{model}: loaded in {load_s:.1f}s; {len(todo)} questions")
     with Store(DB, CONFIG) as store:
         retriever = HybridRetriever(store, CachedQueryEmbedder(vectors), **RRF)
-        agent = Agent(llm, retriever, None, None, AgentConfig())
+        agent = Agent(llm, retriever, None, None, AgentConfig(idf_chunks=str(CHUNKS)))
         for q in todo:
             llm.num_ctx = NUM_CTX
             rec = run_agent_question(agent, llm, q, golds[q["id"]])

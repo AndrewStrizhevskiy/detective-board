@@ -191,3 +191,14 @@ def test_agent_uses_idf_chunks(tmp_path):
     f.write_text(json.dumps({"text": LONG, "story": "s"}) + "\n")
     ag = make_agent(FakeLLM("x"), config=AgentConfig(idf_chunks=str(f)))
     assert ag.idf and ag.idf["adder"] > 0
+
+
+def test_abbreviation_does_not_split_claim():
+    from detective_board.agent.answer import split_claims
+
+    claims = split_claims(
+        'The snake that killed Dr. Grimesby Roylott was a swamp adder [1: "It is a swamp adder!"].'
+    )
+    assert len(claims) == 1
+    assert claims[0].text.startswith("The snake that killed Dr. Grimesby")
+    assert claims[0].cites
