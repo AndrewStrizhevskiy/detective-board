@@ -134,18 +134,28 @@ Caveats:
 | Embeddings | bge-m3 | High |
 | Retrieval | SQLite FTS5 + sqlite-vec, hybrid RRF k=30, w 0.5:1, BM25 in OR mode | Medium (tuned on the evaluation questions) |
 | Extraction | qwen3:4b, think off | Medium-low (12 chunks, AI gold) |
-| Answer model | provisional qwen3:4b; qwen3:8b only if the check shows a clear gain worth about 1.7x latency | Low until section 9 |
+| Answer model | qwen3:4b-instruct (section 9) | Medium-low (n=12) |
 | Reranker | not needed for hit@5 | Medium |
 
 Latency: qwen3:4b gives 17.2 s + 150/7.07 = about 38 s for a 150-token answer (the length is an assumption).
 
-## 9. Answer-model check: PENDING
+## 9. Answer-model check (2026-10-23, real Agent, retrieval-only path)
 
-Fill in from these files when they appear:
-- `docs/spike/results/answers-20261023-082109.md`
-- `docs/spike/results/answers-20261023-082109-<model>.jsonl`
+Files: `docs/spike/results/answers-20261023-v3.md` and `answers-20261023-v3-<model>.jsonl`. 12 fixed golden questions, one run each, temperature 0, seed 42, agent defaults (top_k 4, rank_full: top-1 chunk whole + 3 windows of 60 words, 1200-token budget, hybrid RRF k=30 w 0.5:1). Graph and MCP tools off.
 
-Then update section 8, finalise ADR-0008, and have a human read a sample, because the metrics are proxies.
+| Model | behaviour correct | answered+verified / answerable | coverage (crude) | cites gold chunk | TTFT s | total s per question | prompt tokens |
+|---|---|---|---|---|---|---|---|
+| qwen3:4b-instruct | 8/12 | 5/10 | 0.33 | 5/10 | 42.0 | 59.5 | 1110 |
+| gemma3:4b | 6/12 | 4/10 | 0.11 | 2/10 | 43.5 | 82.6 | 1220 |
+| qwen3:8b | 9/12 | 5/10 | 0.19 | 5/10 | 101.1 | 141.5 | 1166 |
+
+- **Decision: qwen3:4b-instruct for answers.** qwen3:8b is at most one question better (noise at n=12) and 2.4x slower to first token. gemma3:4b is worse.
+- qwen3:4b with think=false still writes its reasoning into the answer (fails the self-check), so it is unusable for chat answers; it remains the extraction model (constrained JSON output is unaffected).
+- Bare-LLM baseline (qwen3:4b-instruct, no retrieval): it confidently denies true facts (for g001: Roylott "was not killed by a snake") and invents context; behaved as required on 1/3 out-of-corpus/adversarial questions, the agent on 2/3.
+- Failure causes found and fixed on the way (all visible in git history): window selection without IDF weights; a strict system prompt without an example made the 4B model refuse even with the answer in the prompt; the sentence splitter cut "Dr."; the eval script did not pass the IDF file. The remaining misses are mostly retrieval: the gold chunk is in the top-4 for about 81% of answerable questions (`evidence-20261023-093201.md`: the gold evidence is inside the prompt for 66-69%).
+- The Russian question is refused by the relevance gate before any LLM call (the lexical support check fails across languages); Russian remains optional.
+- Caveats: n=12, one run per model, crude coverage proxy, no human judging, gold written by an AI, thresholds provisional.
+- Latency at the chosen setting: about 42 s to first token and 60 s total on average on this CPU. The demo must show trace events and retrieved quotes while the model prefills.
 
 ## 10. Risks
 
