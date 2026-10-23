@@ -41,6 +41,7 @@ from .llm import LLM
 from .memory import Turn, retrieval_query, summarize
 from .retrieval_step import gate, hit_traces
 from .router import Router, extract_names, parse_time_window
+from .window import idf_from_jsonl
 
 log = logging.getLogger(__name__)
 _CODE = re.compile(r"[a-z_]{1,40}")
@@ -70,6 +71,7 @@ class Agent:
     ) -> None:
         self.llm, self.retriever, self.graph, self.tools = llm, retriever, graph, tools
         self.cfg = config or AgentConfig()
+        self.idf = idf_from_jsonl(self.cfg.idf_chunks) if self.cfg.idf_chunks else None
         self.router = Router(router_llm or llm, self.cfg.use_llm_router)
         self._now, self._mono, self._run_id = now, mono, run_id
 
@@ -128,7 +130,7 @@ class Agent:
                 tool_errors.append(f"{tool}: {err}")
 
         def assemble(h: list[Any], gs: list[ctx.Source], ts: list[ctx.Source]) -> list[ctx.Source]:
-            out = ctx.sources_from_hits(h, question, cfg.window_words)
+            out = ctx.sources_from_hits(h, question, cfg.window_words, idf=self.idf)
             n = len(out) + 1
             out += [_renum(s, n + i) for i, s in enumerate(gs)]
             n = len(out) + 1

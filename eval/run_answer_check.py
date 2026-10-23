@@ -25,6 +25,7 @@ import re
 import statistics
 import sys
 import time
+import urllib.error
 import urllib.request
 from collections.abc import Iterator, Sequence
 from datetime import datetime
@@ -206,7 +207,11 @@ class MeteredLLM:
             data=json.dumps(payload).encode(),
             headers={"Content-Type": "application/json"},
         )
-        with urllib.request.urlopen(req, timeout=self.timeout) as resp:  # noqa: S310
+        try:
+            resp_cm = urllib.request.urlopen(req, timeout=self.timeout)  # noqa: S310
+        except urllib.error.HTTPError as e:
+            raise RuntimeError(f"HTTP {e.code}: {e.read().decode(errors='replace')[:400]}") from e
+        with resp_cm as resp:
             for raw in resp:
                 line = raw.decode().strip()
                 if not line:

@@ -157,3 +157,37 @@ def test_real_chunks_fit_budget_for_golden_questions():
             assert (
                 len(s.window.split()) <= cfg.window_words * 1.2 or len(sentence_spans(s.text)) < 3
             )
+
+
+# ---- IDF window selection -------------------------------------------------------
+def _chunks():
+    return [json.loads(x) for x in (ROOT / "data/chunks.jsonl").read_text().splitlines()]
+
+
+def test_idf_is_deterministic_and_ranks_rare_words_higher():
+    from detective_board.agent.window import idf_from_chunks
+
+    ch = _chunks()
+    texts, stories = [c["text"] for c in ch], [c["story"] for c in ch]
+    a, b = idf_from_chunks(texts, stories), idf_from_chunks(texts, stories)
+    assert a == b and a["adder"] > a["holm"] if "holm" in a else a["adder"] > 0
+    assert a["roylott"] < a["adder"]  # a story-wide name weighs less than a rare noun
+
+
+def test_g001_window_keeps_swamp_adder():
+    from detective_board.agent.window import idf_from_jsonl
+
+    ch = _chunks()
+    c = next(x for x in ch if x["chunk_id"] == "speckled-band-0030")
+    q = "What kind of snake killed Dr. Grimesby Roylott?"
+    idf = idf_from_jsonl(str(ROOT / "data/chunks.jsonl"))
+    w = best_window(c["text"], q, 110, idf)
+    assert "swamp adder" in c["text"][w.start : w.end]
+    assert len(c["text"][w.start : w.end].split()) <= 110 * 1.2
+
+
+def test_agent_uses_idf_chunks(tmp_path):
+    f = tmp_path / "chunks.jsonl"
+    f.write_text(json.dumps({"text": LONG, "story": "s"}) + "\n")
+    ag = make_agent(FakeLLM("x"), config=AgentConfig(idf_chunks=str(f)))
+    assert ag.idf and ag.idf["adder"] > 0

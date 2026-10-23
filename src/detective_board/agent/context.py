@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import re
 import unicodedata
+from collections.abc import Mapping
 from dataclasses import dataclass, replace
 from typing import Any, Literal
 
@@ -66,12 +67,16 @@ class Source:
 
 
 def sources_from_hits(
-    hits: list[Hit], question: str = "", window_words: int = 0, start: int = 1
+    hits: list[Hit],
+    question: str = "",
+    window_words: int = 0,
+    start: int = 1,
+    idf: Mapping[str, float] | None = None,
 ) -> list[Source]:
     """One source per chunk. With `window_words` the model sees only the query-focused window."""
     out: list[Source] = []
     for i, h in enumerate(hits):
-        w = best_window(h.text, question, window_words) if window_words > 0 else None
+        w = best_window(h.text, question, window_words, idf) if window_words > 0 else None
         out.append(
             Source(
                 start + i,

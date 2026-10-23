@@ -2,8 +2,14 @@
 
 from __future__ import annotations
 
+import json
+import math
 import re
+from collections import Counter
+from collections.abc import Mapping
 from dataclasses import dataclass
+from functools import lru_cache
+from pathlib import Path
 
 _WORD = re.compile(r"[^\W_]{3,}")
 STOP = frozenset(
@@ -17,6 +23,8 @@ _SUFFIX = ("ing", "ed", "es", "s")
 _ABBR = frozenset("dr mr mrs ms st no capt col messrs jr sr mt vs gen lt sgt inspector".split())
 _END = re.compile(r"[.!?]+[\"”’')\]]*\s+")
 BONUS_ADJACENT = 0.5
+NAME_FACTOR = 0.6  # capitalised question words (names) identify the topic, not the answer
+SAT_DAMP = 0.5  # how strongly story-wide words are discounted
 MAX_FACTOR = 1.2  # hard cap = window_words * 1.2 (about 130 for the default 110)
 
 
@@ -29,6 +37,43 @@ def stem(w: str) -> str:
 
 def content_words(text: str) -> set[str]:
     return {stem(w) for w in _WORD.findall(text.lower()) if w not in STOP}
+
+
+def idf_from_chunks(texts: list[str], stories: list[str] | None = None) -> dict[str, float]:
+    """Word weight table; document = chunk. Deterministic.
+
+    weight = ln(1 + N / (1 + df)), damped by (1 - saturation) where saturation is the highest
+    share of one story's chunks that contain the word: names of the story's characters appear in
+    most of its chunks and say nothing about which sentence holds the answer.
+    """
+    df: Counter[str] = Counter()
+    per_story: dict[str, Counter[str]] = {}
+    size: Counter[str] = Counter()
+    for i, t in enumerate(texts):
+        words = content_words(t)
+        df.update(words)
+        if stories:
+            per_story.setdefault(stories[i], Counter()).update(words)
+            size[stories[i]] += 1
+    sat: dict[str, float] = {}
+    for st, cnt in per_story.items():
+        for w, c in cnt.items():
+            sat[w] = max(sat.get(w, 0.0), c / size[st])
+    n = len(texts)
+    return {
+        w: math.log(1 + n / (1 + c)) * (1 - SAT_DAMP * sat.get(w, 0.0))
+        for w, c in sorted(df.items())
+    }
+
+
+@lru_cache(maxsize=4)
+def idf_from_jsonl(path: str) -> Mapping[str, float]:
+    """Weights over a chunks.jsonl file (cached per path). Missing file -> empty (plain overlap)."""
+    p = Path(path)
+    if not p.is_file():
+        return {}
+    rows = [json.loads(line) for line in p.read_text().splitlines() if line.strip()]
+    return idf_from_chunks([r["text"] for r in rows], [r["story"] for r in rows])
 
 
 @dataclass(frozen=True)
@@ -71,7 +116,17 @@ def _add(spans: list[tuple[int, int]], text: str, a: int, b: int) -> None:
         spans.append((a, b))
 
 
-def best_window(text: str, question: str, window_words: int = 110) -> Window:
+def name_words(question: str) -> set[str]:
+    """Stems of capitalised words that are not the first word of the question."""
+    toks = re.findall(r"[^\W_]{3,}", question)
+    first = re.match(r"\W*([^\W_]+)", question)
+    skip = first.group(1) if first else ""
+    return {stem(t.lower()) for t in toks if t[0].isupper() and t != skip}
+
+
+def best_window(
+    text: str, question: str, window_words: int = 110, idf: Mapping[str, float] | None = None
+) -> Window:
     """Best contiguous run of whole sentences of about `window_words` words for the question."""
     spans = sentence_spans(text)
     if not spans:
@@ -81,31 +136,35 @@ def best_window(text: str, question: str, window_words: int = 110) -> Window:
     if sum(words) <= hi:
         return Window(0, len(text), len(spans), 0.0)
     q = content_words(question)
-    raw = [float(len(q & content_words(text[a:b]))) for a, b in spans]
+    sent_words = [content_words(text[a:b]) for a, b in spans]
+    if idf:  # words absent from the corpus are the rarest of all
+        top = max(idf.values())
+        weight = {w: idf.get(w, top) for w in q}
+    else:
+        weight = dict.fromkeys(q, 1.0)
+    for w in (name_words(question) & weight.keys()) if idf else ():
+        weight[w] *= NAME_FACTOR
+    raw = [sum(weight[w] for w in q & sw) for sw in sent_words]
     best = max(range(len(spans)), key=lambda i: (raw[i], -i))  # first best sentence
     score = list(raw)
+    unit = raw[best] / max(1, len(q & sent_words[best]))
     for j in (best - 1, best + 1):
         if 0 <= j < len(spans):
-            score[j] += BONUS_ADJACENT
-    i = j = best
-    total = words[best]
+            score[j] += BONUS_ADJACENT * unit
     target = max(1, window_words)
-    while total < target:
-        left = words[i - 1] if i > 0 else None
-        right = words[j + 1] if j + 1 < len(spans) else None
-        ok_l = left is not None and total + left <= hi
-        ok_r = right is not None and total + right <= hi
-        if not (ok_l or ok_r):
-            break
-        take_right = ok_r and (
-            not ok_l or score[j + 1] >= score[i - 1]
-        )  # tie: read forward, the answer usually follows
-        if take_right:
-            j += 1
-            total += words[j]
-        else:
-            i -= 1
-            total += words[i]
+    pick = (-1.0, 0, 0, 0)  # (score, -distance to target, -start, end)
+    for i0 in range(len(spans)):
+        total = 0
+        acc = 0.0
+        for j0 in range(i0, len(spans)):
+            total += words[j0]
+            if total > hi and j0 > i0:
+                break
+            acc += score[j0]
+            cand = (round(acc, 9), -abs(total - target), -i0, j0)
+            if cand > pick:
+                pick = cand
+    i, j = -pick[2], pick[3]
     start = 0 if i == 0 else spans[i][0]
     end = len(text) if j == len(spans) - 1 else spans[j][1]
     return Window(start, end, j - i + 1, sum(score[i : j + 1]))

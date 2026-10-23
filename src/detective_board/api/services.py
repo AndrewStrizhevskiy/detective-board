@@ -5,6 +5,7 @@ inside each worker thread (see `runtime.py`); never share a `Services` between t
 
 from __future__ import annotations
 
+import dataclasses
 import sys
 from dataclasses import dataclass
 from typing import Any
@@ -113,6 +114,16 @@ def build_services(
             HybridRetriever(store, emb),
             graph=graph,  # type: ignore[arg-type]
             tools=client,
-            config=cfg.agent_config(),
+            config=_agent_cfg(cfg),
         )
     return svc
+
+
+def _agent_cfg(cfg: Any) -> Any:
+    """Agent thresholds; the window word weights default to the corpus next to the index."""
+    ac = cfg.agent_config()
+    if not ac.idf_chunks:
+        chunks = cfg.resolve("data/chunks.jsonl")
+        if chunks.exists():
+            ac = dataclasses.replace(ac, idf_chunks=str(chunks))
+    return ac

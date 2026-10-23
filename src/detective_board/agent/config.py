@@ -9,6 +9,7 @@ from dataclasses import dataclass
 class AgentConfig:
     top_k: int = 3  # chunks put into the prompt (prefill is ~11-23 tok/s on the target CPU)
     window_words: int = 110  # query-focused window per chunk (90-130 words, whole sentences)
+    idf_chunks: str = ""  # chunks.jsonl for window word weights; empty = plain word overlap
     max_prompt_tokens: int = 1000  # estimate = chars/4, system prompt + facts + question included
     retry_extra_k: int = 2  # extra chunks fetched on the re-retrieve attempt
     min_score: float = 0.018  # RRF score of the best hit; ~ "present in both arms"
