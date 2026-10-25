@@ -9,7 +9,7 @@ No LLM, no Ollama, no full-corpus data needed; everything is tested on hand-buil
 1. **Normaliser** (new `extract/normalise.py`, pure, deterministic, no LLM; R-07, R-08, R-11)
    - `normalise_time(text, ref=None) -> TimeSpec`: reuses `graph.timenorm.derive_time_norm` for
      clock times and day parts; adds approximation words (about, nearly, shortly) -> `low`,
-     "since X" as a start bound, relative day cues (next morning, following day, that night, the
+     "since X" as the instant X, `low` (TimeSpec has no open interval), relative day cues (next morning, following day, that night, the
      day before) -> `rel` + `ref_event_id`, `day = ref.day + k` only when the reference day is known.
    - `resolve_days(events)`: story calendar from explicit dates ("June 3rd", high) and weekdays
      ("Monday", low); a relative cue is resolved against the nearest preceding event with a known

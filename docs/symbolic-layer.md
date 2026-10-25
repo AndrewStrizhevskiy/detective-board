@@ -463,16 +463,20 @@ Implemented in `src/detective_board/symbolic/` (T-36), tests in `tests/symbolic/
 
 - **Normaliser** `extract/normalise.py` (R-07, R-08, R-11; deterministic, no LLM). `normalise_time`
   reuses `graph.timenorm` for clock times and day parts; approximation words (about, nearly,
-  shortly, ...) and "since X" make the time `low`; relative cues (next morning, following day,
+  shortly, ...) and "since X" make the time `low` ("since X" is stored as the instant X, since
+  `TimeSpec` has no open interval; the Wisteria overlap rests on "nearly one" and "since one"
+  both mapping to 01:00, which is why that finding is conditional); relative cues (next morning, following day,
   that night, the day before) set `rel` and `ref_event_id`, and a day only when the reference day
   is known. `resolve_days` builds a story calendar: explicit dates are `high`; a weekday is placed
   through a date named in the same expression ("June 3rd, that is, on Monday"), else on its own
   week scale, `low`; a relative cue takes the day of the nearest earlier item with a known day,
   `low` (the reference is chosen by narration order, so it is never `high`). No cue: day unknown.
   `claim_prop` maps the schema-v2 `about_person/about_place/about_time_text/polarity` to a
-  `PresenceProp`; a denial, a missing or unparsed slot, or a name with zero or several ids gives
-  no proposition, with a reason code (`DENIAL_NOT_MODELLED`, `NO_PLACE`, `NO_TIME`,
-  `TIME_UNPARSED`, `PERSON_AMBIGUOUS`, ...). No new proposition kinds were added here.
+  `PresenceProp`; a denial, a missing or unparsed slot (`about_person` is never filled from the
+  speaker), or a name with zero or several ids gives no proposition, with a reason code
+  (`DENIAL_NOT_MODELLED`, `PERSON_MISSING`, `NO_PLACE`, `NO_TIME`, `TIME_UNPARSED`,
+  `PERSON_AMBIGUOUS`, ...). Weekdays qualified by next/last/following get no day. No new
+  proposition kinds were added here.
 - `normalise.apply(store, story)` writes overlays `time` (full `TimeSpec`), `story_day` and `prop`
   with source `normaliser`; overlays with any other source (curation, `set_event_day`) are kept
   and win. `SqliteFactSource` prefers the `time` overlay. CLI for a built graph:

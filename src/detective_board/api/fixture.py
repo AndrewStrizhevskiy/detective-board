@@ -631,6 +631,9 @@ def _answer(messages: Sequence[dict[str, str]]) -> str:
                 "If these extracted facts are right, Garcia was at two places at one o’clock: "
                 f"he looked in at Eccles's door, and he had been there on the Common. {cites}"
             )
+        if demo_mode() or not any("mistaken" in text for _, text in found):
+            n, text = found[0]
+            return f'The rule engine reports a finding resting on this passage. [{n}: "{text}"]'
         found.sort(key=lambda f: "mistaken" not in f[1])  # A = his account, B = what was seen
         cites = " ".join(f'[{n}: "{text}"]' for n, text in found)
         return (
