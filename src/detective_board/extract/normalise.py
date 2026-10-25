@@ -50,6 +50,7 @@ _DATE = re.compile(
     rf"\b(?:({'|'.join(_MONTHS)})\s+{_ORD}|{_ORD}\s+(?:of\s+)?({'|'.join(_MONTHS)}))\b"
 )
 _WEEKDAY = re.compile(rf"\b({'|'.join(_WEEKDAYS)})\b")
+_QUALIFIED_WD = re.compile(rf"\b(next|following|last|previous|coming)\s+({'|'.join(_WEEKDAYS)})\b")
 
 
 def _fold(text: str) -> str:
@@ -110,13 +111,14 @@ class DayInput:
     item_id: str
     text: str | None
     order: int  # position in the story (char offset); used only to pick a relative reference
+    known_day: int | None = None  # curated day: kept, and usable as a relative reference
 
 
 @dataclass(frozen=True)
 class DayResult:
     day: int | None
     confidence: Confidence
-    method: Literal["date", "weekday", "relative", "none"]
+    method: Literal["curated", "date", "weekday", "relative", "none"]
     ref_event_id: str | None = None
 
 
@@ -141,14 +143,19 @@ def resolve_days(items: Sequence[DayInput]) -> dict[str, DayResult]:
     for i in ordered:
         if (m := _DATE.search(folded[i.item_id])) and (o := _date_ordinal(m)) is not None:
             dates[i.item_id] = o
-        if m := _WEEKDAY.search(folded[i.item_id]):
+        # "next Monday", "last Friday": which week is unknown, so no day from the weekday
+        if (m := _WEEKDAY.search(folded[i.item_id])) and not _QUALIFIED_WD.search(
+            folded[i.item_id]
+        ):
             weekdays[i.item_id] = _WEEKDAYS.index(m.group(1))
     link = next(((dates[k], weekdays[k]) for k in dates if k in weekdays), None)
     out: dict[str, DayResult] = {}
     last: tuple[str, int] | None = None
     for i in ordered:
         res = DayResult(None, "low", "none")
-        if i.item_id in dates:
+        if i.known_day is not None:
+            res = DayResult(i.known_day, "low", "curated")
+        elif i.item_id in dates:
             res = DayResult(dates[i.item_id], "high", "date")
         elif i.item_id in weekdays:
             wd = weekdays[i.item_id]
@@ -196,7 +203,9 @@ def claim_prop(
 
     if getattr(claim, "polarity", "affirm") == "deny":
         return fail("DENIAL_NOT_MODELLED")
-    who = getattr(claim, "about_person", None) or claim.speaker
+    who = getattr(claim, "about_person", None)
+    if not who:  # "often the speaker" is a guess the rules must not rest on
+        return fail("PERSON_MISSING")
     people = resolve_person(who)
     if len(people) != 1:
         return fail("PERSON_AMBIGUOUS" if people else "PERSON_UNRESOLVED")
@@ -249,7 +258,8 @@ def apply(store: Any, story: str) -> NormaliseReport:
     text = {
         k: props[k].get("time_text" if kind[k] == "event" else "about_time_text") for k in order
     }
-    days = resolve_days([DayInput(k, text[k], order[k]) for k in order])
+    known = {k: v[0] for (k, key), v in curated.items() if key == "story_day"}
+    days = resolve_days([DayInput(k, text[k], order[k], known.get(k)) for k in order])
 
     def day_of(node_id: str) -> tuple[int | None, Confidence]:
         cur = curated.get((node_id, "story_day"))
@@ -264,6 +274,9 @@ def apply(store: Any, story: str) -> NormaliseReport:
         d = days[r["id"]]
         ref_id = d.ref_event_id if kind.get(d.ref_event_id or "") == "event" else None
         t = normalise_time(text[r["id"]], ref=times.get(ref_id or ""), ref_event_id=ref_id)
+        if (r["id"], "time") in curated:  # a curated TimeSpec wins, its day included
+            times[r["id"]] = TimeSpec.model_validate(curated[(r["id"], "time")][0])
+            continue
         if t is None:
             continue
         day, conf = day_of(r["id"])
@@ -281,12 +294,12 @@ def apply(store: Any, story: str) -> NormaliseReport:
             (SOURCE, story),
         )
         for eid, t in sorted(times.items()):
-            if (eid, "time") not in curated:
-                _put(store, eid, "time", t.model_dump(mode="json"), t.confidence)
-            if t.day is not None:
-                n_dated += 1
-                if (eid, "story_day") not in curated:
-                    _put(store, eid, "story_day", t.day, days[eid].confidence)
+            n_dated += t.day is not None
+            if (eid, "time") in curated:
+                continue
+            _put(store, eid, "time", t.model_dump(mode="json"), t.confidence)
+            if t.day is not None and (eid, "story_day") not in curated:
+                _put(store, eid, "story_day", t.day, days[eid].confidence)
         for r in rows:
             if r["kind"] != "claim" or (r["id"], "prop") in curated:
                 continue
@@ -348,7 +361,7 @@ def _put(store: Any, node_id: str, key: str, value: Any, confidence: str) -> Non
         (
             node_id,
             key,
-            json.dumps(value, sort_keys=True, separators=(",", ":")),
+            json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")),
             confidence,
             SOURCE,
         ),

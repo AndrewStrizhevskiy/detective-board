@@ -146,14 +146,34 @@ def test_claim_without_checkable_proposition(kw, reason):
     assert r.prop is None and r.reason == reason
 
 
-def test_claim_about_the_speaker_by_default_and_high_confidence():
+def test_claim_person_is_never_guessed_from_the_speaker():
     PEOPLE["scott eccles"] = ["p:s:eccles"]
     try:
         c = _claim(about_place="Wisteria Lodge", about_time_text="half past ten in the evening")
         r = claim_prop(c, person, place, day=2, day_confidence="high")
     finally:
         del PEOPLE["scott eccles"]
-    assert r.prop.person_id == "p:s:eccles" and r.confidence == "high"
+    assert r.prop is None and r.reason == "PERSON_MISSING"
+
+
+def test_claim_with_all_slots_and_a_known_day_is_high():
+    c = _claim(
+        about_person="Garcia",
+        about_place="Wisteria Lodge",
+        about_time_text="half past ten in the evening",
+    )
+    r = claim_prop(c, person, place, day=2, day_confidence="high")
+    assert r.prop.person_id == "p:s:garcia" and r.confidence == "high"
+
+
+def test_qualified_weekdays_get_no_day_and_curated_days_are_references():
+    out = _days("on Monday", "the following Monday", "next Friday")
+    assert out["e:0"].day == 0 and out["e:1"].day is None and out["e:2"].day is None
+    out = resolve_days(
+        [DayInput("a", "at nine o'clock", 0, known_day=7), DayInput("b", "the next morning", 1)]
+    )
+    assert (out["a"].day, out["a"].method) == (7, "curated")
+    assert (out["b"].day, out["b"].ref_event_id) == (8, "a")
 
 
 def test_claim_without_day_keeps_the_time_but_rules_will_say_unknown():

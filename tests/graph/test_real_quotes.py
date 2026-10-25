@@ -8,7 +8,7 @@ from pathlib import Path
 from detective_board.extract import normalise
 from detective_board.extract.schema_v2 import Claim, Entity, Event, Extraction
 from detective_board.graph import ChunkRef, GraphStore, SqliteFactSource
-from detective_board.symbolic.api import Verdict, check_claim, run_all
+from detective_board.symbolic.api import PresenceProp, TimeSpec, Verdict, check_claim, run_all
 
 ROOT = Path(__file__).resolve().parents[2]
 BV, WL = "boscombe-valley-mystery", "wisteria-lodge"
@@ -217,6 +217,21 @@ def test_wisteria_with_curated_day_is_a_conditional_r1_violation():
     ]
     clean = (ROOT / "data" / "clean" / f"{WL}.txt").read_text(encoding="utf-8")
     assert all(clean[a.char_start : a.char_end] == a.quote for a in f.explanation.anchors)
+
+
+def test_curated_prop_and_time_survive_the_normaliser():
+    g = wisteria()
+    claim = f"c:{WL}-0010:0"
+    t = TimeSpec(day=5, lo=60, hi=60, exact=True, confidence="high")
+    prop = PresenceProp(person_id=f"p:{WL}:garcia", place_ref=f"pl:{WL}:wisteria-lodge", time=t)
+    g.set_claim_prop(claim, prop, confidence="high")
+    g.set_overlay(LOOK_IN, "time", t.model_copy(update={"day": 99}), confidence="high")
+    normalise.apply(g, WL)
+    fb = SqliteFactSource(g).load(WL)
+    assert fb.claim(claim).prop == prop
+    assert fb.event(LOOK_IN).time.day == 99
+    keys = {(r[0], r[1]) for r in g.conn.execute("SELECT node_id, key FROM g_overlay")}
+    assert (LOOK_IN, "story_day") not in keys
 
 
 def test_normalise_cli_on_a_graph_file(tmp_path, capsys):

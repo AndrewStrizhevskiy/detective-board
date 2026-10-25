@@ -615,8 +615,11 @@ class GraphStore:
     def set_event_day(self, event_id: str, day: int, *, confidence: str = "low") -> None:
         self.set_overlay(event_id, "story_day", day, confidence=confidence)
 
-    def set_claim_prop(self, claim_id: str, prop: Any, *, confidence: str = "low") -> None:
-        self.set_overlay(claim_id, "prop", prop, confidence=confidence, source="normaliser")
+    def set_claim_prop(
+        self, claim_id: str, prop: Any, *, confidence: str = "low", source: str = "manual"
+    ) -> None:
+        """Curated by default; `extract.normalise` writes its own rows (source 'normaliser')."""
+        self.set_overlay(claim_id, "prop", prop, confidence=confidence, source=source)
 
     # ------------------------------------------------------------------ queries
 
