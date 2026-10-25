@@ -166,6 +166,16 @@ export function fmtSeconds(ms) {
   return ms < 10000 ? `${(ms / 1000).toFixed(1)} s` : `${Math.round(ms / 1000)} s`;
 }
 
+// Run clock: milliseconds under a second (a fake or cached run finishes in a few ms, and "0.0 s"
+// would look like a stopped clock), tenths up to a minute, then m:ss.
+export function fmtElapsed(ms) {
+  if (ms == null || !Number.isFinite(ms) || ms < 0) return "0.0 s";
+  if (ms < 1000) return `${Math.max(1, Math.round(ms))} ms`;
+  if (ms < 60000) return `${(ms / 1000).toFixed(1)} s`;
+  const s = Math.floor(ms / 1000);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
 // Health chip content. level: ok | degraded | down
 export function healthSummary(h) {
   if (!h) return { level: "down", text: "API unreachable", problems: ["The API did not answer /api/health."] };

@@ -515,3 +515,9 @@ button.primary { background: #9e2219; color: #fff6e6; border-color: #6e140e; fon
 
 @media (max-width: 1499px) { .panel.board .search input { width: 150px; } .panel.board .panel-head { gap: 6px; } .panel.board .panel-head h2 { font-size: 18px; } }
 
+/* the run clock says what it is showing: ticking (red dot), finished (tick), or nothing yet */
+.clock[data-state="idle"] { color: var(--db-text-muted); }
+.clock[data-state="running"]::before { content: "\25CF "; color: var(--db-error); animation: live-dot calc(var(--db-dur-pulse) * 1.6) ease-in-out infinite; }
+.clock[data-state="done"]::before { content: "\2713 "; color: var(--db-ok); }
+:root[data-motion="off"] .clock::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { .clock::before { animation: none; } }

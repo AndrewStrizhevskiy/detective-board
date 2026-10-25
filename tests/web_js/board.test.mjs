@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { fmtElapsed } from "../../web/js/trace.js";
 import { hashStr, personArt, placeArt, itemArt, exhibitLetter, stringGeom, shadowVector, initialName, storyTitle } from "../../web/js/board-art.js";
 
 test("hash and portrait variants are deterministic", () => {
@@ -62,4 +63,12 @@ test("names and story titles", () => {
   assert.equal(storyTitle("boscombe-valley-mystery"), "Boscombe Valley Mystery");
   assert.equal(storyTitle("scandal-in-bohemia"), "Scandal in Bohemia");
   assert.equal(storyTitle(""), "");
+});
+
+test("run clock: ms under a second, tenths, then minutes", () => {
+  assert.equal(fmtElapsed(0.4), "1 ms");
+  assert.equal(fmtElapsed(24), "24 ms");
+  assert.equal(fmtElapsed(2900), "2.9 s");
+  assert.equal(fmtElapsed(75000), "1:15");
+  assert.equal(fmtElapsed(null), "0.0 s");
 });

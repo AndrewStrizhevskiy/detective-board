@@ -1,7 +1,7 @@
 // Detective Board UI: wiring between the pure modules, the DOM and the API.
 import { askStream, getHealth, getEntities, getSubgraph, getSource, friendlyError } from "./api.js";
 import { initialState, reduce, answerText, waitingStage, emptyGraph, boardGraph, citedBoard, progressSteps } from "./state.js";
-import { traceRows, TYPE_LABEL, fmtSeconds, healthSummary } from "./trace.js";
+import { traceRows, TYPE_LABEL, fmtSeconds, fmtElapsed, healthSummary } from "./trace.js";
 import { splitHighlights, parseAnswer } from "./highlight.js";
 import { normaliseRecording, playReplay, safeReplayPath } from "./replay.js";
 import { createGraph, isDerived, KIND_GLYPH, KIND_WORD } from "./graph.js";
@@ -433,7 +433,7 @@ function renderProgress() {
   const elapsed = (((running ? Date.now() : state.endedAt || Date.now()) - state.startedAt) / 1000);
   if (!running) {
     const n = steps.filter((x) => x.status === "done").length;
-    box.replaceChildren(h("span", { class: "summary" }, `\u2713 Done in ${elapsed.toFixed(1)} s`), h("span", { class: "muted" }, ` / ${n} steps / ${state.mode === "replay" ? "recorded run" : "live run"}`));
+    box.replaceChildren(h("span", { class: "summary" }, `\u2713 Done in ${fmtElapsed(elapsed * 1000)}`), h("span", { class: "muted" }, ` / ${n} steps / ${state.mode === "replay" ? "recorded run" : "live run"}`));
     return;
   }
   const active = steps.find((x) => x.status === "active");
@@ -826,7 +826,14 @@ function renderStrip() {
 setInterval(() => {
   const running = state.phase === "running";
   const start = state.startedAt;
-  $("clock").textContent = start ? `${(((running ? Date.now() : state.endedAt || Date.now()) - start) / 1000).toFixed(1)} s` : "0.0 s";
+  const clock = $("clock");
+  const clockState = !start ? "idle" : running ? "running" : "done";
+  clock.textContent = start ? fmtElapsed((running ? Date.now() : state.endedAt || Date.now()) - start) : "0.0 s";
+  if (clock.dataset.state !== clockState) {
+    clock.dataset.state = clockState;
+    clock.setAttribute("aria-label", clockState === "done" ? "Duration of the last run" : "Elapsed time");
+    clock.title = clockState === "done" ? "How long the last run took" : clockState === "running" ? "Time since the question was asked" : "No run yet";
+  }
   if (running) { renderTrace(); renderStrip(); renderProgress(); }
 }, 250);
 
