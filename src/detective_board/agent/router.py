@@ -41,7 +41,7 @@ _LABEL_ROUTES: dict[str, tuple[list[RouteName], list[str]]] = {
     "fact": (["vector"], []),
     "relation": (["graph", "vector"], []),
     "alibi": (["mcp", "graph", "vector"], ["check_alibi"]),
-    "contradiction": (["mcp", "vector"], ["find_contradictions"]),
+    "contradiction": (["mcp", "graph", "vector"], ["find_contradictions"]),
     "out_of_scope": (["refusal"], []),
 }
 
@@ -71,13 +71,17 @@ class Router:
             routes.extend(("mcp", "graph"))
             tools.append("check_alibi")
             matched.append(m.group(0))
-            why.append("alibi/time question -> MCP check_alibi + graph events")
+            why.append(
+                "alibi/time question -> graph events of the named person + rule R1 check_alibi"
+            )
         if m := _CONTRA.search(q):
-            if "mcp" not in routes:
-                routes.append("mcp")
+            routes.extend(r for r in ("mcp", "graph") if r not in routes)
             tools.append("find_contradictions")
             matched.append(m.group(0))
-            why.append("contradiction question -> symbolic rules via MCP find_contradictions")
+            why.append(
+                "contradiction question -> graph facts of the named person + rules R1-R3 "
+                "via timeline-alibi find_contradictions"
+            )
         if m := _RELATION.search(q):
             if "graph" not in routes:
                 routes.append("graph")
