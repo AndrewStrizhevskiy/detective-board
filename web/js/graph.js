@@ -222,6 +222,7 @@ function buildCard(n, graph, exhibitNo) {
   }
   if (tentative) card.classList.add("tentative");
   card.dataset.id = n.id;
+  card.id = `card-${hashStr(n.id).toString(36)}`;
   return card;
 }
 
@@ -669,6 +670,9 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
   function select(sel) {
     selected = sel;
     applySelection();
+    const c = sel && sel.kind === "node" ? cards.get(sel.id) : null;
+    if (c) container.setAttribute("aria-activedescendant", c.el.id);
+    else container.removeAttribute("aria-activedescendant");
   }
 
   function move(dir) {
@@ -799,7 +803,14 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
   return {
     sync,
     select,
-    fit: () => { userActed(); fitView(true); },
+    // fit() from a button or key hands the camera to the user; fit({ auto: true }) from a resize
+    // does not, and waits while the camera is showing a finding
+    fit(opts) {
+      if (opts && opts.auto) { if (!focusOn && !flyRaf) fitView(false); return; }
+      userActed();
+      fitView(true);
+    },
+    userActed,
     move,
     resize() { measure(); updateLamp(true); queueShade(); },
     zoom(f) { userActed(); measure(); zoomAt(vw / 2, vh / 2, f, true); queueShade(); },

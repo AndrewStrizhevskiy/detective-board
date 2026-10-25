@@ -749,6 +749,7 @@ $("zoom-in").addEventListener("click", () => graph && graph.zoom(ZOOM_STEP));
 $("zoom-out").addEventListener("click", () => graph && graph.zoom(1 / ZOOM_STEP));
 $("cy").addEventListener("keydown", (e) => {
   if (!graph) return;
+  graph.userActed(); // a key on the board hands the camera to the user, like a click
   const k = e.key;
   if (k === "ArrowRight" || k === "ArrowDown") { e.preventDefault(); const n = graph.move(1); if (n) select(n); }
   else if (k === "ArrowLeft" || k === "ArrowUp") { e.preventDefault(); const n = graph.move(-1); if (n) select(n); }
@@ -869,11 +870,11 @@ for (const b of document.querySelectorAll(".tabs button")) {
   b.addEventListener("click", () => {
     document.querySelector(".cols").dataset.tab = b.dataset.tab;
     document.querySelectorAll(".tabs button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-    if (b.dataset.tab === "board" && graph) requestAnimationFrame(() => { graph.resize(); graph.fit(); });
+    if (b.dataset.tab === "board" && graph) requestAnimationFrame(() => { graph.resize(); graph.fit({ auto: true }); });
   });
 }
 let rzTimer = null;
-new ResizeObserver(() => { if (!graph) return; graph.resize(); clearTimeout(rzTimer); rzTimer = setTimeout(() => graph.fit(), 150); }).observe($("cy"));
+new ResizeObserver(() => { if (!graph) return; graph.resize(); clearTimeout(rzTimer); rzTimer = setTimeout(() => graph.fit({ auto: true }), 150); }).observe($("cy"));
 
 // ---------------------------------------------------------------- boot
 // the key is a card pinned on the board; it starts folded so it never hides evidence
