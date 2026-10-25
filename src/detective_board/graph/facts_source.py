@@ -36,9 +36,21 @@ class SqliteFactSource:
         )
         return {r["node_id"]: (json.loads(r["value_json"]), r["confidence"]) for r in rows}
 
-    def _time(self, props: dict[str, Any], day_ov: tuple[Any, str] | None) -> TimeSpec | None:
+    def _time(
+        self,
+        props: dict[str, Any],
+        day_ov: tuple[Any, str] | None,
+        time_ov: tuple[Any, str] | None = None,
+    ) -> TimeSpec | None:
         if not props.get("time_text"):
             return None
+        if time_ov is not None:  # the normaliser's TimeSpec (extract/normalise.py) wins
+            t = TimeSpec.model_validate(time_ov[0])
+            day, dconf = day_ov if day_ov else (t.day, t.confidence)
+            if day is None and self.assume_day is not None:
+                day, dconf = self.assume_day, "low"
+            low = t.confidence == "low" or (day is not None and dconf == "low")
+            return t.model_copy(update={"day": day, "confidence": "low" if low else "high"})
         tn = props.get("time_norm") or {}
         day, dconf = day_ov if day_ov else (self.assume_day, "low")
         low = tn.get("confidence", "low") == "low" or (day is not None and dconf == "low")
@@ -93,6 +105,7 @@ class SqliteFactSource:
         for e in edges.get("OCCURRED_AT", []):
             where.setdefault(e["src"], e["dst"])
         days = self._overlays("story_day")
+        times = self._overlays("time")
         events = []
         for r in nodes("event"):
             p = json.loads(r["props_json"])
@@ -100,7 +113,7 @@ class SqliteFactSource:
                 EventRec(
                     id=r["id"],
                     description=p.get("description", ""),
-                    time=self._time(p, days.get(r["id"])),
+                    time=self._time(p, days.get(r["id"]), times.get(r["id"])),
                     place_ref=where.get(r["id"]),
                     participants=people.get(r["id"], []),
                     anchors=[self._anchor(r)],
