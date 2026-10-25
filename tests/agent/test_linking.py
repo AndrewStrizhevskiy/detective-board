@@ -79,6 +79,12 @@ def test_surname_fallback_and_not_found(g):
     assert link_person(g, []).status == "no_names"
 
 
+def test_surname_fallback_never_swaps_given_names(g):
+    assert link_person(g, ["Mary Turner"]).status == "not_found"  # John and Alice exist
+    link = link_person(g, ["Pedro Garcia"])  # only a bare "Garcia" is known
+    assert link.person_id == "p:ot:garcia" and link.matched == "Garcia"
+
+
 def test_place_names_are_not_persons(g):
     link = link_person(g, ["Boscombe Pool", "John Turner"])
     assert link.person_id == "p:bv:john-turner"

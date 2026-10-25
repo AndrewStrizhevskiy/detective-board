@@ -8,7 +8,7 @@ import pytest
 from detective_board.agent import FakeLLM
 from detective_board.agent.rules_client import InProcessRulesClient
 from detective_board.extract import normalise
-from detective_board.extract.schema_v2 import Entity, Event, Extraction
+from detective_board.extract.schema_v2 import Claim, Entity, Event, Extraction
 from detective_board.graph import ChunkRef, GraphStore, SqliteFactSource
 from detective_board.mcp import tools as mcp_tools
 
@@ -20,7 +20,7 @@ T2 = "He had been there on Oxshott Common since one o'clock, said Baynes of Garc
 T3 = "Lucas Moreno and Ana Moreno, his cousin, were at Wisteria Lodge."
 
 
-def _graph(*, cousins: bool = False) -> GraphStore:
+def _graph(*, cousins: bool = False, baynes: bool = False) -> GraphStore:
     g = GraphStore()
     rows = [(1, T1), (2, T2)] + ([(3, T3)] if cousins else [])
     refs = {n: ChunkRef(f"{S}-{n:04d}", S, 1000 * n, 1000 * n + len(t), t) for n, t in rows}
@@ -55,6 +55,15 @@ def _graph(*, cousins: bool = False) -> GraphStore:
                         quote="He had been there on Oxshott Common since one o'clock",
                     )
                 ],
+                claims=[
+                    Claim(
+                        speaker="Baynes",
+                        content="Garcia lay on the Common since one o'clock",
+                        quote="said Baynes of Garcia",
+                    )
+                ]
+                if baynes
+                else [],
             ),
         ),
     ]
@@ -164,6 +173,35 @@ def test_ambiguous_alibi_is_skipped_with_the_candidates():
     assert not res.ok and res.error["code"] == "ambiguous"
     assert "Ana Moreno" in res.error["message"]
     assert "tool_call" not in [e.type for e in ev if getattr(e, "tool", "") == "check_alibi"]
+
+
+def test_person_without_events_widens_the_scan_once_and_says_so():
+    ev, llm = _run(_graph(baynes=True), "Is there a conflict in what Baynes said?")
+    results = [e for e in ev if e.type == "tool_result"]
+    assert [r.step_id for r in results] == [
+        "tool-find_contradictions",
+        "tool-find_contradictions-2",
+    ]
+    assert results[0].error["code"] == "not_found" and results[1].ok
+    calls = [e.arguments for e in ev if e.type == "tool_call"]
+    assert calls == [{"story": S, "person_id": f"p:{S}:baynes"}, {"story": S}]
+    assert f"SCOPE WIDENED: p:{S}:baynes has no events" in llm.calls[0][1]["content"]
+
+
+def test_ambiguous_across_unretrieved_stories_runs_no_tool():
+    g = _graph(cousins=True)
+    retr = FakeRetriever([hit(1, T1, story="other"), hit(2, T2, story="other")])
+    for sid in ("x", "y"):
+        text = "Pablo Ruiz lived there."
+        g.ingest(
+            ChunkRef(f"{sid}-0001", sid, 0, len(text), text),
+            Extraction(entities=[Entity(name="Pablo Ruiz", type="person", quote="Pablo Ruiz")]),
+        )
+    agent = make_agent(FakeLLM(_answer), retr, graph=g, tools=InProcessRulesClient(g))
+    ev = list(agent.ask("Is there a conflict about Pablo Ruiz?"))
+    assert "tool_call" not in types(ev)
+    res = next(e for e in ev if e.type == "tool_result")
+    assert res.error["code"] == "skipped"
 
 
 @pytest.mark.parametrize("question", ["Where was Garcia at one o'clock? Check his alibi."])

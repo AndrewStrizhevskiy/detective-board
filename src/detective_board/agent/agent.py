@@ -115,7 +115,9 @@ class Agent:
         if decision.tools and self.graph is not None:
             stories = list(dict.fromkeys(h.story for h in (hits or rejected)))
             link = link_person(self.graph, names, stories)
-            story = link.story or story
+            # ambiguous across stories none of which was retrieved: no story to scan
+            no_story = link.status == "ambiguous" and link.story is None
+            story = None if no_story else (link.story or story)
             person = link.person_id
             if link.status == "ambiguous":
                 headers.append(f"ENTITY LINK: {link.note()}")
@@ -125,10 +127,9 @@ class Agent:
             res = yield from self._graph_step(sink, decision, names, story, link)
             if res is not None:
                 graph_sources = ctx.sources_from_graph(res, cfg.max_graph_facts, 1)
-                if res.nodes:
+                if res.nodes and link is None:  # rule questions take story/person from the link
                     story = story or res.nodes[0].story
-                    if link is None:
-                        person = next((n.id for n in res.nodes if n.kind == "person"), None)
+                    person = next((n.id for n in res.nodes if n.kind == "person"), None)
 
         # 4. rule tools (timeline-alibi: MCP stdio or the same functions in-process)
         for tool in decision.tools:
@@ -332,7 +333,7 @@ class Agent:
             meta = {"linked_from": link.mention, "link": link.status}
         if link is not None and link.status == "ambiguous":
             kind = "find_entities"
-            args: dict[str, Any] = {"name": link.mention, "kind": "person", "story": link.story}
+            args: dict[str, Any] = {"name": link.matched, "kind": "person", "story": link.story}
         elif link is not None and link.person_id:
             if "check_alibi" in decision.tools:
                 kind, args = "events_by_person", {"person": link.person_id, "story": link.story}
@@ -466,7 +467,14 @@ class Agent:
         )
         if err and err["code"] == "not_found" and "person_id" in args and tool != "check_alibi":
             if attempt == 1:  # the person has no events of their own (only claims): whole story
-                return (yield from self._tool_step(sink, tool, question, story, None, link, 2))
+                srcs, hdr, e2 = yield from self._tool_step(
+                    sink, tool, question, story, None, link, 2
+                )
+                note = (
+                    f"SCOPE WIDENED: {args['person_id']} has no events of their own; the {tool} "
+                    "results are for the whole story and may concern other people"
+                )
+                return srcs, [note, *hdr], e2
         return srcs, hdr, (summary if err else None)
 
     def _refuse(

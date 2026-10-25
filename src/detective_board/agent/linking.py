@@ -10,6 +10,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Any, Literal
 
+from detective_board.graph.normalize import normalize_name
+
 LinkStatus = Literal["ok", "ambiguous", "not_found", "no_names"]
 
 
@@ -28,6 +30,7 @@ class Link:
     story: str | None = None
     candidates: list[Candidate] = field(default_factory=list)
     reason: str = ""
+    matched: str | None = None  # the surface form that was looked up (mention or its surname)
 
     def note(self) -> str:
         """One line for the trace and the prompt header."""
@@ -48,6 +51,12 @@ def _candidates(graph: Any, name: str, story: str | None) -> list[Candidate]:
     return out
 
 
+def _same_given_names(mention: str, cand: Candidate) -> bool:
+    """Surname fallback: 'Aloysius Garcia' may be 'Garcia', never 'John Garcia'."""
+    known = normalize_name(cand.name).split()
+    return len(known) == 1 or known[:-1] == normalize_name(mention).split()[:-1]
+
+
 def link_person(graph: Any, names: Sequence[str], stories: Sequence[str] = ()) -> Link:
     """The first question name that resolves to exactly one person, in the story the retrieval
     ranks highest among the candidates' stories (`stories`: retrieval order). A name with
@@ -57,11 +66,11 @@ def link_person(graph: Any, names: Sequence[str], stories: Sequence[str] = ()) -
         return Link("no_names", reason="no person name in the question")
     tried: list[str] = []
     for name in names:
+        matched, how = name, "exact name/alias"
         cands = _candidates(graph, name, None)
-        how = "exact name/alias"
         if not cands and len(name.split()) > 1:  # "Aloysius Garcia" when only "Garcia" is known
-            cands = _candidates(graph, name.split()[-1], None)
-            how = f"surname {name.split()[-1]!r}"
+            matched, how = name.split()[-1], f"surname {name.split()[-1]!r}"
+            cands = [c for c in _candidates(graph, matched, None) if _same_given_names(name, c)]
         if not cands:
             tried.append(name)
             continue
@@ -73,6 +82,7 @@ def link_person(graph: Any, names: Sequence[str], stories: Sequence[str] = ()) -
         if len(pool) == 1:
             c = pool[0]
             why = f"{name!r} -> {c.id} ({how} in {c.story})"
-            return Link("ok", name, c.id, c.story, pool, why)
-        return Link("ambiguous", name, None, story, sorted(pool, key=lambda c: c.id))
+            return Link("ok", name, c.id, c.story, pool, why, matched)
+        pool = sorted(pool, key=lambda c: c.id)
+        return Link("ambiguous", name, None, story, pool, matched=matched)
     return Link("not_found", None, reason=f"no person in the graph named {', '.join(tried)}")
