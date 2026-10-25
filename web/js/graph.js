@@ -191,6 +191,7 @@ function sketch(node) {
 
 // ---------------------------------------------------------------- cards
 
+let cardSerial = 0;
 function buildCard(n, graph, exhibitNo) {
   const card = el("button", `bcard bcard-${n.kind}`);
   card.type = "button";
@@ -222,7 +223,7 @@ function buildCard(n, graph, exhibitNo) {
   }
   if (tentative) card.classList.add("tentative");
   card.dataset.id = n.id;
-  card.id = `card-${hashStr(n.id).toString(36)}`;
+  card.id = `card-${++cardSerial}`; // unique for the page, referenced by aria-activedescendant
   return card;
 }
 
@@ -397,6 +398,7 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
     pinsSvg.append(pin.g);
     cards.set(id, { el: card, pin });
     placeCard(id);
+    if (selected && selected.kind === "node" && selected.id === id) container.setAttribute("aria-activedescendant", card.id);
     order.push(id);
     queueShade();
   }
@@ -703,6 +705,7 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
     for (const k in positions) delete positions[k];
     for (const k in kinds) delete kinds[k];
     selected = null; order = []; latest = null; items = 0;
+    container.removeAttribute("aria-activedescendant");
     queueShade();
   }
 
