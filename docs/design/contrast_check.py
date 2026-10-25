@@ -39,7 +39,7 @@ def ratio(a: str, b: str) -> float:
 
 TEXT, UI = 4.5, 3.0
 ENT = ["person", "place", "item", "event", "claim"]
-PAIRS = []  # (label, fg, bg, threshold)
+PAIRS = []  # (label, fg, bg, threshold); fg may be a tuple: the object is told apart by its most contrasting part
 for e in ENT:
     PAIRS.append((f"{e} label/stroke on board", f"db-{e}-fg", "db-bg-board", TEXT))
     PAIRS.append((f"{e} label/stroke on surface", f"db-{e}-fg", "db-bg-surface", TEXT))
@@ -73,6 +73,18 @@ PAIRS += [
     ("card pin vs person fill", "db-pin", "db-person-fill", UI),
     ("cited halo vs board", "db-halo", "db-bg-board", UI),
     ("cited halo vs surface", "db-halo", "db-bg-surface", UI),
+    # the board: ink on paper cards, threads and paper on cork, stamps on paper
+    ("ink on paper card", "db-ink", "db-paper", TEXT),
+    ("muted ink on paper card", "db-ink-muted", "db-paper", TEXT),
+    ("ink on photo mount", "db-ink", "db-paper-photo", TEXT),
+    ("muted ink on photo mount", "db-ink-muted", "db-paper-photo", TEXT),
+    ("stamp ink on paper", "db-stamp", "db-paper", TEXT),
+    ("verified stamp on paper", "db-stamp-verified", "db-paper", TEXT),
+    ("card edge vs cork", "db-card-edge", "db-cork", UI),
+    ("thread vs cork (casing, core or sheen)", ("db-thread", "db-thread-sheen", "db-thread-casing"), "db-cork", UI),
+    ("thread casing vs paper card", "db-thread-casing", "db-paper", UI),
+    ("lettering on the wooden frame", "db-frame-text", "db-frame", TEXT),
+    ("text on the manila folder", "db-folder-text", "db-folder", TEXT),
 ]
 
 
@@ -84,7 +96,7 @@ def main() -> int:
         print(f"\n== {theme} ==")
         print(f"{'pair':58s} {'fg':8s} {'bg':8s} {'ratio':>6s} {'need':>5s}  result")
         for label, fg, bg, need in PAIRS:
-            r = ratio(tok[fg.removeprefix('--')], tok[bg])
+            r, fg = max((ratio(tok[f], tok[bg]), f) for f in (fg if isinstance(fg, tuple) else (fg,)))
             ok = r >= need
             fails += not ok
             print(f"{label:58s} {tok[fg]:8s} {tok[bg]:8s} {r:6.2f} {need:5.1f}  {'ok' if ok else 'FAIL'}")

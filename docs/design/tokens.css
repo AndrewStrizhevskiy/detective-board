@@ -1,70 +1,103 @@
-/* Detective Board design tokens. Light is the default; dark follows the OS
- * (prefers-color-scheme) unless data-theme="light" is set, and data-theme="dark" forces dark.
+/* Detective Board design tokens. Light ("daylight study") is the default; dark ("night at
+ * Baker Street", lamp-lit board) follows the OS (prefers-color-scheme) unless
+ * data-theme="light" is set, and data-theme="dark" forces dark.
  * Contrast ratios for every pair are computed by docs/design/contrast_check.py
  * (it parses this file), see docs/design/board-design.md section 6.
  * Naming: --db-<group>-<name>. Entity colours come in three roles:
  *   -fg   stroke, icon and label-on-board colour (>= 4.5:1 on --db-bg-board)
  *   -fill node body (text --db-text-on-fill must reach >= 4.5:1 on it)
+ * Paper (cards, notebook, dossier sheets) is paper in both themes: .db-paper re-declares the
+ * light text tokens for everything inside it, so ink on paper is checked once, in light.
  */
 :root {
   color-scheme: light;
 
   /* surfaces */
-  --db-bg-board: #f4efe4;      /* corkboard-paper, graph canvas */
-  --db-bg-surface: #ffffff;    /* panels: trace, answer, quote */
-  --db-bg-surface-2: #ece6d6;  /* panel headers, chips */
-  --db-border: #7d7868;        /* UI component edges, >= 3:1 */
-  --db-border-subtle: #cfc8b4; /* decorative dividers only */
+  --db-bg-board: #e6dcc8;      /* the wall behind the board and the panels */
+  --db-bg-surface: #f6f0e2;    /* paper: trace notebook, dossier sheets, popovers */
+  --db-bg-surface-2: #ece2cc;  /* panel headers, chips */
+  --db-border: #7a6a50;        /* UI component edges, >= 3:1 */
+  --db-border-subtle: #cdbf9f; /* decorative dividers only */
 
   /* text */
-  --db-text: #1b1f24;
-  --db-text-muted: #4a5058;
-  --db-text-on-fill: #1b1f24;
-  --db-link: #0b4fb3;
+  --db-text: #23170e;
+  --db-text-muted: #5a4835;
+  --db-text-on-fill: #23170e;
+  --db-link: #24508f;
 
   /* entity types: stroke/label and body fill */
   --db-person-fg: #1f5fa8;  --db-person-fill: #d6e5f8;
-  --db-place-fg:  #2a6f48;  --db-place-fill:  #d3ecdc;
-  --db-item-fg:   #8a5a00;  --db-item-fill:   #f6e3b8;
+  --db-place-fg:  #276843;  --db-place-fill:  #d3ecdc;
+  --db-item-fg:   #7d5200;  --db-item-fill:   #f6e3b8;
   --db-event-fg:  #7a3e9d;  --db-event-fill:  #e8d8f3;
   --db-claim-fg:  #a03a6b;  --db-claim-fill:  #f7d9e6;
 
-  /* edge semantics */
+  /* edge semantics (the list view and the legend; the board draws threads, below) */
   --db-edge: #5d6068;            /* neutral relation / evidence link */
   --db-edge-support: #2a6f48;    /* claim supports / alibi supported */
   --db-edge-conflict: #b3261e;   /* contradiction / alibi contradicted */
-  --db-edge-unknown: #6b6f78;    /* unknown / insufficient evidence (dotted) */
+  --db-edge-unknown: #626670;    /* unknown / insufficient evidence (dotted) */
 
   /* answer status and confidence (always shown with text and a bar, never colour alone) */
   --db-conf-high: #1b6b3f;
-  --db-conf-mid: #8a5a00;
+  --db-conf-mid: #7d5200;
   --db-conf-low: #b3261e;
   --db-conf-track: #d9d3c0;
   --db-refusal: #4a3f8f;         /* honest refusal banner accent, distinct from error */
   --db-error: #b3261e;
   --db-ok: #1b6b3f;
-  --db-warn: #8a5a00;
+  --db-warn: #7d5200;
 
   /* quote highlight */
   --db-quote-bg: #ffe9a8;
-  --db-quote-text: #1b1f24;
+  --db-quote-text: #23170e;
   --db-quote-bg-conflict: #f9d0cc;   /* second quote of a contradiction pair */
 
-  /* investigation board: pin head on every card, halo behind cards the answer cites */
+  /* investigation board: brand pin, halo behind cards the answer cites */
   --db-pin: #b3261e;
-  --db-halo: #b87400;
+  --db-halo: #a86a00;
+
+  /* the board itself: cork, wooden frame, paper cards, threads (>= 3:1 on cork), pin heads */
+  --db-cork: #c9a679;
+  --db-frame: #6a4628;
+  --db-paper: #f3ead6;
+  --db-paper-photo: #e9dcc0;     /* cabinet-card mount */
+  --db-card-edge: #644c2c;       /* dark edge of every card, >= 3:1 on cork */
+  --db-ink: #23170e;
+  --db-ink-muted: #5a4835;
+  --db-thread: #b01e18;          /* every string, both themes: crimson core */
+  --db-thread-sheen: #f0a8a8;    /* twist highlight along the thread */
+  --db-thread-sheen-alpha: 0.55;
+  --db-thread-casing: #2a0508;   /* dark casing: visible on light cork and on paper */
+  --db-frame-text: #f3e2b8;      /* brass-plate lettering on the wooden frame */
+  --db-folder: #cfa868;          /* manila case folder behind the answer and source */
+  --db-folder-text: #3b2610;
+  --db-stamp: #b3261e;           /* rubber-stamp ink on paper */
+  --db-stamp-verified: #3d3a8c;
+  --db-pin-person: #b8923a;      /* brass */
+  --db-pin-place: #3b7a63;       /* verdigris */
+  --db-pin-item: #2e5aa0;        /* cobalt */
+  --db-pin-event: #e4ddcc;       /* pearl */
+  --db-pin-claim: #b3261e;       /* crimson */
+  --db-pin-source: #6f6a62;      /* steel */
+  --db-lamp-glow: rgba(255, 214, 150, 0);
+  --db-lamp-glow-2: rgba(255, 190, 110, 0);
+  --db-lamp-shade: rgba(20, 12, 4, 0.14);
+  --db-shadow-alpha: 0.32;
 
   /* focus and selection */
   --db-focus: #0b57d0;
-  --db-selected-ring: #1b1f24;
+  --db-selected-ring: #23170e;
 
   /* "replay" badge for cached steps (honesty marker) */
-  --db-replay-bg: #1b1f24;
-  --db-replay-text: #f4efe4;
+  --db-replay-bg: #23170e;
+  --db-replay-text: #f3ead6;
 
-  /* typography */
+  /* typography: display and quote faces are vendored (web/vendor/fonts), never fetched */
   --db-font-ui: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --db-font-quote: Georgia, "Times New Roman", serif;
+  --db-font-display: "IM Fell English", Georgia, "Times New Roman", serif;
+  --db-font-quote: "EB Garamond", Georgia, "Times New Roman", serif;
+  --db-font-type: "Special Elite", "Courier New", monospace;
   --db-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --db-text-xs: 12px;
   --db-text-sm: 14px;
@@ -95,16 +128,16 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --db-bg-board: #12151a;
-    --db-bg-surface: #1b2027;
-    --db-bg-surface-2: #252b34;
-    --db-border: #8a919c;
-    --db-border-subtle: #353c47;
+    --db-bg-board: #15100b;
+    --db-bg-surface: #1f1812;
+    --db-bg-surface-2: #2a2118;
+    --db-border: #9a8a70;
+    --db-border-subtle: #3d3226;
 
-    --db-text: #e8e6e1;
-    --db-text-muted: #b4b8bf;
+    --db-text: #efe4cf;
+    --db-text-muted: #c2b195;
     --db-text-on-fill: #f2f0ea;
-    --db-link: #8ab4f8;
+    --db-link: #9cc0f0;
 
     --db-person-fg: #7db2f0;  --db-person-fill: #1f3552;
     --db-place-fg:  #6cc28e;  --db-place-fill:  #1d4130;
@@ -120,7 +153,7 @@
     --db-conf-high: #6cc28e;
     --db-conf-mid: #e0b15a;
     --db-conf-low: #ff8a80;
-    --db-conf-track: #353c47;
+    --db-conf-track: #3d3226;
     --db-refusal: #b5a9ff;
     --db-error: #ff8a80;
     --db-ok: #6cc28e;
@@ -133,26 +166,34 @@
     --db-pin: #ff8a80;
     --db-halo: #ffc233;
 
-    --db-focus: #8ab4f8;
+    --db-cork: #3e2a1b;
+    --db-card-edge: #e9dcc0;
+    --db-frame: #2e1c0f;
+    --db-lamp-glow: rgba(255, 214, 150, 0.32);
+    --db-lamp-glow-2: rgba(255, 190, 110, 0.12);
+    --db-lamp-shade: rgba(10, 6, 3, 0.55);
+    --db-shadow-alpha: 0.55;
+
+    --db-focus: #9cc0f0;
     --db-selected-ring: #f2f0ea;
 
-    --db-replay-bg: #e8e6e1;
-    --db-replay-text: #12151a;
+    --db-replay-bg: #efe4cf;
+    --db-replay-text: #15100b;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --db-bg-board: #12151a;
-  --db-bg-surface: #1b2027;
-  --db-bg-surface-2: #252b34;
-  --db-border: #8a919c;
-  --db-border-subtle: #353c47;
+  --db-bg-board: #15100b;
+  --db-bg-surface: #1f1812;
+  --db-bg-surface-2: #2a2118;
+  --db-border: #9a8a70;
+  --db-border-subtle: #3d3226;
 
-  --db-text: #e8e6e1;
-  --db-text-muted: #b4b8bf;
+  --db-text: #efe4cf;
+  --db-text-muted: #c2b195;
   --db-text-on-fill: #f2f0ea;
-  --db-link: #8ab4f8;
+  --db-link: #9cc0f0;
 
   --db-person-fg: #7db2f0;  --db-person-fill: #1f3552;
   --db-place-fg:  #6cc28e;  --db-place-fill:  #1d4130;
@@ -168,7 +209,7 @@
   --db-conf-high: #6cc28e;
   --db-conf-mid: #e0b15a;
   --db-conf-low: #ff8a80;
-  --db-conf-track: #353c47;
+  --db-conf-track: #3d3226;
   --db-refusal: #b5a9ff;
   --db-error: #ff8a80;
   --db-ok: #6cc28e;
@@ -181,11 +222,59 @@
   --db-pin: #ff8a80;
   --db-halo: #ffc233;
 
-  --db-focus: #8ab4f8;
+  --db-cork: #3e2a1b;
+  --db-card-edge: #e9dcc0;
+  --db-frame: #2e1c0f;
+  --db-lamp-glow: rgba(255, 214, 150, 0.32);
+  --db-lamp-glow-2: rgba(255, 190, 110, 0.12);
+  --db-lamp-shade: rgba(10, 6, 3, 0.55);
+  --db-shadow-alpha: 0.55;
+
+  --db-focus: #9cc0f0;
   --db-selected-ring: #f2f0ea;
 
-  --db-replay-bg: #e8e6e1;
-  --db-replay-text: #12151a;
+  --db-replay-bg: #efe4cf;
+  --db-replay-text: #15100b;
+}
+
+/* Paper keeps the light ink in both themes (cards, notebook, dossier, popovers, list view). */
+.db-paper {
+  color-scheme: light;
+  --db-bg-surface: #f6f0e2;
+  --db-bg-surface-2: #ece2cc;
+  --db-border: #7a6a50;
+  --db-border-subtle: #cdbf9f;
+  --db-text: #23170e;
+  --db-text-muted: #5a4835;
+  --db-text-on-fill: #23170e;
+  --db-link: #24508f;
+  --db-person-fg: #1f5fa8;  --db-person-fill: #d6e5f8;
+  --db-place-fg:  #276843;  --db-place-fill:  #d3ecdc;
+  --db-item-fg:   #7d5200;  --db-item-fill:   #f6e3b8;
+  --db-event-fg:  #7a3e9d;  --db-event-fill:  #e8d8f3;
+  --db-claim-fg:  #a03a6b;  --db-claim-fill:  #f7d9e6;
+  --db-edge: #5d6068;
+  --db-edge-support: #2a6f48;
+  --db-edge-conflict: #b3261e;
+  --db-edge-unknown: #626670;
+  --db-conf-high: #1b6b3f;
+  --db-conf-mid: #7d5200;
+  --db-conf-low: #b3261e;
+  --db-conf-track: #d9d3c0;
+  --db-refusal: #4a3f8f;
+  --db-error: #b3261e;
+  --db-ok: #1b6b3f;
+  --db-warn: #7d5200;
+  --db-quote-bg: #ffe9a8;
+  --db-quote-text: #23170e;
+  --db-quote-bg-conflict: #f9d0cc;
+  --db-pin: #b3261e;
+  --db-halo: #a86a00;
+  --db-focus: #0b57d0;
+  --db-selected-ring: #23170e;
+  --db-replay-bg: #23170e;
+  --db-replay-text: #f3ead6;
+  color: var(--db-text);
 }
 
 /* Cut switch: <html data-motion="off"> or OS setting disables every animation in the spec. */
