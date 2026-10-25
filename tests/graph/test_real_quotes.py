@@ -219,6 +219,15 @@ def test_wisteria_with_curated_day_is_a_conditional_r1_violation():
     assert all(clean[a.char_start : a.char_end] == a.quote for a in f.explanation.anchors)
 
 
+def test_normalise_cli_on_a_graph_file(tmp_path, capsys):
+    path = str(tmp_path / "g.sqlite")
+    g = GraphStore(path)
+    g.ingest_many([(chunk(f"{WL}-0006"), Extraction(entities=[ent("Garcia", "person", "Garcia")]))])
+    g.close()
+    normalise.main([path, "--story", WL])
+    assert capsys.readouterr().out.startswith(f"{WL}: events timed 0")
+
+
 def test_normalise_is_deterministic_and_idempotent():
     a, b = wisteria(), wisteria()
     for g in (a, b):

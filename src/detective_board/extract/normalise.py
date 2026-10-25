@@ -316,6 +316,31 @@ class _ClaimView:
         self.polarity = p.get("polarity") or "affirm"
 
 
+def main(argv: list[str] | None = None) -> None:
+    """python -m detective_board.extract.normalise data/graph.sqlite [--story SLUG ...]"""
+    import argparse
+
+    from detective_board.graph import GraphStore
+
+    ap = argparse.ArgumentParser(prog="normalise", description=__doc__)
+    ap.add_argument("graph", help="graph SQLite file built by the extraction pipeline")
+    ap.add_argument("--story", action="append", help="only these stories (default: all)")
+    ns = ap.parse_args(argv)
+    store = GraphStore(ns.graph)
+    try:
+        stories = ns.story or [
+            r[0] for r in store.conn.execute("SELECT DISTINCT story FROM g_node ORDER BY story")
+        ]
+        for story in stories:
+            r = apply(store, story)
+            print(
+                f"{story}: events timed {r.events_timed}, dated {r.events_dated}; "
+                f"claims structured {r.claims_structured}; reasons {r.claim_reasons}"
+            )
+    finally:
+        store.close()
+
+
 def _put(store: Any, node_id: str, key: str, value: Any, confidence: str) -> None:
     store.conn.execute(
         "INSERT OR REPLACE INTO g_overlay(node_id,key,value_json,confidence,source)"
@@ -328,3 +353,7 @@ def _put(store: Any, node_id: str, key: str, value: Any, confidence: str) -> Non
             SOURCE,
         ),
     )
+
+
+if __name__ == "__main__":
+    main()
