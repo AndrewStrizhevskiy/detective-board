@@ -210,8 +210,12 @@ def parse_time_window(question: str) -> tuple[dict[str, int], str] | None:
         hour += 12
     elif suffix.startswith("a") and hour == 12:
         hour = 0
-    elif not suffix.startswith(("a", "p")) and 1 <= hour <= 11 and hour <= 12:
-        hour += 12
-        note = "no a.m./p.m. given: read as p.m."
+    elif not suffix.startswith(("a", "p")) and 1 <= hour <= 11:
+        part = re.search(r"\b(night|morning|dawn)\b", question, re.I)
+        if part and (part.group(1).lower() != "night" or hour < 6):
+            note = f"no a.m./p.m. given: read as a.m. ({part.group(1).lower()})"
+        else:
+            hour += 12
+            note = "no a.m./p.m. given: read as p.m."
     t = min(hour * 60 + minute, 1440)
     return {"start_min": t, "end_min": t}, note

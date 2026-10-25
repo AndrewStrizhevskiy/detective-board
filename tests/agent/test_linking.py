@@ -1,7 +1,7 @@
 import pytest
 
 from detective_board.agent.linking import link_person
-from detective_board.agent.router import extract_names
+from detective_board.agent.router import extract_names, parse_time_window
 from detective_board.extract.schema import Entity, Extraction
 from detective_board.graph import ChunkRef, GraphStore
 
@@ -41,6 +41,14 @@ def test_extract_names_keeps_mc_names_whole():
     q = "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?"
     assert extract_names(q) == ["James McCarthy", "William Crowder"]
     assert extract_names("Was MacDonald at the inn?") == ["MacDonald"]
+
+
+def test_time_window_uses_night_and_morning_words():
+    w, note = parse_time_window("Where was Garcia at about one o'clock on the night he died?")
+    assert w["start_min"] == 60 and "a.m. (night)" in note
+    assert parse_time_window("Where was he at nine o'clock at night?")[0]["start_min"] == 21 * 60
+    assert parse_time_window("Where was he at seven in the morning?")[0]["start_min"] == 7 * 60
+    assert parse_time_window("Where was he at nine?")[0]["start_min"] == 21 * 60
 
 
 def test_exact_name_and_title_are_linked(g):
