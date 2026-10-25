@@ -1,5 +1,7 @@
 # Handoff (2026-10-23, 13:00) - read this first
 
+> Current plan and schedule: [docs/ROADMAP.md](ROADMAP.md) (2026-10-25).
+
 Work by the orchestrator stopped here on the customer's request so the team can continue on stronger
 machines. Everything below is committed on `main`. Nothing is running in the background.
 
