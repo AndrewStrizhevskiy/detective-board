@@ -1,0 +1,37 @@
+/* Vendored faces (latin subset), served by the app itself: the CSP allows no external fonts and
+ * the demo runs offline. Licenses and sha256 sums: web/vendor/README.md. */
+@font-face {
+  font-family: "IM Fell English";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/im-fell-english-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IM Fell English";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/im-fell-english-italic-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("../vendor/fonts/eb-garamond-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/eb-garamond-italic-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Special Elite";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/special-elite-latin.woff2") format("woff2");
+}

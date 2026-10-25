@@ -1,7 +1,7 @@
 // Detective Board UI: wiring between the pure modules, the DOM and the API.
 import { askStream, getHealth, getEntities, getSubgraph, getSource, friendlyError } from "./api.js";
 import { initialState, reduce, answerText, waitingStage, emptyGraph, boardGraph, citedBoard, progressSteps } from "./state.js";
-import { traceRows, TYPE_LABEL, fmtSeconds, healthSummary } from "./trace.js";
+import { traceRows, TYPE_LABEL, fmtSeconds, fmtElapsed, healthSummary } from "./trace.js";
 import { splitHighlights, parseAnswer } from "./highlight.js";
 import { normaliseRecording, playReplay, safeReplayPath } from "./replay.js";
 import { createGraph, isDerived, KIND_GLYPH, KIND_WORD } from "./graph.js";
@@ -433,7 +433,7 @@ function renderProgress() {
   const elapsed = (((running ? Date.now() : state.endedAt || Date.now()) - state.startedAt) / 1000);
   if (!running) {
     const n = steps.filter((x) => x.status === "done").length;
-    box.replaceChildren(h("span", { class: "summary" }, `\u2713 Done in ${elapsed.toFixed(1)} s`), h("span", { class: "muted" }, ` / ${n} steps / ${state.mode === "replay" ? "recorded run" : "live run"}`));
+    box.replaceChildren(h("span", { class: "summary" }, `\u2713 Done in ${fmtElapsed(elapsed * 1000)}`), h("span", { class: "muted" }, ` / ${n} steps / ${state.mode === "replay" ? "recorded run" : "live run"}`));
     return;
   }
   const active = steps.find((x) => x.status === "active");
@@ -743,18 +743,20 @@ function renderListView() {
     h("table", null, h("caption", null, `Edges (${erows.length})`), h("thead", null, h("tr", null, ["From", "Relation", "To", "Provenance", "Cited", "Source"].map((x) => h("th", { scope: "col" }, x)))), h("tbody", null, erows)));
 }
 
+const ZOOM_STEP = 1.4; // one click of + / - or one key press
 $("fit-btn").addEventListener("click", () => graph && graph.fit());
-$("zoom-in").addEventListener("click", () => graph && graph.zoom(1.25));
-$("zoom-out").addEventListener("click", () => graph && graph.zoom(0.8));
+$("zoom-in").addEventListener("click", () => graph && graph.zoom(ZOOM_STEP));
+$("zoom-out").addEventListener("click", () => graph && graph.zoom(1 / ZOOM_STEP));
 $("cy").addEventListener("keydown", (e) => {
   if (!graph) return;
+  graph.userActed(); // a key on the board hands the camera to the user, like a click
   const k = e.key;
   if (k === "ArrowRight" || k === "ArrowDown") { e.preventDefault(); const n = graph.move(1); if (n) select(n); }
   else if (k === "ArrowLeft" || k === "ArrowUp") { e.preventDefault(); const n = graph.move(-1); if (n) select(n); }
   else if (k === "Enter" && sel && sel.kind === "node") { e.preventDefault(); expandNode(sel.id); }
   else if (k === "Escape") { e.stopPropagation(); select(null); }
-  else if (k === "+" || k === "=") graph.zoom(1.25);
-  else if (k === "-") graph.zoom(0.8);
+  else if (k === "+" || k === "=") graph.zoom(ZOOM_STEP);
+  else if (k === "-") graph.zoom(1 / ZOOM_STEP);
   else if (k === "0") graph.fit();
 });
 
@@ -825,7 +827,14 @@ function renderStrip() {
 setInterval(() => {
   const running = state.phase === "running";
   const start = state.startedAt;
-  $("clock").textContent = start ? `${(((running ? Date.now() : state.endedAt || Date.now()) - start) / 1000).toFixed(1)} s` : "0.0 s";
+  const clock = $("clock");
+  const clockState = !start ? "idle" : running ? "running" : "done";
+  clock.textContent = start ? fmtElapsed((running ? Date.now() : state.endedAt || Date.now()) - start) : "0.0 s";
+  if (clock.dataset.state !== clockState) {
+    clock.dataset.state = clockState;
+    clock.setAttribute("aria-label", clockState === "done" ? "Duration of the last run" : "Elapsed time");
+    clock.title = clockState === "done" ? "How long the last run took" : clockState === "running" ? "Time since the question was asked" : "No run yet";
+  }
   if (running) { renderTrace(); renderStrip(); renderProgress(); }
 }, 250);
 
@@ -861,14 +870,14 @@ for (const b of document.querySelectorAll(".tabs button")) {
   b.addEventListener("click", () => {
     document.querySelector(".cols").dataset.tab = b.dataset.tab;
     document.querySelectorAll(".tabs button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-    if (b.dataset.tab === "board" && graph) requestAnimationFrame(() => { graph.resize(); graph.fit(); });
+    if (b.dataset.tab === "board" && graph) requestAnimationFrame(() => { graph.resize(); graph.fit({ auto: true }); });
   });
 }
 let rzTimer = null;
-new ResizeObserver(() => { if (!graph) return; graph.resize(); clearTimeout(rzTimer); rzTimer = setTimeout(() => graph.fit(), 150); }).observe($("cy"));
+new ResizeObserver(() => { if (!graph) return; graph.resize(); clearTimeout(rzTimer); rzTimer = setTimeout(() => graph.fit({ auto: true }), 150); }).observe($("cy"));
 
 // ---------------------------------------------------------------- boot
-if (innerWidth >= 1500) $("legend").open = true;
+// the key is a card pinned on the board; it starts folded so it never hides evidence
 
 applyTheme(store.get("db-theme", "auto"));
 applyMotion(store.get("db-motion", "on") !== "off");
@@ -881,4 +890,4 @@ if (replayRequested) {
   else runReplay();
 }
 // test hook for browser checks (read-only snapshot)
-window.__db = { get state() { return state; }, get board() { return graph ? graph.counts() : null; }, get cy() { return graph ? graph.cy : null; } };
+window.__db = { get state() { return state; }, get board() { return graph ? graph.counts() : null; }, get cy() { return graph ? graph.element : null; } };
