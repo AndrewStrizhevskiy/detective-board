@@ -26,6 +26,8 @@ from detective_board.graph.timenorm import TIME_NORM_VERSION, derive_time_norm
 from detective_board.symbolic.model import Anchor
 
 ENTITY_KINDS = ("person", "place", "item")
+# schema-v2 claim fields kept in the claim's props when a v2 Extraction is ingested (R-11)
+V2_CLAIM_FIELDS = ("about_person", "about_place", "about_time_text", "polarity")
 _PREFIX = {"person": "p", "place": "pl", "item": "i"}
 _ALL_KINDS = ("person", "place", "item")
 
@@ -465,6 +467,7 @@ class GraphStore:
             why = "ambiguous_anchor" if a.weak else ("weak_reference" if weak else "")
             nid = f"c:{cid}:{i}"
             props = {"content": c.content, "speaker": c.speaker, "about": c.about}
+            props |= {k: getattr(c, k) for k in V2_CLAIM_FIELDS if hasattr(c, k)}
             self._insert_node(ctx, nid, "claim", props, a, weak, why)
             ctx.n_claims += 1
             self._edge(ctx, speaker, nid, "ASSERTS", a, weak=sweak)
@@ -493,13 +496,17 @@ class GraphStore:
                 place, w = self._ref(ctx, e.place, ("place",), a, create=True)
                 weak |= w
             tn = derive_time_norm(e.time_text) if e.time_text else None
-            reported = any(s <= a.rel_start and a.rel_end <= t for s, t in claim_spans)
+            reported = getattr(e, "in_speech", False) or any(
+                s <= a.rel_start and a.rel_end <= t for s, t in claim_spans
+            )
             props = {
                 "description": e.description,
                 "time_text": e.time_text,
                 "time_norm": tn.model_dump(mode="json") if tn else None,
                 "narrator": not reported,
             }
+            if (transit := getattr(e, "transit", None)) is not None:
+                props["transit"] = transit
             why = "ambiguous_anchor" if a.weak else ("weak_reference" if weak else "")
             nid = f"e:{cid}:{i}"
             self._insert_node(ctx, nid, "event", props, a, weak, why)
@@ -608,8 +615,11 @@ class GraphStore:
     def set_event_day(self, event_id: str, day: int, *, confidence: str = "low") -> None:
         self.set_overlay(event_id, "story_day", day, confidence=confidence)
 
-    def set_claim_prop(self, claim_id: str, prop: Any, *, confidence: str = "low") -> None:
-        self.set_overlay(claim_id, "prop", prop, confidence=confidence, source="normaliser")
+    def set_claim_prop(
+        self, claim_id: str, prop: Any, *, confidence: str = "low", source: str = "manual"
+    ) -> None:
+        """Curated by default; `extract.normalise` writes its own rows (source 'normaliser')."""
+        self.set_overlay(claim_id, "prop", prop, confidence=confidence, source=source)
 
     # ------------------------------------------------------------------ queries
 

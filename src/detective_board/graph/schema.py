@@ -9,7 +9,7 @@ from __future__ import annotations
 import sqlite3
 
 GRAPH_BUILD_VERSION = (
-    "1"  # bump when resolution/derivation logic changes (invalidates input hashes)
+    "2"  # bump when resolution/derivation logic changes (invalidates input hashes)
 )
 
 _V1 = """

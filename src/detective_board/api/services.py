@@ -11,11 +11,14 @@ from dataclasses import dataclass
 from typing import Any
 
 from detective_board.agent import LLM, Agent, HybridRetriever, OllamaLLM, ToolClient
+from detective_board.agent.rules_client import InProcessRulesClient
 from detective_board.api import fixture
 from detective_board.api.config import ApiConfig
 from detective_board.api.tool_client import SyncToolClient
 from detective_board.graph import GraphStore
 from detective_board.retrieval import EmbeddingConfig, OllamaEmbedder, Store
+
+RuleTools = SyncToolClient | InProcessRulesClient | fixture.FakeToolClient
 
 
 class RunCancelled(BaseException):  # noqa: N818 - BaseException: the agent's `except Exception` must not swallow it
@@ -54,7 +57,7 @@ class Services:
     store: Store
     graph: GraphStore
     agent: Agent | None = None
-    tools: SyncToolClient | fixture.FakeToolClient | None = None
+    tools: RuleTools | None = None
     index_present: bool = True
     graph_present: bool = True
 
@@ -80,11 +83,13 @@ def _mcp_tools(cfg: ApiConfig) -> SyncToolClient | None:
 def build_services(
     cfg: ApiConfig, *, with_agent: bool, is_cancelled: Any = lambda: False
 ) -> Services:
+    tools: RuleTools | None
     if cfg.fake:
         store, emb = fixture.build_store()
         graph = fixture.build_graph()
         llm: LLM = fixture.build_llm()
-        tools: SyncToolClient | fixture.FakeToolClient | None = fixture.FakeToolClient()
+        # demo flavour: the real rules over the fixture graph; lean (tests): one canned finding
+        tools = InProcessRulesClient(graph) if fixture.demo_mode() else fixture.FakeToolClient()
     else:
         emb_cfg = EmbeddingConfig(
             model=cfg.embed_model,
@@ -103,7 +108,9 @@ def build_services(
         llm = OllamaLLM(
             cfg.llm_model, cfg.ollama_host, num_ctx=cfg.num_ctx, timeout=cfg.llm_timeout_s
         )
-        tools = _mcp_tools(cfg) if with_agent else None
+        tools = None
+        if with_agent:  # stdio MCP over a FactBase file if configured, else the same tools
+            tools = _mcp_tools(cfg) or (InProcessRulesClient(graph) if gpath.exists() else None)
     svc = Services(
         store, graph, tools=tools, graph_present=cfg.fake or cfg.resolve(cfg.graph_path).exists()
     )

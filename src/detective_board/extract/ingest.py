@@ -6,16 +6,15 @@ from collections.abc import Iterable, Mapping
 from typing import Any
 
 from detective_board.extract.pipeline import ChunkResult
-from detective_board.extract.schema import Extraction as ExtractionV1
-from detective_board.extract.schema_v2 import to_v1
+from detective_board.extract.schema_v2 import Extraction
 
 
-def to_graph_input(res: ChunkResult, chunk_rec: Mapping[str, Any]) -> tuple[Any, ExtractionV1]:
-    """(ChunkRef, v1 Extraction) as `GraphStore.ingest` expects. v2-only fields are not stored
-    by the graph yet (they need graph-engineer support, see docs/backlog.md R-07)."""
+def to_graph_input(res: ChunkResult, chunk_rec: Mapping[str, Any]) -> tuple[Any, Extraction]:
+    """(ChunkRef, v2 Extraction) for `GraphStore.ingest`. v2 is a superset of v1; the graph keeps
+    the claim about_*/polarity and event in_speech/transit fields (backlog R-11)."""
     from detective_board.graph import ChunkRef
 
-    return ChunkRef.from_record(dict(chunk_rec)), to_v1(res.to_extraction())
+    return ChunkRef.from_record(dict(chunk_rec)), res.to_extraction()
 
 
 def ingest_results(

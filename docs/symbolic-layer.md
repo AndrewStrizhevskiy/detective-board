@@ -458,3 +458,42 @@ Implemented in `src/detective_board/symbolic/` (T-36), tests in `tests/symbolic/
 - R3: established = narrator-voice event with high presence confidence. Low-confidence narrator events are included by default and make the finding conditional (`CLAIM_VS_EXTRACTED_EVENT`; established: `CLAIM_INCOMPATIBLE_WITH_FACT`; both: the established label). Order claims use the closure over established edges first, then over any narrator-voice edge (conditional). `CLAIM_VS_CLAIM` also fires for non-narrator events and other presence claims that contradict the claim. A claim's own low confidence makes its non-unknown finding conditional.
 - `unknown` findings never carry `conditional`/`weak`; they list `missing`. Findings sort by `(rule_id, violated < unknown < consistent, finding_id)`; `finding_id` is the first 12 hex of sha256 over the sorted ids it rests on. `snapshot_digest` hashes the canonical JSON of the whole `FactBase` plus rule versions.
 - `load_facts` only delegates to `FactSource.load`; the `GraphStore` adapter is not part of this task.
+
+### 11.1 Wiring to graph data (issue #3, `feat/agent-graph-route`)
+
+- **Normaliser** `extract/normalise.py` (R-07, R-08, R-11; deterministic, no LLM). `normalise_time`
+  reuses `graph.timenorm` for clock times and day parts; approximation words (about, nearly,
+  shortly, ...) and "since X" make the time `low` ("since X" is stored as the instant X, since
+  `TimeSpec` has no open interval; the Wisteria overlap rests on "nearly one" and "since one"
+  both mapping to 01:00, which is why that finding is conditional); relative cues (next morning, following day,
+  that night, the day before) set `rel` and `ref_event_id`, and a day only when the reference day
+  is known. `resolve_days` builds a story calendar: explicit dates are `high`; a weekday is placed
+  through a date named in the same expression ("June 3rd, that is, on Monday"), else on its own
+  week scale, `low`; a relative cue takes the day of the nearest earlier item with a known day,
+  `low` (the reference is chosen by narration order, so it is never `high`). No cue: day unknown.
+  `claim_prop` maps the schema-v2 `about_person/about_place/about_time_text/polarity` to a
+  `PresenceProp`; a denial, a missing or unparsed slot (`about_person` is never filled from the
+  speaker), or a name with zero or several ids gives no proposition, with a reason code
+  (`DENIAL_NOT_MODELLED`, `PERSON_MISSING`, `NO_PLACE`, `NO_TIME`, `TIME_UNPARSED`,
+  `PERSON_AMBIGUOUS`, ...). Weekdays qualified by next/last/following get no day. No new
+  proposition kinds were added here.
+- `normalise.apply(store, story)` writes overlays `time` (full `TimeSpec`), `story_day` and `prop`
+  with source `normaliser`; overlays with any other source (curation, `set_event_day`) are kept
+  and win. `SqliteFactSource` prefers the `time` overlay. CLI for a built graph:
+  `python -m detective_board.extract.normalise data/graph.sqlite [--story SLUG]`.
+- The graph keeps the v2 fields: claim `about_*`/`polarity` in the claim props, event `transit`;
+  `in_speech=True` makes an event non-narrator (before: only claim-span containment).
+  `GRAPH_BUILD_VERSION` 2.
+- **Agent route.** Contradiction and alibi questions take the `graph` + `mcp` routes. Names are
+  linked to person ids by `agent/linking.py` (R-12: exact normalised name or alias, then the
+  surname; the story ranked highest by retrieval breaks a cross-story tie; several candidates =
+  `ambiguous`, reported in the trace and the prompt, never guessed: `check_alibi` is skipped, a
+  contradiction scan runs story-wide). The graph step is seeded on the linked id (R-16b). The rule
+  tools are the `mcp/tools.py` functions, called over stdio when a FactBase file is configured,
+  else in-process over the live graph (`agent/rules_client.py`, server label
+  `timeline-alibi[in-process]`): one implementation either way.
+- Regression cases on real passages (`tests/graph/test_real_quotes.py`): Boscombe "following my
+  father" vs the game-keeper gives no `violated` finding (gold c042 is a consistent control: the
+  denial is about intent and is not a checkable proposition); Wisteria Lodge (gold c001) gives
+  R1 `violated`, conditional, once the story day of the two events is curated (the text says "on
+  the night of his death", which the day resolver does not read).

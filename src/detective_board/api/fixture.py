@@ -21,7 +21,12 @@ from collections.abc import Sequence
 from typing import Any
 
 from detective_board.agent import FakeLLM
+from detective_board.extract import normalise
 from detective_board.extract.schema import Claim, Entity, Event, Extraction, Relation
+from detective_board.extract.schema_v2 import Claim as ClaimV2
+from detective_board.extract.schema_v2 import Entity as EntityV2
+from detective_board.extract.schema_v2 import Event as EventV2
+from detective_board.extract.schema_v2 import Extraction as ExtractionV2
 from detective_board.graph import ChunkRef, GraphStore
 from detective_board.mcp.errors import error_payload
 from detective_board.retrieval import (
@@ -122,6 +127,29 @@ B_DEMO_CHUNKS = [  # (chunk number, absolute start in boscombe-valley-mystery.tx
 ]
 
 
+# Wisteria Lodge, gold case c001 (R1): Eccles says Garcia looked in at nearly one o'clock, the
+# police say Garcia lay dead on Oxshott Common since one o'clock. Verbatim, real offsets.
+W_STORY = "wisteria-lodge"
+W_LOOK = (
+    "About eleven I was glad to go to bed. Some time later Garcia looked in at my door—the "
+    "room was dark at the time—and asked me if I had rung. I said that I had not. He "
+    "apologised for having disturbed me so late, saying that it was nearly one o’clock."
+)
+W_FOUND = (
+    "“As to Garcia,” said Gregson, “that is easily answered. He was found dead "
+    "this morning upon Oxshott Common, nearly a mile from his home."
+)
+W_SINCE = (
+    "“He had been there since one o’clock. There was rain about that time, and his "
+    "death had certainly been before the rain.”\n\n“But that is perfectly impossible, "
+    "Mr. Baynes,” cried our client. “His voice is unmistakable. I could swear to it "
+    "that it was he who addressed me in my bedroom at that very hour.”"
+)
+W_CHUNKS = [(1, 10022, W_LOOK), (2, 15557, W_FOUND), (3, 17622, W_SINCE)]
+W_LOOK_QUOTE = "Some time later Garcia looked in at my door"
+W_SINCE_QUOTE = "He had been there since one o’clock"
+
+
 def demo_mode() -> bool:
     """True for the rich demo dataset. `DETECTIVE_BOARD_FIXTURE=demo|lean` forces a flavour;
     otherwise tests (pytest loaded) get the lean one and a real server the demo one."""
@@ -146,6 +174,7 @@ def records() -> list[dict]:
     rows += [(B_STORY, n, start, text) for n, start, text in B_CHUNKS]
     if demo_mode():
         rows += [(B_STORY, n, start, text) for n, start, text in B_DEMO_CHUNKS]
+        rows += [(W_STORY, n, start, text) for n, start, text in W_CHUNKS]
     return [
         {
             "chunk_id": chunk_id(n, story),
@@ -222,6 +251,9 @@ def build_graph(path: str = ":memory:") -> GraphStore:
     )
     if demo_mode():
         _add_boscombe(g)
+        _add_wisteria(g)
+        for story in (B_STORY, W_STORY):
+            normalise.apply(g, story)
     return g
 
 
@@ -393,26 +425,90 @@ def _add_boscombe(g: GraphStore) -> None:
             ),
         ]
     )
-    exp = boscombe_explanation()
-    a = exp.anchors[1]  # the claim's anchor: the derived edge is justified by that quote
-    g.conn.execute(
-        "INSERT INTO g_edge(src,dst,rel,props_json,provenance,confidence,chunk_id,char_start,"
-        "char_end,rel_start,rel_end,quote,ambiguous) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,0)",
-        (
-            exp.facts[0].fact_id,
-            exp.facts[1].fact_id,
-            "CONTRADICTS",
-            json.dumps({"explanation": exp.model_dump(mode="json"), "rule": exp.rule_id}),
-            "derived",
-            "high",
-            a.chunk_id,
-            a.char_start,
-            a.char_end,
-            a.rel_start,
-            a.rel_end,
-            a.quote,
-        ),
+    # No hand-written rule edge here: findings come from the rules at question time. The
+    # McCarthy/game-keeper pair is a consistent control in the gold set (c042).
+
+
+def _wref(n: int) -> ChunkRef:
+    start, text = {k: (st, tx) for k, st, tx in W_CHUNKS}[n]
+    return ChunkRef(chunk_id(n, W_STORY), W_STORY, start, start + len(text), text)
+
+
+def _add_wisteria(g: GraphStore) -> None:
+    """Gold c001. Both Garcia events are reported speech; their story day is curated (the text
+    says 'on the night of his death', which the day resolver cannot read), so it is `low` and
+    the R1 finding is conditional."""
+    ga = "Garcia"
+    g.ingest_many(
+        [
+            (
+                _wref(1),
+                ExtractionV2(
+                    entities=[EntityV2(name=ga, type="person", quote="Garcia")],
+                    events=[
+                        EventV2(
+                            description="Garcia looks in at Eccles's bedroom door",
+                            time_text="nearly one o’clock",
+                            place="Wisteria Lodge",
+                            participants=[ga],
+                            in_speech=True,
+                            quote=W_LOOK_QUOTE,
+                        )
+                    ],
+                ),
+            ),
+            (
+                _wref(2),
+                ExtractionV2(
+                    entities=[
+                        EntityV2(name=ga, type="person", quote="Garcia"),
+                        EntityV2(name="Gregson", type="person", quote="Gregson"),
+                        EntityV2(name="Oxshott Common", type="place", quote="Oxshott Common"),
+                    ],
+                    events=[
+                        EventV2(
+                            description="Garcia is found dead on Oxshott Common",
+                            time_text="this morning",
+                            place="Oxshott Common",
+                            participants=[ga],
+                            in_speech=True,
+                            quote="He was found dead this morning upon Oxshott Common",
+                        )
+                    ],
+                ),
+            ),
+            (
+                _wref(3),
+                ExtractionV2(
+                    entities=[EntityV2(name="Mr. Baynes", type="person", quote="Mr. Baynes")],
+                    events=[
+                        EventV2(
+                            description="Garcia lies dead on Oxshott Common",
+                            time_text="since one o’clock",
+                            place="Oxshott Common",
+                            participants=[ga],
+                            in_speech=True,
+                            quote=W_SINCE_QUOTE,
+                        )
+                    ],
+                    claims=[
+                        ClaimV2(
+                            speaker="Scott Eccles",
+                            content="Garcia addressed him in his bedroom at that hour",
+                            about=ga,
+                            about_person=ga,
+                            about_place="Wisteria Lodge",
+                            about_time_text="that very hour",
+                            quote="I could swear to it that it was he who addressed me in my "
+                            "bedroom at that very hour",
+                        )
+                    ],
+                ),
+            ),
+        ]
     )
+    for n in (1, 3):
+        g.set_event_day(f"e:{chunk_id(n, W_STORY)}:0", 1, confidence="low")
 
 
 def _anchor(chunk_n: int, start: int, text: str, quote: str) -> SymAnchor:
@@ -493,7 +589,8 @@ def boscombe_explanation() -> Explanation:
 
 
 class FakeToolClient:
-    """Stands in for the MCP client in `--fake` mode: one derived R3 finding, no I/O."""
+    """Stands in for the MCP client in the lean `--fake` flavour (tests): one canned R3 finding,
+    no I/O. The demo flavour runs the real rules in-process (`agent.rules_client`)."""
 
     def call(self, tool: str, arguments: dict[str, Any], *, timeout: float) -> dict[str, Any]:
         if tool != "find_contradictions":
@@ -520,6 +617,7 @@ class FakeToolClient:
 
 _TOOL_SRC = re.compile(r"n=(\d+) [^>\n]*origin=tool[^>\n]*>>>\n(.*?)\n<<<END", re.S)
 _VEC_SRC = re.compile(r"n=(\d+) [^>\n]*origin=vector[^>\n]*>>>\n(.*?)\n<<<END", re.S)
+_ANY_SRC = re.compile(r"n=(\d+) [^>\n]*>>>\n(.*?)\n<<<END", re.S)
 
 
 def _answer(messages: Sequence[dict[str, str]]) -> str:
@@ -527,24 +625,38 @@ def _answer(messages: Sequence[dict[str, str]]) -> str:
     user = messages[-1]["content"]
     found = _TOOL_SRC.findall(user)
     if "RULE RESULT" in user and found:
+        cites = " ".join(f'[{n}: "{text}"]' for n, text in found)
+        if demo_mode() and any("Garcia" in text for _, text in found):
+            return (
+                "If these extracted facts are right, Garcia was at two places at one o’clock: "
+                f"he looked in at Eccles's door, and he had been there on the Common. {cites}"
+            )
+        if demo_mode() or not any("mistaken" in text for _, text in found):
+            n, text = found[0]
+            return f'The rule engine reports a finding resting on this passage. [{n}: "{text}"]'
         found.sort(key=lambda f: "mistaken" not in f[1])  # A = his account, B = what was seen
         cites = " ".join(f'[{n}: "{text}"]' for n, text in found)
-        if demo_mode():
-            return (
-                "James McCarthy told the inquest that he was not following his father, yet the "
-                f"game-keeper saw him going the same way with a gun. {cites}"
-            )
         return (
             f"The rule engine finds James McCarthy going the same way with a gun, a "
             f"contradiction. {cites}"
         )
     if demo_mode():
-        for n, text in _VEC_SRC.findall(user):
+        shown = _VEC_SRC.findall(user)
+        for n, text in shown:
             if S_ADDER_QUOTE in text:
                 return (
                     "Holmes says the speckled band is a swamp adder, "
                     f'"{S_ADDER_QUOTE}". [{n}: "{S_ADDER_QUOTE}"]'
                 )
+        shown = _ANY_SRC.findall(user)  # retrieved chunks and graph facts alike
+        seen = next((n for n, text in shown if B_FACT_QUOTE in text), None)
+        said = next((n for n, text in shown if B_CLAIM_QUOTE in text), None)
+        if seen and said:  # no rule finding: show both accounts side by side (demo step 2)
+            return (
+                "The game-keeper saw his son, James McCarthy, going the same way with a gun. "
+                f'[{seen}: "{B_FACT_QUOTE}"] James says the game-keeper is mistaken in thinking '
+                f'that he was following his father. [{said}: "{B_CLAIM_QUOTE}"]'
+            )
     return FAKE_ANSWER
 
 

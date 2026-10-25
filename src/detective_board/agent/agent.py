@@ -37,6 +37,7 @@ from .events import (
     _utc_now,
     parse_explanation,
 )
+from .linking import Link, link_person
 from .llm import LLM
 from .memory import Turn, retrieval_query, summarize
 from .retrieval_step import gate, hit_traces
@@ -109,21 +110,33 @@ class Agent:
         hits, rejected, gate_missing = yield from self._retrieve(sink, question, rq, cfg.top_k, 1)
         story = (hits or rejected or [None])[0].story if (hits or rejected) else None
 
-        # 2. graph
+        # 2. rule questions: names -> graph ids (R-12); ambiguity is reported, never guessed
+        link: Link | None = None
+        if decision.tools and self.graph is not None:
+            stories = list(dict.fromkeys(h.story for h in (hits or rejected)))
+            link = link_person(self.graph, names, stories)
+            # ambiguous across stories none of which was retrieved: no story to scan
+            no_story = link.status == "ambiguous" and link.story is None
+            story = None if no_story else (link.story or story)
+            person = link.person_id
+            if link.status == "ambiguous":
+                headers.append(f"ENTITY LINK: {link.note()}")
+
+        # 3. graph
         if "graph" in decision.routes and self.graph is not None:
-            res = yield from self._graph_step(sink, decision, names, story)
+            res = yield from self._graph_step(sink, decision, names, story, link)
             if res is not None:
                 graph_sources = ctx.sources_from_graph(res, cfg.max_graph_facts, 1)
-                if res.nodes:
+                if res.nodes and link is None:  # rule questions take story/person from the link
                     story = story or res.nodes[0].story
                     person = next((n.id for n in res.nodes if n.kind == "person"), None)
 
-        # 3. MCP tools
+        # 4. rule tools (timeline-alibi: MCP stdio or the same functions in-process)
         for tool in decision.tools:
             if self.tools is None:
                 tool_errors.append(f"{tool}: no MCP client configured")
                 continue
-            srcs, hdr, err = yield from self._tool_step(sink, tool, question, names, story, person)
+            srcs, hdr, err = yield from self._tool_step(sink, tool, question, story, person, link)
             tool_sources += srcs
             headers += hdr
             if err:
@@ -307,19 +320,35 @@ class Agent:
         return (found, [], missing) if g.passed else ([], found, missing)
 
     def _graph_step(
-        self, sink: EventSink, decision: RouteDecided, names: list[str], story: str | None
+        self,
+        sink: EventSink,
+        decision: RouteDecided,
+        names: list[str],
+        story: str | None,
+        link: Link | None = None,
     ):
         assert self.graph is not None
-        if not names:
+        meta: dict[str, Any] = {}
+        if link is not None and link.status in ("ok", "ambiguous"):
+            meta = {"linked_from": link.mention, "link": link.status}
+        if link is not None and link.status == "ambiguous":
+            kind = "find_entities"
+            args: dict[str, Any] = {"name": link.matched, "kind": "person", "story": link.story}
+        elif link is not None and link.person_id:
+            if "check_alibi" in decision.tools:
+                kind, args = "events_by_person", {"person": link.person_id, "story": link.story}
+            else:  # the person's events and claims are one hop away (R-16b)
+                kind, args = "neighbours", {"ref": link.person_id, "k": 1, "story": link.story}
+        elif not names:
             return None
-        if "check_alibi" in decision.tools:
+        elif "check_alibi" in decision.tools:
             kind, args = "events_by_person", {"person": names[0]}
         elif len(names) >= 2:
             kind, args = "shortest_path", {"a": names[0], "b": names[1]}
         else:
             kind, args = "neighbours", {"ref": names[0], "k": 1}
         step = "graph-1"
-        yield sink.emit(GraphQuery(step_id=step, query_kind=kind, args=args))
+        yield sink.emit(GraphQuery(step_id=step, query_kind=kind, args=args | meta))
         t0 = self._mono()
         try:
             res = getattr(self.graph, kind)(**args)
@@ -350,51 +379,61 @@ class Agent:
         )
         return res
 
+    def _skip(self, sink: EventSink, step: str, tool: str, code: str, why: str):
+        yield sink.emit(
+            ToolResult(
+                step_id=step,
+                server=self._server,
+                tool=tool,
+                ok=False,
+                summary=f"skipped: {why}",
+                error={"code": code, "message": why},
+            )
+        )
+        return [], [], why
+
+    @property
+    def _server(self) -> str:
+        return getattr(self.tools, "server", "timeline-alibi")
+
     def _tool_step(
         self,
         sink: EventSink,
         tool: str,
         question: str,
-        names: list[str],
         story: str | None,
         person: str | None,
+        link: Link | None = None,
+        attempt: int = 1,
     ):
-        step = f"tool-{tool}"
+        step = f"tool-{tool}" + (f"-{attempt}" if attempt > 1 else "")
         if story is None:
-            yield sink.emit(
-                ToolResult(
-                    step_id=step,
-                    tool=tool,
-                    ok=False,
-                    summary="skipped: story unknown",
-                    error={"code": "skipped", "message": "no story could be determined"},
-                )
+            return (
+                yield from self._skip(sink, step, tool, "skipped", "no story could be determined")
             )
-            return [], [], "no story could be determined"
         args: dict[str, Any] = {"story": story}
         if tool == "check_alibi":
             win = parse_time_window(question)
+            if link is not None and link.status == "ambiguous":
+                return (yield from self._skip(sink, step, tool, "ambiguous", link.note()))
             if person is None or win is None:
                 why = (
                     "no person found in the graph"
                     if person is None
                     else "no clock time in the question"
                 )
-                yield sink.emit(
-                    ToolResult(
-                        step_id=step,
-                        tool=tool,
-                        ok=False,
-                        summary=f"skipped: {why}",
-                        error={"code": "skipped", "message": why},
-                    )
-                )
-                return [], [], why
+                return (yield from self._skip(sink, step, tool, "skipped", why))
             args |= {"person_id": person, "window": win[0]}
         elif person:
             args["person_id"] = person
         yield sink.emit(
-            ToolCall(step_id=step, tool=tool, arguments=args, timeout_s=self.cfg.tool_timeout_s)
+            ToolCall(
+                step_id=step,
+                server=self._server,
+                tool=tool,
+                arguments=args,
+                timeout_s=self.cfg.tool_timeout_s,
+            )
         )
         t0 = self._mono()
         payload: dict[str, Any]
@@ -417,6 +456,7 @@ class Agent:
             ToolResult(
                 step_id=step,
                 duration_ms=self._ms(t0),
+                server=self._server,
                 tool=tool,
                 ok=not err,
                 summary=summary,
@@ -425,6 +465,16 @@ class Agent:
                 error=err or None,
             )
         )
+        if err and err["code"] == "not_found" and "person_id" in args and tool != "check_alibi":
+            if attempt == 1:  # the person has no events of their own (only claims): whole story
+                srcs, hdr, e2 = yield from self._tool_step(
+                    sink, tool, question, story, None, link, 2
+                )
+                note = (
+                    f"SCOPE WIDENED: {args['person_id']} has no events of their own; the {tool} "
+                    "results are for the whole story and may concern other people"
+                )
+                return srcs, [note, *hdr], e2
         return srcs, hdr, (summary if err else None)
 
     def _refuse(
