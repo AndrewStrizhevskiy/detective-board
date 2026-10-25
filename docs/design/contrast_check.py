@@ -19,9 +19,24 @@ def parse_blocks(css: str) -> dict[str, dict[str, str]]:
         if not m:
             raise SystemExit(f"block {name} not found")
         blocks[name] = dict(re.findall(r"--([\w-]+):\s*(#[0-9a-fA-F]{6})", m.group(1)))
+        blocks[name].update(re.findall(r"--([\w-]+-alpha):\s*([0-9.]+)\s*;", m.group(1)))
     # dark block only overrides some tokens; fall back to light for the rest
     blocks["dark"] = {**blocks["light"], **blocks["dark"]}
+    for tok in blocks.values():
+        for name, color, under, alpha in DRAWN:
+            tok[name] = blend(tok[color], tok[under], float(tok[alpha]))
     return blocks
+
+
+def blend(fg: str, bg: str, a: float) -> str:
+    """fg painted with opacity a over bg, as the browser draws it."""
+    f, b = (tuple(int(h.lstrip("#")[i : i + 2], 16) for i in (0, 2, 4)) for h in (fg, bg))
+    return "#" + "".join(f"{round(a * x + (1 - a) * y):02x}" for x, y in zip(f, b))
+
+
+# Colours as drawn, not as declared: (token made here, colour, drawn over, opacity token).
+# The thread sheen is a translucent stroke over the thread core.
+DRAWN = [("db-thread-sheen-drawn", "db-thread-sheen", "db-thread", "db-thread-sheen-alpha")]
 
 
 def lum(hexcolor: str) -> float:
@@ -81,7 +96,8 @@ PAIRS += [
     ("stamp ink on paper", "db-stamp", "db-paper", TEXT),
     ("verified stamp on paper", "db-stamp-verified", "db-paper", TEXT),
     ("card edge vs cork", "db-card-edge", "db-cork", UI),
-    ("thread vs cork (casing, core or sheen)", ("db-thread", "db-thread-sheen", "db-thread-casing"), "db-cork", UI),
+    # every thread variant (about, derived, conditional, unknown, conflict) draws casing, core and sheen
+    ("thread vs cork (casing, core or drawn sheen)", ("db-thread", "db-thread-sheen-drawn", "db-thread-casing"), "db-cork", UI),
     ("thread casing vs paper card", "db-thread-casing", "db-paper", UI),
     ("lettering on the wooden frame", "db-frame-text", "db-frame", TEXT),
     ("text on the manila folder", "db-folder-text", "db-folder", TEXT),

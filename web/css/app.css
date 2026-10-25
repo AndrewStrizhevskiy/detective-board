@@ -435,7 +435,7 @@ button.primary { background: #9e2219; color: #fff6e6; border-color: #6e140e; fon
 .thread.sem-unknown .t-core, .thread.sem-unknown .t-casing, .thread.sem-unknown .t-twist { stroke-dasharray: 2 4; }
 .thread.rel-about .t-core { stroke-width: 1.1; }
 .thread.rel-about .t-casing { stroke-width: 2; }
-.thread.rel-about .t-twist { display: none; }
+.thread.rel-about .t-twist { stroke-width: .8; } /* the sheen is what keeps a thin thread visible on dark cork */
 .thread.hot .t-halo { stroke: var(--db-stamp); opacity: .35; }
 #cy .bcard.linked { outline: 3px dashed var(--db-stamp); outline-offset: 5px; z-index: 2; }
 .thread.lowconf .t-core, .thread.lowconf .t-casing, .thread.conditional .t-core, .thread.conditional .t-casing { stroke-dasharray: 8 5; }
