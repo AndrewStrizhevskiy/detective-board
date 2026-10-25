@@ -68,6 +68,7 @@ test("names and story titles", () => {
 test("run clock: ms under a second, tenths, then minutes", () => {
   assert.equal(fmtElapsed(0.4), "1 ms");
   assert.equal(fmtElapsed(24), "24 ms");
+  assert.equal(fmtElapsed(999.6), "1.0 s");
   assert.equal(fmtElapsed(2900), "2.9 s");
   assert.equal(fmtElapsed(75000), "1:15");
   assert.equal(fmtElapsed(null), "0.0 s");
