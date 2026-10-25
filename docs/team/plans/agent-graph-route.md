@@ -54,14 +54,17 @@ Regressions with real quotes and offsets from `data/clean`: Boscombe "following 
 game-keeper -> no `violated` finding (gold c042 is a consistent control); Wisteria c001 -> R1
 `violated`, conditional. Determinism: two runs give byte-identical JSON. All existing tests green.
 
-## Decisions for the maintainer
+## Decisions
 
-- **Demo step 2 (James McCarthy vs the game-keeper).** With real rules the answer becomes "no rule
-  violation; the two accounts differ on intent". That matches gold c042 and the fallback already in
-  `docs/design/demo-script.md`, but it differs from today's canned R3 finding. OK to change?
+- **Demo step 2 (James McCarthy vs the game-keeper).** The rules decide; nothing is hand-written.
+  With real rules the answer is "no rule violation; both accounts shown side by side": James
+  denies *intent* ("following"), which is not a checkable proposition. This matches gold c042
+  (consistent control) and the fallback already in `docs/design/demo-script.md` (step 2). The
+  canned R3 finding is removed from the demo flavour, because its derivation was not rule output
+  and it contradicted the gold set. The rule showcase is Wisteria Lodge (gold c001, R1).
 - A curated day overlay (low confidence) for the Wisteria fixture events: this is curation, not
   inference, and is labelled as such.
 - Day resolution is a heuristic: a reference chosen by narration order is always `low`, so the
   findings that rest on it are `conditional`.
-- No public interface or event schema change is planned. `GraphBackend` gains `resolve` (already
-  on `GraphStore`). `api/` changes are wiring only (`services.py`, the fake fixture).
+- No public interface or event schema change. `GraphBackend` is unchanged (linking uses
+  `find_entities`). `api/` changes are wiring only (`services.py`, the fake fixture).
