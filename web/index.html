@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Detective Board</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/app.css">
 </head>
@@ -11,7 +13,7 @@
 <a class="skip" href="#question">Skip to the question box</a>
 <header class="bar">
   <div class="bar-row">
-    <h1 class="brand"><svg class="brand-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>Detective Board</h1>
+    <h1 class="brand"><svg class="brand-mark" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg><span class="brand-text">Detective Board<span class="brand-sub">221B &middot; case files</span></span></h1>
     <form id="ask-form" class="ask" autocomplete="off">
       <label for="question" class="sr">Question about the Sherlock Holmes stories</label>
       <input id="question" name="question" type="text" maxlength="1000" placeholder="Ask about the Holmes stories  ( / to focus )" required>
@@ -32,7 +34,7 @@
     <span class="try muted" id="try-label">Try:</span>
     <span id="demo-chips" class="demo-chips" aria-labelledby="try-label"></span>
     <details id="history" class="history"><summary>History <span id="history-count">(0)</span></summary>
-      <div class="history-pop">
+      <div class="history-pop db-paper">
         <label class="inline"><input type="checkbox" id="use-history"> Send answered questions as context for follow-ups</label>
         <ol id="history-list"></ol>
         <button id="history-clear" type="button">Clear history</button>
@@ -42,7 +44,7 @@
     <label class="inline"><input type="checkbox" id="keep-graph"> Keep previous graph</label>
     <span id="replay-note" class="muted" hidden></span>
   </div>
-  <div id="health-pop" class="pop" hidden></div>
+  <div id="health-pop" class="pop db-paper" hidden></div>
   <div id="banner" class="banner" role="alert" hidden></div>
 </header>
 
@@ -53,8 +55,8 @@
 </nav>
 
 <main class="cols" data-tab="trace">
-  <section id="panel-trace" class="panel" aria-labelledby="h-trace">
-    <h2 id="h-trace">Trace <span id="trace-count" class="muted"></span></h2>
+  <section id="panel-trace" class="panel notebook db-paper" aria-labelledby="h-trace">
+    <h2 id="h-trace">Case notes <span class="muted">trace</span> <span id="trace-count" class="muted"></span></h2>
     <div id="working" class="working" hidden></div>
     <ol id="trace" class="trace" role="log" aria-live="polite" aria-relevant="additions" aria-label="Agent steps"></ol>
     <p id="trace-empty" class="empty">No steps yet. Ask a question and every step the agent takes appears here.</p>
@@ -63,11 +65,11 @@
 
   <section id="panel-board" class="panel board" aria-labelledby="h-board">
     <div class="panel-head">
-      <h2 id="h-board">Board <span id="graph-count" class="muted"></span></h2>
+      <h2 id="h-board">Evidence board <span id="graph-count" class="muted"></span></h2>
       <div class="search">
         <label for="entity-q" class="sr">Search entities</label>
         <input id="entity-q" type="search" placeholder="Find an entity" role="combobox" aria-expanded="false" aria-controls="entity-list" aria-autocomplete="list" autocomplete="off">
-        <ul id="entity-list" role="listbox" hidden></ul>
+        <ul id="entity-list" class="db-paper" role="listbox" hidden></ul>
       </div>
       <button id="view-toggle" type="button" aria-pressed="false">List view (g)</button>
       <button id="fit-btn" type="button">Fit</button>
@@ -76,34 +78,36 @@
     </div>
     <div class="canvas-wrap">
       <div id="cy" tabindex="0" role="application" aria-label="Evidence graph. Arrow keys move between nodes, Enter selects, Escape clears, plus and minus zoom. Press g for the list view."></div>
-      <p id="board-empty" class="empty overlay-msg">Ask a question. Nodes appear as the agent finds evidence.</p>
-      <div id="list-view" class="list-view" hidden></div>
-    </div>
-    <details class="legend" id="legend">
-      <summary>Legend</summary>
-      <div class="legend-grid">
+      <p id="board-empty" class="empty overlay-msg db-paper">Ask a question. Nodes appear as the agent finds evidence.</p>
+      <div id="list-view" class="list-view db-paper" hidden></div>
+      <details class="legend db-paper" id="legend">
+        <summary>Key <span class="muted">to the board</span></summary>
         <ul aria-label="Card types">
-          <li><span class="sw sw-person"></span><b>Person</b> oval, silhouette</li>
-          <li><span class="sw sw-place"></span><b>Place</b> box, map pin</li>
-          <li><span class="sw sw-item"></span><b>Item</b> diamond, key</li>
-          <li><span class="sw sw-event"></span><b>Event</b> hexagon, clock</li>
-          <li><span class="sw sw-claim"></span><b>Claim</b> speech note on its speaker</li>
-          <li><span class="sw sw-source"></span><b>Source text</b> clipping</li>
+          <li><span class="lg-pin lg-person" aria-hidden="true"></span><b>Person</b> cabinet portrait, brass pin</li>
+          <li><span class="lg-pin lg-place" aria-hidden="true"></span><b>Place</b> landscape print, verdigris pin</li>
+          <li><span class="lg-pin lg-item" aria-hidden="true"></span><b>Item</b> exhibit tag, cobalt pin</li>
+          <li><span class="lg-pin lg-event" aria-hidden="true"></span><b>Event</b> newspaper clipping, pearl pin</li>
+          <li><span class="lg-pin lg-claim" aria-hidden="true"></span><b>Claim</b> index card, crimson pin</li>
+          <li><span class="lg-pin lg-source" aria-hidden="true"></span><b>Source text</b> torn book page, steel pin</li>
         </ul>
-        <ul aria-label="Strings and marks">
-          <li><span class="ln ln-rel"></span><b>string</b> relation</li>
-          <li><span class="ln ln-dbl"></span><b>double line + DERIVED stamp</b> made by a rule</li>
-          <li><span class="ln ln-dbl-dash"></span><b>double, dashed</b> conditional</li>
-          <li><span class="ln ln-conf"></span><b>red + !</b> conflict</li>
-          <li><span class="sw sw-low"></span><b>dashed card</b> tentative (low confidence)</li>
-          <li><span class="sw sw-cited"></span><b>amber halo</b> cited in the answer</li>
+        <ul aria-label="Threads and marks">
+          <li><span class="lg-thread" aria-hidden="true"></span><b>red thread</b> relation, the chevron points along it</li>
+          <li><span class="lg-thread lg-ink" aria-hidden="true"></span><b>thin thread</b> what a claim is about</li>
+          <li><span class="lg-thread lg-dbl" aria-hidden="true"></span><b>double thread</b> derived by a rule; its tag names the rule</li>
+          <li><span class="lg-thread lg-dbl lg-dash" aria-hidden="true"></span><b>double, dashed</b> conditional</li>
+          <li><span class="lg-tag" aria-hidden="true">! CONTRA&hellip;</span><b>hanging tag</b> a finding between two cards; hover it to see which</li>
+          <li><span class="lg-thread lg-conf" aria-hidden="true"></span><b>thick thread</b> contradiction</li>
+          <li><span class="lg-thread lg-unk" aria-hidden="true"></span><b>dotted thread</b> unknown</li>
+          <li><span class="lg-card lg-low" aria-hidden="true"></span><b>dashed card</b> tentative (low confidence)</li>
+          <li><span class="lg-card lg-cited" aria-hidden="true"></span><b>amber glow</b> cited in the answer</li>
         </ul>
-      </div>
-    </details>
+        <p class="lg-hint">Drag the cork to move, drag a card to re-pin it, scroll or + / &minus; to zoom.</p>
+      </details>
+    </div>
   </section>
 
-  <section id="panel-answer" class="side" aria-labelledby="h-answer">
-    <div class="panel answer-panel">
+  <section id="panel-answer" class="side folder" aria-labelledby="h-answer">
+    <div class="panel answer-panel db-paper">
       <h2 id="h-answer">Answer</h2>
       <div id="status-line" class="status-line" role="status"></div>
       <section id="progress" class="progress" aria-label="Progress of this run" hidden></section>
@@ -113,7 +117,7 @@
       <div id="evidence" class="evidence"></div>
       <div id="refusal" class="refusal" hidden></div>
     </div>
-    <div class="panel source-panel" aria-live="polite">
+    <div class="panel source-panel db-paper" aria-live="polite">
       <h2 id="h-source">Source <span class="tag">corpus text = data</span></h2>
       <div id="source"><p class="empty">Click a citation marker, a graph node or edge, or a trace hit to see the quote in its source chunk.</p></div>
     </div>

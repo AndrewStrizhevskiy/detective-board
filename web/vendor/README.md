@@ -9,6 +9,7 @@
 - `cytoscape.esm.min.mjs` sha256: `0d7e373a706f0f01d6fb7a6ccf04988c01307cee1c2f9bcc7b068e9f6b431e3f`
 - `cytoscape.LICENSE` sha256: `eb319c6e6f233607f71e8e2f450391751883cfc0eeb3ca7ef574c13d1d9c2203`
 - Downloaded 2026-10-22. Upgrade: replace the file, update this list.
+- Not imported since 2026-10-25: the board is drawn with DOM + SVG (`js/graph.js`), see the request in `docs/backlog.md` (ADR-0005 amendment). The file stays until that decision.
 
 ## Fonts (latin subset, woff2, from Google Fonts on 2026-10-25)
 

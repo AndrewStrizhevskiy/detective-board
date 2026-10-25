@@ -6,16 +6,17 @@
 // only the new nodes move, then a rectangle-collision pass so cards never overlap. No random
 // numbers: the same evidence always gives the same picture (a demo needs that).
 
-// Card sizes in graph units (width, height). graph.js uses the same table for the styles.
+// Card sizes in board px (width, height). graph.js sizes the cards from the same table.
 export const BOX = {
-  person: [136, 66],
-  place: [146, 60],
-  item: [104, 104],
-  event: [164, 84],
-  claim: [150, 64],
-  source: [140, 76],
+  person: [136, 228], // cabinet portrait
+  place: [180, 198],  // landscape print
+  item: [156, 152],   // exhibit tag
+  event: [196, 172],  // newspaper clipping
+  claim: [214, 150],  // index card
+  source: [176, 124], // torn book page
 };
-const GAP = 14; // free space kept between two cards
+const GAP = 16; // free space kept between two cards
+const SCALE = 1.8; // forces and start radii were tuned for cards this much smaller
 const dims = (kinds, id) => BOX[kinds[id]] || BOX.person;
 
 function neighboursOf(id, edges) {
@@ -32,7 +33,7 @@ function idealLength(a, b, e, kinds) {
   const [wa, ha] = dims(kinds, a);
   const [wb, hb] = dims(kinds, b);
   const base = Math.hypot((wa + wb) / 2, (ha + hb) / 2) * 0.62;
-  // (tuned so ~12 cards fit a 550 px board at about 0.8 zoom)
+  // (tuned so ~12 cards fit a 1100 px board at about 0.75 zoom)
   if (e.rel === "ASSERTS") return base * 0.9;
   if (/CONTRADICT|CONFLICT/.test(e.rel)) return base * 1.9; // room for the DERIVED stamp on the string
   if (e.rel === "ABOUT") return base * 1.7;
@@ -60,10 +61,10 @@ export function placeNew(positions, newIds, edges, kinds = {}) {
     const nb = neighboursOf(id, edges).find((o) => pos[o] && !freeSet.has(o));
     const a = (i + 1) * 2.399963;
     if (nb) {
-      const r = 150 + 18 * (i % 3);
+      const r = (150 + 18 * (i % 3)) * SCALE;
       pos[id] = { x: pos[nb].x + r * Math.cos(a), y: pos[nb].y + r * Math.sin(a) };
     } else {
-      const r = fixedCount === 0 && i === 0 ? 0 : 120 + 62 * Math.sqrt(i);
+      const r = fixedCount === 0 && i === 0 ? 0 : (120 + 62 * Math.sqrt(i)) * SCALE;
       pos[id] = { x: r * Math.cos(a) * 1.25, y: r * Math.sin(a) };
     }
   });
@@ -84,7 +85,7 @@ export function placeNew(positions, newIds, edges, kinds = {}) {
         let dy = pos[a].y - pos[b].y;
         let d = Math.hypot(dx, dy);
         if (d < 1) { dx = ((i * 7 + j) % 5) - 2 || 1; dy = ((i + j * 3) % 5) - 2; d = Math.hypot(dx, dy); }
-        const f = 26000 / (d * d);
+        const f = (26000 * SCALE * SCALE) / (d * d);
         const fx = (dx / d) * f, fy = (dy / d) * f;
         if (freeSet.has(a)) { force[a].x += fx; force[a].y += fy; }
         if (freeSet.has(b)) { force[b].x -= fx; force[b].y -= fy; }
@@ -109,7 +110,7 @@ export function placeNew(positions, newIds, edges, kinds = {}) {
     }
     for (const id of free) {
       const m = Math.hypot(force[id].x, force[id].y);
-      const cap = 28 * cool + 1.5;
+      const cap = (28 * cool + 1.5) * SCALE;
       const s = m > cap ? cap / m : 1;
       pos[id].x += force[id].x * s;
       pos[id].y += force[id].y * s;
@@ -144,7 +145,7 @@ export function placeNew(positions, newIds, edges, kinds = {}) {
     if (!clash(id, pos[id])) continue;
     const home = { ...pos[id] };
     let found = null;
-    for (let r = 20; r < 700 && !found; r += 20) {
+    for (let r = 20; r < 1400 && !found; r += 20) {
       for (let k = 0; k < 24 && !found; k++) {
         const a = (k / 24) * Math.PI * 2;
         const p = { x: home.x + r * Math.cos(a), y: home.y + r * Math.sin(a) };

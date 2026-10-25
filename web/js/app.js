@@ -743,9 +743,10 @@ function renderListView() {
     h("table", null, h("caption", null, `Edges (${erows.length})`), h("thead", null, h("tr", null, ["From", "Relation", "To", "Provenance", "Cited", "Source"].map((x) => h("th", { scope: "col" }, x)))), h("tbody", null, erows)));
 }
 
+const ZOOM_STEP = 1.4; // one click of + / - or one key press
 $("fit-btn").addEventListener("click", () => graph && graph.fit());
-$("zoom-in").addEventListener("click", () => graph && graph.zoom(1.25));
-$("zoom-out").addEventListener("click", () => graph && graph.zoom(0.8));
+$("zoom-in").addEventListener("click", () => graph && graph.zoom(ZOOM_STEP));
+$("zoom-out").addEventListener("click", () => graph && graph.zoom(1 / ZOOM_STEP));
 $("cy").addEventListener("keydown", (e) => {
   if (!graph) return;
   const k = e.key;
@@ -753,8 +754,8 @@ $("cy").addEventListener("keydown", (e) => {
   else if (k === "ArrowLeft" || k === "ArrowUp") { e.preventDefault(); const n = graph.move(-1); if (n) select(n); }
   else if (k === "Enter" && sel && sel.kind === "node") { e.preventDefault(); expandNode(sel.id); }
   else if (k === "Escape") { e.stopPropagation(); select(null); }
-  else if (k === "+" || k === "=") graph.zoom(1.25);
-  else if (k === "-") graph.zoom(0.8);
+  else if (k === "+" || k === "=") graph.zoom(ZOOM_STEP);
+  else if (k === "-") graph.zoom(1 / ZOOM_STEP);
   else if (k === "0") graph.fit();
 });
 
@@ -868,7 +869,7 @@ let rzTimer = null;
 new ResizeObserver(() => { if (!graph) return; graph.resize(); clearTimeout(rzTimer); rzTimer = setTimeout(() => graph.fit(), 150); }).observe($("cy"));
 
 // ---------------------------------------------------------------- boot
-if (innerWidth >= 1500) $("legend").open = true;
+// the key is a card pinned on the board; it starts folded so it never hides evidence
 
 applyTheme(store.get("db-theme", "auto"));
 applyMotion(store.get("db-motion", "on") !== "off");
@@ -881,4 +882,4 @@ if (replayRequested) {
   else runReplay();
 }
 // test hook for browser checks (read-only snapshot)
-window.__db = { get state() { return state; }, get board() { return graph ? graph.counts() : null; }, get cy() { return graph ? graph.cy : null; } };
+window.__db = { get state() { return state; }, get board() { return graph ? graph.counts() : null; }, get cy() { return graph ? graph.element : null; } };
