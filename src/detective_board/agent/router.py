@@ -158,7 +158,8 @@ _STOP_START = {
     "it",
 }
 _TITLES = {"mr", "mrs", "dr", "sir", "miss"}
-_NAME = re.compile(r"(?:(?:Mr|Mrs|Dr|Sir|Miss)\.?\s+)?[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*")
+_WORD = r"(?:Ma?c[A-Z][a-z]+|[A-Z][a-z]+)"  # McCarthy, MacDonald
+_NAME = re.compile(rf"(?:(?:Mr|Mrs|Dr|Sir|Miss)\.?\s+)?{_WORD}(?:\s+{_WORD})*")
 
 
 def extract_names(question: str) -> list[str]:
