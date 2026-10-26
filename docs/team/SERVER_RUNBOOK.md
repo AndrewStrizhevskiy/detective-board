@@ -175,6 +175,28 @@ shard logs, and `report.md` containing: commit hash, `ollama --version`, GPU, mo
 number of identical outputs in the determinism check, the sanity numbers, anything unusual.
 Do NOT commit binaries to git; hand the files to the lead (release asset or shared drive).
 
+## 5b. Presence pass (optional, after section 5; about 596 short requests per model)
+
+A second, targeted extraction for R1/R3 ("person X at place P at time T", witness statements, denials; see
+`docs/symbolic-layer.md` 11.3). It is not a phase of `server_run_all.sh` (it needs the finished graph and
+two other models); it is its own script, resumable, with one cache, one graph copy and one predictions file per
+model. Its quality is unmeasured until this run: read `eval.json` before believing anything.
+```bash
+ollama pull qwen3:8b && ollama pull qwen3:4b-instruct          # or add --pull below
+scripts/server_presence.sh --limit 3 --dry-run                  # preview; then --limit 3 as a smoke test
+scripts/server_presence.sh                                      # demo stories: wisteria-lodge boscombe-valley-mystery silver-blaze thor-bridge abbey-grange
+scripts/server_presence.sh --all                                # then every story (demo chunks are cache hits)
+scripts/server_presence.sh --lenient                            # A/B: keep values not in the quote (LOW); no new model calls
+```
+Single model by hand: `uv run python -m detective_board.extract.presence --model qwen3:8b --chunks data/chunks.jsonl
+--story wisteria-lodge --cache data/cache/presence-cache-qwen3_8b.sqlite --graph-db data/graph/presence-qwen3_8b.sqlite
+--out data/cache/server/presence/qwen3_8b.jsonl` (the graph DB is a COPY of `graph.sqlite`; the pass writes into it and runs
+the normaliser). Score without a model: `uv run python scripts/spike/presence_eval.py data/cache/server/presence/*.jsonl
+--json data/cache/server/presence/eval.json`. Bring back `data/cache/server/presence/`, `data/cache/presence-cache-*.sqlite`
+and `data/graph/presence-*.sqlite`. Write into the report: facts kept per model, `fact_survival_rate`, the strict-gold
+recall (the gold has only 4 strict items), and the R1/R3 findings that the new graph gives
+(`InProcessRulesClient(GraphStore(path)).call("find_contradictions", {"story": ...})`).
+
 ## 6. Cleanup
 
 Use the cleanup checklist in the TL;DR. Stop `ollama serve`, delete the working copy and the pulled models if the admin asks, leave no keys or
