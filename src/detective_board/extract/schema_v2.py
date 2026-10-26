@@ -19,6 +19,23 @@ SCHEMA_VERSION = "2"
 
 Polarity = Literal["affirm", "deny"]
 
+# Fields written by `extract/repair.py` (docs/symbolic-layer.md 11.2): the model never sets them, so
+# they are not in the schema sent to Ollama (`ollama_format_schema`) and are stripped from model
+# output (`parse.validate_items`). They carry the model's original values (audit) and the grounding
+# outcome. The repair version is deliberately not part of the cache key.
+REPAIR_FIELDS: dict[str, frozenset[str]] = {
+    "entities": frozenset(),
+    "events": frozenset(
+        "participants_model in_speech_model time_text_model place_model time_text_inherited "
+        "place_inherited repair repair_version".split()
+    ),
+    "claims": frozenset(
+        "polarity_model about_person_model about_place_model about_time_text_model "
+        "repair repair_version".split()
+    ),
+    "relations": frozenset(),
+}
+
 
 class Entity(v1.Entity):
     unnamed: bool = Field(
@@ -33,6 +50,15 @@ class Event(v1.Event):
     transit: bool = Field(
         default=False, description="true if it is movement (arrived, left), not being somewhere"
     )
+    # --- repair audit (not model-facing, see REPAIR_FIELDS)
+    participants_model: list[str] | None = None
+    in_speech_model: bool | None = None
+    time_text_model: str | None = None
+    place_model: str | None = None
+    time_text_inherited: str | None = None  # model time not found in the event's own quote
+    place_inherited: str | None = None  # model place not found in the event's own quote
+    repair: list[str] = Field(default_factory=list)
+    repair_version: str | None = None
 
 
 class Claim(v1.Claim):
@@ -42,6 +68,13 @@ class Claim(v1.Claim):
     about_place: str | None = Field(default=None, description="Place the claim says someone was at")
     about_time_text: str | None = Field(default=None, description="Time in the claim, as written")
     polarity: Polarity = Field(default="affirm", description="'deny' if the speaker denies it")
+    # --- repair audit (not model-facing, see REPAIR_FIELDS)
+    polarity_model: Polarity | None = None
+    about_person_model: str | None = None
+    about_place_model: str | None = None
+    about_time_text_model: str | None = None
+    repair: list[str] = Field(default_factory=list)
+    repair_version: str | None = None
 
 
 class Extraction(v1.Extraction):
@@ -62,7 +95,12 @@ ITEM_MODELS: dict[str, type] = {
 def ollama_format_schema() -> dict:
     """JSON schema for Ollama's `format` parameter (v2), with $defs/$ref inlined."""
     s = Extraction.model_json_schema()
-    return cast("dict[Any, Any]", _inline_refs(s, s.get("$defs", {})))
+    out = cast("dict[Any, Any]", _inline_refs(s, s.get("$defs", {})))
+    for kind, hidden in REPAIR_FIELDS.items():
+        item = out["properties"][kind]["items"]
+        for f in hidden:
+            item["properties"].pop(f, None)
+    return out
 
 
 def to_v1(ex: Extraction) -> v1.Extraction:
