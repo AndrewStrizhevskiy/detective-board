@@ -7,6 +7,23 @@ Read `docs/team/models.md` (tags and digests) and `docs/team/ASSIGNMENTS.md` (Pa
 What this is: batch INFERENCE with an existing open model. There is no training and no fine-tuning.
 The final agent still runs on the laptop; the server only precomputes data. Say so when asked.
 
+## Known facts about the department server (reply of the tech support, 2026-10-26)
+
+- Hardware: i7-12700K, 96 GB DDR4-3200, RTX 4070 (12 GB VRAM). qwen3:4b needs about 3.5 GB, qwen3:8b about 5.5 GB, so
+  both fit; several parallel requests fit as well.
+- Access only inside the university network (MSTU); allocated from 2026-10-26 until Sunday 2026-11-01 evening;
+  everything else is to be agreed separately with the tech support.
+- Time slots: Tuesday 2026-10-27 from 14:30; Wednesday 2026-10-28 from 12:00 to 18:00. Message the tech support on
+  Telegram before coming (confirm the slot).
+- Still unknown (ask): the operating system, whether the internet is reachable from the server network (else bring the
+  model files and wheels on a USB stick), whether Ollama/uv may be installed in a user directory, whether a process may
+  stay in `tmux`/`screen` after the slot ends, until what hour the room is open on Tuesday.
+- The Tuesday session is the main one: the heavy run must finish before the Wednesday freeze (18:00); Wednesday is the
+  backup slot. Since the server stays available until Sunday, later reruns (prompt variants, evaluation runs) are possible
+  but nothing after the freeze may change the demo build.
+- Expected speed on this GPU is NOT measured yet. Measure seconds per chunk in step 2 and decide the plan from it
+  (a rough guess: some tens of seconds per chunk per stream, so the full corpus in a few hours or less).
+
 ## 0. Questions for the server admin (before the session)
 
 GPU model and VRAM; OS; Docker/root available or not; internet access (or a proxy) for `ollama pull`;
