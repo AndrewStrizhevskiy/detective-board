@@ -23,7 +23,7 @@ def ov(a, b):
     return max(0, min(a[1], b[1]) - max(a[0], b[0]))
 
 
-def run(pred_path):
+def run(pred_path, gold_dir=None):
     preds = {}
     for l in open(pred_path, encoding="utf-8"):
         r = json.loads(l)
@@ -34,7 +34,9 @@ def run(pred_path):
     out = {}
     for kind in ("claims", "relations", "entities", "events"):
         tp_p = n_p = tp_g = n_g = 0
-        for f in sorted((ROOT / "eval/extraction_gold").glob("*.json")):
+        for f in sorted(
+            (Path(gold_dir) if gold_dir else ROOT / "eval/extraction_gold").glob("*.json")
+        ):
             g = json.loads(f.read_text(encoding="utf-8"))
             text = ws(g["text"])
             gs = [s for s in (span(text, x["quote"]) for x in g["gold"].get(kind, [])) if s]
