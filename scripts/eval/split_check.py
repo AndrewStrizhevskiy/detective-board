@@ -6,6 +6,7 @@ questions are dev, the recorded rule reproduces the test lists, and the sha256 m
 `--write` regenerates the file (only before the split is frozen).
 Exit code 1 on any problem.
 """
+
 import hashlib
 import json
 import sys
@@ -16,12 +17,39 @@ ROOT = Path(__file__).resolve().parents[2]
 GOLD = ROOT / "eval/golden"
 SPLIT = GOLD / "split.json"
 SEED = "detective-board-split-v1"
-FORCED_DEV = ["g001", "g007", "g028", "g032", "g016", "g019", "g022", "g038", "g047", "g056", "g057", "g062"]
+FORCED_DEV = [
+    "g001",
+    "g007",
+    "g028",
+    "g032",
+    "g016",
+    "g019",
+    "g022",
+    "g038",
+    "g047",
+    "g056",
+    "g057",
+    "g062",
+]
 # test items per stratum (stratum = category for questions, kind for contradiction cases)
-Q_TEST = {"fact": 4, "multi-hop": 3, "relation": 2, "chronology": 3, "testimony-contradiction": 3,
-          "alibi": 3, "cross-story": 3, "out-of-corpus": 5, "adversarial": 3, "language-ru": 1}
-C_TEST = {"R1_place_conflict": 2, "R2_order_cycle_or_inconsistency": 1,
-          "R3_claim_vs_fact": 9, "consistent_control": 8}
+Q_TEST = {
+    "fact": 4,
+    "multi-hop": 3,
+    "relation": 2,
+    "chronology": 3,
+    "testimony-contradiction": 3,
+    "alibi": 3,
+    "cross-story": 3,
+    "out-of-corpus": 5,
+    "adversarial": 3,
+    "language-ru": 1,
+}
+C_TEST = {
+    "R1_place_conflict": 2,
+    "R2_order_cycle_or_inconsistency": 1,
+    "R3_claim_vs_fact": 9,
+    "consistent_control": 8,
+}
 RULE = (
     "Deterministic stratified choice. Per stratum (question category / contradiction kind), "
     "candidates are the ids not forced into dev; each is ranked by sha256(seed + ':' + id) "
@@ -32,7 +60,9 @@ RULE = (
 
 
 def load(name):
-    return [json.loads(x) for x in (GOLD / name).read_text(encoding="utf-8").splitlines() if x.strip()]
+    return [
+        json.loads(x) for x in (GOLD / name).read_text(encoding="utf-8").splitlines() if x.strip()
+    ]
 
 
 def rank(i):
@@ -53,7 +83,9 @@ def choose(items, key, quota, forced):
 
 
 def digest(content):
-    return hashlib.sha256(json.dumps(content, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return hashlib.sha256(
+        json.dumps(content, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
 
 
 def build():
@@ -62,10 +94,14 @@ def build():
     cd, ct = choose(c, "kind", C_TEST, set())
     content = {"golden": {"dev": qd, "test": qt}, "contradictions": {"dev": cd, "test": ct}}
     return {
-        "header": {"rule": RULE, "seed": SEED, "forced_dev": FORCED_DEV,
-                   "test_per_stratum": {"golden": Q_TEST, "contradictions": C_TEST},
-                   "sha256_of_content": digest(content),
-                   "sha256_note": "sha256 of json.dumps(content, sort_keys=True, separators=(',',':'))"},
+        "header": {
+            "rule": RULE,
+            "seed": SEED,
+            "forced_dev": FORCED_DEV,
+            "test_per_stratum": {"golden": Q_TEST, "contradictions": C_TEST},
+            "sha256_of_content": digest(content),
+            "sha256_note": "sha256 of json.dumps(content, sort_keys=True, separators=(',',':'))",
+        },
         "content": content,
     }
 
