@@ -63,7 +63,7 @@ def same_person(a: str, b: str) -> bool:
 
 def match_events(
     preds: list[schema_v2.Event], golds: list[v1.Event]
-) -> list[tuple[schema_v2.Event, dict]]:
+) -> list[tuple[schema_v2.Event, v1.Event]]:
     """Greedy one-to-one pairing of predicted and gold events by best quote overlap."""
     cands = sorted(
         (
