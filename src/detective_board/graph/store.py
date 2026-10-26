@@ -17,12 +17,20 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
 
+from detective_board.extract.presence_schema import SCHEMA_VERSION as PRESENCE_SCHEMA_VERSION
+from detective_board.extract.presence_schema import GroundedFact
 from detective_board.extract.schema import SCHEMA_VERSION, Extraction
 from detective_board.graph.anchors import ChunkRef, resolve_quote
-from detective_board.graph.normalize import is_unnamed_person, normalize_name, slugify
+from detective_board.graph.normalize import (
+    fold_text,
+    is_unnamed_person,
+    normalize_name,
+    slugify,
+)
 from detective_board.graph.results import EdgeHit, GraphResult, NodeHit, PathResult
 from detective_board.graph.schema import GRAPH_BUILD_VERSION, migrate
 from detective_board.graph.timenorm import TIME_NORM_VERSION, derive_time_norm
+from detective_board.symbolic.facts import MOTION_VERBS
 from detective_board.symbolic.model import Anchor
 
 ENTITY_KINDS = ("person", "place", "item")
@@ -96,6 +104,10 @@ class _Ctx:
         return _A(
             r.rel_start, r.rel_end, cs, ce, r.quote, r.ambiguous, r.ambiguous or not c.contiguous
         )
+
+
+def _presence_key(chunk_id: str) -> str:
+    return f"presence:{chunk_id}"
 
 
 def _j(obj: Any) -> str:
@@ -212,6 +224,251 @@ class GraphStore:
             warnings=ctx.warnings,
         )
 
+    # ------------------------------------------------------------------ presence pass
+
+    def ingest_presence(
+        self, chunk: ChunkRef, facts: Sequence[GroundedFact], *, force: bool = False
+    ) -> IngestReport:
+        """Upsert the targeted presence facts of one chunk (extract/presence.py, spec 11.3).
+
+        Independent of `ingest`: the generic nodes of the chunk are untouched; presence nodes have
+        their own ids (`e:<chunk>:p<i>`, `c:<chunk>:p<i>`) and are replaced as a set. A generic
+        re-ingest of the chunk purges them too (rerun the presence ingest afterwards; it is cached).
+
+        Each affirmed fact is an event (PARTICIPATED_IN person, OCCURRED_AT place, narrator iff the
+        source is the narrator, time from `normalise_time` on the fact's own time_text). A fact said
+        in speech by a named speaker also becomes a claim (ASSERTS, ABOUT person) with the
+        proposition fields in its props; a denial is a claim only, never an event. A narrator denial
+        has no asserter and is recorded as dropped. Facts whose values were not in the quote
+        (`context`, lenient mode) and motion verbs make the node LOW.
+        """
+        h = _sha(
+            _j(
+                {
+                    "chunk": [chunk.chunk_id, chunk.story, chunk.char_start, chunk.char_end],
+                    "text": _sha(chunk.text),
+                    "facts": [f.model_dump(mode="json") for f in facts],
+                    "versions": [PRESENCE_SCHEMA_VERSION, GRAPH_BUILD_VERSION, TIME_NORM_VERSION],
+                }
+            )
+        )
+        row = self.conn.execute(
+            "SELECT value FROM g_meta WHERE key=?", (_presence_key(chunk.chunk_id),)
+        ).fetchone()
+        old = json.loads(row["value"]) if row else None
+        have_chunk = self.conn.execute(
+            "SELECT 1 FROM g_chunk WHERE chunk_id=?", (chunk.chunk_id,)
+        ).fetchone()
+        if old and old["hash"] == h and have_chunk and not force:
+            return IngestReport(chunk_id=chunk.chunk_id, status="unchanged")
+        ctx = _Ctx(chunk)
+        with self._tx():
+            if not have_chunk:
+                self.conn.execute(
+                    "INSERT INTO g_chunk(chunk_id, story, char_start, char_end, contiguous,"
+                    " text_sha, input_hash) VALUES (?,?,?,?,?,?,?)",
+                    (
+                        chunk.chunk_id,
+                        chunk.story,
+                        chunk.char_start,
+                        chunk.char_end,
+                        int(chunk.contiguous),
+                        _sha(chunk.text),
+                        "presence-only",
+                    ),
+                )
+            if old:
+                self._purge_presence(chunk.chunk_id, old)
+            mention_floor = self.conn.execute(
+                "SELECT COALESCE(MAX(id), 0) FROM g_mention"
+            ).fetchone()[0]
+            node_ids: list[str] = []
+            for i, f in enumerate(facts):
+                node_ids += self._ingest_presence_fact(ctx, i, f)
+            mentions = [
+                r[0]
+                for r in self.conn.execute(
+                    "SELECT id FROM g_mention WHERE chunk_id=? AND id>? ORDER BY id",
+                    (chunk.chunk_id, mention_floor),
+                )
+            ]
+            self.conn.execute(
+                "INSERT OR REPLACE INTO g_meta(key, value) VALUES (?,?)",
+                (
+                    _presence_key(chunk.chunk_id),
+                    _j({"hash": h, "nodes": node_ids, "mentions": mentions}),
+                ),
+            )
+            for nid in sorted(ctx.touched):
+                self._refresh_entity(nid)
+            for d in ctx.dropped:
+                self.conn.execute(
+                    "INSERT OR IGNORE INTO g_dropped(chunk_id,item_kind,idx,reason,quote)"
+                    " VALUES (?,?,?,?,?)",
+                    (chunk.chunk_id, d.item_kind, d.idx, d.reason, d.quote),
+                )
+        return IngestReport(
+            chunk_id=chunk.chunk_id,
+            status="replaced" if old else "inserted",
+            entities=ctx.n_entities,
+            events=ctx.n_events,
+            claims=ctx.n_claims,
+            edges=ctx.n_edges,
+            ambiguous_anchors=ctx.n_amb,
+            dropped=ctx.dropped,
+            warnings=ctx.warnings,
+        )
+
+    def _purge_presence(self, chunk_id: str, old: dict[str, Any]) -> None:
+        c = self.conn
+        nodes: list[str] = old.get("nodes", [])
+        mentions: list[int] = old.get("mentions", [])
+        affected = sorted(
+            {
+                r[0]
+                for m in mentions
+                for r in c.execute("SELECT node_id FROM g_mention WHERE id=?", (m,))
+            }
+        )
+        for nid in nodes:
+            c.execute("DELETE FROM g_edge WHERE src=? OR dst=?", (nid, nid))
+            c.execute("DELETE FROM g_node WHERE id=?", (nid,))
+        for m in mentions:
+            c.execute("DELETE FROM g_mention WHERE id=?", (m,))
+        c.execute("DELETE FROM g_dropped WHERE chunk_id=? AND item_kind='presence'", (chunk_id,))
+        for nid in affected:
+            left = c.execute("SELECT 1 FROM g_mention WHERE node_id=? LIMIT 1", (nid,)).fetchone()
+            used = c.execute(
+                "SELECT 1 FROM g_edge WHERE src=? OR dst=? LIMIT 1", (nid, nid)
+            ).fetchone()
+            if left:
+                self._refresh_entity(nid)
+            elif not used:
+                c.execute("DELETE FROM g_node WHERE id=?", (nid,))
+
+    def _ref_person(self, ctx: _Ctx, name: str, a: _A) -> tuple[str | None, bool]:
+        """Person for a presence fact: exact name/alias, then a unique surname match (either way,
+        LOW), else a new implicit person (LOW). Ambiguous names are never guessed."""
+        story = ctx.chunk.story
+        nid, cands = self._lookup(story, "person", name)
+        if nid:
+            return nid, False
+        if cands:
+            ctx.warnings.append(f"person {name!r} ambiguous between {cands}")
+            return None, True
+        toks = normalize_name(name, "person").split()
+        if toks:
+            like = self.conn.execute(
+                "SELECT DISTINCT n.id FROM g_node n WHERE n.story=? AND n.kind='person'"
+                " AND n.unnamed=0 AND (n.norm_name=? OR n.norm_name LIKE ?) ORDER BY n.id",
+                (story, toks[-1], f"% {toks[-1]}"),
+            ).fetchall()
+            if len(like) == 1:
+                return like[0][0], True
+            if len(like) > 1:
+                ctx.warnings.append(f"person {name!r} ambiguous by surname")
+                return None, True
+        nid, _ = self._ref(ctx, name, ("person",), a, create=True)
+        return nid, nid is None  # a name found in the quote is a sound new person, not a guess
+
+    def _ingest_presence_fact(self, ctx: _Ctx, i: int, f: GroundedFact) -> list[str]:
+        from detective_board.extract.normalise import normalise_time
+
+        cid = ctx.chunk.chunk_id
+        a = ctx.anchor(f.quote)
+
+        def drop(reason: str) -> list[str]:
+            ctx.dropped.append(
+                DroppedItem(item_kind="presence", idx=i, reason=reason, quote=f.quote)
+            )
+            return []
+
+        if a is None:
+            return drop("quote_not_found")
+        deny = f.polarity == "deny"
+        speech = f.source == "speech"
+        if deny and not (speech and f.speaker):
+            return drop("denial_without_speaker")
+        pid, pweak = self._ref_person(ctx, f.person, a)
+        if pid is None:
+            return drop("person_unresolved")
+        speaker, sweak = (None, False)
+        if speech and f.speaker:
+            speaker, sweak = self._ref(ctx, f.speaker, ("person",), a, create=True)
+        context = set(f.context)
+        motion = any(w in MOTION_VERBS for w in fold_text(f.quote).split())
+        made: list[str] = []
+        base: dict[str, Any] = {"pass": "presence", "presence_version": PRESENCE_SCHEMA_VERSION}
+        if f.day_text:
+            base["day_text"] = f.day_text
+        if context:
+            base["context"] = sorted(context)
+        weak = a.weak or pweak or bool(context)
+        if not deny:
+            place, _ = self._ref(ctx, f.place, ("place",), a, create=True)
+            if place is None:
+                return drop("place_unresolved")
+            tn = normalise_time(f.time_text)
+            ctx_time = "time_text" in context
+            if tn is not None and ctx_time:
+                tn = tn.model_copy(update={"exact": False, "confidence": "low"})
+            ev_weak = weak or motion
+            props: dict[str, Any] = {
+                "description": f"{f.person} at {f.place}, {f.time_text}",
+                "time_text": None if ctx_time else f.time_text,
+                "time_norm": tn.model_dump(mode="json") if tn else None,
+                "narrator": not speech,
+                "occurrence": f"{cid}:{a.rel_start}-{a.rel_end}:{pid}",
+                "transit": motion,
+                **base,
+            }
+            if ctx_time:
+                props["time_text_inherited"] = f.time_text
+            why = (
+                "ambiguous_anchor"
+                if a.weak
+                else "inherited_context"
+                if context
+                else "transit_cue"
+                if motion
+                else "weak_reference"
+                if ev_weak
+                else ""
+            )
+            nid = f"e:{cid}:p{i}"
+            self._insert_node(ctx, nid, "event", props, a, ev_weak, why)
+            ctx.n_events += 1
+            self._edge(ctx, pid, nid, "PARTICIPATED_IN", a, weak="person" in context)
+            self._edge(ctx, nid, place, "OCCURRED_AT", a, weak="place" in context)
+            made.append(nid)
+        if speech and speaker is not None:
+            verb = "was not" if deny else "was"
+            cprops = {
+                "content": f"{f.person} {verb} at {f.place}, {f.time_text}",
+                "speaker": f.speaker,
+                "about": f.person,
+                "about_person": f.person,
+                "about_place": f.place,
+                "about_time_text": f.time_text,
+                "polarity": f.polarity,
+                **base,
+            }
+            cweak = weak or sweak
+            why = (
+                "ambiguous_anchor"
+                if a.weak
+                else "inherited_context"
+                if context
+                else ("weak_reference" if cweak else "")
+            )
+            nid = f"c:{cid}:p{i}"
+            self._insert_node(ctx, nid, "claim", cprops, a, cweak, why)
+            ctx.n_claims += 1
+            self._edge(ctx, speaker, nid, "ASSERTS", a, weak=sweak)
+            self._edge(ctx, nid, pid, "ABOUT", a, weak=pweak)
+            made.append(nid)
+        return made
+
     def _purge_chunk(self, chunk_id: str) -> None:
         c = self.conn
         affected = [
@@ -225,6 +482,7 @@ class GraphStore:
         c.execute("DELETE FROM g_node WHERE chunk_id=?", (chunk_id,))
         c.execute("DELETE FROM g_mention WHERE chunk_id=?", (chunk_id,))
         c.execute("DELETE FROM g_dropped WHERE chunk_id=?", (chunk_id,))
+        c.execute("DELETE FROM g_meta WHERE key=?", (_presence_key(chunk_id),))
         for nid in affected:
             left = c.execute("SELECT 1 FROM g_mention WHERE node_id=? LIMIT 1", (nid,)).fetchone()
             used = c.execute(

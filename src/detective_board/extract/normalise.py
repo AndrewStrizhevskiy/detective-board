@@ -17,7 +17,10 @@ from typing import Any, Literal
 from detective_board.graph.timenorm import DAY_PARTS, derive_time_norm
 from detective_board.symbolic.api import PresenceProp, TimeSpec
 
-NORMALISER_VERSION = "1"
+NORMALISER_VERSION = "2"
+# Heuristic story days of presence facts (`assign_text_days`): far from the weekday scale (0..6)
+# and from date ordinals (about 730000), so a heuristic day never equals a real one by accident.
+TEXT_DAY_BASE = 10_000
 SOURCE = "normaliser"
 
 Confidence = Literal["high", "low"]
@@ -131,7 +134,7 @@ class DayInput:
 class DayResult:
     day: int | None
     confidence: Confidence
-    method: Literal["curated", "date", "weekday", "relative", "none"]
+    method: Literal["curated", "date", "weekday", "relative", "day_text", "none"]
     ref_event_id: str | None = None
 
 
@@ -189,6 +192,42 @@ def resolve_days(items: Sequence[DayInput]) -> dict[str, DayResult]:
             last = (i.item_id, res.day)
         out[i.item_id] = res
     return dict(sorted(out.items()))
+
+
+_DAY_PREPOSITIONS = frozenset("on in upon during at of".split())
+
+
+def day_key(day_text: str) -> str:
+    """Grouping key of a day label: casefolded, punctuation, leading prepositions and the filler
+    'very' removed. "That night" and "that very night" share a key; "that night" and "the night"
+    do not (kept apart on purpose: they may name different nights)."""
+    words = [w for w in re.sub(r"[^\w\s'-]", " ", _fold(day_text)).split() if w != "very"]
+    while words and words[0] in _DAY_PREPOSITIONS:
+        words.pop(0)
+    return " ".join(words)
+
+
+def assign_text_days(
+    days: dict[str, DayResult], day_texts: dict[str, str], order: dict[str, int]
+) -> dict[str, DayResult]:
+    """HEURISTIC story days for presence facts (extract/presence.py): items of one story whose
+    `day_text` has the same `day_key` get the same synthetic day, always `low`. Only items without
+    a curated day, an explicit date or a weekday are touched (those keep what `resolve_days`
+    gave); a relative cue ("that night") is replaced, because it points at whatever dated item
+    came last. Facts that share a label but belong to different nights are not told apart, which
+    is why every finding resting on such a day is conditional. Groups are numbered in narration
+    order, so the result is deterministic."""
+    out = dict(days)
+    groups: dict[str, int] = {}
+    for k in sorted(day_texts, key=lambda x: (order.get(x, 0), x)):
+        if days[k].method in ("curated", "date", "weekday"):
+            continue
+        key = day_key(day_texts[k])
+        if not key:
+            continue
+        n = groups.setdefault(key, len(groups))
+        out[k] = DayResult(TEXT_DAY_BASE + n, "low", "day_text")
+    return out
 
 
 @dataclass(frozen=True)
@@ -276,10 +315,15 @@ def apply(store: Any, story: str) -> NormaliseReport:
     }
     for k in inherited:  # repair step: model time not found in the event's own quote
         text[k] = props[k].get("time_text_inherited")
+    day_texts = {k: props[k]["day_text"] for k in order if props[k].get("day_text")}
+    day_src = {  # presence pass: the fact's own day label leads the text the day is read from
+        k: f"{day_texts[k]} {text[k] or ''}".strip() if k in day_texts else text[k] for k in order
+    }
     known = {k: v[0] for (k, key), v in curated.items() if key == "story_day"}
     days = resolve_days(
-        [DayInput(k, text[k], order[k], known.get(k), k in inherited) for k in order]
+        [DayInput(k, day_src[k], order[k], known.get(k), k in inherited) for k in order]
     )
+    days = assign_text_days(days, day_texts, order)
 
     def day_of(node_id: str) -> tuple[int | None, Confidence]:
         cur = curated.get((node_id, "story_day"))

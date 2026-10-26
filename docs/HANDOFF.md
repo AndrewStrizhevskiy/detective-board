@@ -13,7 +13,7 @@ checkable conclusions with quotes, and every answer cites verbatim text. Competi
 7-minute talk, on a ThinkPad X1 Carbon 7th gen (i7-8665U, 15 GiB, no GPU). Feature freeze 2026-10-28.
 See `README.md`, `docs/PRD.md`, `docs/architecture/c4.md`.
 
-## 2. State of the code (all tests green: `uv run pytest -q -m "not live"` = 424 passed; `just test-web`
+## 2. State of the code (all tests green: `uv run pytest -q -m "not live"` = 562 passed; `just test-web`
 42 passed + 2 skipped; ruff, format and pyright clean)
 
 | Area | Where | State |
@@ -71,6 +71,14 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
    server on the real graph; the router has no graph step for contradiction questions yet (UI works around it);
    claim-property and day normalisation (R-07/R-08/R-11 in `docs/backlog.md`) are needed or R1/R3 stay
    `unknown` on real data. Measure the contradiction set `eval/golden/contradictions.jsonl` separately.
+   **Presence pass (branch `feat/presence-pass`, written, NOT measured).** A second, targeted extraction
+   (`python -m detective_board.extract.presence`, prompt `presence_v1.txt`) asks only "person X at place P
+   at time T" (narrator, witness speech, denials) with at most 6 short facts per chunk, grounds every field
+   against its own quote, ingests events/claims (`GraphStore.ingest_presence`) and gives same-label days a
+   LOW heuristic story day. Run it after the graph exists with `scripts/server_presence.sh` (qwen3:8b and
+   qwen3:4b-instruct, then `scripts/spike/presence_eval.py`); details and limits in
+   `docs/symbolic-layer.md` 11.3. The tests use canned model output: they show the plumbing, not extraction
+   quality, and Wisteria Lodge (c001) is only reachable with `--lenient` (context fields, LOW).
 4. **Build `eval/run_eval.py`** (Package C): bare LLM / vector / vector+rerank / hybrid+graph; heavy runs on
    the strong machine, a short CI mode. Tune the provisional thresholds (min_score 0.018, min_support 0.25,
    min_claim_overlap 0.3; R-13).
