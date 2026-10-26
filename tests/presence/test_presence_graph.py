@@ -8,6 +8,7 @@ import json
 
 from detective_board.agent.rules_client import InProcessRulesClient
 from detective_board.extract import normalise, presence
+from detective_board.extract.presence import PROMPT_V1
 from detective_board.extract.presence_schema import GroundedFact
 from detective_board.extract.schema import Entity, Extraction
 from detective_board.graph import ChunkRef, GraphStore, SqliteFactSource
@@ -224,7 +225,7 @@ def test_wisteria_c001_with_canned_context_resolved_facts_is_a_conditional_r1_fi
     )  # fmt: skip
     db = tmp_path / "g.sqlite"
     args = ["--model", "fake", "--chunks", str(chunks), "--cache", str(tmp_path / "c.sqlite"),
-            "--graph-db", str(db)]  # fmt: skip
+            "--graph-db", str(db), "--prompt", str(PROMPT_V1)]  # fmt: skip
     assert presence.main([*args, "--lenient"], client=client) == 0
 
     g = GraphStore(str(db))
@@ -243,7 +244,7 @@ def test_wisteria_c001_with_canned_context_resolved_facts_is_a_conditional_r1_fi
     # the same input without --lenient produces nothing (strict grounding)
     strict_db = tmp_path / "strict.sqlite"
     s_args = ["--model", "fake", "--chunks", str(chunks), "--cache", str(tmp_path / "c.sqlite"),
-              "--graph-db", str(strict_db)]  # fmt: skip
+              "--graph-db", str(strict_db), "--prompt", str(PROMPT_V1)]  # fmt: skip
     assert presence.main(s_args, client=fake_by_passage({})) == 0
     gs = GraphStore(str(strict_db))
     assert (
@@ -283,7 +284,7 @@ def test_boscombe_mccarthy_control_c042_is_not_flagged(tmp_path):
     )  # fmt: skip
     db = tmp_path / "g.sqlite"
     rc = presence.main(["--model", "fake", "--chunks", str(chunks), "--cache", str(tmp_path / "c"),
-                        "--graph-db", str(db)], client=client)  # fmt: skip
+                        "--graph-db", str(db), "--prompt", str(PROMPT_V1)], client=client)  # fmt: skip
     assert rc == 0
     g = GraphStore(str(db))
     assert len(nodes(g, "event")) == 3 and len(nodes(g, "claim")) == 1

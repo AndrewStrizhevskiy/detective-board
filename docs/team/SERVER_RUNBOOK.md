@@ -180,12 +180,14 @@ Do NOT commit binaries to git; hand the files to the lead (release asset or shar
 A second, targeted extraction for R1/R3 ("person X at place P at time T", witness statements, denials; see
 `docs/symbolic-layer.md` 11.3). It is not a phase of `server_run_all.sh` (it needs the finished graph and
 two other models); it is its own script, resumable, with one cache, one graph copy and one predictions file per
-model. Its quality is unmeasured until this run: read `eval.json` before believing anything.
+model. Default prompt `presence-2` takes the candidate persons/places from the graph, so it MUST run AFTER the
+generic extraction and graph build (`server_run_all.sh`); the script aborts if `graph.sqlite` is missing. Its quality is unmeasured until this run: read `eval.json` before believing anything.
 ```bash
 ollama pull qwen3:8b && ollama pull qwen3:4b-instruct          # or add --pull below
 scripts/server_presence.sh --limit 3 --dry-run                  # preview; then --limit 3 as a smoke test
 scripts/server_presence.sh                                      # demo stories: wisteria-lodge boscombe-valley-mystery silver-blaze thor-bridge abbey-grange
 scripts/server_presence.sh --all                                # then every story (demo chunks are cache hits)
+scripts/server_presence.sh --literal                            # presence-2 strict variant: person/place must be in the quote
 scripts/server_presence.sh --lenient                            # A/B: keep values not in the quote (LOW); no new model calls
 ```
 Single model by hand: `uv run python -m detective_board.extract.presence --model qwen3:8b --chunks data/chunks.jsonl
