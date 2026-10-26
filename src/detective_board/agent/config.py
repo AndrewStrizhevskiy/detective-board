@@ -26,6 +26,7 @@ class AgentConfig:
     memory_max_chars: int = 600
     use_llm_router: bool = False  # LLM classifier fallback when no rule matched
     tool_timeout_s: float = 5.0
+    rule_first: bool = True  # rule questions: deterministic template from the rule result, no LLM
     temperature: float = 0.0
     seed: int = 42
 

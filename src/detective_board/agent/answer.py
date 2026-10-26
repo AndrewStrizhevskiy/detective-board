@@ -9,6 +9,7 @@ from detective_board.extract.ground import normalise
 
 from .context import REFUSAL_TEXT, Source
 from .events import Anchor, Citation, CitationTrace, ProvenanceLabel
+from .honesty import GUARD_PROBLEM, asserts_consistency
 from .window import content_words
 
 CITATION = re.compile(r'\[(\d+)(?:\s*:\s*"(.+?)")?\s*\]', re.S)
@@ -113,7 +114,14 @@ def self_check(
     sources: list[Source],
     min_quote_chars: int = 6,
     min_overlap: float = DEFAULT_MIN_OVERLAP,
+    *,
+    allow_uncited: bool = False,
+    forbid_consistency: bool = False,
 ) -> CheckResult:
+    """Mechanical check of [n: "quote"] citations. `allow_uncited`: sentences without a citation
+    are statements of the rule engine (deterministic templates), not claims about the text; every
+    citation present is still verified. `forbid_consistency`: the route carried an empty or failed
+    rule result, so a claim that asserts consistency / absence of conflict is rejected."""
     answer = strip_reasoning(answer)
     if leaks_reasoning(answer):
         return CheckResult(False, [], [], [], [REASONING_PROBLEM])
@@ -126,8 +134,8 @@ def self_check(
     problems: list[str] = []
     seen: set[tuple[int, str | None]] = set()
     for c in claims:
-        valid = bool(c.cites)
-        if not c.cites:
+        valid = bool(c.cites) or allow_uncited
+        if not c.cites and not allow_uncited:
             unsupported.append(c.text)
             problems.append(f"claim without citation: {c.text[:80]!r}")
         for n, quote in c.cites:
@@ -153,9 +161,18 @@ def self_check(
                     else "quote is not verbatim in the source"
                 )
                 problems.append(f"[{n}] {why}: {(quote or '')[:60]!r}")
-        if valid and c.cites and not _supported(c.text, [q or "" for _, q in c.cites], min_overlap):
+        if (
+            valid
+            and c.cites
+            and min_overlap > 0
+            and not _supported(c.text, [q or "" for _, q in c.cites], min_overlap)
+        ):
             valid = False
             problems.append(f"claim not supported by its quote: {c.text[:80]!r}")
+        if forbid_consistency and (hits := asserts_consistency(c.text)):
+            valid = False
+            unsupported.append(c.text)
+            problems.append(f"{GUARD_PROBLEM}: {hits[0]!r}")
         c.ok = valid
     if not claims:
         problems.append("no claims with citations")

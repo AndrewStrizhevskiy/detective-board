@@ -71,7 +71,11 @@ def test_mccarthy_question_gets_no_invented_violation(demo):
     tr = by["tool_result"]
     assert tr["ok"] and tr["summary"] == "status=ok items=0" and tr["explanation"] is None
     fin = by["final"]
-    assert fin["status"] == "answered"
-    assert {c["quote"] for c in fin["citations"]} == {fixture.B_FACT_QUOTE, fixture.B_CLAIM_QUOTE}
-    # both accounts are shown as text/extracted facts; nothing is labelled derived
-    assert {p["label"] for p in fin["provenance"]} <= {"source_text", "extracted"}
+    assert fin["status"] == "answered" and fin["verified"]
+    # rule-first: no finding -> the honest template, no model text, no claim of agreement
+    assert fin["answer"].startswith("The rule engine found no violation")
+    assert "no conflict" not in fin["answer"].lower() and "no contradiction" not in fin["answer"]
+    assert "not rule results" in fin["answer"]
+    # the passages are source text, never labelled derived
+    assert fin["citations"] and {c["label"] for c in fin["citations"]} == {"source_text"}
+    assert {p["label"] for p in fin["provenance"]} == {"source_text"}

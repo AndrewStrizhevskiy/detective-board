@@ -168,7 +168,7 @@ def test_alibi_route_calls_tool_with_derived_label():
     tools = FakeTools(payload)
     llm = FakeLLM('He was a deadly snake. [4: "a deadly snake from India"]')
     ev = run(
-        make_agent(llm, graph=FakeGraph(), tools=tools),
+        make_agent(llm, graph=FakeGraph(), tools=tools, config=AgentConfig(rule_first=False)),
         "Where was Roylott at 9 pm? Check his alibi",
     )
     assert tools.calls[0][0] == "check_alibi"
@@ -199,8 +199,10 @@ def test_contradiction_route_uses_symbolic_tool():
 
 def test_tool_error_without_other_evidence_refuses():
     tools = FakeTools({"error": {"code": "timeout", "message": "x"}})
+    cfg = AgentConfig(rule_first=False)  # the LLM path; rule-first answers with a template
     ev = run(
-        make_agent(FakeLLM(GOOD), FakeRetriever([]), tools=tools), "Any contradictions in Holmes?"
+        make_agent(FakeLLM(GOOD), FakeRetriever([]), tools=tools, config=cfg),
+        "Any contradictions in Holmes?",
     )
     assert ev[-1].refusal_code in ("tool_error", "no_evidence")
 
@@ -389,7 +391,7 @@ def test_tool_result_and_final_carry_explanation_unchanged():
         f'A witness saw his son James McCarthy going the same way with a gun. [3: "{quote}"]'
     )
     ev = run(
-        make_agent(llm, tools=FakeTools(payload)),
+        make_agent(llm, tools=FakeTools(payload), config=AgentConfig(rule_first=False)),
         "Are there contradictions in the Speckled Band story?",
     )
     tr = next(e for e in ev if e.type == "tool_result")

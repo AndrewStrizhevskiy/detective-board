@@ -5,7 +5,7 @@ import re
 
 import pytest
 
-from detective_board.agent import FakeLLM
+from detective_board.agent import AgentConfig, FakeLLM
 from detective_board.agent.rules_client import InProcessRulesClient
 from detective_board.extract import normalise
 from detective_board.extract.schema_v2 import Claim, Entity, Event, Extraction
@@ -101,9 +101,12 @@ QUESTION = "Is there a conflict about where Garcia was at one o'clock?"
 
 
 def _run(g, question=QUESTION, llm=None):
+    """The LLM path (`rule_first=False`): these tests pin the prompt and the trace; the
+    rule-first path has its own tests in test_rule_first.py."""
     llm = llm or FakeLLM(_answer)
     retr = FakeRetriever([hit(1, T1, story=S), hit(2, T2, story=S)])
-    agent = make_agent(llm, retr, graph=g, tools=InProcessRulesClient(g))
+    cfg = AgentConfig(rule_first=False)
+    agent = make_agent(llm, retr, graph=g, tools=InProcessRulesClient(g), config=cfg)
     return list(agent.ask(question)), llm
 
 

@@ -14,6 +14,7 @@ from typing import Any
 from detective_board.symbolic.api import Explanation
 
 from . import context as ctx
+from . import rule_first as rf
 from .answer import CheckResult, citations_for, self_check, strip_reasoning
 from .backends import GraphBackend, Retriever, ToolClient
 from .config import AgentConfig
@@ -103,6 +104,7 @@ class Agent:
         graph_sources: list[ctx.Source] = []
         tool_sources: list[ctx.Source] = []
         tool_errors: list[str] = []
+        outcomes: list[rf.ToolOutcome] = []
         story: str | None = None
         person: str | None = None
 
@@ -135,12 +137,28 @@ class Agent:
         for tool in decision.tools:
             if self.tools is None:
                 tool_errors.append(f"{tool}: no MCP client configured")
+                outcomes.append(
+                    rf.ToolOutcome(
+                        tool, {"error": {"code": "skipped", "message": "no MCP client configured"}}
+                    )
+                )
                 continue
-            srcs, hdr, err = yield from self._tool_step(sink, tool, question, story, person, link)
+            srcs, hdr, err, payload = yield from self._tool_step(
+                sink, tool, question, story, person, link
+            )
+            outcomes.append(rf.ToolOutcome(tool, payload))
             tool_sources += srcs
             headers += hdr
             if err:
                 tool_errors.append(f"{tool}: {err}")
+
+        if cfg.rule_first and decision.tools:  # the answer is the rule result, not a model's text
+            yield from self._rule_first_answer(
+                sink, decision, question, story, link, hits, outcomes, headers
+            )
+            return
+        # any other route that carried a rule result: an empty one must not read as agreement
+        guard = bool(decision.tools) and not rf.has_rule_verdict(outcomes)
 
         def assemble(h: list[Any], gs: list[ctx.Source], ts: list[ctx.Source]) -> list[ctx.Source]:
             out = ctx.sources_from_hits(
@@ -229,7 +247,13 @@ class Agent:
                 parts.append(tok)
                 yield sink.emit(AnswerToken(attempt=attempt, text=tok))
             text = strip_reasoning("".join(parts))
-            last = self_check(text, sources, cfg.min_quote_chars, cfg.min_claim_overlap)
+            last = self_check(
+                text,
+                sources,
+                cfg.min_quote_chars,
+                cfg.min_claim_overlap,
+                forbid_consistency=guard,
+            )
             if last.ok:
                 yield sink.emit(
                     CitationCheck(attempt=attempt, ok=True, citations=last.traces, action="accept")
@@ -390,7 +414,7 @@ class Agent:
                 error={"code": code, "message": why},
             )
         )
-        return [], [], why
+        return [], [], why, {"error": {"code": code, "message": why}}
 
     @property
     def _server(self) -> str:
@@ -448,6 +472,8 @@ class Agent:
             err = {"code": "tool_error", "message": "tool call failed"}
         elif isinstance(err, dict):
             err = {"code": _safe_code(err["code"]), "message": "tool call failed"}
+        if err:
+            payload = {"error": err}
         srcs, hdr = ctx.sources_from_tool(tool, payload, self.cfg.max_tool_facts, 1)
         summary = (
             f"error {err['code']}" if err else f"status={payload.get('status')} items={len(srcs)}"
@@ -467,15 +493,94 @@ class Agent:
         )
         if err and err["code"] == "not_found" and "person_id" in args and tool != "check_alibi":
             if attempt == 1:  # the person has no events of their own (only claims): whole story
-                srcs, hdr, e2 = yield from self._tool_step(
+                srcs, hdr, e2, payload = yield from self._tool_step(
                     sink, tool, question, story, None, link, 2
                 )
                 note = (
                     f"SCOPE WIDENED: {args['person_id']} has no events of their own; the {tool} "
                     "results are for the whole story and may concern other people"
                 )
-                return srcs, [note, *hdr], e2
-        return srcs, hdr, (summary if err else None)
+                return srcs, [note, *hdr], e2, payload
+        return srcs, hdr, (summary if err else None), payload
+
+    def _rule_first_answer(
+        self,
+        sink: EventSink,
+        decision: RouteDecided,
+        question: str,
+        story: str | None,
+        link: Link | None,
+        hits: list[Any],
+        outcomes: list[rf.ToolOutcome],
+        headers: list[str],
+    ):
+        """Deterministic answer for contradiction / alibi routes: a template over the tool result
+        (docs/symbolic-layer.md). No model call; the same events as an LLM run, so the UI is
+        unchanged: tokens stream from the template, the verbatim self-check runs on it."""
+        cfg = self.cfg
+        ans = rf.build_answer(
+            question=question,
+            story=story,
+            outcomes=outcomes,
+            link=link,
+            notes=headers,
+            hits=hits,
+            coverage=rf.coverage_for(self.tools, self.graph, story),
+            idf=self.idf,
+            min_quote_chars=cfg.min_quote_chars,
+        )
+        sources = ans.sources
+        yield sink.emit(
+            EnrichedQuery(
+                attempt=1,
+                strategy=f"rule-first ({ans.kind}): no model call",
+                sources=[
+                    SourceTrace(
+                        n=s.n,
+                        chunk_id=s.chunk_id,
+                        story=s.story,
+                        char_start=s.char_start,
+                        char_end=s.char_end,
+                        origin=s.origin,
+                        label=s.label,
+                        window_start=s.win_start,
+                        window_end=s.window_end,
+                        window_char_start=s.char_start + s.win_start,
+                        window_char_end=s.char_start + s.window_end,
+                    )
+                    for s in sources
+                ],
+                graph_facts=0,
+                rule_facts=sum(1 for s in sources if s.origin == "tool"),
+            )
+        )
+        for tok in re.findall(r"\S+\s*|\s+", ans.text):
+            yield sink.emit(AnswerToken(attempt=1, text=tok))
+        # the same verbatim check as for a model answer; sentences without a quote are statements
+        # of the rule engine, the lexical-overlap test is for model paraphrase
+        chk = self_check(ans.text, sources, cfg.min_quote_chars, 0.0, allow_uncited=True)
+        if not chk.ok:  # cannot happen: every quote is copied from a source
+            log.error("rule-first template failed its own check: %s", chk.problems)
+            yield sink.emit(
+                CitationCheck(attempt=1, ok=False, problems=chk.problems, action="refuse")
+            )
+            yield from self._refuse(
+                sink, decision, "selfcheck_failed", ctx.REFUSAL_TEXT, chk.problems[:5], SEARCHED
+            )
+            return
+        yield sink.emit(CitationCheck(attempt=1, ok=True, citations=chk.traces, action="accept"))
+        cites, labels = citations_for(ans.text, sources)
+        yield sink.emit(
+            Final(
+                status="answered",
+                verified=True,
+                answer=ans.text,
+                citations=cites,
+                provenance=labels,
+                route=decision,
+                attempts=1,
+            )
+        )
 
     def _refuse(
         self,
