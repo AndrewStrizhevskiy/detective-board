@@ -587,6 +587,31 @@ Duplicates collapse and the first 6 facts are kept. The model's original values 
 and lists them in `context`; such facts are LOW and never exact. It is for comparing against strict, not
 a default.
 
+**`presence-2` (default; candidate lists).** Measured 2026-10-26 on the three c001 chunks
+(wisteria-lodge-0006/-0009/-0010) with `presence-1`: qwen3:4b-instruct 16 facts, qwen3:8b 12, strict
+grounding kept 0 of each (`PERSON_NOT_A_NAME`: the model writes "he" 7 and 8 times; `PERSON_NOT_IN_QUOTE`;
+`PLACE_DEICTIC`). A small model cannot do coreference by free generation but can choose from a short
+list. So for every chunk the runner builds the persons and places the generic extraction already found
+there (`extract/presence_candidates.py`): `--candidates graph` (default: `g_mention` rows of the chunk
+joined to named person/place `g_node` rows, mention counts, aliases shown as "(also: ...)", the presence
+pass's own mentions left out so a rerun sees the same lists), falling back to `cache` (the chunk's
+generic-extraction cache entry, `--generic-cache/--generic-model/--generic-prompt`) and then to `text` (a
+deterministic capitalised-name detector). Each list is capped at 30 names (most mentioned first). The
+lists go into the prompt (`prompts/extract/presence_v2.txt`, version `presence-2`, worked example with a
+pronoun resolved from the list, an UNKNOWN case and a denial) AND into the `format` schema as `enum`
+for `person` and `place`, plus the literal `UNKNOWN`. The cache key holds prompt version, schema version
+`presence-2` and a hash of both lists, so a changed graph invalidates entries. Grounding: `UNKNOWN` is
+dropped (`PERSON_UNKNOWN`, `PLACE_UNKNOWN`), a value outside the list too (`*_NOT_IN_CANDIDATES`); a list
+entry not found in the quote is kept as `person_resolution: "context"` / `place_resolution: "context"`
+(`context` lists the field), which the graph makes LOW exactly like `--lenient` (`inherited_context`);
+`--literal` restores "must literally appear in the quote". time_text and day_text stay literal phrases
+from the quote. Because the lists are per chunk, a "he" whose referent is only named in an earlier chunk
+(c001's 0010: "He had been there since one o'clock") resolves only if the generic extraction put that
+person in the chunk. **Run `presence-2` AFTER the generic extraction and graph build; the candidates
+come from the graph.** `enum` in `format`: the Ollama docs (api.md, structured-outputs) do not mention
+it; the llama.cpp JSON-schema-to-grammar converter Ollama builds on supports string enums. Quality is
+UNMEASURED until a real run.
+
 Graph. `GraphStore.ingest_presence(chunk, facts)` is independent of `ingest`: node ids are
 `e:<chunk>:p<i>` and `c:<chunk>:p<i>`, and the set is replaced as a whole (unchanged input is a no-op,
 hash in `g_meta` key `presence:<chunk>`). A generic re-ingest of the chunk purges the presence nodes too,

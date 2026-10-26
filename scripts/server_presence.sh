@@ -5,16 +5,23 @@
 # Resumable (the cache key holds model, prompt version and schema version): run it again after an
 # interruption. Quality is UNMEASURED until this has run: read data/cache/server/presence/eval.json.
 #
+# Default prompt presence-2 (prompts/extract/presence_v2.txt): person/place are chosen from per-chunk
+# candidate lists read from the graph, so this MUST run AFTER the generic extraction and graph build.
+#
 # Usage: scripts/server_presence.sh [--models "qwen3:8b qwen3:4b-instruct"] [--all] [--limit N]
-#                                   [--lenient] [--pull] [--dry-run]
+#                                   [--lenient] [--literal] [--candidates graph|cache|text]
+#                                   [--prompt FILE] [--pull] [--dry-run]
 #   --models LIST  Ollama tags, space separated (default: qwen3:8b qwen3:4b-instruct)
 #   --all          after the demo stories, run every story (demo chunks are cache hits)
 #   --limit N      only the first N chunks of each selected set (smoke test)
 #   --lenient      keep values not found in the quote as LOW context (A/B against strict; own cache
 #                  is shared, grounding is not cached, so the model is NOT called again)
+#   --literal      person/place must literally appear in the quote (presence-2 strict variant)
+#   --candidates M candidate source: graph (default, falls back to cache, then text), cache, text
+#   --prompt FILE  prompt file (default prompts/extract/presence_v2.txt; presence_v1.txt = old pass)
 #   --pull         `ollama pull` a model that the server does not list
 #   --dry-run      print the commands, run nothing
-# Output: data/cache/server/presence/<model>.jsonl (+ -lenient), eval.json; caches data/cache/presence-cache-<model>.sqlite;
+# Output: data/cache/server/presence/<model>.jsonl (+ -lenient and/or -literal), eval.json; caches data/cache/presence-cache-<model>.sqlite;
 #         graphs data/graph/presence-<model>.sqlite (copies of graph.sqlite + the presence facts).
 set -u
 cd "$(dirname "$0")/.."
@@ -22,16 +29,19 @@ export PATH="$HOME/.local/bin:$PATH"
 
 MODELS="qwen3:8b qwen3:4b-instruct"
 DEMO="wisteria-lodge boscombe-valley-mystery silver-blaze thor-bridge abbey-grange"
-ALL=0; LIMIT=0; LENIENT=0; PULL=0; DRY=0
+ALL=0; LIMIT=0; LENIENT=0; LITERAL=0; PULL=0; DRY=0; CAND=graph; PROMPT=prompts/extract/presence_v2.txt
 while [ $# -gt 0 ]; do
   case "$1" in
     --models) MODELS="${2:?}"; shift 2 ;;
     --all) ALL=1; shift ;;
     --limit) LIMIT="${2:?}"; shift 2 ;;
     --lenient) LENIENT=1; shift ;;
+    --literal) LITERAL=1; shift ;;
+    --candidates) CAND="${2:?}"; shift 2 ;;
+    --prompt) PROMPT="${2:?}"; shift 2 ;;
     --pull) PULL=1; shift ;;
     --dry-run) DRY=1; shift ;;
-    -h|--help) sed -n '2,19p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,28p' "$0"; exit 0 ;;
     *) echo "unknown argument: $1 (try --help)" >&2; exit 2 ;;
   esac
 done
@@ -54,7 +64,9 @@ fi
 stories=(); for s in $DEMO; do stories+=(--story "$s"); done
 extra=(); SUF=""
 [ "$LIMIT" -gt 0 ] && extra+=(--limit "$LIMIT")
+extra+=(--prompt "$PROMPT" --candidates "$CAND")
 [ "$LENIENT" -eq 1 ] && { extra+=(--lenient); SUF="-lenient"; }
+[ "$LITERAL" -eq 1 ] && { extra+=(--literal); SUF="$SUF-literal"; }
 
 preds=()
 for model in $MODELS; do

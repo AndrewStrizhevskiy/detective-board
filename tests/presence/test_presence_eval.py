@@ -5,6 +5,7 @@ import json
 import sys
 
 from detective_board.extract import presence
+from detective_board.extract.presence import PROMPT_V1
 
 from .helpers import ROOT, fact, fake_by_passage, records, write_chunks
 
@@ -46,7 +47,7 @@ def run_runner(tmp_path, table, *extra):
     out = tmp_path / "pred.jsonl"
     rc = presence.main(
         ["--model", "fake", "--chunks", str(write_chunks(tmp_path / "ch.jsonl", *chunks)),
-         "--cache", str(tmp_path / "c.sqlite"), "--out", str(out), *extra],
+         "--cache", str(tmp_path / "c.sqlite"), "--out", str(out), "--prompt", str(PROMPT_V1), *extra],
         client=fake_by_passage(table),
     )  # fmt: skip
     assert rc == 0

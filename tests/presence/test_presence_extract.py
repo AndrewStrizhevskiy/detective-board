@@ -7,7 +7,7 @@ from detective_board.extract.cache import ExtractCache
 from detective_board.extract.llm import FakeClient
 from detective_board.extract.pipeline import load_prompt
 from detective_board.extract.presence import (
-    DEFAULT_PROMPT,
+    PROMPT_V1,
     KnownEntities,
     PresenceConfig,
     PresenceExtractor,
@@ -54,7 +54,7 @@ def test_format_schema_is_inline_and_capped():
 
 
 def test_prompt_version_and_worked_example_is_self_consistent():
-    p = load_prompt(DEFAULT_PROMPT)
+    p = load_prompt(PROMPT_V1)
     assert p.version == "presence-1" and "{{CHUNK}}" in p.template
     head = p.template.split("Example passage (invented):\n", 1)[1]
     passage, rest = head.split("\n\nExample output:\n", 1)
@@ -222,7 +222,7 @@ def chunks_file(tmp_path):
 def test_runner_resumes_from_cache_and_reports(tmp_path, capsys):
     cache, out = tmp_path / "c.sqlite", tmp_path / "out.jsonl"
     args = ["--model", "fake:8b", "--chunks", str(chunks_file(tmp_path)), "--cache", str(cache),
-            "--out", str(out)]  # fmt: skip
+            "--out", str(out), "--prompt", str(PROMPT_V1)]  # fmt: skip
     client = fake_by_passage(CANNED)
     assert presence.main(args, client=client) == 0
     assert len(client.calls) == 4
@@ -245,7 +245,7 @@ def test_runner_resumes_from_cache_and_reports(tmp_path, capsys):
 def test_runner_story_and_limit_filters(tmp_path):
     client = fake_by_passage(CANNED)
     args = ["--model", "fake:8b", "--chunks", str(chunks_file(tmp_path)),
-            "--cache", str(tmp_path / "c.sqlite"), "--story", BV, "--story", "silver-blaze"]  # fmt: skip
+            "--prompt", str(PROMPT_V1), "--cache", str(tmp_path / "c.sqlite"), "--story", BV, "--story", "silver-blaze"]  # fmt: skip
     assert presence.main(args, client=client) == 0
     assert len(client.calls) == 2
     client2 = fake_by_passage(CANNED)
@@ -254,7 +254,7 @@ def test_runner_story_and_limit_filters(tmp_path):
 
 
 def test_cache_key_has_model_prompt_and_schema_version(tmp_path):
-    prompt = load_prompt(DEFAULT_PROMPT)
+    prompt = load_prompt(PROMPT_V1)
     mk = lambda model, p=prompt: PresenceExtractor(  # noqa: E731
         FakeClient([]), PresenceConfig(model), ExtractCache(), p
     )

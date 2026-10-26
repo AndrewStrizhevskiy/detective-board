@@ -398,11 +398,15 @@ class GraphStore:
         context = set(f.context)
         motion = any(w in MOTION_VERBS for w in fold_text(f.quote).split())
         made: list[str] = []
-        base: dict[str, Any] = {"pass": "presence", "presence_version": PRESENCE_SCHEMA_VERSION}
+        base: dict[str, Any] = {"pass": "presence", "presence_version": f.version}
         if f.day_text:
             base["day_text"] = f.day_text
         if context:
             base["context"] = sorted(context)
+        if f.person_resolution == "context":
+            base["person_resolution"] = "context"  # chosen from the candidate list (presence-2)
+        if f.place_resolution == "context":
+            base["place_resolution"] = "context"
         weak = a.weak or pweak or bool(context)
         if not deny:
             place, _ = self._ref(ctx, f.place, ("place",), a, create=True)

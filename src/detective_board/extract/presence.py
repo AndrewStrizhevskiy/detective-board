@@ -34,6 +34,7 @@ import argparse
 import json
 import sys
 import time
+from collections import Counter
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -41,14 +42,24 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from detective_board.extract import schema_v2
 from detective_board.extract.cache import ExtractCache, cache_key
 from detective_board.extract.ground import ground_quote, normalise
 from detective_board.extract.llm import GenRequest, LLMClient, OllamaClient
 from detective_board.extract.parse import parse_output
-from detective_board.extract.pipeline import PROMPT_DIR, Prompt, load_prompt
+from detective_board.extract.pipeline import DEFAULT_PROMPT as GENERIC_PROMPT
+from detective_board.extract.pipeline import PROMPT_DIR, ExtractConfig, Prompt, load_prompt
+from detective_board.extract.presence_candidates import (
+    MODES,
+    Candidates,
+    CandidateSource,
+    candidates_from_text,
+)
 from detective_board.extract.presence_schema import (
     MAX_FACTS,
     SCHEMA_VERSION,
+    SCHEMA_VERSION_V2,
+    UNKNOWN,
     GroundedFact,
     PresenceExtraction,
     PresenceFact,
@@ -76,13 +87,16 @@ __all__ = [
     "PresenceExtractor",
     "PresenceFact",
     "PresenceResult",
+    "PROMPT_V1",
     "build_report",
     "ground_facts",
     "known_from_graph",
     "ollama_format_schema",
 ]
 
-DEFAULT_PROMPT = PROMPT_DIR / "presence_v1.txt"
+DEFAULT_PROMPT = PROMPT_DIR / "presence_v2.txt"
+PROMPT_V1 = PROMPT_DIR / "presence_v1.txt"
+PEOPLE_MARK, PLACES_MARK = "{{PEOPLE}}", "{{PLACES}}"
 MAX_QUOTE_CHARS = 500
 # A place starting with one of these is no name for the rules ("my door", "there", "his home").
 DEICTIC = frozenset(
@@ -137,6 +151,9 @@ class PresenceConfig:
     temperature: float = 0.0
     fuzzy_threshold: float = 0.85
     lenient: bool = False  # grounding only; not part of the cache key
+    literal: bool = (
+        False  # presence-2: person/place must literally be in the quote (grounding only)
+    )
 
     def options(self) -> dict[str, Any]:
         return {
@@ -148,6 +165,43 @@ class PresenceConfig:
 
 
 # --------------------------------------------------------------------------- grounding
+
+
+def _pick(text: str, names: Sequence[str]) -> str | None:
+    """The candidate `text` names (case/space-insensitive), else None."""
+    k = " ".join(text.split()).casefold()
+    return next((n for n in names if n.casefold() == k), None)
+
+
+def _ground_person_cand(
+    text: str, qf: str, people: _People, names: Sequence[str], literal: bool
+) -> tuple[str | None, bool, str | None]:
+    """presence-2: the model chose `text` from the candidate list (or UNKNOWN)."""
+    if text.strip().casefold() == UNKNOWN.casefold():
+        return None, False, "PERSON_UNKNOWN"
+    pick = _pick(text, names)
+    if pick is None:
+        return None, False, "PERSON_NOT_IN_CANDIDATES"
+    name, in_quote, why = _ground_person(pick, qf, people, True)
+    if why or name is None:
+        return None, False, why or "PERSON_NOT_A_NAME"
+    if not in_quote and literal:
+        return None, False, "PERSON_NOT_IN_QUOTE"
+    return name, in_quote, None
+
+
+def _ground_place_cand(
+    text: str, qf: str, places: _Places, names: Sequence[str], literal: bool
+) -> tuple[str | None, bool, str | None]:
+    if text.strip().casefold() == UNKNOWN.casefold():
+        return None, False, "PLACE_UNKNOWN"
+    pick = _pick(text, names)
+    if pick is None:
+        return None, False, "PLACE_NOT_IN_CANDIDATES"
+    in_quote = any(_contains(qf, k) for k in places.keys(pick))
+    if not in_quote and literal:
+        return None, False, "PLACE_NOT_IN_QUOTE"
+    return pick, in_quote, None
 
 
 def _is_name(key: str) -> bool:
@@ -259,8 +313,13 @@ def ground_facts(
     fuzzy_threshold: float = 0.85,
     lenient: bool = False,
     start_idx: int = 0,
+    candidates: Candidates | None = None,
+    literal: bool = False,
 ) -> GroundOutcome:
-    """Deterministic grounding of the model's presence facts against one chunk (see module doc)."""
+    """Deterministic grounding of the model's presence facts against one chunk (see module doc).
+
+    With `candidates` (presence-2) person and place must be a list entry: a value that is not in
+    the quote is kept as 'context' (LOW downstream) unless `literal`; UNKNOWN is dropped."""
     known = known or KnownEntities()
     out = GroundOutcome()
     chunk_n = normalise(chunk_text)
@@ -292,13 +351,21 @@ def ground_facts(
         if g.grounded == "fuzzy":
             codes.append("QUOTE_FUZZY")
 
-        person, in_q, why = _ground_person(f.person, qf, people, lenient)
+        if candidates is not None:
+            person, in_q, why = _ground_person_cand(
+                f.person, qf, people, candidates.people, literal
+            )
+        else:
+            person, in_q, why = _ground_person(f.person, qf, people, lenient)
         if why or person is None:
             drop(i, why or "PERSON_NOT_A_NAME", quote)
             continue
         if not in_q:
             context.append("person")
-        place, in_q, why = _ground_place(f.place, qf, chunk_text, places, lenient)
+        if candidates is not None:
+            place, in_q, why = _ground_place_cand(f.place, qf, places, candidates.places, literal)
+        else:
+            place, in_q, why = _ground_place(f.place, qf, chunk_text, places, lenient)
         if why or place is None:
             drop(i, why or "PLACE_EMPTY", quote)
             continue
@@ -358,6 +425,9 @@ def ground_facts(
                 speaker=speaker,
                 quote=quote,
                 context=context,
+                version=SCHEMA_VERSION_V2 if candidates is not None else SCHEMA_VERSION,
+                person_resolution="context" if "person" in context else "quote",
+                place_resolution="context" if "place" in context else "quote",
                 codes=codes,
                 model_values=f.model_dump(),
             )
@@ -384,6 +454,7 @@ class PresenceResult:
     model: str = ""
     prompt_version: str = ""
     schema_version: str = SCHEMA_VERSION
+    candidates: dict[str, Any] = field(default_factory=dict)  # presence-2: source, sizes, sha
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -392,6 +463,7 @@ class PresenceResult:
             "error": self.error, "model": self.model, "prompt_version": self.prompt_version,
             "schema_version": self.schema_version, "grounding": self.grounding,
             "n_model_facts": self.n_model_facts, "dropped": self.dropped, "facts": self.facts,
+            "candidates": self.candidates,
         }  # fmt: skip
 
     def grounded_facts(self) -> list[GroundedFact]:
@@ -410,19 +482,39 @@ class PresenceExtractor:
         self.cfg = cfg
         self.cache = cache
         self.prompt = prompt or load_prompt(DEFAULT_PROMPT)
+        # a prompt with {{PEOPLE}}/{{PLACES}} is presence-2: candidate lists in prompt and schema
+        self.v2 = PEOPLE_MARK in self.prompt.template
+        self.schema_version = SCHEMA_VERSION_V2 if self.v2 else SCHEMA_VERSION
         self._schema = ollama_format_schema()
 
-    def key(self, text: str) -> str:
-        """Model, prompt version, schema version 'presence-1' and options are all in the key."""
-        return cache_key(
-            text, self.cfg.model, self.prompt.version, SCHEMA_VERSION, self.cfg.options()
-        )
+    def schema_for(self, cands: Candidates | None) -> dict:
+        if self.v2 and cands is not None:
+            return ollama_format_schema(cands.people, cands.places)
+        return self._schema
 
-    def _raw(self, text: str) -> tuple[dict | None, bool, str | None]:
-        key = self.key(text)
+    def prompt_for(self, text: str, cands: Candidates | None) -> str:
+        t = self.prompt.template
+        if self.v2 and cands is not None:
+            t = t.replace(PEOPLE_MARK, cands.people_text()).replace(
+                PLACES_MARK, cands.places_text()
+            )
+        return Prompt(self.prompt.version, t).render(text)
+
+    def key(self, text: str, cands: Candidates | None = None) -> str:
+        """Model, prompt version, schema version ('presence-2') and options are all in the key;
+        for presence-2 also a hash of the two candidate lists, so a changed graph invalidates."""
+        opts = self.cfg.options()
+        if self.v2 and cands is not None:
+            opts = {**opts, "candidates": cands.sha()}
+        return cache_key(text, self.cfg.model, self.prompt.version, self.schema_version, opts)
+
+    def _raw(self, text: str, cands: Candidates | None) -> tuple[dict | None, bool, str | None]:
+        key = self.key(text, cands)
         if self.cache is not None and (hit := self.cache.get(key)) is not None:
             return hit, True, None
-        req = GenRequest(self.cfg.model, self.prompt.render(text), self._schema, self.cfg.options())
+        req = GenRequest(
+            self.cfg.model, self.prompt_for(text, cands), self.schema_for(cands), self.cfg.options()
+        )
         try:
             r = self.client.generate(req)
         except Exception as e:  # network/model error: not cached, chunk marked error
@@ -434,12 +526,30 @@ class PresenceExtractor:
         return rec, False, None
 
     def extract_chunk(
-        self, chunk_id: str, story: str, text: str, known: KnownEntities | None = None
+        self,
+        chunk_id: str,
+        story: str,
+        text: str,
+        known: KnownEntities | None = None,
+        cands: Candidates | None = None,
     ) -> PresenceResult:
         res = PresenceResult(
-            chunk_id, story, "error", model=self.cfg.model, prompt_version=self.prompt.version
+            chunk_id,
+            story,
+            "error",
+            model=self.cfg.model,
+            prompt_version=self.prompt.version,
+            schema_version=self.schema_version,
         )
-        rec, cached, err = self._raw(text)
+        if self.v2:
+            cands = cands or candidates_from_text(text) or Candidates(source="text")
+            res.candidates = {
+                "source": cands.source, "people": len(cands.people),
+                "places": len(cands.places), "sha": cands.sha(),
+            }  # fmt: skip
+        else:
+            cands = None
+        rec, cached, err = self._raw(text, cands)
         if rec is None:
             res.error = err
             return res
@@ -477,6 +587,8 @@ class PresenceExtractor:
             known,
             fuzzy_threshold=self.cfg.fuzzy_threshold,
             lenient=self.cfg.lenient,
+            candidates=cands,
+            literal=self.cfg.literal,
         )
         res.dropped += out.dropped
         res.grounding = out.grounding
@@ -517,6 +629,9 @@ def build_report(results: Sequence[PresenceResult]) -> dict:
         "kept_deny": sum(f["polarity"] == "deny" for f in kept),
         "kept_with_day_text": sum(bool(f["day_text"]) for f in kept),
         "kept_with_context": sum(bool(f["context"]) for f in kept),
+        "kept_person_from_list": sum(f.get("person_resolution") == "context" for f in kept),
+        "kept_place_from_list": sum(f.get("place_resolution") == "context" for f in kept),
+        "candidate_sources": dict(Counter(r.candidates["source"] for r in results if r.candidates)),
         "quote_grounding": g,
         "sec_per_chunk_live": round(sum(r.wall_s for r in live) / len(live), 1) if live else None,
     }
@@ -542,7 +657,20 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
     ap.add_argument("--cache", type=Path, default=Path("data/cache/presence-cache.sqlite"))
     ap.add_argument("--graph-db", type=Path, help="ingest the facts into this graph DB")
     ap.add_argument("--out", type=Path, help="write one result record per chunk (jsonl)")
-    ap.add_argument("--prompt", type=Path, default=DEFAULT_PROMPT)
+    ap.add_argument(
+        "--prompt", type=Path, default=DEFAULT_PROMPT, help="presence_v2 (default) or v1"
+    )
+    ap.add_argument(
+        "--candidates", choices=MODES, default="graph",
+        help="presence-2 candidate lists: graph (falls back to cache, then text), cache, text",
+    )  # fmt: skip
+    ap.add_argument(
+        "--literal", action="store_true",
+        help="presence-2: person/place must literally appear in the quote (no list-only context)",
+    )  # fmt: skip
+    ap.add_argument("--generic-cache", type=Path, default=Path("data/extract_cache.sqlite"))
+    ap.add_argument("--generic-model", help="model of the generic extraction (default: --model)")
+    ap.add_argument("--generic-prompt", type=Path, default=GENERIC_PROMPT)
     ap.add_argument("--host", default="http://localhost:11434")
     ap.add_argument("--num-ctx", type=int, default=4096)
     ap.add_argument("--num-predict", type=int, default=768)
@@ -556,7 +684,7 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
 
     cfg = PresenceConfig(
         a.model, a.num_ctx, a.num_predict, a.seed,
-        fuzzy_threshold=a.fuzzy_threshold, lenient=a.lenient,
+        fuzzy_threshold=a.fuzzy_threshold, lenient=a.lenient, literal=a.literal,
     )  # fmt: skip
     cache = ExtractCache(a.cache)
     ex = PresenceExtractor(client or OllamaClient(a.host), cfg, cache, load_prompt(a.prompt))
@@ -568,6 +696,15 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
 
         a.graph_db.parent.mkdir(parents=True, exist_ok=True)
         store = GraphStore(str(a.graph_db))
+    gcache: ExtractCache | None = None
+    lookup = None
+    if ex.v2 and a.candidates != "text" and a.generic_cache.exists():
+        gcache = ExtractCache(a.generic_cache)
+        gcfg, gprompt = ExtractConfig(a.generic_model or a.model), load_prompt(a.generic_prompt)
+        lookup = lambda t: gcache.get(  # noqa: E731
+            cache_key(t, gcfg.model, gprompt.version, schema_v2.SCHEMA_VERSION, gcfg.options())
+        )
+    source = CandidateSource(a.candidates, store, lookup)
     results: list[PresenceResult] = []
     t0 = time.perf_counter()
     out = open(a.out, "w", encoding="utf-8") if a.out else None  # noqa: SIM115
@@ -578,7 +715,10 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
             story = rec.get("story", "")
             if store is not None and story not in known_by_story:
                 known_by_story[story] = known_from_graph(store, story)
-            r = ex.extract_chunk(rec["chunk_id"], story, rec["text"], known_by_story.get(story))
+            cands = source.for_chunk(rec["chunk_id"], rec["text"]) if ex.v2 else None
+            r = ex.extract_chunk(
+                rec["chunk_id"], story, rec["text"], known_by_story.get(story), cands
+            )
             results.append(r)
             if out:
                 out.write(json.dumps(r.to_json(), ensure_ascii=False) + "\n")
@@ -590,10 +730,13 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
         if out:
             out.close()
         cache.close()
+        if gcache is not None:
+            gcache.close()
     report = build_report(results)
     report.update(
-        model=a.model, prompt_version=ex.prompt.version, schema_version=SCHEMA_VERSION,
-        lenient=a.lenient, total_s=round(time.perf_counter() - t0, 1),
+        model=a.model, prompt_version=ex.prompt.version, schema_version=ex.schema_version,
+        lenient=a.lenient, literal=a.literal,
+        candidates=a.candidates if ex.v2 else None, total_s=round(time.perf_counter() - t0, 1),
     )  # fmt: skip
     if store is not None:
         from detective_board.extract import normalise as normaliser
