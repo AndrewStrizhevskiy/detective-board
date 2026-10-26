@@ -23,3 +23,16 @@ It is idempotent and never overwrites existing entries. After merging, run
 `just graph qwen3:4b 20` once (merges shard caches if you pass them as the third argument, runs
 `scripts/run_extraction_priority.sh`, then `extract.normalise`): every chunk is a cache hit and it builds
 `data/graph/graph.sqlite` without calling the model. `just normalise` re-runs only the last step. Tests: `tests/test_extract_shards.py`.
+
+## Gold-12 on the server (one command)
+
+```bash
+scripts/server_gold12.sh        # or: just gold12 [--models "qwen3:4b qwen3:4b-instruct"] [--prompts "..."]
+```
+
+Runs the production extractor on exactly the 12 chunks of `eval/extraction_gold/` for every model x
+prompt (defaults: `qwen3:4b qwen3:4b-instruct` x `extract_v2.txt extract_v2_1.txt`), with a separate
+cache and output per run in `data/cache/gold12/`, prints each command, then one comparison table
+(`scripts/spike/score_pipeline.py`) and writes `docs/spike/results/gold12-<stamp>.md`. Resumable:
+finished runs are skipped, partial ones continue from their cache. Needs Ollama with the models
+pulled (`OLLAMA_HOST` is honoured). Tests: `tests/test_score_pipeline.py`, `tests/test_server_gold12.py`.
