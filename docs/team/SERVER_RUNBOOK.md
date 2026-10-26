@@ -1,5 +1,58 @@
 # Runbook: extraction on a GPU server (one session, 4-6 hours)
 
+## TL;DR (two commands)
+
+Facts from the admin: unrestricted internet (gigabit), direct attended access only, no VPN to install. The repo is
+private and the server is a shared department machine: put NO GitHub credentials on it.
+
+Before leaving (on the laptop, in the repo, on the commit to run):
+```bash
+git rev-parse HEAD > /tmp/COMMIT                                       # the archive has no history; the report reads COMMIT
+git archive --format=tar.gz --add-file=/tmp/COMMIT -o detective-board.tar.gz HEAD   # no .git, no secrets
+scp detective-board.tar.gz USER@SERVER:~/                              # or copy the file to a USB stick
+```
+On the server (use `tmux new -s extract` first, so a dropped terminal does not matter):
+```bash
+mkdir detective-board && tar xzf detective-board.tar.gz -C detective-board && cd detective-board   # from USB: copy it first
+scripts/server_bootstrap.sh            # 1: checks, uv, Ollama, server settings, models, tests, GPU proof; ends with PASS or FAIL + next step
+scripts/server_run_all.sh              # 2: determinism -> concurrency probe -> gold12 -> full run -> merge/graph/report
+scripts/server_progress.sh             # any time, from a second tmux window: counts per shard, chunks/min, ETA, last log lines
+```
+Preview without changing anything: `scripts/server_bootstrap.sh --check-only`, `scripts/server_run_all.sh --dry-run`.
+Short on time: `scripts/server_run_all.sh --skip-gold12`. Interrupted or a shard died: run the same command again (resumable).
+Options: `--phase determinism,probe,gold12,run,finish`, `--streams N` (skips the probe), `--no-wait`, `--force`;
+bootstrap: `--parallel N` (OLLAMA_NUM_PARALLEL, default 4), `--with-8b`. Logs and state: `data/cache/server/`.
+
+What to copy back (the run ends by printing this list): `data/cache/extract-cache.sqlite`, `data/graph/graph.sqlite`,
+`data/cache/server/report.md` (write anything unusual into its last section), and `data/cache/server/logs/`.
+```bash
+# on the laptop (or copy the files to a USB stick):
+mkdir -p ~/server-out && scp USER@SERVER:'detective-board/data/cache/extract-cache.sqlite detective-board/data/graph/graph.sqlite detective-board/data/cache/server/report.md' ~/server-out/
+scp -r USER@SERVER:detective-board/data/cache/server/logs ~/server-out/
+```
+Do not commit these binaries. Optional, only if scp/USB are impossible: a private GitHub release from the laptop
+side (`gh release create <tag> <files> --repo OWNER/REPO --draft --title T --notes N`; syntax from
+`gh release create --help`, assets are the file arguments). If `gh` must be used on the server at all, use a temporary
+fine-grained token with release-upload permission only, type it with `read -rs GH_TOKEN; export GH_TOKEN` (never on the
+command line, never in a file, never `gh auth login` on the shared machine), then `unset GH_TOKEN`, run `gh auth logout`
+and delete the token on GitHub.
+
+Cleanup checklist (before you leave): [ ] results copied and opened on the laptop; [ ] `ollama serve` stopped if it was
+started by hand (`kill $(cat data/cache/server/ollama-serve.pid)`; a systemd service stays unless the admin says
+otherwise); [ ] working copy removed if the admin asks (`rm -rf ~/detective-board ~/detective-board.tar.gz`);
+[ ] no token anywhere (`gh auth status` says not logged in, token deleted on GitHub); [ ] no SSH keys or credentials
+left on the machine; [ ] no VPN or other software installed beyond uv and Ollama.
+
+How the Ollama server settings are applied (names from the official FAQ, verified 2026-10-26):
+`OLLAMA_NUM_PARALLEL` (parallel requests per model, default 1) and `OLLAMA_KEEP_ALIVE` (for example `24h`).
+systemd install: `sudo systemctl edit ollama`, add under `[Service]` the lines `Environment="OLLAMA_NUM_PARALLEL=4"` and
+`Environment="OLLAMA_KEEP_ALIVE=24h"`, then `sudo systemctl daemon-reload && sudo systemctl restart ollama` (the bootstrap
+does this when sudo works). Manual: `OLLAMA_NUM_PARALLEL=4 OLLAMA_KEEP_ALIVE=24h ollama serve` (the bootstrap starts it
+that way when there is no systemd service). Without sudo the bootstrap prints the documented tarball steps
+(`curl -fsSL https://ollama.com/download/ollama-linux-amd64.tar.zst | sudo tar x -C /usr`, user, systemd unit) for the admin.
+
+The sections below are the manual fallback, the same steps one by one.
+
 Goal: produce the extraction cache for all 20 stories (596 chunks) with the SAME model, prompt and
 options as the laptop, bring one file back, and build the graph from it. Nothing else runs on the server.
 Read `docs/team/models.md` (tags and digests) and `docs/team/ASSIGNMENTS.md` (Package A) first.
@@ -21,6 +74,7 @@ The final agent still runs on the laptop; the server only precomputes data. Say 
   there is no working driver after about 20-30 minutes, install Ubuntu 24.04 LTS (the same distribution as the lead's
   laptop) and install the driver with the distribution's tool. Ask about: internet access, SSH/VPN from outside the
   university network (official access only), sudo, the room's opening hours, running unattended overnight.
+- Update 2026-10-27: unrestricted internet (gigabit), direct attended access only (no remote access); no offline bundle needed.
 - Still unknown (ask): the operating system, whether the internet is reachable from the server network (else bring the
   model files and wheels on a USB stick), whether Ollama/uv may be installed in a user directory, whether a process may
   stay in `tmux`/`screen` after the slot ends, until what hour the room is open on Tuesday.
@@ -42,8 +96,8 @@ as a zip plus the `uv` cache.
 
 ```bash
 nvidia-smi                                   # note the GPU model and VRAM in your report
-git clone git@github.com:AndrewStrizhevskiy/detective-board.git && cd detective-board   # or unzip
-git log --oneline | head -3                  # note the commit hash
+tar xzf detective-board.tar.gz -C detective-board && cd detective-board   # the archive from the TL;DR; do not clone the private repo here
+cat COMMIT                                   # the commit hash (written by the laptop, goes into the report)
 curl -LsSf https://astral.sh/uv/install.sh | sh   # only if uv is missing (official installer)
 uv sync                                      # Python deps, pinned in uv.lock
 uv run pytest -q -m "not live"               # must be green (about 500 tests, no Ollama needed)
@@ -116,14 +170,14 @@ just graph                                           # merges nothing, runs scri
 Sanity numbers to write into the report: chunks extracted, items kept and dropped (and why), share of events
 with a time, share of claims with a proposition, stories with zero events.
 
-Bring back (copy with scp/rsync/USB): `data/cache/extract-cache.sqlite`, `data/graph/graph.sqlite`, the
+Bring back (scp/USB, see the TL;DR; no GitHub credentials on this machine): `data/cache/extract-cache.sqlite`, `data/graph/graph.sqlite`, the
 shard logs, and `report.md` containing: commit hash, `ollama --version`, GPU, model IDs, seconds per chunk,
 number of identical outputs in the determinism check, the sanity numbers, anything unusual.
 Do NOT commit binaries to git; hand the files to the lead (release asset or shared drive).
 
 ## 6. Cleanup
 
-Stop `ollama serve`, delete the working copy and the pulled models if the admin asks, leave no keys or
+Use the cleanup checklist in the TL;DR. Stop `ollama serve`, delete the working copy and the pulled models if the admin asks, leave no keys or
 tokens on the machine. Nothing in this repo contains secrets; never paste yours into logs or reports.
 
 ## If something fails
