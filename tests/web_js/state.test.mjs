@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initialState, reduce, mergeGraph, emptyGraph, citedGraphIds, answerText, waitingStage } from "../../web/js/state.js";
+import { initialState, reduce, mergeGraph, emptyGraph, citedGraphIds, answerText, waitingStage, progressSteps } from "../../web/js/state.js";
 
 const run = (events, now = 1000) => {
   let s = reduce(initialState(), { type: "run_start", question: "q", now });
@@ -117,4 +117,21 @@ test("waiting stage: working, first token, writing", () => {
   s = reduce(s, { type: "event", event: { seq: 1, type: "answer_token", text: "x" }, now: 14000 });
   assert.equal(waitingStage(s, 16000).kind, "writing");
   assert.equal(waitingStage(initialState(), 0), null);
+});
+
+test("rule-first run (no model call): tokens stream from the template and every step ends done", () => {
+  const s = run([
+    { type: "route_decided", routes: ["mcp", "graph", "vector"], tools: ["find_contradictions"], method: "rules", reason: "r" },
+    { type: "retrieval_results", hits: [], gate: { passed: true }, chunk_ids: [] },
+    { type: "graph_results", nodes: [], edges: [] },
+    { type: "tool_result", tool: "find_contradictions", ok: true, summary: "status=ok items=0" },
+    { type: "enriched_query", sources: [], prompt_chars: 0, prompt_tokens_estimate: 0, strategy: "rule-first (empty): no model call" },
+    tok("The rule engine found no violation "), tok("among the facts."),
+    { type: "citation_check", ok: true, citations: [], action: "accept" },
+    { type: "final", status: "answered", verified: true, answer: "The rule engine found no violation among the facts.", citations: [], provenance: [] },
+  ]);
+  assert.equal(s.phase, "done");
+  assert.equal(answerText(s), "The rule engine found no violation among the facts.");
+  const steps = progressSteps(s, 5000);
+  assert.ok(steps.every((x) => x.status === "done" || x.status === "skipped"));
 });

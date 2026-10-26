@@ -498,6 +498,16 @@ Implemented in `src/detective_board/symbolic/` (T-36), tests in `tests/symbolic/
   R1 `violated`, conditional, once the story day of the two events is curated (the text says "on
   the night of his death", which the day resolver does not read).
 
+### 11.1a Rule-first answers (`agent/rule_first.py`, `agent/honesty.py`)
+
+Observed on the real stack (2026-10-26): for the Garcia question the router sent mcp + graph + vector, `find_contradictions` returned no finding (the graph has no story days, `events_dated=0`), and the 4B model still wrote "There is no conflict ..." and passed the self-check. An empty list is absence of a finding, not of a conflict. For routes whose answer the rule engine determines (`find_contradictions`, `check_alibi`) the answer is therefore a deterministic template over the tool result and its Explanation, with no model call (`AgentConfig.rule_first`, default true):
+
+- **findings**: one sentence per finding (rule id, verdict, reason code, label `derived` or `conditional`), each with its verbatim anchor quotes as `[n: "quote"]`, and for `conditional` the low-confidence inputs from the Explanation.
+- **no finding**: `The rule engine found no violation among the facts extracted for <story>. This does not show that the accounts are consistent: <coverage>`. Coverage is computed from the same fact source the rules read: events and claims of the story, events with an exact clock time, events with a story day, claims with a presence proposition, and the pairs R1 examined and could not decide. Up to three retrieved passages follow, labelled `source_text` and marked "not rule results". An `unknown` alibi verdict is reported as unknown, never as agreement.
+- **error, skipped step, ambiguous or unknown person**: a sentence that says what was missing (the entity-link note with its candidates is reused).
+
+The words that assert agreement ("no conflict", "consistent", "no contradiction") do not occur outside quoted source text, the negated sentence above, or a `consistent` verdict a rule really returned. The same check guards the LLM path (`rule_first=false`, or any route that carried a rule result): `answer.self_check(..., forbid_consistency=True)` rejects such a claim with a retry hint when the rule result is empty or failed. The template runs through the same verbatim self-check (sentences without a quote are statements of the engine; every quote present is verified), which passes by construction.
+
 ### 11.2 Field grounding of extracted items (`extract/repair.py`, branch `feat/field-grounding`)
 
 Measured on qwen3:4b with prompt extract-2.1 over 64 cached Wisteria/Boscombe chunks (177 events,

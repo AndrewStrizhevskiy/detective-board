@@ -124,4 +124,7 @@ def test_tool_error_message_and_odd_code_do_not_leak():
     )
     d = _dump(ev)
     assert "/home/mendax" not in d and "/etc/passwd" not in d
-    assert ev[-1].refusal_code in ("tool_error", "no_evidence")
+    assert "could not answer" in ev[-1].answer or ev[-1].refusal_code in (
+        "tool_error",
+        "no_evidence",
+    )
