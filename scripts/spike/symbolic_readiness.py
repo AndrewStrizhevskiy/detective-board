@@ -21,7 +21,7 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -106,7 +106,7 @@ def readiness(gold: dict[str, dict], results: dict[str, dict]) -> dict[str, floa
             continue
         events += ex.events
         claims += ex.claims
-        for p, ge in match_events(ex.events, g["gold"].events):
+        for p, ge in match_events(ex.events, cast("v1.Extraction", g["gold"]).events):
             n_pairs += 1
             gp = ge.participants
             pp += len(p.participants)
