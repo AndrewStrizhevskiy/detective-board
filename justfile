@@ -34,6 +34,28 @@ test-live:
 index:
     uv run python -m detective_board.index.build
 
+# Build data/graph/graph.sqlite from the extraction cache(s) and normalise it. Resumable (cache hits).
+# Optional shard caches are merged into data/cache/extract-cache.sqlite first, for example:
+#   just graph qwen3:4b 20 "data/cache/extract-cache-qwen3_4b-shard*.sqlite"
+# Needs Ollama only for chunks that are not in the cache.
+graph model="qwen3:4b" stories="20" caches="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p data/cache data/graph
+    if [ -n "{{caches}}" ]; then
+        uv run python scripts/merge_extract_cache.py merge data/cache/extract-cache.sqlite {{caches}} --model {{model}}
+    fi
+    scripts/run_extraction_priority.sh {{model}} {{stories}}
+    uv run python -m detective_board.extract.normalise data/graph/graph.sqlite
+
+# Add normalised times and claim propositions to the graph (graph already built).
+normalise:
+    uv run python -m detective_board.extract.normalise data/graph/graph.sqlite
+
+# Score the 12 gold chunks on the GPU server: models x prompts, one comparison table. Needs Ollama.
+gold12 *args:
+    scripts/server_gold12.sh {{args}}
+
 # TODO: scripts/eval/run.py does not exist yet. Pass `--short` for the CI subset.
 eval *args:
     uv run python scripts/eval/run.py {{args}}

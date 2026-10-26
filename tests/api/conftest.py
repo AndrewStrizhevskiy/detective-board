@@ -9,7 +9,7 @@ from starlette.testclient import TestClient  # noqa: E402
 
 from detective_board.api import ApiConfig, build_app  # noqa: E402
 
-MODELS = ["qwen3:8b", "nomic-embed-text:latest"]
+MODELS = ["qwen3:8b", "bge-m3:latest"]
 
 
 @pytest.fixture

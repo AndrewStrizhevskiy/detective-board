@@ -20,5 +20,6 @@ Shard planning reads the story order from `scripts/run_extraction_priority.sh` a
 chunk count. Merge recomputes the expected cache keys from `data/chunks.jsonl` + model + prompt
 version + schema version + options and refuses entries outside that set unless `--force`.
 It is idempotent and never overwrites existing entries. After merging, run
-`scripts/run_extraction_priority.sh qwen3:4b 20` once: every chunk is a cache hit and it builds
-`data/graph/graph.sqlite` without calling the model. Tests: `tests/test_extract_shards.py`.
+`just graph qwen3:4b 20` once (merges shard caches if you pass them as the third argument, runs
+`scripts/run_extraction_priority.sh`, then `extract.normalise`): every chunk is a cache hit and it builds
+`data/graph/graph.sqlite` without calling the model. `just normalise` re-runs only the last step. Tests: `tests/test_extract_shards.py`.

@@ -57,15 +57,15 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
    scripts/extract_shard.sh <k> 4 qwen3:4b            # each person runs one shard
    uv run python scripts/merge_extract_cache.py merge data/cache/extract-cache.sqlite \
        data/cache/extract-cache-qwen3_4b-shard*.sqlite --model qwen3:4b
-   scripts/run_extraction_priority.sh qwen3:4b 20       # all cache hits: builds data/graph/graph.sqlite
+   just graph qwen3:4b 20      # all cache hits: builds data/graph/graph.sqlite, then normalises (`just normalise`)
    ```
    A partial cache (26 chunks of boscombe-valley-mystery, v2.1) is in
    `data/extraction/extract-cache-qwen3_4b-extract-2.1-partial.sqlite` (force-added; `*.sqlite` is git-ignored).
    Verify determinism against it with `merge_extract_cache.py verify ... -n 3` before trusting a new machine.
    Ship the finished `extract-cache.sqlite` and `graph.sqlite` back (release asset or LFS; do not commit
    large binaries to git history).
-2. **Score extraction quality of v2.1/schema v2** on the 12 gold chunks (the scorer reads schema v1; use
-   `from_v1/to_v1` in `extract/schema_v2.py` or extend the scorer). Try prompt/schema variants to raise claims
+2. **Score extraction quality of v2.1/schema v2** on the 12 gold chunks: `just gold12` (models x prompts, one
+   table; `scripts/server_gold12.sh`) or `uv run python scripts/spike/score_pipeline.py OUT.jsonl`. Try prompt/schema variants to raise claims
    and relations (F1 only 0.2-0.5).
 3. **Wire the real stack end to end** (see `docs/api.md`, `build_app(config)`): real index + graph + MCP
    server on the real graph; the router has no graph step for contradiction questions yet (UI works around it);

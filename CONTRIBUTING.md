@@ -18,7 +18,7 @@ uv run pytest -m "not live"    # sanity check, no Ollama needed
 
 Optional: `uvx pre-commit install`. UI e2e only: `uv sync --group e2e && uv run playwright install chromium`.
 Raw corpus and indexes are not in git: rebuild them with the scripts in `scripts/corpus/` and
-`just index` (see README), or ask for a data archive.
+`just index` (writes `data/index/db.sqlite`; the graph is `data/graph/graph.sqlite` via `just graph`), or ask for a data archive.
 
 ## Branches
 

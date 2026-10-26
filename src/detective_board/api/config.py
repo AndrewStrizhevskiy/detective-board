@@ -24,18 +24,18 @@ class ApiConfig:
     port: int = 8000
     fake: bool = False  # FakeLLM + tiny in-memory fixture; never touches Ollama or data files
     # data (relative paths resolve against the repo root)
-    index_path: str = "data/index.sqlite"  # retrieval.Store
-    graph_path: str = "data/graph.sqlite"  # graph.GraphStore
+    index_path: str = "data/index/db.sqlite"  # retrieval.Store
+    graph_path: str = "data/graph/graph.sqlite"  # graph.GraphStore
     facts_path: str | None = None  # FactBase JSON for the timeline-alibi MCP server
     facts_allow: str | None = None  # allow-listed dirs for it (os.pathsep separated)
     web_dir: str = "web"
     # models; the embedding identity must match the one the index was built with
     ollama_host: str = "http://localhost:11434"
     llm_model: str = "qwen3:8b"
-    embed_model: str = "nomic-embed-text"
-    embed_dim: int = 768
-    embed_doc_prefix: str = "search_document: "
-    embed_query_prefix: str = "search_query: "
+    embed_model: str = "bge-m3"  # same as index.build.CONFIG
+    embed_dim: int = 1024
+    embed_doc_prefix: str = ""
+    embed_query_prefix: str = ""
     num_ctx: int | None = None
     llm_timeout_s: float = 300.0
     # limits
@@ -57,11 +57,37 @@ class ApiConfig:
         path = Path(p)
         return path if path.is_absolute() else REPO_ROOT / path
 
+    def data_status(self) -> list[str]:
+        """Real mode only: one line per data file, with a fix when it is missing."""
+        lines = []
+        for label, rel, missing in (
+            ("index", self.index_path, index_missing_message(self)),
+            ("graph", self.graph_path, graph_missing_message(self)),
+        ):
+            lines.append(
+                f"{label}: present ({rel})" if self.resolve(rel).exists() else f"{label}: {missing}"
+            )
+        return lines
+
     def allowed_hosts(self) -> list[str]:
         """Host-header allow-list (DNS-rebinding guard); other binds are the operator's choice."""
         if self.host in LOOPBACK:
             return ["localhost", "127.0.0.1", "[::1]"]
         return ["*"]
+
+
+def index_missing_message(cfg: ApiConfig) -> str:
+    return (
+        f"index not found: {cfg.index_path}. Build it with `just index` "
+        "(python -m detective_board.index.build), or point DETECTIVE_BOARD_INDEX_PATH at it."
+    )
+
+
+def graph_missing_message(cfg: ApiConfig) -> str:
+    return (
+        f"graph not found: {cfg.graph_path}; the graph is empty. Build it with `just graph` "
+        "(extraction + `just normalise`), or point DETECTIVE_BOARD_GRAPH_PATH at it."
+    )
 
 
 _FIELDS = {f.name: f for f in dataclasses.fields(ApiConfig)}

@@ -480,7 +480,7 @@ Implemented in `src/detective_board/symbolic/` (T-36), tests in `tests/symbolic/
 - `normalise.apply(store, story)` writes overlays `time` (full `TimeSpec`), `story_day` and `prop`
   with source `normaliser`; overlays with any other source (curation, `set_event_day`) are kept
   and win. `SqliteFactSource` prefers the `time` overlay. CLI for a built graph:
-  `python -m detective_board.extract.normalise data/graph.sqlite [--story SLUG]`.
+  `python -m detective_board.extract.normalise data/graph/graph.sqlite [--story SLUG]`.
 - The graph keeps the v2 fields: claim `about_*`/`polarity` in the claim props, event `transit`;
   `in_speech=True` makes an event non-narrator (before: only claim-span containment).
   `GRAPH_BUILD_VERSION` 2.

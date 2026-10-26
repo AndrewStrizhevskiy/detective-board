@@ -13,7 +13,7 @@ from typing import Any
 from detective_board.agent import LLM, Agent, HybridRetriever, OllamaLLM, ToolClient
 from detective_board.agent.rules_client import InProcessRulesClient
 from detective_board.api import fixture
-from detective_board.api.config import ApiConfig
+from detective_board.api.config import ApiConfig, graph_missing_message, index_missing_message
 from detective_board.api.tool_client import SyncToolClient
 from detective_board.graph import GraphStore
 from detective_board.retrieval import EmbeddingConfig, OllamaEmbedder, Store
@@ -99,11 +99,11 @@ def build_services(
         )
         index, gpath = cfg.resolve(cfg.index_path), cfg.resolve(cfg.graph_path)
         if not index.exists():  # never create an empty index implicitly
-            raise FileNotFoundError(f"index not found: {cfg.index_path} (build it first)")
+            raise FileNotFoundError(index_missing_message(cfg))
         store = Store(index, emb_cfg)
         graph = GraphStore(str(gpath)) if gpath.exists() else GraphStore()
         if not gpath.exists():
-            print(f"warning: graph not found: {cfg.graph_path}; graph is empty", file=sys.stderr)
+            print(f"warning: {graph_missing_message(cfg)}", file=sys.stderr)
         emb = OllamaEmbedder(emb_cfg, base_url=cfg.ollama_host)
         llm = OllamaLLM(
             cfg.llm_model, cfg.ollama_host, num_ctx=cfg.num_ctx, timeout=cfg.llm_timeout_s

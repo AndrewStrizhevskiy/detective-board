@@ -330,7 +330,7 @@ class _ClaimView:
 
 
 def main(argv: list[str] | None = None) -> None:
-    """python -m detective_board.extract.normalise data/graph.sqlite [--story SLUG ...]"""
+    """python -m detective_board.extract.normalise data/graph/graph.sqlite [--story SLUG ...]"""
     import argparse
 
     from detective_board.graph import GraphStore

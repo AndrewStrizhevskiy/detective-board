@@ -18,6 +18,11 @@ def main(argv: list[str] | None = None) -> None:
     )
     ns = ap.parse_args(argv)
     cfg = load_config(ns.config, host=ns.host, port=ns.port, fake=True if ns.fake else None)
+    if not cfg.fake:
+        for line in cfg.data_status():
+            print(line, file=sys.stderr)
+        if not cfg.resolve(cfg.index_path).exists():
+            raise SystemExit(2)  # nothing to serve without the index
     if cfg.host not in LOOPBACK:
         print(f"warning: binding to {cfg.host}, the API is not authenticated", file=sys.stderr)
 
