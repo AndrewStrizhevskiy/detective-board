@@ -26,6 +26,8 @@ from detective_board.agent import Turn
 from detective_board.api import graph_view, sse
 from detective_board.api.config import ApiConfig
 from detective_board.api.runtime import Busy, Runtime
+from detective_board.api.services import mcp_status
+from detective_board.api.warmup import Warmup
 from detective_board.retrieval import SCHEMA_VERSION as INDEX_SCHEMA_VERSION
 
 API_VERSION = "1"
@@ -177,6 +179,7 @@ def build_app(
     `config` and return the ASGI app. `config.fake=True` uses FakeLLM and a tiny fixture."""
     cfg = config or ApiConfig()
     rt = runtime or Runtime(cfg)
+    warm = Warmup(cfg)
     probe: OllamaProbe = ollama_probe or (lambda: ollama_models(cfg.ollama_host))
 
     # ---------------------------------------------------------------- /api/ask
@@ -417,7 +420,8 @@ def build_app(
                 "ollama": ollama,
                 "index": index,
                 "graph": graph,
-                "mcp": {"configured": bool(cfg.facts_path)},
+                "mcp": mcp_status(cfg, bool(data and data["graph_present"])),
+                "warm": warm.status(),
                 "busy": rt.busy,
                 "versions": {
                     "api": API_VERSION,
@@ -437,6 +441,7 @@ def build_app(
                     "llm": "fake" if cfg.fake else cfg.llm_model,
                     "embedding": "fake-hash" if cfg.fake else cfg.embed_model,
                 },
+                "llm_options": {"num_ctx": cfg.num_ctx, "keep_alive": cfg.keep_alive},
                 "agent": {k: v for k, v in vars(cfg.agent_config()).items()},
                 "limits": {
                     "max_body_bytes": cfg.max_body_bytes,
@@ -510,4 +515,5 @@ def build_app(
     )
     app.state.runtime = rt
     app.state.config = cfg
+    app.state.warmup = warm
     return app

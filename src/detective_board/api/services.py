@@ -68,6 +68,19 @@ class Services:
         self.graph.close()
 
 
+def mcp_status(cfg: ApiConfig, graph_present: bool) -> dict[str, Any]:
+    """How the rule tools are reached, mirroring `build_services`: what `tool_call.server` shows."""
+    if cfg.fake and not fixture.demo_mode():
+        return {"configured": True, "mode": "fake", "server": "timeline-alibi"}
+    if cfg.fake or (not cfg.facts_path and graph_present):
+        return {"configured": True, "mode": "in-process", "server": InProcessRulesClient.server}
+    if cfg.facts_path:
+        return {"configured": True, "mode": "stdio", "server": "timeline-alibi"}
+    if graph_present:
+        return {"configured": True, "mode": "in-process", "server": InProcessRulesClient.server}
+    return {"configured": False, "mode": "none", "server": None}
+
+
 def _mcp_tools(cfg: ApiConfig) -> SyncToolClient | None:
     if not cfg.facts_path:
         return None
@@ -104,9 +117,13 @@ def build_services(
         graph = GraphStore(str(gpath)) if gpath.exists() else GraphStore()
         if not gpath.exists():
             print(f"warning: {graph_missing_message(cfg)}", file=sys.stderr)
-        emb = OllamaEmbedder(emb_cfg, base_url=cfg.ollama_host)
+        emb = OllamaEmbedder(emb_cfg, base_url=cfg.ollama_host, keep_alive=cfg.keep_alive)
         llm = OllamaLLM(
-            cfg.llm_model, cfg.ollama_host, num_ctx=cfg.num_ctx, timeout=cfg.llm_timeout_s
+            cfg.llm_model,
+            cfg.ollama_host,
+            num_ctx=cfg.num_ctx,
+            keep_alive=cfg.keep_alive,
+            timeout=cfg.llm_timeout_s,
         )
         tools = None
         if with_agent:  # stdio MCP over a FactBase file if configured, else the same tools
