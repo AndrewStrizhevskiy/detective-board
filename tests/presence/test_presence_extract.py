@@ -286,3 +286,14 @@ def test_model_error_and_bad_json_do_not_crash(tmp_path):
         .status
         == "error"
     )
+
+
+def test_time_expressions_the_model_gives_for_vague_hours_are_accepted():
+    from detective_board.extract.repair import _is_time_expression as is_time
+
+    q = "some quote"
+    for ok in ["one o'clock", "nearly one o’clock", "at that hour", "last night", "early", "so late",
+               "a quarter to nine", "half-past ten", "thirty minutes"]:  # fmt: skip
+        assert is_time(ok, q), ok
+    for bad in ["Garcia", "the room", "Wisteria Lodge", "some quote"]:
+        assert not is_time(bad, q), bad

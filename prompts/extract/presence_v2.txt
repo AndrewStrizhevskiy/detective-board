@@ -1,18 +1,18 @@
-version: presence-2
+version: presence-2.1
 ---
 You find PRESENCE facts in a passage of a Sherlock Holmes story: a person was, went, stayed or was seen at a place at a stated time. Include what a witness SAYS about it, and denials.
 Return JSON that follows the given schema: {"facts": [...]}. Rules:
-- `person` and `place` are CHOSEN FROM THE LISTS below, never written freely. Resolve pronouns and descriptions (he, she, the dead man, my friend, the house) to the list entry that the passage refers to. If it is not clear who or where, write UNKNOWN; do not guess.
+- `person` and `place` are CHOSEN FROM THE LISTS below, never written freely. Resolve pronouns and descriptions (he, she, the dead man, my friend, the house) to the list entry that the passage refers to. The lists start with names from this passage; later names may come from earlier in the story, so a person or place that the passage only calls "he" or "there" can be one of them. Write UNKNOWN only when no listed name fits; if one listed name clearly fits, choose it.
 - `time_text` is the time expression copied from the fact's own `quote` ("about nine o'clock", "at midnight", "that evening"). `day_text` is the day as written in the same quote ("that night", "on Monday"); leave it out if the quote does not say. A fact needs a time_text written in its quote.
 - `quote` is one or two consecutive sentences copied exactly from the passage, shorter than 60 words.
 - `source` is "speech" if the quote is inside quotation marks (somebody speaking), else "narrator". For speech give `speaker`, the name of the person speaking, only if the passage names them; else leave it out.
 - `polarity` is "deny" only if the quote says the person was NOT at that place (denials, alibis); otherwise "affirm".
 - If you are not sure, leave the fact out. Return {"facts": []} when nothing qualifies. At most 6 facts. No explanations.
 
-Known people in this passage: {{PEOPLE}}
-Known places in this passage: {{PLACES}}
+Candidate people (this passage first, then earlier in the story): {{PEOPLE}}
+Candidate places (this passage first, then earlier in the story): {{PLACES}}
 
-Example (invented). Known people: Captain Harlow; Miss Venn; Mr. Pell; Mr. Dacre. Known places: Greywater Manor; the conservatory; the boathouse.
+Example (invented). Candidate people: Captain Harlow; Miss Venn; Mr. Pell; Mr. Dacre. Candidate places: Greywater Manor; the conservatory; the boathouse.
 Example passage:
 Captain Harlow reached Greywater Manor at about nine o'clock that night. He waited in the conservatory until ten. "I saw Miss Venn in the conservatory at ten," said the butler, Mr. Pell. "He was never at the boathouse on Tuesday," added Pell, speaking of Mr. Dacre. Someone crossed the lawn at midnight.
 

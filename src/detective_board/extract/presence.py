@@ -329,21 +329,24 @@ def ground_facts(
     places = _Places(known.place_entities())
     seen: set[tuple[str, ...]] = set()
 
-    def drop(i: int, reason: str, quote: str) -> None:
-        out.dropped.append({"kind": "facts", "idx": i, "reason": reason, "quote": quote})
+    def drop(i: int, reason: str, quote: str, f: PresenceFact) -> None:
+        model = {"person": f.person, "place": f.place, "time_text": f.time_text}
+        out.dropped.append(
+            {"kind": "facts", "idx": i, "reason": reason, "quote": quote, "model": model}
+        )
 
     for i, f in enumerate(raw, start_idx):
         if len(out.facts) >= MAX_FACTS:
-            drop(i, "over_limit", f.quote)
+            drop(i, "over_limit", f.quote, f)
             continue
         g = ground_quote(f.quote, chunk_n, threshold=fuzzy_threshold)
         out.grounding[g.grounded] += 1
         if g.span is None:
-            drop(i, "quote_not_grounded", f.quote)
+            drop(i, "quote_not_grounded", f.quote, f)
             continue
         quote = g.span
         if len(quote) > MAX_QUOTE_CHARS:
-            drop(i, "quote_too_long", quote)
+            drop(i, "quote_too_long", quote, f)
             continue
         qf = fold_text(quote)
         codes: list[str] = []
@@ -358,7 +361,7 @@ def ground_facts(
         else:
             person, in_q, why = _ground_person(f.person, qf, people, lenient)
         if why or person is None:
-            drop(i, why or "PERSON_NOT_A_NAME", quote)
+            drop(i, why or "PERSON_NOT_A_NAME", quote, f)
             continue
         if not in_q:
             context.append("person")
@@ -367,13 +370,13 @@ def ground_facts(
         else:
             place, in_q, why = _ground_place(f.place, qf, chunk_text, places, lenient)
         if why or place is None:
-            drop(i, why or "PLACE_EMPTY", quote)
+            drop(i, why or "PLACE_EMPTY", quote, f)
             continue
         if not in_q:
             context.append("place")
         time_text, in_q, why = _ground_time(f.time_text, qf, quote, lenient)
         if why or time_text is None:
-            drop(i, why or "TIME_NOT_TEMPORAL", quote)
+            drop(i, why or "TIME_NOT_TEMPORAL", quote, f)
             continue
         if not in_q:
             context.append("time_text")
@@ -391,7 +394,7 @@ def ground_facts(
 
         cue = has_negation(quote)
         if (f.polarity == "deny") != cue:
-            drop(i, "POLARITY_UNCLEAR", quote)
+            drop(i, "POLARITY_UNCLEAR", quote, f)
             continue
 
         located = index.in_speech(quote)
@@ -411,7 +414,7 @@ def ground_facts(
             fold_text(quote),
         )
         if key in seen:
-            drop(i, "duplicate", quote)
+            drop(i, "duplicate", quote, f)
             continue
         seen.add(key)
         out.facts.append(
@@ -544,8 +547,9 @@ class PresenceExtractor:
         if self.v2:
             cands = cands or candidates_from_text(text) or Candidates(source="text")
             res.candidates = {
-                "source": cands.source, "people": len(cands.people),
-                "places": len(cands.places), "sha": cands.sha(),
+                "source": cands.source, "carry": cands.carry, "sha": cands.sha(),
+                "n_people": len(cands.people), "n_places": len(cands.places),
+                "people": list(cands.people[:12]), "places": list(cands.places[:12]),
             }  # fmt: skip
         else:
             cands = None
@@ -631,6 +635,13 @@ def build_report(results: Sequence[PresenceResult]) -> dict:
         "kept_with_context": sum(bool(f["context"]) for f in kept),
         "kept_person_from_list": sum(f.get("person_resolution") == "context" for f in kept),
         "kept_place_from_list": sum(f.get("place_resolution") == "context" for f in kept),
+        "PERSON_UNKNOWN": reasons.get("PERSON_UNKNOWN", 0),
+        "PLACE_UNKNOWN": reasons.get("PLACE_UNKNOWN", 0),
+        "offered_by_chunk": {
+            r.chunk_id: {"people": r.candidates["people"], "places": r.candidates["places"]}
+            for r in results
+            if r.candidates
+        },
         "candidate_sources": dict(Counter(r.candidates["source"] for r in results if r.candidates)),
         "quote_grounding": g,
         "sec_per_chunk_live": round(sum(r.wall_s for r in live) / len(live), 1) if live else None,
@@ -663,6 +674,10 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
     ap.add_argument(
         "--candidates", choices=MODES, default="graph",
         help="presence-2 candidate lists: graph (falls back to cache, then text), cache, text",
+    )  # fmt: skip
+    ap.add_argument(
+        "--carry", type=int, default=3,
+        help="presence-2 graph candidates: also names of the previous N chunks of the story",
     )  # fmt: skip
     ap.add_argument(
         "--literal", action="store_true",
@@ -704,7 +719,7 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
         lookup = lambda t: gcache.get(  # noqa: E731
             cache_key(t, gcfg.model, gprompt.version, schema_v2.SCHEMA_VERSION, gcfg.options())
         )
-    source = CandidateSource(a.candidates, store, lookup)
+    source = CandidateSource(a.candidates, store, lookup, carry=a.carry)
     results: list[PresenceResult] = []
     t0 = time.perf_counter()
     out = open(a.out, "w", encoding="utf-8") if a.out else None  # noqa: SIM115
@@ -736,7 +751,8 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
     report.update(
         model=a.model, prompt_version=ex.prompt.version, schema_version=ex.schema_version,
         lenient=a.lenient, literal=a.literal,
-        candidates=a.candidates if ex.v2 else None, total_s=round(time.perf_counter() - t0, 1),
+        candidates=a.candidates if ex.v2 else None, carry=a.carry,
+        total_s=round(time.perf_counter() - t0, 1),
     )  # fmt: skip
     if store is not None:
         from detective_board.extract import normalise as normaliser
