@@ -1,217 +1,193 @@
 ---
-status: DRAFT 1, 2026-10-22 (nothing executed; no model was run to write this)
+status: DRAFT 2, 2026-10-26 (rewrite of DRAFT 1; nothing was executed to write it, every number is copied from a file named next to it)
 owner: demo-director + ux-designer
 show date: 2026-10-30, 7 minutes, English
 ---
 # 7-minute demo script (location: docs/design/demo-script.md)
 
-Read with: `docs/design/board-design.md` (screen), `docs/acceptance/acceptance.md` (AC-03, 05, 07, 09, 10, 11, 12, 16, 18, 19), `docs/data-schema.md` section 5 (trace events), `docs/mcp-contracts.md` (alibi tool).
+Read with: `docs/ROADMAP.md` (schedule, risks), `docs/HANDOFF.md` (state of the code), `docs/design/board-design.md` (screen), `docs/spike/REPORT.md` and `docs/spike/results/answers-20261023-v3.md` (numbers), `docs/symbolic-layer.md` section 11.1 (Wisteria case), `eval/golden/contradictions.jsonl` (c001, c042), `eval/golden/questions.jsonl` (g001, g047).
 
 ## 0. What constrains this script
 
-| Fact (source) | Consequence for the script |
+| Fact (source) | Consequence |
 |---|---|
-| Generation 4-7 tok/s; qwen3:8b 4.3 tok/s (PRD 6, spike) | A 60-token answer takes 9-14 s to write. Never wait on it silently. |
-| TTFT 15-30 s on a 300-word prompt; 3.8 s on a 52-token prompt (spike: qwen3:8b 29.5 s / 3.8 s) | Any step with a long evidence prompt is **REPLAY** unless it has been timed in rehearsal. Short-prompt steps may be LIVE. |
-| Retrieval, graph query and MCP tool calls involve no LLM (mcp-contracts 2: tool never calls an LLM, 5 s timeout) | These are the "useful in 2-3 s" parts: trace rows, graph nodes, quote cards. |
-| Heavy extraction is offline (c4 Flow A) | The graph already exists; the board only reveals the evidence subset. |
-| Cold model load 15.4 s (spike) | Warm the model before going on stage. |
+| CPU-only i7-8665U. Answer check with the real agent, qwen3:4b-instruct, 12 questions: time to first token **42.0 s end to end** (routing + retrieval + prefill + first token), 59.5 s total per question, 6.0 tok/s, 1110 prompt tokens (answers-20261023-v3.md). g001 alone: first token 49.5 s, total 54.7 s (`answers-20261023-v3-qwen3_4b-instruct.jsonl`). | Never promise 15-30 s. Every live LLM answer is preceded by about 40-50 s of waiting. That wait is filled with trace rows, quote cards and the architecture slide. |
+| The retrieval gate refuses before any LLM call (0.01 s for g047). Graph queries and MCP tool calls call no LLM (`docs/mcp-contracts.md`). | These parts are fast and may be live. |
+| Nothing has yet run end to end on a real extracted graph; the real graph and the real stdio MCP server over it do not exist yet (ROADMAP state of 2026-10-25, backlog R-19). | Step 2 is conditional on the Tuesday integration (section 6). Its fallbacks are named, not hoped for. |
+| Cold model load 8-15 s (REPORT section 3). | Warm the model before going on stage. |
 
-**Honesty rule:** every cached run shows the `REPLAY` badge (board-design 1.1) and the presenter says "this one is a stored run". A cached answer is never presented as live. Cache = the stored `trace_log` events of an earlier real run (data-schema section 4), keyed by normalised question + index manifest hash + model id + prompt version; replayed with original event order and each gap capped at 2 s. Replay is therefore the real output of the real system, only faster to start (AC-19).
+**Honesty rules (customer decisions of 2026-10-22, kept).** A pre-recorded step is called a **recording** in slides, speech and on the badge (`RECORDING`); only what really runs on the laptop during the talk is called live. A stored run of the real system (key `c`) is also announced as a stored run. A bare-LLM error is never staged; the one used here was produced by a real run (section 2, step 0). All timings below are targets until measured on Tuesday.
 
-**Live vs cached at a glance**
+**Live vs recording at a glance**
 
-| # | Time | Question | Mode | Why |
-|---|---|---|---|---|
-| 1 | 0:35-1:35 | the dog in the night-time | REPLAY | long answer prompt |
-| 2 | 1:35-3:05 | James McCarthy vs the gamekeeper | REPLAY (retrieval/graph part may run LIVE in parallel if timed in rehearsal) | two long quotes in prompt |
-| 3 | 3:05-4:25 | Miss Dunbar's alibi | **LIVE** | deterministic MCP tool, short summary prompt |
-| 4 | 4:25-5:15 | Reichenbach (out of corpus) | **LIVE** if refusal needs no LLM (request 1, board-design 8), else REPLAY | refusal is a rules path |
-| 5 | 5:15-6:30 | Patience Moran, bare vs agent | bare LLM LIVE in terminal (short prompt), agent side REPLAY | bare prompt is ~30 tokens, no evidence |
+| # | Time | Content | Mode |
+|---|---|---|---|
+| 0 | 0:00-0:30 | Bare-LLM failure on g001, then the g001 agent question | bare = **RECORDING**; agent = **LIVE** (starts at 0:02) |
+| 1 | 0:30-1:30 | Architecture slide; board shows the g001 run finishing | slide; board **LIVE** |
+| 2 | 1:30-3:30 | Wisteria Lodge R1 (c001), conditional finding, MCP trace | **LIVE, no LLM wait** (rules + MCP only) |
+| 3 | 3:30-4:15 | Gate refusal (g047) | **LIVE**, no LLM call |
+| 4 | 4:15-5:15 | Bare vs agent on g001, verbatim-quote check | bare = **RECORDING**; `rg` check **LIVE** |
+| 5 | 5:15-6:15 | Measurements slide | slide |
+| 6 | 6:15-7:00 | Limits and close | slide |
 
-Targets in this script (first visible event within 2-3 s, etc.) are goals; AC-12 and the latency metric are TBD until the performance pass (T-24).
+Order differs from DRAFT 1 only by what the customer review asked for (R1 first, no McCarthy/Crowder step, no Thor Bridge step); the one adjustment of the reviewed order is in step 1 (the architecture slide is shown for about 40 s, then the board returns for the answer, because the answer arrives at about 0:45-0:55, see step 1).
 
 ## 1. Pre-show checklist (T-10 min)
 
-1. Laptop on mains, power profile performance, other apps closed, **network off** (AC-13 proves offline operation; also Wi-Fi off removes a failure source).
-2. `just` run recipe (name TBD, T-02) started; UI open at 1920x1080 full screen; theme chosen at the projector (light by default).
-3. Warm the model: one throwaway question typed in the box (not on the script). Wait until `llm.result`. Cold load is 15.4 s; a warm model avoids it.
-4. Caches present for Q1, Q2, Q5-agent (and Q3, Q4 as fallbacks): ask the five scripted questions once in this order, confirm the cache files exist, then restart the UI so the board is empty.
-5. Terminal window, font 20 pt, in `/home/mendax/code/detective-board`, pre-loaded with the bare-model command (command TBD by agent-engineer: same model id as the agent, no retrieval, temperature 0, seed 42 as in the spike benchmarks).
-6. Second tab/window with the recorded run (T-34) ready, paused at 0:00.
-7. Clock visible to the presenter. Operator key sheet: `c` = serve cached answer for the current question (request to frontend, board-design 7), `Esc` = stop run, `g` = list view.
+1. Laptop on mains, performance profile, other apps closed, network off, charger and cooling as in ROADMAP risks.
+2. `just run` (recipe exists: `uv run python -m detective_board.api`) on the real index and graph; UI full screen at 1920x1080.
+3. Warm the model with one throwaway question not on the script; wait for `llm.result`.
+4. The stored run of g001 exists (for key `c`) and the stored runs for step 2 and step 3 exist as fallbacks; then restart the UI so the board is empty. (Stored runs and key `c` are backlog R-02/R-03: if not merged, the ladder skips straight to the full recording.)
+5. Terminal in `/home/mendax/code/detective-board`, font 20 pt, command for step 4 in shell history.
+6. Full recording (all steps) open in a second window, paused at 0:00; screenshot slides ready.
+7. Operator key sheet: `c` = stored run for the current question, `Esc` = stop, `g` = list view. Clock visible to the presenter.
 
-Rehearsal gate (AC-18): the number of clean rehearsals required is TBD; every rehearsal's per-step timings are recorded in this file's section 5 (empty today).
+## 2. Running order
 
-## 2. Storyline
+Fallback ladder, same for every step (details in section 4): **(1) narrate over the trace; (2) press `c` for the stored run; (3) play the full recording; (4) screenshots.**
 
-Narrative: "A chat model will tell you anything about Sherlock Holmes. Our agent only says what it can quote. We will watch it work, break a witness's story, check an alibi, refuse a question it cannot answer, and then compare with a model that has no evidence."
+### Step 0: Hook (0:00-0:30)
 
-### Step 0: Opening (0:00-0:35)
+- **Exact question (agent, LIVE, typed at 0:02):** `What kind of snake killed Dr. Grimesby Roylott?` (golden g001; gold: "A swamp adder"; gold quote "It is a swamp adder!" cried Holmes; "the deadliest snake in India.", `speckled-band`).
+- **Shown:** first, the **RECORDING** of the bare model (qwen3:4b-instruct, no retrieval, no system prompt, same question, temperature 0, seed 42, 2026-10-23 run; `answers-20261023-v3-BARE-qwen3_4b-instruct.jsonl`, id g001, first token 1.4 s, 300 tokens cut by the limit, 48.7 s). The screen shows the first lines, verbatim:
 
-- **Screen:** empty board (board-design 7, Empty). Legend open.
-- **Do:** nothing yet; point at the three columns left to right.
-- **Say:** "Detective Board is an investigator agent over 20 Sherlock Holmes stories, running on this laptop with no network and a model of at most 8 billion parameters. This machine writes about five words a second, so you will see the agent *work* before it speaks. Left: every step it takes. Centre: the evidence board. Right: the answer, and the proof."
-- **Audience sees:** empty board, legend (five shapes, three line styles).
-- **Fallback:** none needed.
+  > Dr. Grimesby Roylott was not killed by a snake in the story of *The Hound of the Baskervilles* or any of Arthur Conan Doyle's Sherlock Holmes stories.
+  >
+  > In fact, Dr. Grimesby Roylott is a character from *The Hound of the Baskervilles*, but he is not actually killed by a snake. Instead, he is a villainous character who is ultimately **murdered by a snake** — but only in a symbolic or fictional sense.
+  >
+  > Wait — correction: **Dr. Grimesby Roylott is not a character in *The Hound of the Baskervilles*.**
 
-### Step 1: Simple lookup with proof (0:35-1:35)  REPLAY
+  The rest of the 300 tokens keeps contradicting itself and ends mid-word ("...he is a doctor who is **murdered"). Roylott is in *The Speckled Band*, killed by a swamp adder (g001 gold). The recording is labelled `RECORDING`, with date and model id. At 0:25 the screen switches to the board, where the agent run has been going since 0:02: trace rows, route chip, quote cards.
+- **Said (about 2 sentences):** "This is a small model with no evidence, recorded earlier on this laptop: it states with confidence that Roylott was not killed by a snake, and puts him in the wrong story. Now the same question to our agent, live: you will see it work for the next forty seconds before it writes a word."
+- **Live or recording:** bare = recording; agent = live.
+- **Fallback ladder:** (1) if the board shows no trace row after 3 s, say "retrieval is still ranking" and keep talking; (2) `c` for the stored g001 run (announce it); (3) full recording from 0:00; (4) screenshot of the bare transcript and of the finished agent answer.
+- **Pass criterion (measure Tuesday, 3 runs):** first trace row within 3 s of Enter (AC-12 target, not yet measured); retrieval quote card with `speckled-band-0030` visible before the LLM call; the recording file plays without a click delay. The bare transcript is re-recorded on Tuesday with the same settings; if it no longer shows the error, step 0 and step 4 are replaced by the quote check alone and this is said honestly (customer decision 2).
 
-- **Do:** click the first question chip (or type): `What was the curious incident of the dog in the night-time?`
-- **Source in the corpus (verified in `data/clean/silver-blaze.txt`, chunk `silver-blaze-0022`):**
-  > "To the curious incident of the dog in the night-time." / "The dog did nothing in the night-time." / "That was the curious incident," remarked Sherlock Holmes.
-  Expected answer: the dog did nothing in the night-time; that was the curious incident (Holmes, Silver Blaze). The pass criterion is that the quoted sentences are verbatim and cite `silver-blaze-0022`. Same fact as `eval/spike_questions.jsonl` en-04.
-- **Audience sees (target times from click):**
-  - t+0.3 s: `run.start` row, clock ticking, badge `REPLAY`.
-  - t+1-2 s: route chip `RETRIEVAL (rules)`; trace row `retrieve.vector: N chunks, fused top 5`; candidate-evidence cards appear in the answer panel with the Silver Blaze quote on top.
-  - t+2-3 s: Silver Blaze story node and a Person node (Holmes) appear on the board; the quote card is highlighted in the quote panel (chunk text, span highlighted).
-  - t+4-15 s: `llm.call` row with waiting counter; draft text streams muted "draft, not yet verified".
-  - end: `selfcheck: quotes verified n/n`; label switches to "verified"; Q1 done.
-- **Say:** "Simple question, so the router chose plain retrieval; you can see the choice and the reason here. These quotes arrived before the model wrote a word. Now the model writes, and the self-check confirms each quote is a verbatim substring of that chunk. Unverifiable quotes get dropped."
-- **Fallback:**
-  - No trace row after 3 s (AC-12 target TBD): say "retrieval is still ranking", wait to 6 s, then press `c`.
-  - Model rambles or answer lacks the quote: press `c`; say "that one is a stored run".
-  - Live retrieval fine but model slow: keep talking over the waiting counter; at t+20 s, press `c`.
+### Step 1: Architecture slide (0:30-1:30)
 
-### Step 2: Contradiction of testimony (1:35-3:05)  REPLAY
+- **Exact question:** none (the g001 run continues in the background).
+- **Shown:** one slide, three words: **LLM guesses, rules prove, real MCP.** Left: the model reads the stories and extracts facts with a verbatim quote and a confidence (label `extracted`). Middle: deterministic rules R1-R3 derive findings from those facts (label `derived`, or `conditional` when the proof rests on a shaky guess). Right: a tool server speaking the Model Context Protocol over stdio, which never calls a model. At about 1:10 the presenter returns to the board: by then the g001 answer should be on screen (first token expected near 0:45-0:55 = 0:02 + the 42-50 s measured in the answer check, writing 30 tokens at 6 tok/s = about 5 s more) with `selfcheck: verified` and the quote card.
+- **Said (about 2 sentences):** "The language model only guesses: it reads and proposes facts, each with a quote, and it can be wrong. The rules and the tool server do the proving, the same way every time, and every conclusion lists the quotes it stands on. While we talked, the board finished the snake question: a swamp adder, with the sentence from the book."
+- **Live or recording:** slide; the board behind it is live.
+- **Fallback ladder:** (1) if the answer is late, stay on the slide and say "the model is still reading its evidence, about forty seconds is normal on this CPU", return to the board at 1:20 regardless; (2) `c` for the stored g001 run at 1:25 if still no answer; (3) full recording from 0:30; (4) screenshot of the finished answer.
+- **Pass criterion (Tuesday):** on 3 runs the g001 status is `answered` with `verified` and cites `speckled-band-0030` (that is what the answer check produced: `The snake that killed Dr. Grimesby Roylott was a swamp adder [1: "It is a swamp adder!"].`), and the first token arrives no later than 0:02 + 60 s. Record the measured first-token times in section 5; if the 3-run mean is above 55 s, move the return to the board to 1:30.
 
-- **Do:** click chip / type: `Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?`
-- **Source (verified in `data/clean/boscombe-valley-mystery.txt`):**
-  - Crowder, as summarised by Holmes, chunk `boscombe-valley-mystery-0003`:
-    > "The game-keeper adds that within a few minutes of his seeing Mr. McCarthy pass he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm. To the best of his belief, the father was actually in sight at the time, and the son was following him."
-  - James McCarthy, chunk `boscombe-valley-mystery-0007`:
-    > "On my way I saw William Crowder, the game-keeper, as he had stated in his evidence; but he is mistaken in thinking that I was following my father. I had no idea that he was in front of me."
-  Expected answer: yes, they conflict on one point: Crowder believes the son was following the father with the father in sight; James says he was not following and did not know his father was ahead. Caveat the answer must carry (honest reading): Crowder's evidence reaches us through Holmes's summary of the inquest, and James himself acknowledges Crowder's account and calls it a mistake; the conflict is real but it does not by itself say who is right.
-- **Audience sees:**
-  - t+1-3 s: route chips `GRAPH + RETRIEVAL`; trace `retrieve.graph: seed "James McCarthy"`; two Person nodes (James McCarthy, William Crowder) and two Claim nodes appear, laid out as a facing pair.
-  - t+3-5 s: conflict edge draws between the claims with "!" badge and the label "conflicts"; quote panel shows quote A and quote B stacked, each highlighted in its chunk.
-  - t+5-8 s: answer panel shows confidence bar and number (value: whatever the stored run holds; TBD, the confidence formula is not built) with a one-line reason; the two evidence cards sit side by side.
-  - then: text streams, `selfcheck` stamps.
-- **Say:** "Complex question: the router picked graph plus retrieval. The agent builds a small graph of who said what. Two claims, same event, one conflict edge. Click the red edge: here are both quotes in the book, with the highlighted spans. The confidence number is the agent's own estimate, not a probability; and note the caveat it adds: one witness is reported second-hand."
-- **Click sequence:** click the red edge, then click node "William Crowder" (quote panel updates, selection ring moves), then click citation marker `[2]` in the answer.
-- **Fallback:**
-  - Graph shows no conflict edge (extraction missed it): the answer still carries both quotes; say "the graph did not link these two claims, the retrieval path did; the quotes are still the proof" and click evidence cards instead of the edge. Log it as a defect.
-  - Wrong or missing quote: press `c`.
-  - Agent reports "no contradiction" (AC-06 path): press `c`. Do not argue with it live.
+### Step 2: Wisteria Lodge, rule R1 (1:30-3:30)
 
-### Step 3: Alibi check through an MCP tool (3:05-4:25)  LIVE
+- **Exact question (golden contradiction c001):** `Is there a conflict about where Aloysius Garcia was at about one o'clock on the night he died?`
+- **Shown (all without waiting for an LLM sentence):**
+  - Trace: route chip `GRAPH + MCP (rules)`; a `tool.call` row `timeline-alibi.find_overlaps` (or `check_alibi`, whichever the router calls; name written in section 5 after rehearsal) with its arguments, then a `tool.result` row with its time in **milliseconds** (the tool never calls an LLM).
+  - Board: Person node Aloysius Garcia and two events (in the bedroom at Wisteria Lodge, dead on Oxshott Common), joined by a conflict edge with the stamp `= DERIVED R1` drawn as **conditional** (dashed, `=? CONDITIONAL`, board-design 1.6).
+  - Finding and Why panel (click the edge): rule R1 "one person, one place, one interval", then the numbered inputs, each with its quote and source anchor. The four gold quotes of c001 are the expected inputs: Scott Eccles "He apologised for having disturbed me so late, saying that it was nearly one o'clock." and "I could swear to it that it was he who addressed me in my bedroom at that very hour."; Inspector Baynes "He had been there since one o'clock. There was rain about that time, and his death had certainly been before the rain."; Inspector Gregson "He was found dead this morning upon Oxshott Common, nearly a mile from his home."
+  - The `conditional` flag, with the doubtful input ringed.
+- **Said (about 2 sentences):** "One man cannot be in his bedroom and dead a mile away at one o'clock, and the rule R1 says exactly that, listing the four quotes it used; the tool call took this many milliseconds and no model was involved. The finding is marked conditional because the proof rests on 'nearly one' and 'since one', both read as 01:00, and on a story day that we fixed by hand; if the extraction had misread the text, the rule would faithfully prove something from the misreading, which is why every input shows its quote."
+  The presenter must state the hand-curated day (symbolic-layer.md 11.1: "the text says 'on the night of his death', which the day resolver does not read"). This is a conclusion that follows from the stated facts, not a claim that it is true in the story; Holmes only hints at an explanation (altered clocks), so the gold finding is the conflict, not its resolution (c001 notes).
+- **Live or recording:** live, with no LLM answer needed. If the stack also starts an LLM call, the presenter does not wait for it: press `Esc` once the Why panel is open (the finding does not depend on the sentence).
+- **Fallback ladder:** (1) the graph route is slow or the tool row is late: narrate "the tool call is in flight, the trace shows its arguments", up to 6 s; (2) `c` for the stored c001 run (RECORDING badge, announced); (3) full recording from 1:30; (4) screenshots of the finding, the Why panel and the trace. Named fallback if the real stdio MCP over the real graph is not merged by Tuesday 12:00 (ROADMAP risk): serve the stdio server from the single-story FactBase file for Wisteria Lodge and say "this server holds one story"; if the real R1 finding is not `violated` on the real graph, use the stored run and say so.
+- **Pass criterion (Tuesday):** on 3 runs against the real graph, R1 returns `violated` for the Garcia pair, flagged conditional, with at least the Eccles "nearly one" quote and the Baynes "since one" quote as inputs; the MCP `tool.result` time is under 5 s (the tool timeout) and the measured value is written in ms in section 5; the Why panel opens; no LLM call is needed for the finding. Also record whether the router sends this question to the graph route (HANDOFF: the router has no graph step for contradiction questions yet).
 
-- **Do:** type `Can Miss Dunbar prove an alibi for the evening of the tragedy?` and press Enter. (Typed live on purpose: short prompt, the part that is deterministic.)
-- **Source (verified in `data/clean/thor-bridge.txt`; the text has double spaces after full stops, quotes must match them):**
-  - chunk `thor-bridge-0004` (Holmes summarising the case):
-    > "Nor could she prove an alibi.  On the contrary, she had to admit that she was down near Thor Bridge--that was the scene of the tragedy--about that hour.  She couldn't deny it, for some passing villager had seen her there."
-  - chunk `thor-bridge-0016` (Holmes recalling the note found on the dead woman):
-    > "'I will be at Thor Bridge at nine o'clock.--G. Dunbar.'"
-  Expected answer: the text gives her no alibi; it places her near the bridge at the relevant hour and the note names nine o'clock. The agent must **not** conclude guilt: in the same chunk Holmes answers "That really seems final." with "And yet, Watson--and yet!" (`thor-bridge-0004`), i.e. the story itself treats the missing alibi as misleading. A correct answer says "no alibi shown; that is not proof of guilt".
-  The tool status (`supported | contradicted | unknown | insufficient_evidence`, mcp-contracts 3.2) depends on what the extraction and the time normaliser produced for this story. **Do not script the status.** Record it in rehearsal (section 5). The text "late in the evening" for the death is vague (`thor-bridge.txt` line 43), so `unknown` with low confidence is a plausible, honest result; if so, the line below applies.
-- **Audience sees:**
-  - t+0.3 s: `run.start`, route chip `MCP: alibi (rules)`.
-  - t+1-3 s: trace `tool.call: timeline-alibi.check_alibi(story=thor-bridge, person=..., window=~21:00)` (arguments visible), then `tool.result: <status>, n anchors, <ms>` (target well under the 5 s tool timeout); Person node (Grace Dunbar), Place node (Thor Bridge), Event nodes appear; edge style per status.
-  - t+3-5 s: evidence cards for the anchors with the quotes above.
-  - t+5-30 s: `llm.call` (short prompt: tool result and two quotes) with waiting counter, then streaming; this is the longest wait of the demo, so the presenter talks (see Say).
-  - end: `selfcheck`, verified ticks, confidence bar.
-- **Say:** "Third kind of question: an alibi. The agent does not guess; it calls a tool over the Model Context Protocol. Look at the trace: tool name, arguments, result, in milliseconds. The tool never calls a language model and returns evidence with source anchors. While the model writes its summary: in the tool result you see which statements are the suspect's own claims and which are narrator statements; a claim is evidence of what was said, not of what happened."
-  If the status is `unknown`/low confidence: "Notice what it did not do: it did not declare her guilty. The text gives her no alibi, and the tool says how sure it is."
-- **Fallback:**
-  - Tool times out (5 s) or returns `error`: trace shows the `tool.result ok=false` row; say "this is the designed failure: it continues without the evidence and says so"; if the answer is a refusal `tool_error`, that is also a valid on-script moment, then press `c` on the stored run.
-  - Model stalls > 25 s on the summary: the tool result and quotes are already on screen; say "the evidence is the product, the sentence is cosmetic" and press `c` to load the stored summary.
-  - Entity not resolved (`ambiguous`/`not_found`): press `c`.
+### Step 3: Live gate refusal (3:30-4:15)
 
-### Step 4: Honest refusal (4:25-5:15)  LIVE if no-LLM refusal exists, else REPLAY
+- **Exact question (golden g047):** `What was the creature that haunted the Baskerville family on the Devonshire moor?`
+- **Why this question (checked in the files):** the answer check shows g047 refused by the retrieval gate **before any LLM call**: reason "top chunks cover 0.17 of the question terms, need 0.25", total 0.01 s, answer text "In these materials there is nothing about this." (`answers-20261023-v3-qwen3_4b-instruct.jsonl`); `rg -il baskerville data/clean` returns no file (re-run before the show). The other out-of-corpus golden question g056 (Colonel Ross's fee) is **not** usable live: it passed the gate and cost an LLM call of 47 s, then declined. The DRAFT 1 question (Reichenbach / Moriarty) has **not been run through the gate** and is uncertain (Moriarty is mentioned once in the corpus, `norwood-builder-0000`, which can raise the support score); it is therefore not the live question. If it is tried on Tuesday and the gate refuses it with no LLM call, it may replace g047; the named fallback is g047.
+- **Shown:** `run.start`, route chip, a `refusal` row with the gate reason and scores, the "Searched" list, no `llm.call` row, indigo refusal banner; the board stays empty. The bare model, asked the same thing, answered from memory ("a large, spectral hound", `answers-20261023-v3-BARE-qwen3_4b-instruct.jsonl`, g047): this is canon knowledge, not corpus evidence, and the presenter calls it exactly that, not a hallucination.
+- **Said (about 2 sentences):** "This question is about a famous novel that is not among our 20 stories. The agent checks whether its evidence covers the question, finds it does not, and refuses in a hundredth of a second without calling the model; a bare model happily tells the story from memory."
+- **Live or recording:** live.
+- **Fallback ladder:** (1) if the refusal row is late, narrate the gate ("it is ranking, then checking coverage"); (2) `c` for the stored refusal; (3) full recording from 3:30; (4) screenshot. If the live run does NOT refuse and calls the LLM: press `Esc`, press `c`, and say plainly that the thresholds are provisional (R-13) and this live run missed.
+- **Pass criterion (Tuesday, 3 runs on the real index):** status `refused`, code `no_evidence`, no `llm.call`, total under 1 s. Re-check after the R-13 threshold tuning, because min_score 0.018 and min_support 0.25 may change.
 
-- **Do:** type `How did Holmes escape from Moriarty at the Reichenbach Falls?`
-- **Why this question (verified):** `rg -i "reichenbach|falls|switzerland|meiringen" data/clean` finds no Reichenbach, no Switzerland, no Meiringen; Moriarty is mentioned exactly once, in `norwood-builder-0000`:
-  > "London has become a singularly uninteresting city since the death of the late lamented Professor Moriarty."
-  So the corpus supports one fact (Moriarty is dead) and nothing about the falls or an escape. The matching stories are not among the 20 selected (c4: 20 stories; PRD 5). Expected: refusal for the asked part, supported part quoted (AC-03 + AC-04), "Searched: ..." list, no invented narration.
-  The question is chosen because a model with canon knowledge will happily narrate the falls (see Step 5 backup).
-- **Audience sees:**
-  - t+0.3 s: `run.start`; t+1-3 s: route chip `REFUSAL (rules)` or `RETRIEVAL` followed by `refusal`; trace shows the search queries and that top chunks scored below the threshold (threshold TBD).
-  - answer panel: indigo banner "Refusal: not in the corpus", "Searched: Reichenbach, Falls, Moriarty ...", nearest rejected chunks collapsed, and the one supported quote from `norwood-builder-0000` marked "what the corpus does say".
-  - the board stays almost empty: one Person node (Moriarty), no edges, with the explanation "only one mention".
-- **Say:** "This is the question that makes ordinary chatbots shine and fail: they know the famous story from outside. Our 20-story corpus doesn't contain it. The agent says so, shows what it searched, and quotes the one thing it can: Moriarty is dead. No invention."
-- **Fallback:**
-  - Agent answers with content instead of refusing (self-check should drop unquoted claims; if not): press `Esc`, press `c` for the stored refusal, and say "the stored run shows the intended behaviour; this live run is a defect I will show in the eval report" (honest).
-  - Refusal is slow (LLM-written): replay; say "refusal text is cached for timing".
-  - Backup out-of-corpus question (no Holmes content at all, AC-03 example): `Who won the 2022 football World Cup?` Verified absent in the corpus by `rg -i "world cup" data/clean` (no hits; do not rely on this line, re-run `rg` before the show).
+### Step 4: Bare vs agent, and the verbatim-quote check (4:15-5:15)
 
-### Step 5: Bare LLM vs our agent, hallucination caught (5:15-6:30)  bare LIVE (terminal), agent REPLAY
+- **Exact question:** `What kind of snake killed Dr. Grimesby Roylott?` (same as step 0).
+- **Shown:** side by side, the bare **RECORDING** from step 0 (labelled) and the agent's finished g001 answer from step 0 (the live run, or the stored one if `c` was used, labelled). Then the live check in the terminal, which is the part that does not depend on trusting anyone:
+  1. `rg -F "It is a swamp adder!" data/clean/speckled-band.txt` prints the book line (checked on 2026-10-26: one hit): the agent's quote is a verbatim substring.
+  2. `rg -il "baskerville" data/clean` prints nothing (checked on 2026-10-26: no file): the bare answer set Roylott in a book that is not in the corpus.
+  Both commands take about 1 s. The board's `selfcheck: quotes verified n/n` row is shown next to the terminal.
+- **Said (about 2 sentences):** "The bare model's answer is fluent and wrong; the agent's answer is one sentence with a quote that you can find in the book with a one-second search. 'Verified' here means the quote is verbatim and lexically supports the claim, not that the claim is true; the check is mechanical, and I will say below what it does not cover."
+  One question, one run: not a rate. The measured comparison is on the next slide; on the three out-of-corpus and adversarial questions the bare model behaved as required on 1 of 3, the agent on 2 of 3 (answers-20261023-v3.md).
+- **Live or recording:** bare = recording; agent answer = the step 0 run; `rg` commands = live.
+- **Fallback ladder:** (1) terminal slow: run the first command only; (2) `c` for the stored agent run; (3) full recording from 4:15; (4) screenshot of the terminal output.
+- **Pass criterion (Tuesday):** both `rg` commands give the stated result on the demo laptop (path and file names correct, text file present offline); the bare recording and the agent answer are on screen together without a window-switch longer than 3 s.
 
-- **Question (same for both):** `Who saw the McCarthys quarrelling by Boscombe Pool, and what did she do afterwards?`
-- **Ground truth (verified, `boscombe-valley-mystery-0003`):**
-  > "A girl of fourteen, Patience Moran, who is the daughter of the lodge-keeper of the Boscombe Valley estate, was in one of the woods picking flowers."
-  > "She was so frightened by their violence that she ran away and told her mother when she reached home that she had left the two McCarthys quarrelling near Boscombe Pool"
-  Facts to check: Patience Moran; fourteen; daughter of the lodge-keeper; picking flowers; saw father and son quarrelling at the border of the wood; ran home and told her mother.
-- **Do:**
-  1. (5:15) Switch to the terminal. Run the bare-model command with the question (same model, no retrieval, no corpus). TTFT is expected a few seconds (short prompt, 3.8 s for qwen3:8b on 52 tokens in the spike) and then 4-7 tok/s. Let it write ~3 lines.
-  2. (5:45) While it writes, press Alt+Tab to the board, ask the same question; it replays the stored agent run: evidence cards with the Patience Moran quote appear within 2-3 s.
-  3. (6:05) Take any specific claim from the bare answer (a name, an age, or a quoted sentence in quotation marks) and check it in front of the audience:
-     `rg -F "<the invented phrase>" data/clean/` (about 1 s, no hits) and show the agent's own quote check: every agent quote `verified`.
-- **What the audience should see:** left, a fluent confident paragraph (terminal); right, the agent's board with quote cards and "verified" ticks; then the red-handed moment: the bare answer's specific claim does not exist anywhere in the text (`rg` returns nothing).
-- **Say:** "Same model, same laptop, same question. On the left it has no evidence; on the right it has to prove every sentence. Here the bare model says [read the specific wrong claim]. Let's search the 183,000 words: nothing. The agent's answer: Patience Moran, a fourteen-year-old picking flowers; here is the sentence; the self-check confirmed it."
-- **Risk and the honest handling:** whether the bare model errs on this question is **unknown until rehearsal** (a model may know this story). In rehearsal, record the bare output at temperature 0, seed 42 (deterministic setting used in the benchmarks) and write the wrong claim into section 5. If the bare model is right, do not stage a fake error. Use, in order: (a) ask the bare model for the verbatim sentence rather than a summary ("quote the exact sentence"), where invented quotes are likely; the substring check then fails; (b) use the Step 4 question on the bare model: it will tell the Reichenbach story with confidence from outside the corpus, which is ungrounded rather than hallucinated, and the presenter must call it exactly that.
-  Never present a result of one run as a general rate: say "one question, one run; the measured comparison is in the eval report" and point to the A/B table (numbers TBD, T-23).
-- **Fallback:**
-  - Bare model too slow (> 15 s to first token): play the recorded bare output (file from rehearsal) and say "recorded earlier on this laptop".
-  - Terminal problem: show a screenshot from the backup slide.
-  - Agent run fails: press `c`.
+### Step 5: Measurements slide (5:15-6:15)
 
-### Step 6: Close (6:30-7:00)
+- **Exact question:** none.
+- **Shown:** one slide with the numbers below and their caveats on the same slide. Every row names its file.
 
-- **Screen:** board with the last run still visible; then the single results slide.
-- **Say:** "What we measured: [A/B table: baseline RAG vs hybrid vs GraphRAG vs agent; numbers TBD until T-23/T-30, state them as measured, including the ones that are bad]. What we did not solve: [list from jury-faq]. Everything you saw ran offline on this laptop."
-- **Fallback:** if numbers are not final, show only the structure and say "the final report is in the repository" (no invented numbers, ever).
-
-### Segment 5b: where the agent guesses and where it proves (inside Step 3 or Step 6, about 40 s)  recording unless the Step 3 tool call is live
-
-- **Screen:** the Step 3 (alibi) or Step 2 (contradiction) board, with the provenance legend open (board-design 1.6) and the "Why?" panel on the finding.
-- **Do:** point at an `extracted` fact (chip "~", confidence shown), then at the `derived` finding (chip "="); click the finding to open its explanation: rule id, the facts used, the source quote of each. If the rehearsal produced a `conditional` finding, show its doubtful input.
-- **Say:** "Two kinds of statements on this board. The model guesses: it reads the story and extracts facts, with a confidence; it can be wrong. The rules prove: given those facts, a rule such as 'one person cannot be in two places at once' gives the same answer every time, and here is exactly which facts and quotes it used. If the proof leans on a shaky guess, the board says conditional. The honest limit: if the model misread the story, the rule faithfully proves something from the misreading; that is why every input shows its quote."
-- **Honesty:** the rule tests are deterministic and can be run on stage (`just test`, rules subset) only if they exist and are green by the freeze; otherwise do not mention them. Do not present a finding as true of the story, only as following from the stated facts.
-- **Cut:** first thing to drop if running late after Step 1 (saves 40 s); never claim "proof" in slides without the explanation panel on screen.
-- **Fallback:** if no `conditional` finding exists, skip it and say so rather than staging one.
-
-## 3. Time budget and cuts
-
-| Step | Start | Length | If running late |
+| What | Number | Caveat on the slide | File |
 |---|---|---|---|
-| 0 Opening | 0:00 | 0:35 | shorten to 15 s |
-| 1 Dog | 0:35 | 1:00 | **cut first** (saves 60 s); the router-path message moves into Step 2 |
-| 2 Contradiction | 1:35 | 1:30 | never cut |
-| 3 Alibi (MCP) | 3:05 | 1:20 | never cut (MCP requirement) |
-| 5b Guess vs prove | inside Step 3 | 0:40 (taken from the Step 3 wait, total stays 7:00) | cut first after Step 1 |
-| 4 Refusal | 4:25 | 0:50 | never cut (PRD: honest refusals) |
-| 5 Bare vs agent | 5:15 | 1:15 | cut step 3 sub-action (b) first |
-| 6 Close | 6:30 | 0:30 | 15 s minimum |
+| 12-question answer check, qwen3:4b-instruct, retrieval-only path | behaviour correct 8/12; answered and verified 5 of 10 answerable; gold chunk cited 5/10; gate-refused without LLM 2/12; first token 42.0 s, total 59.5 s | n=12, one run, no human judging, AI-written gold set, graph and MCP off, so this is not a test of the rules | `answers-20261023-v3.md` |
+| Control c042 (McCarthy vs gamekeeper, "following my father") | the rules do **not** flag it: gold says it is not a conflict of observed facts | regression test on the real quotes, not yet run on a real extracted graph; gold itself is low-confidence and a labelling decision for a human | `eval/golden/contradictions.jsonl`; `docs/symbolic-layer.md` 11.1 |
+| Retrieval pilot, hybrid RRF k=30, bge-m3 | hit@5 0.97 on 35 questions; the gold chunk is in the top 4 for 70 of 86 answerable questions (81%) | tuned on the same questions, so optimistic; pilot | `arms-20261023-080849.md`; `evidence-20261023-093201.md` |
+| Extraction pilot, qwen3:4b | strict F1 entities 0.55, claims 0.31, relations 0.18 on 12 chunks; 6.6% of qwen3:4b quotes are not verbatim (1 - 0.934; 7-21% across the six models) and are dropped or re-anchored | 12 chunks, AI-labelled gold, differences are noise | `REPORT.md` section 6 |
+| Precompute | the full-corpus extraction is 24-30 h of exclusive CPU (projection 29.7 h for qwen3:4b = 596 chunks x 179.7 s); it is run on **stronger hardware**, not on this laptop, and the finished graph is shipped to the laptop (state on the day: written in section 5) | disclosed on stage; this laptop only answers questions | `REPORT.md` section 7; `HANDOFF.md` section 3 |
 
-Cut order follows `docs/backlog.md` ("never cut: working demo, citations, honest refusals, quality measurements"). UI animations (A1-A8) can be turned off without changing this script (board-design 5).
+  Add to the slide only after Tuesday, from the actual runs: the contradiction precision/recall and the A/B table of `eval/run_eval.py` (it does not exist today). If they do not exist on Tuesday, the slide shows only the rows above and says "not yet measured".
+- **Said (about 2 sentences):** "These are pilot numbers on small sets that an AI wrote, so a difference of one question is noise: five of ten answerable questions answered and verified, retrieval puts the right chunk in the top four for about four in five. The rules do not flag the control case where two witnesses differ only about intent, and the graph itself is precomputed on stronger machines because extraction takes 24 to 30 hours on this CPU."
+- **Live or recording:** slide.
+- **Fallback ladder:** (1) skip the caveat column aloud but keep it on the slide; (2) n/a (no run); (3) n/a; (4) the same slide as a PDF.
+- **Pass criterion:** every number on the slide equals the cited file (a pre-show `rg` of each number against its file; list kept in section 5); the permission to precompute on other hardware has been asked of the organizers (ROADMAP, Sunday) and the answer is written in section 5, or the slide says "asked, no answer".
+
+### Step 6: Limits and close (6:15-7:00)
+
+- **Exact question:** none.
+- **Shown:** one slide, five limits and one sentence: (1) the real extracted graph and the real MCP over it were integrated only on Tuesday; (2) the gold sets were written by an AI and are not human-reviewed; (3) only 4 genuine R1 cases and 3 R2 cases exist in the corpus, so the rules are demonstrated, not statistically validated; (4) a small model: the answer prompts are short (1110 tokens) for speed; (5) "verified" means verbatim and lexically supported, not true. Close: "Everything you saw ran on this laptop with the network off; the graph was precomputed on other hardware."
+- **Said (about 2 sentences):** "What it does not do: it cannot tell you a quote is true, only that it is in the book and supports the sentence, and when the model misreads a story, the rules reason faithfully from the misreading. What it does do is show every step, every quote and every condition, so that you can check it in a second."
+- **Live or recording:** slide.
+- **Fallback ladder:** none needed; if late, say limits (2) and (5) only.
+- **Pass criterion:** finishes at or before 7:00 in all three rehearsals; no number on the slide that is not in section 5's checklist.
+
+## 3. Removed and why
+
+- **McCarthy vs Crowder rule step (DRAFT 1 step 2).** Gold c042 (Boscombe Valley) is a *consistent control*: both witnesses agree James went the same way with a gun; they differ only about whether he was deliberately following, which Crowder gives as his belief. The rules correctly do **not** flag it (symbolic-layer.md 11.1), so a step called "contradiction" would either show nothing or be a lie. It moves to the measurements slide (and to the FAQ) as the control the rules pass. Gold note: c042 is low-confidence and conflicts in spirit with g027, which treats the pair as a conflict between accounts; a human has to decide the label.
+- **Thor Bridge alibi step (DRAFT 1 step 3).** The expected `check_alibi` status was never recorded, the extraction and time normalisation for the story were unverified, and the quotes depend on the text's double spaces; the "late in the evening" death time is vague, so `unknown` was the likely result. It would have used the longest LLM wait of the demo for a result we could not predict. Its role (a real MCP call visible in ms) is taken by step 2.
+- **Dog in the night-time step (DRAFT 1 step 1)** and the **Reichenbach step**: replaced by the hook and the g047 refusal. Reichenbach stays a possible swap for step 3 only if Tuesday shows the gate refuses it without an LLM call.
+- **Segment 5b (guess vs prove)** is folded into the architecture slide and step 2.
 
 ## 4. Fallback ladder (applies to every step)
 
-1. Narrate over the trace: the waiting counter proves it is working (AC-12). Allowed up to 6 s of silence from the screen, 25 s on the LLM-writing phase.
-2. Press `c`: stored run, `REPLAY` badge. Say it out loud.
-3. Play the recorded full run (T-34), starting at the matching timestamp.
-4. Slides with screenshots of each step (last resort).
-Never: re-ask the same question hoping for a different answer on stage; blame the model; show an unverified quote as verified.
+1. Narrate over the trace. The waiting counter proves it is working. Allowed: 6 s of silence from the screen, 25 s in the LLM-writing phase (never longer than the architecture slide covers in step 1).
+2. Press `c`: stored run, badge `RECORDING`, say "this one is a stored run".
+3. Play the full recording at the matching timestamp (step start times as in section 0).
+4. Screenshot slides.
+Never: re-ask the same question hoping for a different answer; blame the model; show an unverified quote as verified; call a stored run live.
 
-## 5. Rehearsal log (to be filled; empty on purpose)
+## 5. Rehearsal plan and log
 
-| Run | Date | Step 1 | Step 2 | Step 3 (tool status, ms) | Step 4 | Step 5 bare error found? (quote the wrong claim) | Total | Interventions |
+**Run 0, Tuesday 2026-10-27 (integration day, target laptop, nothing else running):** measure every pass criterion above, three times each, and fill the log. Pick or reject the Reichenbach swap. Re-record the bare g001 transcript.
+
+**Rehearsal 1, Thursday 2026-10-29:** full run with a timer, all live parts live, recordings as recordings; record per-step times and every intervention. Fix wording and fallbacks. **Rehearsal 2, Thursday 2026-10-29 (second laptop or after a reboot):** same, and in addition force one failure per step (disconnect the tool, kill Ollama mid-prefill) to practise rungs 2-4. **Rehearsal 3, Friday 2026-10-30 morning, on the show laptop:** exact setup, offline, charger, thermal check; a clean run under 7:00 with no intervention is the go criterion (ROADMAP G4/G5). Also rehearse the 5-minute cut once.
+
+| Run | Date | Step 0 first trace row (s) | Step 1 g001 first token (s) | Step 2 R1 result, MCP ms, conditional? | Step 3 refusal, ms | Step 4 rg results | Total | Interventions |
 |---|---|---|---|---|---|---|---|---|
+| 0 | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
 | 1 | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 2 | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+| 3 | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
 
-Acceptance (AC-18/19): all scripted questions complete without manual fixes; the stored answers match on a second run. Required clean runs: TBD.
+Number checklist for the slides (each filled with the file hit): TBD.
 
-## 6. Data dependencies to verify before the freeze (blocking for this script)
+## 6. Dependencies to verify on Tuesday (blocking for step 2)
 
-0. Rules module (T-36), provenance badges and explanation panel (T-38) exist; otherwise segment 5b is dropped and the words "neuro-symbolic", "derived" and "proof" are not used on stage.
+1. `graph.sqlite` built from the real extraction, with Garcia, Scott Eccles, Baynes and Gregson and their events and quotes for Wisteria Lodge; the day of the two events resolved (hand-curated, disclosed).
+2. Real stdio MCP server over the graph (R-19) merged; otherwise the single-story FactBase server and the sentence "this server holds one story".
+3. A router path from the c001 question to the graph route (HANDOFF section 4, item 3).
+4. R1 on the real graph returns `violated`, conditional (the unit test uses the curated passage only).
+5. Stored runs, `c` key, `RECORDING` badge (R-02/R-03) merged; otherwise rungs 2 is replaced by rung 3.
+6. Permission on precompute on other hardware: asked of the organizers (ROADMAP); the stage statement is made regardless.
 
-1. Graph contains Person nodes for Grace Dunbar, James McCarthy, William Crowder, Patience Moran with anchors in the chunks quoted above (extraction quality is not measured yet; gold set is 12 chunks labelled by an agent, not a human).
-2. `check_alibi` returns anchors for Thor Bridge; time normalisation for "nine o'clock" / "late in the evening" exists (T-14 is P2, so possibly not).
-3. Refusal path works without an LLM call, or Step 4 is REPLAY.
-4. A contradiction detector exists (T-15, calling rule R1/R3) and finds the Crowder/James pair; otherwise Step 2 falls back to "show both quotes, agent compares" and the word "contradiction" is not claimed from the graph.
-5. `c` key, REPLAY badge, `cached` flag, bare-model command: requests filed in `docs/backlog.md`.
+## 7. Five-minute cut
 
-## Decisions of 2026-10-22 (customer)
+Use when the slot is shortened or rehearsal 2 runs over. Same steps, same fallbacks; only the lengths change.
 
-1. Every pre-recorded step is called a **recording** (not "live", not "replay of the agent") in slides, speech and the on-screen badge. Only steps that really run on the laptop during the talk may be called live.
-2. The "bare LLM vs agent" comparison uses a question on which the bare model **really** errs, found by running the bare model on candidate questions in advance and keeping the exact transcript. The error is never staged. If no candidate fails reliably, the comparison is dropped or replaced by the verbatim-quote check, and this is stated honestly.
+| Time | Content | Cut |
+|---|---|---|
+| 0:00-0:30 | Hook: bare RECORDING on g001, start the live agent question | none |
+| 0:30-1:00 | Architecture slide, 30 s; return to board at 0:50 for the answer | slide shortened to the three words |
+| 1:00-2:45 | Wisteria R1 (1:45): trace in ms, finding, Why panel with two quotes (Eccles, Baynes), conditional flag | show two of the four quotes; keep the hand-curated-day sentence |
+| 2:45-3:15 | Gate refusal g047 | none |
+| 3:15-4:00 | Bare vs agent merged with the check: skip replaying the bare recording (already seen at 0:00); run only the `rg -F "It is a swamp adder!"` check | second `rg` and the side-by-side dropped |
+| 4:00-4:40 | Measurements slide: only the 12-question row, c042, and precompute | retrieval and extraction pilot rows stay on the slide, not spoken |
+| 4:40-5:00 | Limits (2), (5) and the close sentence | other limits stay on the slide |
+
+Cut order inside the full version if running late: (1) step 5 spoken caveats, (2) the second `rg` in step 4, (3) the Why panel quotes beyond two. Never cut: step 2 (the rules and the MCP trace), step 3 (honest refusal), the "verified does not mean true" sentence.
