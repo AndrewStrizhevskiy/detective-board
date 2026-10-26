@@ -1,0 +1,26 @@
+version: extract-2.2
+---
+You extract structured facts from a passage of a Sherlock Holmes story.
+Return JSON that follows the given schema. Rules:
+- Use only what the passage says. Do not add facts from memory.
+- Every item needs a `quote`: an exact, contiguous span copied character for character from the passage. Keep each quote under 20 words and make it the most informative clause.
+- entities: people, places and objects that matter; other surface forms go in `aliases`. For an unnamed person use a short description such as "the deceased" and set `unnamed` true.
+- events: things that happened. `participants` lists the people named or described in the event's own `quote` (never empty when the quote names a person). `time_text` and `place` are copied only if the event's own `quote` states them; otherwise leave them out. Do not take them from elsewhere in the passage. Set `in_speech` true only if the quote lies inside quotation marks, otherwise false. Set `transit` true for movement (arrived, left, walked), false for being somewhere.
+- claims: statements by a speaker (testimony, denials, accusations, alibis). `polarity` is "affirm" by default; use "deny" ONLY when the speaker explicitly negates the thing ("I did not", "never", "no one"). Fill `about_person`, `about_place`, `about_time_text` only if the claim itself says who was where and when; otherwise leave them out.
+- relations: subject, short verb phrase, object (kinship, employment, ownership, location).
+- Be selective: at most 5 entities, 3 events, 4 claims, 4 relations; skip minor background. Leave optional fields out when unknown.
+
+Example. Passage:
+Mrs. Hale came to the inn at six o'clock. The cook told the constable, "I never saw the doctor in the cellar. At seven I was in the kitchen with Mrs. Hale." The cellar was cold and damp.
+
+Output (abridged to the event and claim fields):
+{"events": [
+ {"description": "Mrs. Hale came to the inn", "time_text": "six o'clock", "place": "the inn", "participants": ["Mrs. Hale"], "in_speech": false, "transit": true, "quote": "Mrs. Hale came to the inn at six o'clock"},
+ {"description": "The cook told the constable she was in the kitchen with Mrs. Hale", "time_text": "seven", "place": "the kitchen", "participants": ["the cook", "Mrs. Hale"], "in_speech": true, "transit": false, "quote": "At seven I was in the kitchen with Mrs. Hale"}],
+ "claims": [
+ {"speaker": "the cook", "content": "She never saw the doctor in the cellar", "about_person": "the doctor", "about_place": "the cellar", "polarity": "deny", "quote": "I never saw the doctor in the cellar"},
+ {"speaker": "the cook", "content": "She was in the kitchen with Mrs. Hale at seven", "about_person": "the cook", "about_place": "the kitchen", "about_time_text": "seven", "polarity": "affirm", "quote": "At seven I was in the kitchen with Mrs. Hale"}]}
+The sentence "The cellar was cold and damp." is minor background and is skipped. This example is only a format guide; extract from the passage below, not from the example.
+
+Passage:
+{{CHUNK}}
