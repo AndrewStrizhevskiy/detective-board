@@ -68,17 +68,29 @@ def _relative(t: str) -> tuple[int, str | None, str | None] | None:
 
 
 def normalise_time(
-    text: str | None, *, ref: TimeSpec | None = None, ref_event_id: str | None = None
+    text: str | None,
+    *,
+    ref: TimeSpec | None = None,
+    ref_event_id: str | None = None,
+    inherited: bool = False,
 ) -> TimeSpec | None:
     """`TimeSpec` for one time expression. `ref` is the time of the event a relative cue
-    ('the next morning') refers to; its day is used only when it is known."""
+    ('the next morning') refers to; its day is used only when it is known. `inherited` marks an
+    expression that is not in the event's own quote (repair step): always low, never exact."""
     if text is None or not text.strip():
         return None
     t = _fold(text)
     rel = _relative(t)
     tn = derive_time_norm(text)
     lo, hi, exact = tn.lo, tn.hi, tn.exact
-    low = tn.confidence == "low" or bool(_APPROX.search(t)) or bool(re.search(r"\bsince\b", t))
+    low = (
+        inherited
+        or tn.confidence == "low"
+        or bool(_APPROX.search(t))
+        or bool(re.search(r"\bsince\b", t))
+    )
+    if inherited:
+        exact = False
     day: int | None = None
     rel_kind: Any = None
     ref_id: str | None = None
@@ -112,6 +124,7 @@ class DayInput:
     text: str | None
     order: int  # position in the story (char offset); used only to pick a relative reference
     known_day: int | None = None  # curated day: kept, and usable as a relative reference
+    inherited: bool = False  # text not from the item's own quote: its day is never `high`
 
 
 @dataclass(frozen=True)
@@ -170,6 +183,8 @@ def resolve_days(items: Sequence[DayInput]) -> dict[str, DayResult]:
                 if last is not None
                 else DayResult(None, "low", "relative")
             )
+        if i.inherited and res.confidence == "high":
+            res = DayResult(res.day, "low", res.method, res.ref_event_id)
         if res.day is not None:
             last = (i.item_id, res.day)
         out[i.item_id] = res
@@ -255,11 +270,16 @@ def apply(store: Any, story: str) -> NormaliseReport:
     props = {r["id"]: json.loads(r["props_json"]) for r in rows}
     kind = {r["id"]: r["kind"] for r in rows}
     order = {r["id"]: i for i, r in enumerate(rows)}
+    inherited = {k for k in order if kind[k] == "event" and not props[k].get("time_text")}
     text = {
         k: props[k].get("time_text" if kind[k] == "event" else "about_time_text") for k in order
     }
+    for k in inherited:  # repair step: model time not found in the event's own quote
+        text[k] = props[k].get("time_text_inherited")
     known = {k: v[0] for (k, key), v in curated.items() if key == "story_day"}
-    days = resolve_days([DayInput(k, text[k], order[k], known.get(k)) for k in order])
+    days = resolve_days(
+        [DayInput(k, text[k], order[k], known.get(k), k in inherited) for k in order]
+    )
 
     def day_of(node_id: str) -> tuple[int | None, Confidence]:
         cur = curated.get((node_id, "story_day"))
@@ -273,7 +293,12 @@ def apply(store: Any, story: str) -> NormaliseReport:
             continue
         d = days[r["id"]]
         ref_id = d.ref_event_id if kind.get(d.ref_event_id or "") == "event" else None
-        t = normalise_time(text[r["id"]], ref=times.get(ref_id or ""), ref_event_id=ref_id)
+        t = normalise_time(
+            text[r["id"]],
+            ref=times.get(ref_id or ""),
+            ref_event_id=ref_id,
+            inherited=r["id"] in inherited,
+        )
         if (r["id"], "time") in curated:  # a curated TimeSpec wins, its day included
             times[r["id"]] = TimeSpec.model_validate(curated[(r["id"], "time")][0])
             continue

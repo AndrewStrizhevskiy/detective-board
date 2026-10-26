@@ -497,3 +497,39 @@ Implemented in `src/detective_board/symbolic/` (T-36), tests in `tests/symbolic/
   denial is about intent and is not a checkable proposition); Wisteria Lodge (gold c001) gives
   R1 `violated`, conditional, once the story day of the two events is curated (the text says "on
   the night of his death", which the day resolver does not read).
+
+### 11.2 Field grounding of extracted items (`extract/repair.py`, branch `feat/field-grounding`)
+
+Measured on qwen3:4b with prompt extract-2.1 over 64 cached Wisteria/Boscombe chunks (177 events,
+226 claims): `participants` empty in all events; `time_text` and `place` filled in all events and
+copied from the start of the chunk; `polarity` 'deny' in 222 of 226 claims; `about_person` filled in
+222. R1/R3 therefore found nothing on Wisteria Lodge (133 `DENIAL_NOT_MODELLED`, 0 events dated).
+
+`repair_extraction(extraction, chunk_text) -> (extraction, RepairReport)` (and `repair_items` on the
+item dicts of a `ChunkResult`) checks each structured field against the item's own quote and fixes
+it. It is deterministic and idempotent (a second pass changes nothing), needs no LLM, runs after
+parsing and quote grounding in `Extractor.extract_chunk` (`ExtractConfig.repair`, default on) and
+again in `extract.ingest.to_graph_input` for results that were not repaired. The raw cache is not
+touched and `REPAIR_VERSION` is not part of the cache key, so `just graph` and cache hits give
+repaired items. The model's original values stay in audit fields (`schema_v2.REPAIR_FIELDS`, not in
+the schema sent to Ollama, stripped from model output): `participants_model`, `in_speech_model`,
+`time_text_model`, `place_model`, `polarity_model`, `about_*_model`, plus `repair` (reason codes)
+and `repair_version`. Matching is on text folded like `graph/normalize.py` (casefold, possessives,
+punctuation, titles stripped), token-bounded.
+
+| Rule | What it does | Reason codes |
+|---|---|---|
+| R1 participants | Person entities (name, alias, or a surname unique among the chunk's persons) mentioned in the event's quote or description are added; pronouns and determiners never match. Model-provided names stay only if grounded the same way. | `PARTICIPANTS_ADDED`, `PARTICIPANT_UNGROUNDED_DROPPED` |
+| R2 polarity | 'deny' iff the claim's own quote has a negation cue (not, n't, never, no one, nobody, nothing, none, neither, nor, cannot, without, deny/denied, refuse/refused); else 'affirm'. A bare 'no' is not a cue ("no idea" is not a denial of a proposition). | `POLARITY_CHANGED` |
+| R3 in_speech | True iff the event's quote lies inside one double-quotation span of the chunk (curly and straight marks; a paragraph opening with a mark continues an open quote; a chunk whose first mark is a closing curly mark starts inside a quote; single quotes ignored). A quote not found in the chunk gives false. | `IN_SPEECH_CHANGED`, `IN_SPEECH_QUOTE_NOT_LOCATED` |
+| R4 time/place | `time_text` / `place` stay only if the expression appears in the event's quote or description. Otherwise they move to `time_text_inherited` / `place_inherited`. A time with no temporal cue, longer than 9 tokens or equal to the whole quote, and a place that is not a place entity, a locative noun or a capitalised name of the chunk are dropped (audit only). | `TIME_INHERITED`, `PLACE_INHERITED`, `TIME_NOT_TEMPORAL`, `PLACE_NOT_A_PLACE` |
+| R5 claim about_* | `about_person/about_place/about_time_text` stay only if they appear in the claim's quote or content; `about_person` also if it is the speaker of a first-person quote (I, me, my, we). Else null. | `ABOUT_PERSON_NOT_IN_QUOTE`, `ABOUT_PLACE_NOT_IN_QUOTE`, `ABOUT_TIME_NOT_IN_QUOTE` |
+
+Inherited values are context, not the event's own fact: the graph keeps `time_text_inherited` and
+`place_inherited` in the event props and the event node is `low` (`conf_reason` `inherited_context`);
+the `OCCURRED_AT` edge of an inherited place is `low` with `props.inherited`. `SqliteFactSource` and
+`normalise.apply` read the inherited text when `time_text` is empty, but the `TimeSpec` is always
+`low` and never `exact` (so R1 cannot report a definite overlap from it), and an inherited explicit
+date never gives a `high` story day. `GRAPH_BUILD_VERSION` is now 3.
+
+Evaluation: `uv run python scripts/eval/repair_eval.py CACHE.sqlite [...]` (copies the caches, no LLM).

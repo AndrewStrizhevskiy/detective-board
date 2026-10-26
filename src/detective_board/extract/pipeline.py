@@ -11,6 +11,7 @@ from detective_board.extract.cache import ExtractCache, cache_key
 from detective_board.extract.ground import ground_quote, normalise
 from detective_board.extract.llm import GenRequest, LLMClient
 from detective_board.extract.parse import parse_output, validate_items
+from detective_board.extract.repair import REPAIR_VERSION, repair_items
 
 PROMPT_DIR = Path(__file__).resolve().parents[3] / "prompts" / "extract"
 DEFAULT_PROMPT = PROMPT_DIR / "extract_v2_1.txt"
@@ -44,6 +45,7 @@ class ExtractConfig:
     temperature: float = 0.0
     fuzzy_threshold: float = 0.85
     keep_ungrounded: bool = False
+    repair: bool = True  # deterministic field grounding (extract/repair.py); not in the cache key
 
     def options(self) -> dict[str, Any]:
         """Generation options; part of the cache key."""
@@ -70,6 +72,7 @@ class ChunkResult:
     model: str = ""
     prompt_version: str = ""
     schema_version: str = schema_v2.SCHEMA_VERSION
+    repair: dict[str, Any] = field(default_factory=dict)  # RepairReport.to_dict() + version
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -77,7 +80,7 @@ class ChunkResult:
             "truncated": self.truncated, "cached": self.cached, "wall_s": self.wall_s,
             "error": self.error, "model": self.model, "prompt_version": self.prompt_version,
             "schema_version": self.schema_version, "grounding": self.grounding,
-            "dropped": self.dropped, "extraction": self.extraction,
+            "dropped": self.dropped, "repair": self.repair, "extraction": self.extraction,
         }  # fmt: skip
 
     def to_extraction(self) -> schema_v2.Extraction:
@@ -91,6 +94,12 @@ class ChunkResult:
                 for k, items in self.extraction.items()
             }
         )
+
+
+def apply_repair(res: ChunkResult, chunk_text: str) -> None:
+    """Repair `res.extraction` in place (idempotent); records the report in `res.repair`."""
+    res.extraction, rep = repair_items(res.extraction, chunk_text)
+    res.repair = {"version": REPAIR_VERSION, **rep.to_dict()}
 
 
 class Extractor:
@@ -169,4 +178,6 @@ class Extractor:
                 it["grounded"] = g.grounded
                 kept.append(it)
             res.extraction[kind] = kept
+        if self.cfg.repair:
+            apply_repair(res, text)
         return res

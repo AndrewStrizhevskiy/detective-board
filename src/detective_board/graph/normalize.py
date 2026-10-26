@@ -55,3 +55,8 @@ def normalize_name(name: str, kind: str = "person") -> str:
 
 def slugify(key: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", key).strip("-") or "x"
+
+
+def fold_text(text: str) -> str:
+    """Casefolded text with possessives, punctuation and typography stripped (for mentions)."""
+    return _base(text)

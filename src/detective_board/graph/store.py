@@ -27,7 +27,18 @@ from detective_board.symbolic.model import Anchor
 
 ENTITY_KINDS = ("person", "place", "item")
 # schema-v2 claim fields kept in the claim's props when a v2 Extraction is ingested (R-11)
-V2_CLAIM_FIELDS = ("about_person", "about_place", "about_time_text", "polarity")
+V2_CLAIM_FIELDS = (
+    "about_person",
+    "about_place",
+    "about_time_text",
+    "polarity",
+    # repair audit (extract/repair.py): the model's own values and the reason codes
+    "polarity_model",
+    "about_person_model",
+    "about_place_model",
+    "about_time_text_model",
+    "repair",
+)
 _PREFIX = {"person": "p", "place": "pl", "item": "i"}
 _ALL_KINDS = ("person", "place", "item")
 
@@ -495,7 +506,16 @@ class GraphStore:
             if e.place:
                 place, w = self._ref(ctx, e.place, ("place",), a, create=True)
                 weak |= w
-            tn = derive_time_norm(e.time_text) if e.time_text else None
+            # Values the repair step could not find in the event's own quote (chunk-level context
+            # copied by the model): kept, but always LOW confidence and never an exact time.
+            inh_time = getattr(e, "time_text_inherited", None) if not e.time_text else None
+            inh_place = getattr(e, "place_inherited", None) if not place else None
+            if inh_place:
+                place, _ = self._ref(ctx, inh_place, ("place",), a, create=False)
+            weak |= bool(inh_time) or bool(place and inh_place)
+            tn = derive_time_norm(e.time_text or inh_time) if (e.time_text or inh_time) else None
+            if tn is not None and inh_time:
+                tn = tn.model_copy(update={"exact": False, "confidence": "low"})
             reported = getattr(e, "in_speech", False) or any(
                 s <= a.rel_start and a.rel_end <= t for s, t in claim_spans
             )
@@ -505,16 +525,32 @@ class GraphStore:
                 "time_norm": tn.model_dump(mode="json") if tn else None,
                 "narrator": not reported,
             }
+            if inh_time:
+                props["time_text_inherited"] = inh_time
+            if inh_place:
+                props["place_inherited"] = inh_place
+            if getattr(e, "repair_version", None):
+                props["repair"] = list(getattr(e, "repair", []))
             if (transit := getattr(e, "transit", None)) is not None:
                 props["transit"] = transit
             why = "ambiguous_anchor" if a.weak else ("weak_reference" if weak else "")
+            if weak and not why:
+                why = "inherited_context"
             nid = f"e:{cid}:{i}"
             self._insert_node(ctx, nid, "event", props, a, weak, why)
             ctx.n_events += 1
             for pid in people:
                 self._edge(ctx, pid, nid, "PARTICIPATED_IN", a, weak=False)
             if place:
-                self._edge(ctx, nid, place, "OCCURRED_AT", a, weak=False)
+                self._edge(
+                    ctx,
+                    nid,
+                    place,
+                    "OCCURRED_AT",
+                    a,
+                    weak=bool(inh_place),
+                    props={"inherited": True} if inh_place else None,
+                )
 
     def _ingest_relations(self, ctx: _Ctx, ex: Extraction) -> None:
         for i, r in enumerate(ex.relations):
