@@ -6,10 +6,10 @@ set -u
 cd "$(dirname "$0")/.."
 MODEL="${1:-qwen3:4b}"
 N="${2:-10}"
-STORIES=(boscombe-valley-mystery silver-blaze black-peter blue-carbuncle reigate-squires \
+STORIES=(${ORDER:-boscombe-valley-mystery silver-blaze black-peter blue-carbuncle reigate-squires \
   red-headed-league abbey-grange man-with-the-twisted-lip thor-bridge crooked-man \
   norwood-builder speckled-band naval-treaty priory-school scandal-in-bohemia \
-  resident-patient beryl-coronet wisteria-lodge copper-beeches musgrave-ritual)
+  resident-patient beryl-coronet wisteria-lodge copper-beeches musgrave-ritual})
 mkdir -p data/cache data/graph
 for s in "${STORIES[@]:0:$N}"; do
   echo "== story $s $(date +%H:%M)"
