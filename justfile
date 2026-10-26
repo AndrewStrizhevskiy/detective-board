@@ -62,8 +62,15 @@ eval *args:
 
 # Web UI + API on http://127.0.0.1:8000. Use `just run --fake` for canned demo data without Ollama.
 # Full wiring to the real index/graph/MCP: see docs/api.md and docs/HANDOFF.md (open items).
+# Unless --fake is among the args, scripts/preflight.py first checks Ollama and the models.
 run *args:
-    uv run python -m detective_board.api {{args}}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case " {{args}} " in
+        *" --fake "*) ;;
+        *) uv run python scripts/preflight.py ;;
+    esac
+    exec uv run python -m detective_board.api {{args}}
 
 # Spike benchmarks (exist today). Heavy: needs Ollama; stop other model users first.
 bench which="llm":

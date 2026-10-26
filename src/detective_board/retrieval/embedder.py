@@ -65,14 +65,18 @@ class OllamaEmbedder:
         batch_size: int = 16,
         cache: EmbeddingCache | None = None,
         timeout: float = 120.0,
+        keep_alive: str | None = None,
     ):
         self.cfg, self.base_url, self.batch_size = cfg, base_url.rstrip("/"), batch_size
-        self.cache, self.timeout = cache, timeout
+        self.cache, self.timeout, self.keep_alive = cache, timeout, keep_alive
 
     def _post(self, inputs: list[str]) -> list[list[float]]:
+        payload: dict[str, object] = {"model": self.cfg.model, "input": inputs}
+        if self.keep_alive:
+            payload["keep_alive"] = self.keep_alive
         req = urllib.request.Request(
             f"{self.base_url}/api/embed",
-            data=json.dumps({"model": self.cfg.model, "input": inputs}).encode(),
+            data=json.dumps(payload).encode(),
             headers={"Content-Type": "application/json"},
         )
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:  # noqa: S310

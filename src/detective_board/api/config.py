@@ -31,12 +31,14 @@ class ApiConfig:
     web_dir: str = "web"
     # models; the embedding identity must match the one the index was built with
     ollama_host: str = "http://localhost:11434"
-    llm_model: str = "qwen3:8b"
+    llm_model: str = "qwen3:4b-instruct"  # ADR-0008
     embed_model: str = "bge-m3"  # same as index.build.CONFIG
     embed_dim: int = 1024
     embed_doc_prefix: str = ""
     embed_query_prefix: str = ""
-    num_ctx: int | None = None
+    num_ctx: int | None = 4096  # pinned for the answer path (prompt cap 1200 tokens + answer)
+    keep_alive: str = "30m"  # Ollama keep_alive for the answer and embedding models
+    warmup: bool = True  # start-up warm-up (real mode, `python -m detective_board.api` only)
     llm_timeout_s: float = 300.0
     # limits
     max_body_bytes: int = 16 * 1024

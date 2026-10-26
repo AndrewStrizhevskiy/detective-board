@@ -49,7 +49,8 @@ just test         # fast deterministic tests, no Ollama
 just lint         # ruff
 just index         # data/index/db.sqlite (retrieval index)
 just graph         # data/graph/graph.sqlite from the extraction cache, then normalise
-just run           # API + UI; reads exactly those two files (`just run --fake` needs none)
+just run           # API + UI; preflight checks Ollama and models first (`just run --fake` needs neither)
+just test-web      # UI logic tests (node)
 just bench llm    # spike benchmark; needs a running Ollama and pulled models; also: embed, retrieval, rss
 ```
 

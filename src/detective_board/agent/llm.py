@@ -82,6 +82,7 @@ class OllamaLLM:
         *,
         think: bool = False,
         num_ctx: int | None = None,
+        keep_alive: str | None = None,
         timeout: float = 300.0,
         transport: Transport | None = None,
     ) -> None:
@@ -89,12 +90,17 @@ class OllamaLLM:
         self.host = host.rstrip("/")
         self.think = think
         self.num_ctx = num_ctx
+        self.keep_alive = keep_alive  # Ollama top-level `keep_alive`, e.g. "30m"
         self._post = transport or _urllib_transport(timeout)
 
-    def _options(self, temperature: float, seed: int | None) -> dict[str, Any]:
+    def _options(
+        self, temperature: float, seed: int | None, num_predict: int | None = None
+    ) -> dict[str, Any]:
         opts: dict[str, Any] = {"temperature": temperature}
         if seed is not None:
             opts["seed"] = seed
+        if num_predict is not None:
+            opts["num_predict"] = num_predict
         if self.num_ctx:
             opts["num_ctx"] = self.num_ctx
         return opts
@@ -117,25 +123,34 @@ class OllamaLLM:
                 return
 
     def chat(
-        self, messages: Sequence[Message], *, temperature: float = 0.0, seed: int | None = None
+        self,
+        messages: Sequence[Message],
+        *,
+        temperature: float = 0.0,
+        seed: int | None = None,
+        num_predict: int | None = None,
     ) -> Iterator[str]:
-        payload = {
+        payload: dict[str, Any] = {
             "model": self.model,
             "messages": list(messages),
             "stream": True,
             "think": self.think,
-            "options": self._options(temperature, seed),
+            "options": self._options(temperature, seed, num_predict),
         }
+        if self.keep_alive:
+            payload["keep_alive"] = self.keep_alive
         return self._stream("/api/chat", payload, "message")
 
     def generate(
         self, prompt: str, *, temperature: float = 0.0, seed: int | None = None
     ) -> Iterator[str]:
-        payload = {
+        payload: dict[str, Any] = {
             "model": self.model,
             "prompt": prompt,
             "stream": True,
             "think": self.think,
             "options": self._options(temperature, seed),
         }
+        if self.keep_alive:
+            payload["keep_alive"] = self.keep_alive
         return self._stream("/api/generate", payload, "response")

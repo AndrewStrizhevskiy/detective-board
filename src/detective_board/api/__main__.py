@@ -30,7 +30,9 @@ def main(argv: list[str] | None = None) -> None:
 
     from detective_board.api.app import build_app  # noqa: PLC0415
 
-    uvicorn.run(build_app(cfg), host=cfg.host, port=cfg.port, log_level="info")
+    app = build_app(cfg)
+    app.state.warmup.start()  # background, advisory; skipped in fake mode or warmup=false
+    uvicorn.run(app, host=cfg.host, port=cfg.port, log_level="info")
 
 
 if __name__ == "__main__":

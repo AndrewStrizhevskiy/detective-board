@@ -438,3 +438,19 @@ def test_derived_graph_edge_carries_explanation():
     assert edge["provenance"] == "derived" and edge["explanation"] == _expl("R2")
     plain = run(make_agent(FakeLLM(GOOD), graph=FakeGraph()), "How is Roylott connected to Helen?")
     assert "explanation" not in next(e for e in plain if e.type == "graph_results").edges[0]
+
+
+def test_ollama_keep_alive_and_num_predict():
+    seen = []
+
+    def transport(url, payload):
+        seen.append(payload)
+        yield '{"message":{"content":"a"},"done":true}'
+
+    llm = OllamaLLM("m", transport=transport, keep_alive="30m")
+    list(llm.chat([{"role": "user", "content": "x"}], num_predict=1))
+    list(llm.generate("p"))
+    assert all(p["keep_alive"] == "30m" for p in seen)
+    assert seen[0]["options"]["num_predict"] == 1
+    list(OllamaLLM("m", transport=transport).chat([{"role": "user", "content": "x"}]))
+    assert "keep_alive" not in seen[-1]

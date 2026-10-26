@@ -202,3 +202,32 @@ def test_subgraph_derived_edge_exposes_explanation():
     g.conn.execute("UPDATE g_edge SET provenance='extracted'")
     (e,) = graph_view.subgraph(g, "Helen Stoner", 1, story=None, max_nodes=50)["edges"]
     assert "explanation" not in e
+
+
+def test_config_defaults_and_llm_options(client):
+    assert ApiConfig().llm_model == "qwen3:4b-instruct"
+    d = client.get("/api/config").json()
+    assert d["llm_options"] == {"num_ctx": 4096, "keep_alive": "30m"}
+
+
+def test_health_mcp_and_warm_fields(client, tmp_path):
+    d = client.get("/api/health").json()
+    assert d["mcp"]["configured"] is True and d["mcp"]["mode"] in ("in-process", "fake")
+    assert d["warm"]["state"] == "skipped"
+    store, _ = fixture.build_store(str(tmp_path / "i.sqlite"))
+    store.close()
+    cfg = _real_cfg(tmp_path)  # index only, no graph file: no rule tools
+    with TestClient(build_app(cfg, ollama_probe=lambda: MODELS), base_url="http://localhost") as c:
+        m = c.get("/api/health").json()["mcp"]
+        assert m["mode"] == "none" and m["server"] is None
+    fixture.build_graph(str(tmp_path / "g.sqlite")).close()
+    with TestClient(build_app(cfg, ollama_probe=lambda: MODELS), base_url="http://localhost") as c:
+        m = c.get("/api/health").json()["mcp"]
+        assert m == {
+            "configured": True,
+            "mode": "in-process",
+            "server": "timeline-alibi[in-process]",
+        }
+    cfg2 = _real_cfg(tmp_path, facts_path="f.json")
+    with TestClient(build_app(cfg2, ollama_probe=lambda: MODELS), base_url="http://localhost") as c:
+        assert c.get("/api/health").json()["mcp"]["mode"] == "stdio"
