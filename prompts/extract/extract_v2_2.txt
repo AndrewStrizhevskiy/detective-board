@@ -13,13 +13,19 @@ Return JSON that follows the given schema. Rules:
 Example. Passage:
 Mrs. Hale came to the inn at six o'clock. The cook told the constable, "I never saw the doctor in the cellar. At seven I was in the kitchen with Mrs. Hale." The cellar was cold and damp.
 
-Output (abridged to the event and claim fields):
-{"events": [
+Output:
+{"entities": [
+ {"name": "Mrs. Hale", "type": "person", "aliases": [], "quote": "Mrs. Hale"},
+ {"name": "the cook", "type": "person", "aliases": [], "quote": "The cook"},
+ {"name": "the inn", "type": "place", "aliases": [], "quote": "the inn"}],
+ "events": [
  {"description": "Mrs. Hale came to the inn", "time_text": "six o'clock", "place": "the inn", "participants": ["Mrs. Hale"], "in_speech": false, "transit": true, "quote": "Mrs. Hale came to the inn at six o'clock"},
  {"description": "The cook told the constable she was in the kitchen with Mrs. Hale", "time_text": "seven", "place": "the kitchen", "participants": ["the cook", "Mrs. Hale"], "in_speech": true, "transit": false, "quote": "At seven I was in the kitchen with Mrs. Hale"}],
  "claims": [
  {"speaker": "the cook", "content": "She never saw the doctor in the cellar", "about_person": "the doctor", "about_place": "the cellar", "polarity": "deny", "quote": "I never saw the doctor in the cellar"},
- {"speaker": "the cook", "content": "She was in the kitchen with Mrs. Hale at seven", "about_person": "the cook", "about_place": "the kitchen", "about_time_text": "seven", "polarity": "affirm", "quote": "At seven I was in the kitchen with Mrs. Hale"}]}
+ {"speaker": "the cook", "content": "She was in the kitchen with Mrs. Hale at seven", "about_person": "the cook", "about_place": "the kitchen", "about_time_text": "seven", "polarity": "affirm", "quote": "At seven I was in the kitchen with Mrs. Hale"}],
+ "relations": [
+ {"subject": "the cook", "predicate": "spoke to", "object": "the constable", "quote": "The cook told the constable"}]}
 The sentence "The cellar was cold and damp." is minor background and is skipped. This example is only a format guide; extract from the passage below, not from the example.
 
 Passage:
