@@ -52,9 +52,12 @@ from the shard's final report: it decides the plan in section 4.
 
 ## 3. Quality check of the prompt on the 12 gold chunks (30-60 minutes, before the long run)
 
-`scripts/server_gold12.sh` (if present on your commit; see `docs/spike/results/gold12-*.md` afterwards)
-runs both prompts (v2.0, v2.1) with qwen3:4b and qwen3:4b-instruct on the 12 hand-labelled chunks and prints
-one comparison table. Pick the prompt/model with the best claims and relations numbers that keeps JSON
+```bash
+just gold12          # or: scripts/server_gold12.sh   (models x prompts; resumable; FORCE=1 reruns)
+```
+It runs both prompts (v2.0, v2.1) with qwen3:4b and qwen3:4b-instruct on the 12 hand-labelled chunks, prints each
+command it runs and one comparison table, and writes `docs/spike/results/gold12-<stamp>.md` (the scorer is
+`scripts/spike/score_pipeline.py`; options in `docs/team/README.md`). Pick the prompt/model with the best claims and relations numbers that keeps JSON
 validity at 100% and quote grounding at or above 0.9. Defaults on the laptop were qwen3:4b and prompt v2.1
 (prompt changes alter the cache key; if you change the default prompt or model, tell the team BEFORE running
 the full corpus, because every shard must use the same choice).
@@ -84,8 +87,8 @@ something is wrong (CPU fallback, another process on the GPU): check `ollama ps`
 uv run python scripts/merge_extract_cache.py merge data/cache/extract-cache.sqlite \
     data/cache/extract-cache-qwen3_4b-shard*.sqlite --model qwen3:4b      # add --dry-run first
 uv run python scripts/merge_extract_cache.py count data/cache/extract-cache.sqlite    # expect 596
-scripts/run_extraction_priority.sh qwen3:4b 20      # all cache hits: builds data/graph/graph.sqlite (no model calls)
-uv run python -m detective_board.extract.normalise data/graph/graph.sqlite
+just graph                                           # merges nothing, runs scripts/run_extraction_priority.sh (all cache hits,
+                                                     # no model calls), builds data/graph/graph.sqlite, then normalises it
 ```
 Sanity numbers to write into the report: chunks extracted, items kept and dropped (and why), share of events
 with a time, share of claims with a proposition, stories with zero events.

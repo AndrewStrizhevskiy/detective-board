@@ -3,6 +3,7 @@
 - `../../CONTRIBUTING.md`: setup, branches, commits, PR rules, zones, what not to commit, tests.
 - `ASSIGNMENTS.md`: four work packages (A extraction on strong hardware, B UI polish and e2e, C eval and human review, D run/package/present) and the orchestrator's focus. Deadline 2026-10-27 18:00, freeze 2026-10-28.
 - `models.md`: exact Ollama tags and digests; cache key parts that must match.
+- `SERVER_RUNBOOK.md`: step-by-step session plan for the GPU server (environment, determinism check, gold-12 quality check, full run, merge, graph build, what to bring back).
 
 ## Sharded extraction (Package A tools)
 
