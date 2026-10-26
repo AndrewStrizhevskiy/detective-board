@@ -497,3 +497,126 @@ Implemented in `src/detective_board/symbolic/` (T-36), tests in `tests/symbolic/
   denial is about intent and is not a checkable proposition); Wisteria Lodge (gold c001) gives
   R1 `violated`, conditional, once the story day of the two events is curated (the text says "on
   the night of his death", which the day resolver does not read).
+
+### 11.2 Field grounding of extracted items (`extract/repair.py`, branch `feat/field-grounding`)
+
+Measured on qwen3:4b with prompt extract-2.1 over 64 cached Wisteria/Boscombe chunks (177 events,
+226 claims): `participants` empty in all events; `time_text` and `place` filled in all events and
+copied from the start of the chunk; `polarity` 'deny' in 222 of 226 claims; `about_person` filled in
+222. R1/R3 therefore found nothing on Wisteria Lodge (133 `DENIAL_NOT_MODELLED`, 0 events dated).
+
+`repair_extraction(extraction, chunk_text) -> (extraction, RepairReport)` (and `repair_items` on the
+item dicts of a `ChunkResult`) checks each structured field against the item's own quote and fixes
+it. It is deterministic and idempotent (a second pass changes nothing), needs no LLM, runs after
+parsing and quote grounding in `Extractor.extract_chunk` (`ExtractConfig.repair`, default on) and
+again in `extract.ingest.to_graph_input` for results that were not repaired. The raw cache is not
+touched and `REPAIR_VERSION` is not part of the cache key, so `just graph` and cache hits give
+repaired items. The model's original values stay in audit fields (`schema_v2.REPAIR_FIELDS`, not in
+the schema sent to Ollama, stripped from model output): `participants_model`, `in_speech_model`,
+`time_text_model`, `place_model`, `polarity_model`, `about_*_model`, plus `repair` (reason codes)
+and `repair_version`. Matching is on text folded like `graph/normalize.py` (casefold, possessives,
+punctuation, titles stripped), token-bounded.
+
+| Rule | What it does | Reason codes |
+|---|---|---|
+| R1 participants | Person entities (name, alias, or a surname unique among the chunk's persons) mentioned in the event's quote or description are added; pronouns and determiners never match. Model-provided names stay only if grounded the same way. | `PARTICIPANTS_ADDED`, `PARTICIPANT_UNGROUNDED_DROPPED` |
+| R2 polarity | 'deny' iff the claim's own quote has a negation cue (not, n't, never, no one, nobody, nothing, none, neither, nor, cannot, without, deny/denied, refuse/refused); else 'affirm'. A bare 'no' is not a cue ("no idea" is not a denial of a proposition). | `POLARITY_CHANGED` |
+| R3 in_speech | True iff the event's quote lies inside one double-quotation span of the chunk (curly and straight marks; a paragraph opening with a mark continues an open quote; a chunk whose first mark is a closing curly mark starts inside a quote; single quotes ignored). A quote not found in the chunk gives false. | `IN_SPEECH_CHANGED`, `IN_SPEECH_QUOTE_NOT_LOCATED` |
+| R4 time/place | `time_text` / `place` stay only if the expression appears in the event's quote or description. Otherwise they move to `time_text_inherited` / `place_inherited`. A time with no temporal cue, longer than 9 tokens or equal to the whole quote, and a place that is not a place entity, a locative noun or a capitalised name of the chunk are dropped (audit only). | `TIME_INHERITED`, `PLACE_INHERITED`, `TIME_NOT_TEMPORAL`, `PLACE_NOT_A_PLACE` |
+| R5 claim about_* | `about_person/about_place/about_time_text` stay only if they appear in the claim's quote or content; `about_person` also if it is the speaker of a first-person quote (I, me, my, we). Else null. | `ABOUT_PERSON_NOT_IN_QUOTE`, `ABOUT_PLACE_NOT_IN_QUOTE`, `ABOUT_TIME_NOT_IN_QUOTE` |
+
+Inherited values are context, not the event's own fact: the graph keeps `time_text_inherited` and
+`place_inherited` in the event props and the event node is `low` (`conf_reason` `inherited_context`);
+the `OCCURRED_AT` edge of an inherited place is `low` with `props.inherited`. `SqliteFactSource` and
+`normalise.apply` read the inherited text when `time_text` is empty, but the `TimeSpec` is always
+`low` and never `exact` (so R1 cannot report a definite overlap from it), and an inherited explicit
+date never gives a `high` story day. `GRAPH_BUILD_VERSION` is now 3.
+
+Evaluation: `uv run python scripts/eval/repair_eval.py CACHE.sqlite [...]` (copies the caches, no LLM).
+
+### 11.3 Targeted presence pass (`extract/presence.py`, branch `feat/presence-pass`)
+
+**Status: written and tested with canned model output only. The quality of the extraction is
+UNMEASURED until `scripts/server_presence.sh` has run on the GPU server.** Nothing below says that a
+model finds these facts; it says what happens to them if it does.
+
+Why. 11.2 showed that the generic extraction (extract-2.1, qwen3:4b) gives R1/R3 no event with a clock
+time of its own, no story day, and claims that are rarely a usable "who was where when". The second
+pass asks one narrow question per chunk: *a named person was / went / stayed / was seen at a place at a
+time*, including what a witness says about it and denials. Output is at most 6 facts, so a 7-8B model
+(`qwen3:8b`, `qwen3:4b-instruct`) can run it over all 596 chunks quickly.
+
+Pieces. `extract/presence_schema.py` (`PresenceFact`: person, place, time_text, day_text, polarity,
+source, speaker, quote; `PresenceExtraction`; Ollama `format` schema, refs inlined, `maxItems` 6;
+schema version `presence-1`), `prompts/extract/presence_v1.txt` (version `presence-1`, worked example on
+an invented passage: narrator fact, witness statement, denial), `extract/presence.py` (grounding,
+`PresenceExtractor`, runner), `GraphStore.ingest_presence`, `normalise.assign_text_days`,
+`scripts/spike/presence_eval.py`, `scripts/server_presence.sh`. The cache key holds the chunk text,
+model, prompt version, schema version and generation options (`ExtractCache`, own file
+`data/cache/presence-cache.sqlite`); grounding runs after the cache, so it can change without new
+model calls. Runner: `python -m detective_board.extract.presence --model M --chunks data/chunks.jsonl
+[--story S ...] [--limit N] --cache C --graph-db G [--out F.jsonl] [--lenient] [--no-normalise]`; the
+report has the same style as `extract.run` (valid JSON rate, kept/dropped by reason, quote grounding,
+seconds per chunk) plus `facts_model`, `facts_kept`, `fact_survival_rate`.
+
+Deterministic grounding (no LLM; reuses `ground.py`, `repair.py` helpers and `graph/normalize.py`):
+
+| Field | Kept only if | Else |
+|---|---|---|
+| quote | grounded in the chunk (exact or fuzzy, rewritten to the chunk's characters), at most 500 characters | fact dropped (`quote_not_grounded`, `quote_too_long`) |
+| person | a proper name (no pronoun, no description) found in the quote: full name, a known alias, or a surname no other known person of the story shares; resolved to the graph's canonical name when the story is in the graph (`known_from_graph`) | dropped (`PERSON_NOT_A_NAME`, `PERSON_NOT_IN_QUOTE`) |
+| place | found in the quote; not deictic or possessive ("my door", "there", "his home"); a place the repair helper accepts, or a noun phrase right after a locative preposition ("in the conservatory") | dropped (`PLACE_DEICTIC`, `PLACE_NOT_A_PLACE`, `PLACE_NOT_IN_QUOTE`) |
+| time_text | a temporal expression (`repair._is_time_expression`) found in the quote | dropped (`TIME_NOT_TEMPORAL`, `TIME_NOT_IN_QUOTE`) |
+| day_text | found in the quote | nulled (`DAY_NOT_IN_QUOTE`) |
+| source | decided by the chunk's quotation marks (`repair._ChunkIndex.in_speech`), not by the model | `SOURCE_CHANGED` is recorded |
+| polarity | `deny` iff the model says deny AND the quote has a negation cue | dropped (`POLARITY_UNCLEAR`): a cue in an `affirm` quote ("I said that I had not") costs recall on purpose |
+| speaker | speech only, a name found in the chunk text | nulled |
+
+Duplicates collapse and the first 6 facts are kept. The model's original values stay in
+`GroundedFact.model_values`. `--lenient` keeps person/place/time/day values that are NOT in the quote
+and lists them in `context`; such facts are LOW and never exact. It is for comparing against strict, not
+a default.
+
+Graph. `GraphStore.ingest_presence(chunk, facts)` is independent of `ingest`: node ids are
+`e:<chunk>:p<i>` and `c:<chunk>:p<i>`, and the set is replaced as a whole (unchanged input is a no-op,
+hash in `g_meta` key `presence:<chunk>`). A generic re-ingest of the chunk purges the presence nodes too,
+so run the presence pass after the generic graph build (`GRAPH_BUILD_VERSION` is unchanged: the generic
+logic did not change). An affirmed fact is an event: person PARTICIPATED_IN, place OCCURRED_AT, `narrator`
+from the source, `time_norm` from `normalise_time` on its own `time_text` (exact only for an explicit
+clock time or noon), `occurrence` = chunk + quote span + person. Facts of one person from one quote
+share an occurrence, so R1 skips that pair (`skipped_same_occurrence`): "left Hatherley ... walked down to
+the Pool" is one sentence, not two places at 15:00 (the test shows the false R1 violation that appears
+without the guard). A motion verb in the quote (`MOTION_VERBS`), a surname-only match to an existing
+person, or any `context` field make the node LOW. A fact said in speech by a named speaker also becomes a
+claim (ASSERTS speaker, ABOUT person) with the proposition fields (`about_person`, `about_place`,
+`about_time_text`, `polarity`); `normalise.apply` turns an affirmed one into a `PresenceProp`. A denial
+is a claim only, never an event; R3 still reports it `DENIAL_NOT_MODELLED` (no negative proposition
+kind exists). A narrator denial has no asserter and is recorded in `g_dropped` (`denial_without_speaker`).
+
+Story day (HEURISTIC). The text rarely gives a calendar date, so R1/R3 would stay `unknown`.
+`normalise.assign_text_days`: presence facts of one story whose `day_text` has the same key
+(`day_key`: casefolded, punctuation, leading on/in/during/at/of and "very" removed; "that night" and
+"that very night" match, "that night" and "the night" do not) get the same synthetic story day
+(`TEXT_DAY_BASE` + n in narration order, far from real dates), always `low`. Order of precedence: a
+curated day, then an explicit date or weekday found by `resolve_days` (these keep working and stay
+`high` for a date), then this heuristic. Two different nights called "that night" are not told apart,
+so every finding resting on this day is conditional. `NORMALISER_VERSION` is 2.
+
+Evaluation without a model: `uv run python scripts/spike/presence_eval.py PRED.jsonl [...]`. The gold is
+built from `eval/extraction_gold/*.json` events (a named participant, a place, a time) plus the quotes
+of c001, c003, c038, c043 and three hand-read Boscombe items. A gold item is `strict` when person, place
+and time all occur in its own quote. Of 20 items only 4 are strict, because the gold events were
+labelled with chunk-level places and the contradiction quotes use pronouns ("He had been there since
+one o'clock"); the labels are AI-written and unreviewed. The score reports recall by quote overlap and
+with all three fields, precision on chunks that have gold (a lower bound: the gold is not exhaustive),
+fact survival after grounding, and quote grounding.
+
+What the tests prove (`tests/presence/`, fake client, quotes verbatim from `data/chunks.jsonl`):
+runner, cache and resume; every grounding rule; ingest, idempotence and purge; the day heuristic; R1
+`violated`, conditional, with both verbatim quotes for Wisteria Lodge (gold c001) through
+`find_contradictions`; no finding for the Boscombe McCarthy control (gold c042). What they do not
+prove: that any model produces these facts. The c001 test needs `--lenient`: its two sentences ("He
+apologised ... nearly one o'clock", "He had been there since one o'clock") name neither the person nor
+the place, and the second chunk never mentions Oxshott Common, so strict grounding drops both and the
+same input without `--lenient` gives no finding (also tested). With strict grounding c001 needs
+discourse context that this pass deliberately does not use.

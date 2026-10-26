@@ -29,7 +29,10 @@ def priority_stories(path: Path = PRIORITY_SH) -> list[str]:
     m = re.search(r"STORIES=\((.*?)\)", text, re.S)
     if not m:
         raise ValueError(f"no STORIES=(...) array in {path}")
-    return m.group(1).replace("\\", " ").split()
+    body = m.group(1).replace("\\", " ")
+    # the runner allows `STORIES=(${ORDER:-<default list>})`: the default list is the truth
+    body = re.sub(r"^\s*\$\{ORDER:-", "", body.strip())
+    return body.rstrip("}").split()
 
 
 def chunk_counts(path: Path = CHUNKS) -> Counter:

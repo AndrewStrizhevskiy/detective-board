@@ -10,7 +10,7 @@ from typing import Any, Literal
 
 from pydantic import ValidationError
 
-from detective_board.extract.schema_v2 import ITEM_MODELS
+from detective_board.extract.schema_v2 import ITEM_MODELS, REPAIR_FIELDS
 
 ParseStatus = Literal["ok", "repaired", "failed"]
 _FENCE = re.compile(r"^\s*```(?:json)?\s*|\s*```\s*$")
@@ -108,7 +108,7 @@ def validate_items(data: dict) -> ItemReport:
         if not isinstance(raw_items, list):
             rep.dropped.append({"kind": kind, "idx": -1, "reason": "not_a_list", "quote": None})
             continue
-        known = set(model.model_fields)
+        known = set(model.model_fields) - REPAIR_FIELDS[kind]
         seen: set[str] = set()
         for idx, it in enumerate(raw_items):
             q = it.get("quote") if isinstance(it, dict) else None

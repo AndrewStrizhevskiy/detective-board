@@ -24,8 +24,9 @@ Recorded runs, if shown, are labelled as recordings in the UI.
 - The retrieval index is built with `just index`; where it was built for the demo archive:
   TO BE FILLED.
 
-Whether precomputing on other hardware is allowed by the organizers: TO BE FILLED (the
-question was to be asked, see `docs/ROADMAP.md`). We say this on stage regardless.
+Whether precomputing on other hardware is allowed by the organizers: yes, the organizers gave
+their approval (reported by the team lead on 2026-10-26; the written reply is to be attached here:
+TO BE FILLED with its date and wording). We say this on stage regardless.
 
 ## Models
 

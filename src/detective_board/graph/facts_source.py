@@ -42,25 +42,34 @@ class SqliteFactSource:
         day_ov: tuple[Any, str] | None,
         time_ov: tuple[Any, str] | None = None,
     ) -> TimeSpec | None:
-        if not props.get("time_text"):
+        text = props.get("time_text") or props.get("time_text_inherited")
+        if not text:
             return None
+        inherited = not props.get("time_text")  # copied context: LOW and never exact
         if time_ov is not None:  # the normaliser's TimeSpec (extract/normalise.py) wins
             t = TimeSpec.model_validate(time_ov[0])
             day, dconf = day_ov if day_ov else (t.day, t.confidence)
             if day is None and self.assume_day is not None:
                 day, dconf = self.assume_day, "low"
-            low = t.confidence == "low" or (day is not None and dconf == "low")
-            return t.model_copy(update={"day": day, "confidence": "low" if low else "high"})
+            low = inherited or t.confidence == "low" or (day is not None and dconf == "low")
+            upd: dict[str, Any] = {"day": day, "confidence": "low" if low else "high"}
+            if inherited:
+                upd["exact"] = False
+            return t.model_copy(update=upd)
         tn = props.get("time_norm") or {}
         day, dconf = day_ov if day_ov else (self.assume_day, "low")
-        low = tn.get("confidence", "low") == "low" or (day is not None and dconf == "low")
+        low = (
+            inherited
+            or tn.get("confidence", "low") == "low"
+            or (day is not None and dconf == "low")
+        )
         return TimeSpec(
             day=day,
             lo=tn.get("lo"),
             hi=tn.get("hi"),
-            exact=bool(tn.get("exact", False)),
+            exact=bool(tn.get("exact", False)) and not inherited,
             confidence="low" if low else "high",
-            time_text=props["time_text"],
+            time_text=text,
         )
 
     def load(self, story: str) -> FactBase:
@@ -119,6 +128,7 @@ class SqliteFactSource:
                     anchors=[self._anchor(r)],
                     confidence=r["confidence"],
                     narrator=bool(p.get("narrator", True)),
+                    occurrence_id=p.get("occurrence"),
                 )
             )
 

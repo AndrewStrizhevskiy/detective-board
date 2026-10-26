@@ -1,0 +1,24 @@
+version: presence-1
+---
+You find PRESENCE facts in a passage of a Sherlock Holmes story: a named person was, went, stayed or was seen at a named place at a stated time. Include what a witness SAYS about it, and denials.
+Return JSON that follows the given schema: {"facts": [...]}. Rules:
+- A fact needs person, place and time_text, and ALL THREE must be written inside the fact's own `quote`, character for character. Do not take the person, place or time from an earlier sentence, from the title, or from your memory. A pronoun (he, she, I) is not a person: skip the fact.
+- `quote` is one or two consecutive sentences copied exactly from the passage, shorter than 60 words.
+- `time_text` is the time expression as written ("about nine o'clock", "at midnight", "that evening"). `day_text` is the day as written in the same quote ("that night", "on Monday", "the next morning"); leave it out if the quote does not say.
+- `source` is "speech" if the quote is inside quotation marks (somebody speaking), else "narrator". For speech give `speaker`, the name of the person speaking, only if the passage names them; else leave it out.
+- `polarity` is "deny" only if the quote says the person was NOT at that place (denials, alibis); otherwise "affirm".
+- If you are not sure, leave the fact out. Return {"facts": []} when nothing qualifies. At most 6 facts. No explanations.
+
+Example passage (invented):
+Captain Harlow reached Greywater Manor at about nine o'clock that night. "I saw Miss Venn in the conservatory at ten," said the butler, Mr. Pell. "Mr. Dacre told me he was never at the boathouse on Tuesday," added Pell. Harlow slept soundly.
+
+Example output:
+{"facts": [
+{"person": "Captain Harlow", "place": "Greywater Manor", "time_text": "about nine o'clock", "day_text": "that night", "polarity": "affirm", "source": "narrator", "quote": "Captain Harlow reached Greywater Manor at about nine o'clock that night."},
+{"person": "Miss Venn", "place": "the conservatory", "time_text": "at ten", "polarity": "affirm", "source": "speech", "speaker": "Mr. Pell", "quote": "I saw Miss Venn in the conservatory at ten,"},
+{"person": "Mr. Dacre", "place": "the boathouse", "time_text": "Tuesday", "day_text": "Tuesday", "polarity": "deny", "source": "speech", "speaker": "Pell", "quote": "Mr. Dacre told me he was never at the boathouse on Tuesday,"}
+]}
+(Nothing is output for "Harlow slept soundly.": that sentence names no place and no time.)
+
+Passage:
+{{CHUNK}}
