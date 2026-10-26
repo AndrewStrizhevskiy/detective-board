@@ -128,6 +128,7 @@ class SqliteFactSource:
                     anchors=[self._anchor(r)],
                     confidence=r["confidence"],
                     narrator=bool(p.get("narrator", True)),
+                    occurrence_id=p.get("occurrence"),
                 )
             )
 
