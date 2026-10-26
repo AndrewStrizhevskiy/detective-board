@@ -2,6 +2,7 @@
 # One-time (re-runnable) setup of a GPU server for the extraction run. See docs/team/SERVER_RUNBOOK.md.
 #
 # Usage: scripts/server_bootstrap.sh [--check-only] [--with-8b] [--parallel N] [--keep-alive DUR]
+#   --yes          do not ask for confirmation (default: ask before changing the machine)
 #   --check-only   change NOTHING; print every check and what would be done (lines "WOULD: ...")
 #   --with-8b      also pull qwen3:8b (upper-bound comparison)
 #   --parallel N   OLLAMA_NUM_PARALLEL for the Ollama server (default 4; the probe tests 1, 2 and 4)
@@ -26,6 +27,7 @@ ROOT="$PWD"
 CHECK_ONLY=0
 WITH_8B=0
 SKIP_TESTS=0
+ASSUME_YES=0
 PARALLEL=4
 KEEP_ALIVE=24h
 while [ $# -gt 0 ]; do
@@ -33,6 +35,7 @@ while [ $# -gt 0 ]; do
     --check-only) CHECK_ONLY=1; shift ;;
     --with-8b) WITH_8B=1; shift ;;
     --skip-tests) SKIP_TESTS=1; shift ;;
+    --yes|-y) ASSUME_YES=1; shift ;;
     --parallel) PARALLEL="${2:?--parallel needs a number}"; shift 2 ;;
     --keep-alive) KEEP_ALIVE="${2:?--keep-alive needs a duration}"; shift 2 ;;
     -h|--help) sed -n '2,24p' "$0"; exit 0 ;;
@@ -47,6 +50,25 @@ ENV_FILE="$SERVER_DIR/bootstrap.env"
 HOST_URL="${OLLAMA_HOST:-http://localhost:11434}"
 case "$HOST_URL" in http*) ;; *) HOST_URL="http://$HOST_URL" ;; esac
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
+if [ "$CHECK_ONLY" -eq 0 ] && [ "$ASSUME_YES" -eq 0 ]; then
+  # A shared machine: show what may change and ask first (run with --check-only to see the exact plan).
+  cat <<MSG
+This script may change THIS machine:
+  - install uv into ~/.local (user level)
+  - install Ollama system-wide with the official installer (needs root/sudo) if it is missing
+  - write a systemd drop-in (/etc/systemd/system/ollama.service.d/override.conf) and restart the ollama
+    service if its OLLAMA_NUM_PARALLEL / OLLAMA_KEEP_ALIVE differ (needs sudo)
+  - download about 7-12 GB of models into the Ollama model directory
+Run it with --check-only first to see the exact plan. Do this only with the administrator's OK.
+MSG
+  if [ -t 0 ]; then
+    read -r -p "Continue? [y/N] " ANS
+    case "$ANS" in y|Y|yes|YES) ;; *) echo "aborted"; exit 3 ;; esac
+  else
+    echo "not a terminal and no --yes: aborting (pass --yes to confirm)"; exit 3
+  fi
+fi
 
 if [ "$CHECK_ONLY" -eq 0 ]; then
   mkdir -p "$SERVER_DIR"
