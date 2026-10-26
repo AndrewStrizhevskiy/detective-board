@@ -183,3 +183,27 @@ attribution of the neuro-symbolic layer; add them when the layer exists.
   reigate-squires, naval-treaty, red-headed-league, black-peter, resident-patient,
   beryl-coronet, copper-beeches, speckled-band, scandal-in-bohemia, musgrave-ritual.
   Contradictions elsewhere in those stories may be missing.
+
+## Dev/test split and freeze protocol (`split.json`)
+
+`split.json` fixes a deterministic dev/test split: golden 34 dev / 30 test, contradictions
+23 dev / 20 test, stratified by category (golden) and kind (contradictions). The rule, seed,
+per-stratum quotas and a sha256 of the content are in its `header`. The 12 questions of
+`eval/run_answer_check.py` (`SELECTION`) are dev because they already drove prompt fixes.
+The test split covers every category, including out-of-corpus and adversarial items.
+
+    python3 scripts/eval/split_check.py
+
+verifies coverage, disjointness, the hash and that the rule reproduces the file, and prints
+counts per category. Do not edit `split.json` or the gold files after the freeze without a new
+split version.
+
+Protocol:
+
+- Tune prompts, thresholds and rules only on dev.
+- Run the test split once per frozen configuration (model tags, prompt versions, thresholds,
+  options). A changed configuration is a new configuration; record every test run, including
+  the ones you dislike. Never pick the better of several test runs.
+- Report rates with Wilson 95% intervals (not normal approximation). With 30 and 20 items the
+  intervals are wide; say so next to the numbers.
+- Gold sets are AI-written and not yet human-reviewed (see above); label results accordingly.

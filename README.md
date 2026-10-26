@@ -58,3 +58,5 @@ Spike scripts can also be run directly, for example `uv run python scripts/spike
 ## Docs
 
 `docs/PRD.md` (goals, non-goals), `docs/acceptance/acceptance.md`, `docs/backlog.md`, `docs/test-plan.md`, `docs/design/` (board and demo script), `docs/demo/jury-faq.md`, `docs/STATUS.md`.
+
+Disclosure and licences: [docs/DISCLOSURE.md](docs/DISCLOSURE.md) (what was precomputed where, models, gold-set provenance, corpus licence) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
