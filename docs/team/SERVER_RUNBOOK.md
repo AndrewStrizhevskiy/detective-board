@@ -15,6 +15,12 @@ The final agent still runs on the laptop; the server only precomputes data. Say 
   everything else is to be agreed separately with the tech support.
 - Time slots: Tuesday 2026-10-27 from 14:30; Wednesday 2026-10-28 from 12:00 to 18:00. Message the tech support on
   Telegram before coming (confirm the slot).
+- Update 2026-10-26 18:29 (tech support): 1 TB NVMe SSD, the server is "completely ours", any OS may be installed
+  (currently ALT Linux). Decision: do NOT reinstall unless needed. Check `nvidia-smi` and `uname -r` first; keep ALT Linux
+  if the NVIDIA driver works and CUDA is visible (Ollama's Linux installer targets generic x86_64 with systemd). If
+  there is no working driver after about 20-30 minutes, install Ubuntu 24.04 LTS (the same distribution as the lead's
+  laptop) and install the driver with the distribution's tool. Ask about: internet access, SSH/VPN from outside the
+  university network (official access only), sudo, the room's opening hours, running unattended overnight.
 - Still unknown (ask): the operating system, whether the internet is reachable from the server network (else bring the
   model files and wheels on a USB stick), whether Ollama/uv may be installed in a user directory, whether a process may
   stay in `tmux`/`screen` after the slot ends, until what hour the room is open on Tuesday.
