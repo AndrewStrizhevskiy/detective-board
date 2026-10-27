@@ -39,10 +39,10 @@ Order differs from DRAFT 1 only by what the customer review asked for (R1 first,
 1. Laptop on mains, performance profile, other apps closed, network off, charger and cooling as in ROADMAP risks.
 2. `just run` (recipe exists: `uv run python -m detective_board.api`) on the real index and graph; UI full screen at 1920x1080.
 3. Warm the model with one throwaway question not on the script (the extractive selection call still needs the model resident; cold load 8-15 s, REPORT section 3).
-4. The recordings exist in `web/replay/` (`real-g001-agent.json`, `real-wisteria-r1-curated.json`, `real-refusal-baskerville.json`, `real-boscombe-control.json`, `real-refusal-fee.json`) and are the stored runs. Key `c` (backlog R-02/R-03) is NOT implemented in `web/js` as of this commit (no handler found): rung 2 of the ladder is the `?replay=` URL of section 2a, opened in a second browser tab. Restart the UI so the board is empty.
+4. The recordings exist in `web/replay/` (`real-g001-agent.json`, `real-wisteria-r1-curated.json`, `real-refusal-baskerville.json`, `real-boscombe-control.json`, `real-refusal-fee.json`) and serve as the stored runs for key `c` (listed in `web/replay/index.json`, regenerated with `python3 scripts/replay_index.py` after every `scripts/record_run.py`); then reload the UI so the board is empty. Check the **Recordings** menu in the header lists them. If key `c` fails, rung 2 is the `?replay=` URL of section 2a in a second browser tab.
 5. Terminal in `/home/mendax/code/detective-board`, font 20 pt, command for step 4 in shell history.
 6. Full recording (all steps) open in a second window, paused at 0:00; screenshot slides ready.
-7. Operator key sheet: `Esc` = stop, `g` = list view (`c` = stored run only if R-03 is merged; otherwise use the replay tabs of 2a). Clock visible to the presenter.
+7. Operator key sheet: `c` = stored run for the current question (badge `RECORDING`, gaps over 2 s shortened), `c` again = back to live, `Esc` = stop, `g` = list view. After Enter the question box releases the keyboard, so `c` works during a live run. If the live run gets no data for 90 s the screen says "Connection lost" and offers the stored run of the same question. Clock visible to the presenter.
 
 ## 2. Running order
 
@@ -174,7 +174,7 @@ Not in the deck (kept for questions): Boscombe control `?replay=replay/real-bosc
 ## 4. Fallback ladder (applies to every step)
 
 1. Narrate over the trace. The waiting counter proves it is working. Allowed: 6 s of silence from the screen, 20 s for the model's sentence selection in g001.
-2. Open the `?replay=` tab of the step (section 2a; key `c` only if R-03 is merged): badge `RECORDING`, say "this one is a stored run".
+2. Press `c`: stored run, badge `RECORDING`, say "this one is a stored run". Press `c` again to return to live. If the key does not respond, open the `?replay=` tab of the step (section 2a). Rehearse the connection-lost path with `?stall=5` in the address (5 s instead of 90 s).
 3. Play the full recording at the matching timestamp (step start times as in section 0).
 4. Screenshot slides.
 Never: re-ask the same question hoping for a different answer; blame the model; show an unverified quote as verified; call a stored run live.
@@ -200,7 +200,7 @@ Number checklist for the slides (each filled with the file hit): TBD.
 2. The stdio MCP server over the real graph (R-19) is done: with `data/graph/graph.sqlite` present the app spawns the `timeline-alibi` server as a subprocess that opens the graph read-only and serves all stories; tests show stdio and in-process results are byte-identical on the curated Wisteria/Garcia graph and the rule-first Garcia answer text is unchanged. Check `/api/health` `mcp.mode` is `stdio` before going on stage. Recordings made before the merge show `timeline-alibi[in-process]`; if the trace ever shows that label live, the subprocess failed to start and the same functions ran in-process: say so. Not verified here: a run against real Ollama or the full graph.
 3. A router path from the c001 question to the graph route (HANDOFF section 4, item 3).
 4. R1 on the real graph returns `violated`, conditional (the unit test uses the curated passage only).
-5. Stored runs, `c` key, `RECORDING` badge (R-02/R-03) merged; otherwise rungs 2 is replaced by rung 3.
+5. Stored runs, `c` key, `RECORDING` badge (R-02/R-03): done in the UI from the files in `web/replay/` (issue #7); the backend `trace_log` cache of R-02 is not built, so a stored run exists only for a recorded question.
 6. Permission on precompute on other hardware: asked of the organizers (ROADMAP); the stage statement is made regardless.
 
 ## 7. Five-minute cut

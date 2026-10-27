@@ -50,9 +50,9 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 - [ ] T-35 | product-owner | Daily STATUS, scope control, final go/no-go | STATUS.md updated daily | P0 | 10-23..29
 
 ## Requests from ux-designer / demo-director (2026-10-22)
-- [ ] R-01 | backend/agent | Refusal path without an LLM call (templated from the `refusal` event, with `missing[]` and nearest rejected chunks) | refusal visible within seconds; demo step 4 live | P1
-- [ ] R-02 | backend | `cached: true` on `run.start`; stored-run replay from `trace_log` keyed by question+index hash+model+prompt version, gaps capped at 2 s | REPLAY badge; AC-19 | P0
-- [ ] R-03 | frontend | Operator key `c` (serve cached run), REPLAY/LIVE badge, waiting-for-first-token counter with prefill estimate, candidate-evidence cards before the answer | docs/design/board-design.md sections 1, 7 | P0
+- [x] R-01 | backend/agent | Refusal path without an LLM call (templated from the `refusal` event, with `missing[]` and nearest rejected chunks) | refusal visible within seconds; demo step 4 live | P1 | done: the gate refuses before any LLM call (0.07 s on --fake); the UI shows the refusal card from the `refusal` event with the gate reason (issue #7)
+- [ ] R-02 | backend | `cached: true` on `run.start`; stored-run replay from `trace_log` keyed by question+index hash+model+prompt version, gaps capped at 2 s | REPLAY badge; AC-19 | P0 | UI part done (issue #7): stored runs from `web/replay/index.json`, RECORDING badge, gaps capped at 2 s; the backend `trace_log` cache is not built
+- [x] R-03 | frontend | Operator key `c` (serve cached run), REPLAY/LIVE badge, waiting-for-first-token counter with prefill estimate, candidate-evidence cards before the answer | docs/design/board-design.md sections 1, 7 | P0 | done (issue #7): key `c` both ways, Recordings menu, connection-lost recovery after 90 s of silence; board-design.md section 11
 - [ ] R-04 | frontend | Run `python3 docs/design/contrast_check.py` in `just lint`/CI | token edit cannot regress contrast | P2
 - [ ] R-05 | agent-engineer | Bare-model command (same model id, no retrieval, temperature 0, seed 42) and a `verify-quotes` check usable on any text | demo step 5 | P1
 - [ ] R-06 | agent-engineer | Confidence band thresholds from eval calibration (provisional in board-design 1.4) | documented | P2
