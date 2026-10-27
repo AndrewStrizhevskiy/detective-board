@@ -1,0 +1,288 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "real run recorded on the target laptop",
+  "question": "How large a fee did Colonel Ross pay Holmes for recovering Silver Blaze?",
+  "recorded_at": "2026-10-27T07:32:15+0200",
+  "seconds": 15.7,
+  "commit": "d9709d0158c7d88bf4a51ca03134f6e1a62ac453",
+  "mcp": {
+   "configured": true,
+   "mode": "in-process",
+   "server": "timeline-alibi[in-process]"
+  },
+  "graph": {
+   "chunks": 231,
+   "claim": 838,
+   "edges": 2040,
+   "event": 655,
+   "item": 28,
+   "person": 306,
+   "place": 226
+  },
+  "versions": {
+   "api": "1",
+   "python": "3.12.3",
+   "starlette": "1.9.0",
+   "index_schema": "1",
+   "index_manifest": {
+    "schema_version": "1",
+    "embed_model": "bge-m3",
+    "embed_dim": "1024",
+    "embed_doc_prefix": "",
+    "embed_query_prefix": "",
+    "embed_metric": "cosine"
+   }
+  },
+  "note": "In-corpus subject but the answer is not in the text: the model chooses NONE and the agent refuses"
+ },
+ "events": [
+  {
+   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "seq": 0,
+   "ts": "2026-10-27T05:31:59.563+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "vector"
+   ],
+   "tools": [],
+   "method": "rules",
+   "reason": "no special pattern: plain fact question -> hybrid retrieval",
+   "matched": [],
+   "confidence": 0.5
+  },
+  {
+   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "seq": 1,
+   "ts": "2026-10-27T05:31:59.563+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "How large a fee did Colonel Ross pay Holmes for recovering Silver Blaze?",
+   "k": 4,
+   "attempt": 1
+  },
+  {
+   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "seq": 2,
+   "ts": "2026-10-27T05:31:59.668+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 105,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "silver-blaze-0023",
+     "story": "silver-blaze",
+     "rank": 1,
+     "rrf": 0.03278688524590164,
+     "ranks": {
+      "bm25": 1,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -20.464968665041056,
+      "vec": 0.4532032907009125
+     }
+    },
+    {
+     "chunk_id": "silver-blaze-0024",
+     "story": "silver-blaze",
+     "rank": 2,
+     "rrf": 0.0315136476426799,
+     "ranks": {
+      "bm25": 5,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -14.36922746715593,
+      "vec": 0.46944528818130493
+     }
+    },
+    {
+     "chunk_id": "silver-blaze-0027",
+     "story": "silver-blaze",
+     "rank": 3,
+     "rrf": 0.03149801587301587,
+     "ranks": {
+      "bm25": 4,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -14.963425790395231,
+      "vec": 0.47745847702026367
+     }
+    },
+    {
+     "chunk_id": "silver-blaze-0022",
+     "story": "silver-blaze",
+     "rank": 4,
+     "rrf": 0.030798389007344232,
+     "ranks": {
+      "bm25": 3,
+      "vec": 7
+     },
+     "scores": {
+      "bm25": -17.024914008726018,
+      "vec": 0.5057342052459717
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03278688524590164,
+    "threshold": 0.018,
+    "support": 0.556,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "silver-blaze-0023",
+    "silver-blaze-0024",
+    "silver-blaze-0027",
+    "silver-blaze-0022"
+   ]
+  },
+  {
+   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "seq": 3,
+   "ts": "2026-10-27T05:31:59.676+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "silver-blaze-0023",
+     "story": "silver-blaze",
+     "char_start": 41113,
+     "char_end": 42991,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1878,
+     "window_char_start": 41113,
+     "window_char_end": 42991
+    },
+    {
+     "n": 2,
+     "chunk_id": "silver-blaze-0024",
+     "story": "silver-blaze",
+     "char_start": 42993,
+     "char_end": 44832,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 636,
+     "window_end": 999,
+     "window_char_start": 43629,
+     "window_char_end": 43992
+    },
+    {
+     "n": 3,
+     "chunk_id": "silver-blaze-0027",
+     "story": "silver-blaze",
+     "char_start": 48039,
+     "char_end": 49789,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 270,
+     "window_char_start": 48039,
+     "window_char_end": 48309
+    },
+    {
+     "n": 4,
+     "chunk_id": "silver-blaze-0022",
+     "story": "silver-blaze",
+     "char_start": 39316,
+     "char_end": 41111,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 1483,
+     "window_end": 1795,
+     "window_char_start": 40799,
+     "window_char_end": 41111
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 0,
+   "memory_chars": 0,
+   "prompt_chars": 1884,
+   "prompt_tokens_estimate": 471,
+   "max_prompt_tokens": 1200,
+   "strategy": "extractive",
+   "window_words": 60,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "seq": 4,
+   "ts": "2026-10-27T05:32:15.310+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": false,
+   "citations": [],
+   "unsupported_claims": [],
+   "problems": [
+    "no sentence answers the question"
+   ],
+   "action": "refuse"
+  },
+  {
+   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "seq": 5,
+   "ts": "2026-10-27T05:32:15.310+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "refusal",
+   "code": "no_evidence",
+   "message": "In these materials there is nothing about this.",
+   "missing": [
+    "fee",
+    "large",
+    "pay",
+    "recov"
+   ],
+   "searched": [
+    "hybrid retrieval (BM25 + vector) over the Holmes corpus"
+   ]
+  },
+  {
+   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "seq": 6,
+   "ts": "2026-10-27T05:32:15.310+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "refused",
+   "verified": true,
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "provenance": [],
+   "route": {
+    "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+    "seq": 0,
+    "ts": "2026-10-27T05:31:59.563+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "vector"
+    ],
+    "tools": [],
+    "method": "rules",
+    "reason": "no special pattern: plain fact question -> hybrid retrieval",
+    "matched": [],
+    "confidence": 0.5
+   },
+   "attempts": 1,
+   "refusal_code": "no_evidence"
+  }
+ ]
+}

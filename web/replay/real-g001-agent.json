@@ -1,0 +1,456 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "real run recorded on the target laptop",
+  "question": "What kind of snake killed Dr. Grimesby Roylott?",
+  "recorded_at": "2026-10-27T07:31:39+0200",
+  "seconds": 10.8,
+  "commit": "d9709d0158c7d88bf4a51ca03134f6e1a62ac453",
+  "mcp": {
+   "configured": true,
+   "mode": "in-process",
+   "server": "timeline-alibi[in-process]"
+  },
+  "graph": {
+   "chunks": 231,
+   "claim": 838,
+   "edges": 2040,
+   "event": 655,
+   "item": 28,
+   "person": 306,
+   "place": 226
+  },
+  "versions": {
+   "api": "1",
+   "python": "3.12.3",
+   "starlette": "1.9.0",
+   "index_schema": "1",
+   "index_manifest": {
+    "schema_version": "1",
+    "embed_model": "bge-m3",
+    "embed_dim": "1024",
+    "embed_doc_prefix": "",
+    "embed_query_prefix": "",
+    "embed_metric": "cosine"
+   }
+  },
+  "note": "Fact question: the model picks the evidence sentence (extractive mode); about 10 s on this laptop"
+ },
+ "events": [
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 0,
+   "ts": "2026-10-27T05:31:28.849+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "vector"
+   ],
+   "tools": [],
+   "method": "rules",
+   "reason": "no special pattern: plain fact question -> hybrid retrieval",
+   "matched": [],
+   "confidence": 0.5
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 1,
+   "ts": "2026-10-27T05:31:28.849+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "What kind of snake killed Dr. Grimesby Roylott?",
+   "k": 4,
+   "attempt": 1
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 2,
+   "ts": "2026-10-27T05:31:28.917+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 67,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "speckled-band-0030",
+     "story": "speckled-band",
+     "rank": 1,
+     "rrf": 0.03278688524590164,
+     "ranks": {
+      "bm25": 1,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -15.168238474838386,
+      "vec": 0.30894070863723755
+     }
+    },
+    {
+     "chunk_id": "speckled-band-0031",
+     "story": "speckled-band",
+     "rank": 2,
+     "rrf": 0.03200204813108039,
+     "ranks": {
+      "bm25": 3,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -13.641956937997609,
+      "vec": 0.3710588812828064
+     }
+    },
+    {
+     "chunk_id": "speckled-band-0014",
+     "story": "speckled-band",
+     "rank": 3,
+     "rrf": 0.03125763125763126,
+     "ranks": {
+      "bm25": 5,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -12.702747278634552,
+      "vec": 0.47932884097099304
+     }
+    },
+    {
+     "chunk_id": "speckled-band-0024",
+     "story": "speckled-band",
+     "rank": 4,
+     "rrf": 0.030834914611005692,
+     "ranks": {
+      "bm25": 2,
+      "vec": 8
+     },
+     "scores": {
+      "bm25": -14.534478335985996,
+      "vec": 0.5323832631111145
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03278688524590164,
+    "threshold": 0.018,
+    "support": 0.6,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "speckled-band-0030",
+    "speckled-band-0031",
+    "speckled-band-0014",
+    "speckled-band-0024"
+   ]
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 3,
+   "ts": "2026-10-27T05:31:28.921+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "speckled-band-0030",
+     "story": "speckled-band",
+     "char_start": 47453,
+     "char_end": 49060,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1607,
+     "window_char_start": 47453,
+     "window_char_end": 49060
+    },
+    {
+     "n": 2,
+     "chunk_id": "speckled-band-0031",
+     "story": "speckled-band",
+     "char_start": 49062,
+     "char_end": 51759,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 2232,
+     "window_end": 2563,
+     "window_char_start": 51294,
+     "window_char_end": 51625
+    },
+    {
+     "n": 3,
+     "chunk_id": "speckled-band-0014",
+     "story": "speckled-band",
+     "char_start": 22780,
+     "char_end": 24573,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 778,
+     "window_end": 1127,
+     "window_char_start": 23558,
+     "window_char_end": 23907
+    },
+    {
+     "n": 4,
+     "chunk_id": "speckled-band-0024",
+     "story": "speckled-band",
+     "char_start": 38579,
+     "char_end": 40358,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 689,
+     "window_end": 995,
+     "window_char_start": 39268,
+     "window_char_end": 39574
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 0,
+   "memory_chars": 0,
+   "prompt_chars": 1470,
+   "prompt_tokens_estimate": 368,
+   "max_prompt_tokens": 1200,
+   "strategy": "extractive",
+   "window_words": 60,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 4,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "From "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 5,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 6,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sources: "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 7,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[1: "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 8,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"“It "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 9,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 10,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 11,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "swamp "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 12,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "adder!” "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 13,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "cried "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 14,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Holmes; "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 15,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "“the "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 16,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "deadliest "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 17,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "snake "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 18,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 19,
+   "ts": "2026-10-27T05:31:39.463+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "India.\"]"
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 20,
+   "ts": "2026-10-27T05:31:39.465+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+   "seq": 21,
+   "ts": "2026-10-27T05:31:39.466+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "From the sources: [1: \"“It is a swamp adder!” cried Holmes; “the deadliest snake in India.\"]",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "“It is a swamp adder!” cried Holmes; “the deadliest snake in India.",
+     "anchor": {
+      "story": "speckled-band",
+      "chunk_id": "speckled-band-0030",
+      "char_start": 48439,
+      "char_end": 48506,
+      "quote": "“It is a swamp adder!” cried Holmes; “the deadliest snake in India."
+     },
+     "label": "source_text"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "source_text",
+     "origin": "vector",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "retrieved chunk (rrf 0.0328)",
+     "explanation": null
+    }
+   ],
+   "route": {
+    "run_id": "6711fce8-e026-42bf-a525-b4a7634ea372",
+    "seq": 0,
+    "ts": "2026-10-27T05:31:28.849+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "vector"
+    ],
+    "tools": [],
+    "method": "rules",
+    "reason": "no special pattern: plain fact question -> hybrid retrieval",
+    "matched": [],
+    "confidence": 0.5
+   },
+   "attempts": 1,
+   "refusal_code": null
+  }
+ ]
+}
