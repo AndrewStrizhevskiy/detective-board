@@ -69,6 +69,8 @@ jobs:
       # Node is preinstalled on ubuntu-latest; `just` is not, so the command is spelled out
       # (keep in sync with `just test-web`).
       - run: node --test tests/web_js/*.test.mjs
+      # every vendored script, stylesheet and font matches the sha256 in web/vendor/README.md
+      - run: python3 scripts/check_vendor_hashes.py
 
   eval-short:
     runs-on: ubuntu-latest
