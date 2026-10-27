@@ -1,5 +1,7 @@
 # Runbook: extraction on a GPU server (one session, 4-6 hours)
 
+> Русская пошаговая версия: [SERVER_GUIDE_RU.md](SERVER_GUIDE_RU.md).
+
 ## TL;DR (two commands)
 
 Facts from the admin: unrestricted internet (gigabit), direct attended access only, no VPN to install. The repo is
