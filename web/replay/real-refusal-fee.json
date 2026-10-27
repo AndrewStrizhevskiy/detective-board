@@ -3,13 +3,14 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "How large a fee did Colonel Ross pay Holmes for recovering Silver Blaze?",
-  "recorded_at": "2026-10-27T07:32:15+0200",
-  "seconds": 15.7,
-  "commit": "d9709d0158c7d88bf4a51ca03134f6e1a62ac453",
+  "recorded_at": "2026-10-27T11:51:34+0200",
+  "seconds": 22.6,
+  "commit": "8491402d7c79100bcbc199314979473392d46925",
   "mcp": {
    "configured": true,
-   "mode": "in-process",
-   "server": "timeline-alibi[in-process]"
+   "mode": "stdio",
+   "server": "timeline-alibi",
+   "started": false
   },
   "graph": {
    "chunks": 231,
@@ -38,9 +39,9 @@
  },
  "events": [
   {
-   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
    "seq": 0,
-   "ts": "2026-10-27T05:31:59.563+00:00",
+   "ts": "2026-10-27T09:51:11.452+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -54,22 +55,22 @@
    "confidence": 0.5
   },
   {
-   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
    "seq": 1,
-   "ts": "2026-10-27T05:31:59.563+00:00",
+   "ts": "2026-10-27T09:51:11.452+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
    "query": "How large a fee did Colonel Ross pay Holmes for recovering Silver Blaze?",
-   "k": 4,
+   "k": 6,
    "attempt": 1
   },
   {
-   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
    "seq": 2,
-   "ts": "2026-10-27T05:31:59.668+00:00",
+   "ts": "2026-10-27T09:51:11.595+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 105,
+   "duration_ms": 142,
    "type": "retrieval_results",
    "hits": [
     {
@@ -127,6 +128,34 @@
       "bm25": -17.024914008726018,
       "vec": 0.5057342052459717
      }
+    },
+    {
+     "chunk_id": "silver-blaze-0013",
+     "story": "silver-blaze",
+     "rank": 5,
+     "rrf": 0.030330882352941176,
+     "ranks": {
+      "bm25": 8,
+      "vec": 4
+     },
+     "scores": {
+      "bm25": -10.967378503674261,
+      "vec": 0.4794872999191284
+     }
+    },
+    {
+     "chunk_id": "silver-blaze-0003",
+     "story": "silver-blaze",
+     "rank": 6,
+     "rrf": 0.02946236559139785,
+     "ranks": {
+      "bm25": 2,
+      "vec": 15
+     },
+     "scores": {
+      "bm25": -17.632951991506562,
+      "vec": 0.520591676235199
+     }
     }
    ],
    "gate": {
@@ -141,13 +170,15 @@
     "silver-blaze-0023",
     "silver-blaze-0024",
     "silver-blaze-0027",
-    "silver-blaze-0022"
+    "silver-blaze-0022",
+    "silver-blaze-0013",
+    "silver-blaze-0003"
    ]
   },
   {
-   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
    "seq": 3,
-   "ts": "2026-10-27T05:31:59.676+00:00",
+   "ts": "2026-10-27T09:51:11.656+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "enriched_query",
@@ -168,60 +199,268 @@
     },
     {
      "n": 2,
+     "chunk_id": "silver-blaze-0013",
+     "story": "silver-blaze",
+     "char_start": 23082,
+     "char_end": 24966,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1884,
+     "window_char_start": 23082,
+     "window_char_end": 24966
+    },
+    {
+     "n": 3,
+     "chunk_id": "thor-bridge-0013",
+     "story": "thor-bridge",
+     "char_start": 23563,
+     "char_end": 25219,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1656,
+     "window_char_start": 23563,
+     "window_char_end": 25219
+    },
+    {
+     "n": 4,
+     "chunk_id": "copper-beeches-0009",
+     "story": "copper-beeches",
+     "char_start": 15082,
+     "char_end": 16918,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1836,
+     "window_char_start": 15082,
+     "window_char_end": 16918
+    },
+    {
+     "n": 5,
+     "chunk_id": "black-peter-0020",
+     "story": "black-peter",
+     "char_start": 33924,
+     "char_end": 35864,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1940,
+     "window_char_start": 33924,
+     "window_char_end": 35864
+    },
+    {
+     "n": 6,
+     "chunk_id": "priory-school-0002",
+     "story": "priory-school",
+     "char_start": 3623,
+     "char_end": 5446,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1823,
+     "window_char_start": 3623,
+     "window_char_end": 5446
+    },
+    {
+     "n": 7,
+     "chunk_id": "thor-bridge-0024",
+     "story": "thor-bridge",
+     "char_start": 42931,
+     "char_end": 44866,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1935,
+     "window_char_start": 42931,
+     "window_char_end": 44866
+    },
+    {
+     "n": 8,
+     "chunk_id": "man-with-the-twisted-lip-0022",
+     "story": "man-with-the-twisted-lip",
+     "char_start": 37157,
+     "char_end": 39018,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1861,
+     "window_char_start": 37157,
+     "window_char_end": 39018
+    },
+    {
+     "n": 9,
+     "chunk_id": "thor-bridge-0025",
+     "story": "thor-bridge",
+     "char_start": 44868,
+     "char_end": 46597,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1729,
+     "window_char_start": 44868,
+     "window_char_end": 46597
+    },
+    {
+     "n": 10,
+     "chunk_id": "norwood-builder-0025",
+     "story": "norwood-builder",
+     "char_start": 43238,
+     "char_end": 44974,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1736,
+     "window_char_start": 43238,
+     "window_char_end": 44974
+    },
+    {
+     "n": 11,
+     "chunk_id": "abbey-grange-0019",
+     "story": "abbey-grange",
+     "char_start": 32154,
+     "char_end": 33640,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1486,
+     "window_char_start": 32154,
+     "window_char_end": 33640
+    },
+    {
+     "n": 12,
+     "chunk_id": "thor-bridge-0007",
+     "story": "thor-bridge",
+     "char_start": 12801,
+     "char_end": 14674,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1873,
+     "window_char_start": 12801,
+     "window_char_end": 14674
+    },
+    {
+     "n": 13,
+     "chunk_id": "wisteria-lodge-0019",
+     "story": "wisteria-lodge",
+     "char_start": 30545,
+     "char_end": 32389,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1844,
+     "window_char_start": 30545,
+     "window_char_end": 32389
+    },
+    {
+     "n": 14,
+     "chunk_id": "naval-treaty-0002",
+     "story": "naval-treaty",
+     "char_start": 2298,
+     "char_end": 3629,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1331,
+     "window_char_start": 2298,
+     "window_char_end": 3629
+    },
+    {
+     "n": 15,
+     "chunk_id": "wisteria-lodge-0008",
+     "story": "wisteria-lodge",
+     "char_start": 12967,
+     "char_end": 14619,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1652,
+     "window_char_start": 12967,
+     "window_char_end": 14619
+    },
+    {
+     "n": 16,
+     "chunk_id": "black-peter-0021",
+     "story": "black-peter",
+     "char_start": 35866,
+     "char_end": 37616,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1750,
+     "window_char_start": 35866,
+     "window_char_end": 37616
+    },
+    {
+     "n": 17,
+     "chunk_id": "priory-school-0022",
+     "story": "priory-school",
+     "char_start": 37032,
+     "char_end": 38924,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1892,
+     "window_char_start": 37032,
+     "window_char_end": 38924
+    },
+    {
+     "n": 18,
+     "chunk_id": "priory-school-0000",
+     "story": "priory-school",
+     "char_start": 0,
+     "char_end": 1859,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1859,
+     "window_char_start": 0,
+     "window_char_end": 1859
+    },
+    {
+     "n": 19,
+     "chunk_id": "norwood-builder-0002",
+     "story": "norwood-builder",
+     "char_start": 3289,
+     "char_end": 5092,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1803,
+     "window_char_start": 3289,
+     "window_char_end": 5092
+    },
+    {
+     "n": 20,
      "chunk_id": "silver-blaze-0024",
      "story": "silver-blaze",
      "char_start": 42993,
      "char_end": 44832,
      "origin": "vector",
      "label": "source_text",
-     "window_start": 636,
-     "window_end": 999,
-     "window_char_start": 43629,
-     "window_char_end": 43992
-    },
-    {
-     "n": 3,
-     "chunk_id": "silver-blaze-0027",
-     "story": "silver-blaze",
-     "char_start": 48039,
-     "char_end": 49789,
-     "origin": "vector",
-     "label": "source_text",
      "window_start": 0,
-     "window_end": 270,
-     "window_char_start": 48039,
-     "window_char_end": 48309
-    },
-    {
-     "n": 4,
-     "chunk_id": "silver-blaze-0022",
-     "story": "silver-blaze",
-     "char_start": 39316,
-     "char_end": 41111,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 1483,
-     "window_end": 1795,
-     "window_char_start": 40799,
-     "window_char_end": 41111
+     "window_end": 1839,
+     "window_char_start": 42993,
+     "window_char_end": 44832
     }
    ],
    "graph_facts": 0,
    "rule_facts": 0,
    "memory_chars": 0,
-   "prompt_chars": 1884,
-   "prompt_tokens_estimate": 471,
+   "prompt_chars": 2230,
+   "prompt_tokens_estimate": 558,
    "max_prompt_tokens": 1200,
-   "strategy": "extractive",
+   "strategy": "extractive + sentence index",
    "window_words": 60,
    "dropped_chunks": [],
    "data_marked": true,
    "injection_suspects": []
   },
   {
-   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
    "seq": 4,
-   "ts": "2026-10-27T05:32:15.310+00:00",
+   "ts": "2026-10-27T09:51:34.048+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "citation_check",
@@ -235,9 +474,9 @@
    "action": "refuse"
   },
   {
-   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
    "seq": 5,
-   "ts": "2026-10-27T05:32:15.310+00:00",
+   "ts": "2026-10-27T09:51:34.048+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "refusal",
@@ -254,9 +493,9 @@
    ]
   },
   {
-   "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
    "seq": 6,
-   "ts": "2026-10-27T05:32:15.310+00:00",
+   "ts": "2026-10-27T09:51:34.048+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
@@ -266,9 +505,9 @@
    "citations": [],
    "provenance": [],
    "route": {
-    "run_id": "dfa03062-79b3-471c-a58b-ae47080ee501",
+    "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
     "seq": 0,
-    "ts": "2026-10-27T05:31:59.563+00:00",
+    "ts": "2026-10-27T09:51:11.452+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",

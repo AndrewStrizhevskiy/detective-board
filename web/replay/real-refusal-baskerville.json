@@ -3,13 +3,14 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "What was the creature that haunted the Baskerville family on the Devonshire moor?",
-  "recorded_at": "2026-10-27T07:31:39+0200",
-  "seconds": 0.2,
-  "commit": "d9709d0158c7d88bf4a51ca03134f6e1a62ac453",
+  "recorded_at": "2026-10-27T11:50:40+0200",
+  "seconds": 0.3,
+  "commit": "8491402d7c79100bcbc199314979473392d46925",
   "mcp": {
    "configured": true,
-   "mode": "in-process",
-   "server": "timeline-alibi[in-process]"
+   "mode": "stdio",
+   "server": "timeline-alibi",
+   "started": false
   },
   "graph": {
    "chunks": 231,
@@ -38,9 +39,9 @@
  },
  "events": [
   {
-   "run_id": "429fb846-576f-45d4-81ae-c94a9361b1e0",
+   "run_id": "01eefe83-027f-4518-982b-6a5f857b87c3",
    "seq": 0,
-   "ts": "2026-10-27T05:31:39.617+00:00",
+   "ts": "2026-10-27T09:50:40.472+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -54,22 +55,22 @@
    "confidence": 0.5
   },
   {
-   "run_id": "429fb846-576f-45d4-81ae-c94a9361b1e0",
+   "run_id": "01eefe83-027f-4518-982b-6a5f857b87c3",
    "seq": 1,
-   "ts": "2026-10-27T05:31:39.617+00:00",
+   "ts": "2026-10-27T09:50:40.472+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
    "query": "What was the creature that haunted the Baskerville family on the Devonshire moor?",
-   "k": 4,
+   "k": 6,
    "attempt": 1
   },
   {
-   "run_id": "429fb846-576f-45d4-81ae-c94a9361b1e0",
+   "run_id": "01eefe83-027f-4518-982b-6a5f857b87c3",
    "seq": 2,
-   "ts": "2026-10-27T05:31:39.774+00:00",
+   "ts": "2026-10-27T09:50:40.753+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 155,
+   "duration_ms": 281,
    "type": "retrieval_results",
    "hits": [
     {
@@ -127,6 +128,34 @@
       "bm25": -4.170779398728214,
       "vec": 0.5633605122566223
      }
+    },
+    {
+     "chunk_id": "priory-school-0014",
+     "story": "priory-school",
+     "rank": 5,
+     "rrf": 0.02591362126245847,
+     "ranks": {
+      "bm25": 10,
+      "vec": 26
+     },
+     "scores": {
+      "bm25": -4.867395707191389,
+      "vec": 0.5735326409339905
+     }
+    },
+    {
+     "chunk_id": "silver-blaze-0014",
+     "story": "silver-blaze",
+     "rank": 6,
+     "rrf": 0.02473040977713875,
+     "ranks": {
+      "bm25": 47,
+      "vec": 5
+     },
+     "scores": {
+      "bm25": -2.981820852496134,
+      "vec": 0.5442629456520081
+     }
     }
    ],
    "gate": {
@@ -141,13 +170,15 @@
     "priory-school-0013",
     "silver-blaze-0012",
     "black-peter-0012",
-    "wisteria-lodge-0037"
+    "wisteria-lodge-0037",
+    "priory-school-0014",
+    "silver-blaze-0014"
    ]
   },
   {
-   "run_id": "429fb846-576f-45d4-81ae-c94a9361b1e0",
+   "run_id": "01eefe83-027f-4518-982b-6a5f857b87c3",
    "seq": 3,
-   "ts": "2026-10-27T05:31:39.774+00:00",
+   "ts": "2026-10-27T09:50:40.753+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "refusal",
@@ -165,9 +196,9 @@
    ]
   },
   {
-   "run_id": "429fb846-576f-45d4-81ae-c94a9361b1e0",
+   "run_id": "01eefe83-027f-4518-982b-6a5f857b87c3",
    "seq": 4,
-   "ts": "2026-10-27T05:31:39.774+00:00",
+   "ts": "2026-10-27T09:50:40.753+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
@@ -177,9 +208,9 @@
    "citations": [],
    "provenance": [],
    "route": {
-    "run_id": "429fb846-576f-45d4-81ae-c94a9361b1e0",
+    "run_id": "01eefe83-027f-4518-982b-6a5f857b87c3",
     "seq": 0,
-    "ts": "2026-10-27T05:31:39.617+00:00",
+    "ts": "2026-10-27T09:50:40.472+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",

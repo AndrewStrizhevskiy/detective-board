@@ -3,13 +3,21 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?",
-  "recorded_at": "2026-10-27T07:31:59+0200",
-  "seconds": 19.1,
-  "commit": "d9709d0158c7d88bf4a51ca03134f6e1a62ac453",
+  "recorded_at": "2026-10-27T11:51:11+0200",
+  "seconds": 28.7,
+  "commit": "8491402d7c79100bcbc199314979473392d46925",
   "mcp": {
    "configured": true,
-   "mode": "in-process",
-   "server": "timeline-alibi[in-process]"
+   "mode": "stdio",
+   "server": "timeline-alibi",
+   "started": true,
+   "version": "0.2.0",
+   "tools": [
+    "build_timeline",
+    "check_alibi",
+    "find_contradictions",
+    "find_overlaps"
+   ]
   },
   "graph": {
    "chunks": 231,
@@ -38,9 +46,9 @@
  },
  "events": [
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 0,
-   "ts": "2026-10-27T05:31:40.336+00:00",
+   "ts": "2026-10-27T09:50:42.575+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -60,22 +68,22 @@
    "confidence": 0.8
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 1,
-   "ts": "2026-10-27T05:31:40.336+00:00",
+   "ts": "2026-10-27T09:50:42.575+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
    "query": "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?",
-   "k": 4,
+   "k": 6,
    "attempt": 1
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 2,
-   "ts": "2026-10-27T05:31:40.457+00:00",
+   "ts": "2026-10-27T09:50:42.699+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 120,
+   "duration_ms": 123,
    "type": "retrieval_results",
    "hits": [
     {
@@ -133,6 +141,34 @@
       "bm25": -9.185277085046645,
       "vec": 0.5260510444641113
      }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0011",
+     "story": "boscombe-valley-mystery",
+     "rank": 5,
+     "rrf": 0.029709507042253523,
+     "ranks": {
+      "bm25": 4,
+      "vec": 11
+     },
+     "scores": {
+      "bm25": -10.29815415155428,
+      "vec": 0.5454037189483643
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0017",
+     "story": "boscombe-valley-mystery",
+     "rank": 6,
+     "rrf": 0.029418126757516764,
+     "ranks": {
+      "bm25": 9,
+      "vec": 7
+     },
+     "scores": {
+      "bm25": -7.483906225050669,
+      "vec": 0.52564537525177
+     }
     }
    ],
    "gate": {
@@ -147,13 +183,15 @@
     "boscombe-valley-mystery-0003",
     "boscombe-valley-mystery-0007",
     "boscombe-valley-mystery-0030",
-    "boscombe-valley-mystery-0012"
+    "boscombe-valley-mystery-0012",
+    "boscombe-valley-mystery-0011",
+    "boscombe-valley-mystery-0017"
    ]
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 3,
-   "ts": "2026-10-27T05:31:40.457+00:00",
+   "ts": "2026-10-27T09:50:42.700+00:00",
    "step_id": "graph-1",
    "duration_ms": null,
    "type": "graph_query",
@@ -167,11 +205,11 @@
    }
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 4,
-   "ts": "2026-10-27T05:31:40.461+00:00",
+   "ts": "2026-10-27T09:50:42.702+00:00",
    "step_id": "graph-1",
-   "duration_ms": 3,
+   "duration_ms": 1,
    "type": "graph_results",
    "query_kind": "neighbours",
    "seeds": [
@@ -470,13 +508,13 @@
    "truncated": false
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 5,
-   "ts": "2026-10-27T05:31:40.461+00:00",
+   "ts": "2026-10-27T09:50:42.702+00:00",
    "step_id": "tool-find_contradictions",
    "duration_ms": null,
    "type": "tool_call",
-   "server": "timeline-alibi[in-process]",
+   "server": "timeline-alibi",
    "tool": "find_contradictions",
    "arguments": {
     "story": "boscombe-valley-mystery",
@@ -485,13 +523,13 @@
    "timeout_s": 5.0
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 6,
-   "ts": "2026-10-27T05:31:40.513+00:00",
+   "ts": "2026-10-27T09:50:42.761+00:00",
    "step_id": "tool-find_contradictions",
-   "duration_ms": 52,
+   "duration_ms": 59,
    "type": "tool_result",
-   "server": "timeline-alibi[in-process]",
+   "server": "timeline-alibi",
    "tool": "find_contradictions",
    "ok": true,
    "summary": "status=ok items=0",
@@ -500,9 +538,9 @@
    "error": null
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 7,
-   "ts": "2026-10-27T05:31:40.549+00:00",
+   "ts": "2026-10-27T09:50:42.844+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "enriched_query",
@@ -529,54 +567,197 @@
      "char_end": 14167,
      "origin": "vector",
      "label": "source_text",
-     "window_start": 575,
-     "window_end": 917,
-     "window_char_start": 12659,
-     "window_char_end": 13001
+     "window_start": 0,
+     "window_end": 2083,
+     "window_char_start": 12084,
+     "window_char_end": 14167
     },
     {
      "n": 3,
-     "chunk_id": "boscombe-valley-mystery-0030",
-     "story": "boscombe-valley-mystery",
-     "char_start": 50095,
-     "char_end": 51318,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 696,
-     "window_end": 999,
-     "window_char_start": 50791,
-     "window_char_end": 51094
-    },
-    {
-     "n": 4,
      "chunk_id": "boscombe-valley-mystery-0012",
      "story": "boscombe-valley-mystery",
      "char_start": 21383,
      "char_end": 23131,
      "origin": "vector",
      "label": "source_text",
-     "window_start": 1397,
-     "window_end": 1715,
-     "window_char_start": 22780,
-     "window_char_end": 23098
+     "window_start": 0,
+     "window_end": 1748,
+     "window_char_start": 21383,
+     "window_char_end": 23131
+    },
+    {
+     "n": 4,
+     "chunk_id": "boscombe-valley-mystery-0014",
+     "story": "boscombe-valley-mystery",
+     "char_start": 25927,
+     "char_end": 26872,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 945,
+     "window_char_start": 25927,
+     "window_char_end": 26872
+    },
+    {
+     "n": 5,
+     "chunk_id": "reigate-squires-0002",
+     "story": "reigate-squires",
+     "char_start": 3532,
+     "char_end": 5388,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1856,
+     "window_char_start": 3532,
+     "window_char_end": 5388
+    },
+    {
+     "n": 6,
+     "chunk_id": "boscombe-valley-mystery-0028",
+     "story": "boscombe-valley-mystery",
+     "char_start": 47623,
+     "char_end": 48642,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1019,
+     "window_char_start": 47623,
+     "window_char_end": 48642
+    },
+    {
+     "n": 7,
+     "chunk_id": "boscombe-valley-mystery-0025",
+     "story": "boscombe-valley-mystery",
+     "char_start": 42638,
+     "char_end": 44356,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1718,
+     "window_char_start": 42638,
+     "window_char_end": 44356
+    },
+    {
+     "n": 8,
+     "chunk_id": "boscombe-valley-mystery-0030",
+     "story": "boscombe-valley-mystery",
+     "char_start": 50095,
+     "char_end": 51318,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1223,
+     "window_char_start": 50095,
+     "window_char_end": 51318
+    },
+    {
+     "n": 9,
+     "chunk_id": "boscombe-valley-mystery-0026",
+     "story": "boscombe-valley-mystery",
+     "char_start": 44358,
+     "char_end": 46015,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1657,
+     "window_char_start": 44358,
+     "window_char_end": 46015
+    },
+    {
+     "n": 10,
+     "chunk_id": "boscombe-valley-mystery-0013",
+     "story": "boscombe-valley-mystery",
+     "char_start": 23133,
+     "char_end": 25925,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 2792,
+     "window_char_start": 23133,
+     "window_char_end": 25925
+    },
+    {
+     "n": 11,
+     "chunk_id": "boscombe-valley-mystery-0020",
+     "story": "boscombe-valley-mystery",
+     "char_start": 34068,
+     "char_end": 35943,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1875,
+     "window_char_start": 34068,
+     "window_char_end": 35943
+    },
+    {
+     "n": 12,
+     "chunk_id": "boscombe-valley-mystery-0002",
+     "story": "boscombe-valley-mystery",
+     "char_start": 2791,
+     "char_end": 4456,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1665,
+     "window_char_start": 2791,
+     "window_char_end": 4456
+    },
+    {
+     "n": 13,
+     "chunk_id": "crooked-man-0021",
+     "story": "crooked-man",
+     "char_start": 32882,
+     "char_end": 34627,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1745,
+     "window_char_start": 32882,
+     "window_char_end": 34627
+    },
+    {
+     "n": 14,
+     "chunk_id": "boscombe-valley-mystery-0022",
+     "story": "boscombe-valley-mystery",
+     "char_start": 37713,
+     "char_end": 39635,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1922,
+     "window_char_start": 37713,
+     "window_char_end": 39635
+    },
+    {
+     "n": 15,
+     "chunk_id": "priory-school-0025",
+     "story": "priory-school",
+     "char_start": 42527,
+     "char_end": 44195,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1668,
+     "window_char_start": 42527,
+     "window_char_end": 44195
     }
    ],
    "graph_facts": 0,
    "rule_facts": 0,
    "memory_chars": 0,
-   "prompt_chars": 2155,
-   "prompt_tokens_estimate": 539,
+   "prompt_chars": 2865,
+   "prompt_tokens_estimate": 717,
    "max_prompt_tokens": 1200,
-   "strategy": "rule-first (empty) + extractive",
+   "strategy": "rule-first (empty) + extractive + sentence index",
    "window_words": 60,
    "dropped_chunks": [],
    "data_marked": true,
    "injection_suspects": []
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 8,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -584,9 +765,9 @@
    "text": "The "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 9,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -594,9 +775,9 @@
    "text": "rule "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 10,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -604,9 +785,9 @@
    "text": "engine "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 11,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -614,9 +795,9 @@
    "text": "found "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 12,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -624,9 +805,9 @@
    "text": "no "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 13,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -634,9 +815,9 @@
    "text": "violation "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 14,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -644,9 +825,9 @@
    "text": "among "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 15,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -654,9 +835,9 @@
    "text": "the "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 16,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -664,9 +845,9 @@
    "text": "facts "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 17,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -674,9 +855,9 @@
    "text": "extracted "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 18,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -684,9 +865,9 @@
    "text": "for "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 19,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -694,9 +875,9 @@
    "text": "boscombe-valley-mystery. "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 20,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -704,9 +885,9 @@
    "text": "This "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 21,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -714,9 +895,9 @@
    "text": "does "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 22,
-   "ts": "2026-10-27T05:31:59.396+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -724,9 +905,9 @@
    "text": "not "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 23,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -734,9 +915,9 @@
    "text": "show "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 24,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -744,9 +925,9 @@
    "text": "that "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 25,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -754,9 +935,9 @@
    "text": "the "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 26,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -764,9 +945,9 @@
    "text": "accounts "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 27,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -774,9 +955,9 @@
    "text": "are "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 28,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.257+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -784,9 +965,9 @@
    "text": "consistent: "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 29,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -794,9 +975,9 @@
    "text": "the "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 30,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -804,9 +985,9 @@
    "text": "graph "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 31,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -814,9 +995,9 @@
    "text": "holds "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 32,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -824,9 +1005,9 @@
    "text": "86 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 33,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -834,9 +1015,9 @@
    "text": "events "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 34,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -844,9 +1025,9 @@
    "text": "and "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 35,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -854,9 +1035,9 @@
    "text": "107 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 36,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -864,9 +1045,9 @@
    "text": "claims "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 37,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -874,9 +1055,9 @@
    "text": "for "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 38,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -884,9 +1065,9 @@
    "text": "this "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 39,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -894,9 +1075,9 @@
    "text": "story; "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 40,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -904,9 +1085,9 @@
    "text": "4 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 41,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -914,9 +1095,9 @@
    "text": "events "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 42,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -924,9 +1105,9 @@
    "text": "have "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 43,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -934,9 +1115,9 @@
    "text": "an "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 44,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -944,9 +1125,9 @@
    "text": "exact "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 45,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -954,9 +1135,9 @@
    "text": "clock "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 46,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -964,9 +1145,9 @@
    "text": "time, "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 47,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -974,9 +1155,9 @@
    "text": "7 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 48,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -984,9 +1165,9 @@
    "text": "have "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 49,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -994,9 +1175,9 @@
    "text": "a "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 50,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1004,9 +1185,9 @@
    "text": "story "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 51,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1014,9 +1195,9 @@
    "text": "day, "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 52,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1024,9 +1205,9 @@
    "text": "and "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 53,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1034,9 +1215,9 @@
    "text": "3 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 54,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1044,9 +1225,9 @@
    "text": "claims "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 55,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1054,9 +1235,9 @@
    "text": "carry "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 56,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1064,9 +1245,9 @@
    "text": "a "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 57,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1074,9 +1255,9 @@
    "text": "presence "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 58,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1084,9 +1265,9 @@
    "text": "proposition; "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 59,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1094,9 +1275,9 @@
    "text": "rule "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 60,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1104,9 +1285,9 @@
    "text": "R1 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 61,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1114,9 +1295,9 @@
    "text": "examined "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 62,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1124,9 +1305,9 @@
    "text": "18 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 63,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1134,9 +1315,9 @@
    "text": "event "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 64,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1144,9 +1325,9 @@
    "text": "pairs "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 65,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1154,9 +1335,9 @@
    "text": "and "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 66,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1164,9 +1345,9 @@
    "text": "could "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 67,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1174,9 +1355,9 @@
    "text": "not "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 68,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1184,9 +1365,9 @@
    "text": "decide "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 69,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.258+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1194,9 +1375,9 @@
    "text": "12 "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 70,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1204,9 +1385,9 @@
    "text": "of "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 71,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1214,9 +1395,9 @@
    "text": "them.\n"
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 72,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1224,9 +1405,9 @@
    "text": "Text "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 73,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1234,9 +1415,9 @@
    "text": "evidence: "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 74,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1244,9 +1425,9 @@
    "text": "[1: "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 75,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1254,9 +1435,9 @@
    "text": "\"The "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 76,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1264,9 +1445,9 @@
    "text": "game-keeper "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 77,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1274,9 +1455,9 @@
    "text": "adds "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 78,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1284,9 +1465,9 @@
    "text": "that "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 79,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1294,9 +1475,9 @@
    "text": "within "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 80,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1304,9 +1485,9 @@
    "text": "a "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 81,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1314,9 +1495,9 @@
    "text": "few "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 82,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1324,9 +1505,9 @@
    "text": "minutes "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 83,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1334,9 +1515,9 @@
    "text": "of "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 84,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1344,9 +1525,9 @@
    "text": "his "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 85,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1354,9 +1535,9 @@
    "text": "seeing "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 86,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1364,9 +1545,9 @@
    "text": "Mr. "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 87,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1374,9 +1555,9 @@
    "text": "McCarthy "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 88,
-   "ts": "2026-10-27T05:31:59.397+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1384,9 +1565,9 @@
    "text": "pass "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 89,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1394,9 +1575,9 @@
    "text": "he "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 90,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1404,9 +1585,9 @@
    "text": "had "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 91,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1414,9 +1595,9 @@
    "text": "seen "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 92,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1424,9 +1605,9 @@
    "text": "his "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 93,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1434,9 +1615,9 @@
    "text": "son, "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 94,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1444,9 +1625,9 @@
    "text": "Mr. "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 95,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1454,9 +1635,9 @@
    "text": "James "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 96,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1464,9 +1645,9 @@
    "text": "McCarthy, "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 97,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1474,9 +1655,9 @@
    "text": "going "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 98,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1484,9 +1665,9 @@
    "text": "the "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 99,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1494,9 +1675,9 @@
    "text": "same "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 100,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1504,9 +1685,9 @@
    "text": "way "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 101,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1514,9 +1695,9 @@
    "text": "with "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 102,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1524,9 +1705,9 @@
    "text": "a "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 103,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1534,9 +1715,9 @@
    "text": "gun "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 104,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1544,9 +1725,9 @@
    "text": "under "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 105,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1554,9 +1735,9 @@
    "text": "his "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 106,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1564,119 +1745,49 @@
    "text": "arm.\"] "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 107,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "[1: "
+   "text": "[2: "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 108,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "\"She "
+   "text": "\"“Mr. "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 109,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "states "
+   "text": "James "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 110,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "that "
+   "text": "McCarthy, "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 111,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "while "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 112,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "she "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 113,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "was "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 114,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "there "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 115,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "she "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 116,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "saw, "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 117,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "at "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 118,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.259+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1684,19 +1795,29 @@
    "text": "the "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 119,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 112,
+   "ts": "2026-10-27T09:51:11.260+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "border "
+   "text": "only "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 120,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 113,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "son "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 114,
+   "ts": "2026-10-27T09:51:11.260+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1704,29 +1825,219 @@
    "text": "of "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 115,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 116,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "deceased, "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 117,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 118,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "then "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 119,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "called "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 120,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 121,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.260+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "the "
+   "text": "gave "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 122,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.260+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "wood "
+   "text": "evidence "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 123,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "as "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 124,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "follows: "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 125,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "‘I "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 126,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 127,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "been "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 128,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "away "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 129,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 130,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "home "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 131,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 132,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "three "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 133,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "days "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 134,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 135,
+   "ts": "2026-10-27T09:51:11.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Bristol, "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 136,
+   "ts": "2026-10-27T09:51:11.260+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1734,29 +2045,59 @@
    "text": "and "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 124,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 137,
+   "ts": "2026-10-27T09:51:11.260+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "close "
+   "text": "had "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 125,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 138,
+   "ts": "2026-10-27T09:51:11.261+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "by "
+   "text": "only "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 126,
-   "ts": "2026-10-27T05:31:59.398+00:00",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 139,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "just "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 140,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "returned "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 141,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "upon "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 142,
+   "ts": "2026-10-27T09:51:11.261+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1764,169 +2105,69 @@
    "text": "the "
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 127,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "lake, "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 128,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "Mr. "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 129,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "McCarthy "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 130,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "and "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 131,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "his "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 132,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "son, "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 133,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "and "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 134,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "that "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 135,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "they "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 136,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "appeared "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 137,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "to "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 138,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "be "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 139,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "having "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 140,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "a "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 141,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "violent "
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 142,
-   "ts": "2026-10-27T05:31:59.398+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "quarrel.\"]"
-  },
-  {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
    "seq": 143,
-   "ts": "2026-10-27T05:31:59.402+00:00",
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "morning "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 144,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 145,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "last "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 146,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Monday, "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 147,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 148,
+   "ts": "2026-10-27T09:51:11.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "3rd.\"]"
+  },
+  {
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 149,
+   "ts": "2026-10-27T09:51:11.267+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "citation_check",
@@ -1939,7 +2180,7 @@
      "source_exists": true
     },
     {
-     "n": 1,
+     "n": 2,
      "verbatim": true,
      "source_exists": true
     }
@@ -1949,15 +2190,15 @@
    "action": "accept"
   },
   {
-   "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
-   "seq": 144,
-   "ts": "2026-10-27T05:31:59.404+00:00",
+   "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
+   "seq": 150,
+   "ts": "2026-10-27T09:51:11.269+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
    "status": "answered",
    "verified": true,
-   "answer": "The rule engine found no violation among the facts extracted for boscombe-valley-mystery. This does not show that the accounts are consistent: the graph holds 86 events and 107 claims for this story; 4 events have an exact clock time, 7 have a story day, and 3 claims carry a presence proposition; rule R1 examined 18 event pairs and could not decide 12 of them.\nText evidence: [1: \"The game-keeper adds that within a few minutes of his seeing Mr. McCarthy pass he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm.\"] [1: \"She states that while she was there she saw, at the border of the wood and close by the lake, Mr. McCarthy and his son, and that they appeared to be having a violent quarrel.\"]",
+   "answer": "The rule engine found no violation among the facts extracted for boscombe-valley-mystery. This does not show that the accounts are consistent: the graph holds 86 events and 107 claims for this story; 4 events have an exact clock time, 7 have a story day, and 3 claims carry a presence proposition; rule R1 examined 18 event pairs and could not decide 12 of them.\nText evidence: [1: \"The game-keeper adds that within a few minutes of his seeing Mr. McCarthy pass he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm.\"] [2: \"“Mr. James McCarthy, the only son of the deceased, was then called and gave evidence as follows: ‘I had been away from home for three days at Bristol, and had only just returned upon the morning of last Monday, the 3rd.\"]",
    "citations": [
     {
      "n": 1,
@@ -1972,14 +2213,14 @@
      "label": "source_text"
     },
     {
-     "n": 1,
-     "quote": "She states that while she was there she saw, at the border of the wood and close by the lake, Mr. McCarthy and his son, and that they appeared to be having a violent quarrel.",
+     "n": 2,
+     "quote": "“Mr. James McCarthy, the only son of the deceased, was then called and gave evidence as follows: ‘I had been away from home for three days at Bristol, and had only just returned upon the morning of last Monday, the 3rd.",
      "anchor": {
       "story": "boscombe-valley-mystery",
-      "chunk_id": "boscombe-valley-mystery-0003",
-      "char_start": 5495,
-      "char_end": 5669,
-      "quote": "She states that while she was there she saw, at the border of the wood and close by the lake, Mr. McCarthy and his son, and that they appeared to be having a violent quarrel."
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12084,
+      "char_end": 12303,
+      "quote": "“Mr. James McCarthy, the only son of the deceased, was then called and gave evidence as follows: ‘I had been away from home for three days at Bristol, and had only just returned upon the morning of last Monday, the 3rd."
      },
      "label": "source_text"
     }
@@ -1993,12 +2234,21 @@
      "rule_id": null,
      "summary": "retrieved chunk (rrf 0.0325)",
      "explanation": null
+    },
+    {
+     "n": 2,
+     "label": "source_text",
+     "origin": "vector",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "retrieved chunk (rrf 0.0325)",
+     "explanation": null
     }
    ],
    "route": {
-    "run_id": "7f8b6049-72e0-45db-9776-45f9040e8052",
+    "run_id": "60eb6eef-4f01-4d3e-80de-7bd6db5e1e7a",
     "seq": 0,
-    "ts": "2026-10-27T05:31:40.336+00:00",
+    "ts": "2026-10-27T09:50:42.575+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",
