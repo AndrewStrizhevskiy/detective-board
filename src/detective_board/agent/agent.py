@@ -54,6 +54,7 @@ def _safe_code(code: str) -> str:
     return code if _CODE.fullmatch(code) else "tool_error"
 
 
+DECLINE_RETRY_PROBLEM = "model declined, retrying with a firmer instruction"
 SEARCHED = ["hybrid retrieval (BM25 + vector) over the Holmes corpus"]
 
 
@@ -109,7 +110,9 @@ class Agent:
         person: str | None = None
 
         # 1. vector retrieval (always: it also supplies source text and the story)
-        hits, rejected, gate_missing = yield from self._retrieve(sink, question, rq, cfg.top_k, 1)
+        hits, rejected, gate_missing, support = yield from self._retrieve(
+            sink, question, rq, cfg.top_k, 1
+        )
         story = (hits or rejected or [None])[0].story if (hits or rejected) else None
 
         # 2. rule questions: names -> graph ids (R-12); ambiguity is reported, never guessed
@@ -193,19 +196,20 @@ class Agent:
         last: CheckResult | None = None
         text = ""
         attempts = 0
+        firm = False  # the previous attempt declined: same sources, firmer instruction
         for attempt in range(1, cfg.max_retries + 2):
             attempts = attempt
-            if attempt > 1:
+            if attempt > 1 and not firm:
                 # one re-retrieve with more chunks; keep graph/tool facts
                 if "vector" in decision.routes:
-                    h2, r2, _ = yield from self._retrieve(
+                    h2, r2, _, sup2 = yield from self._retrieve(
                         sink, question, rq, cfg.top_k + cfg.retry_extra_k, attempt
                     )
                     if h2:
-                        hits = h2
+                        hits, support = h2, sup2
                 sources = assemble(hits, graph_sources, tool_sources)
             prompt = ctx.fit_prompt(
-                question, sources, headers, memory, feedback, cfg.max_prompt_tokens
+                question, sources, headers, memory, feedback, cfg.max_prompt_tokens, firm
             )
             msgs, nchars, sources = prompt.messages, prompt.chars, prompt.sources
             # graph/tool facts were renumbered with the sources; keep the lists in step
@@ -272,7 +276,19 @@ class Agent:
                 )
                 return
             if last.refusal_like:
+                if cfg.decline_retry and not firm and attempt <= cfg.max_retries:
+                    firm, feedback = True, ""
+                    yield sink.emit(
+                        CitationCheck(
+                            attempt=attempt,
+                            ok=False,
+                            problems=[DECLINE_RETRY_PROBLEM],
+                            action="retry",
+                        )
+                    )
+                    continue
                 break
+            firm = False
             more = attempt <= cfg.max_retries
             action = "retry" if more else ("partial" if last.has_verified else "refuse")
             yield sink.emit(
@@ -289,6 +305,12 @@ class Agent:
 
         assert last is not None
         if last.refusal_like:
+            if support >= cfg.decline_fallback_min_support:
+                done = yield from self._closest_passages(
+                    sink, decision, question, sources, attempts
+                )
+                if done:
+                    return
             yield sink.emit(
                 CitationCheck(attempt=attempts, ok=False, problems=last.problems, action="refuse")
             )
@@ -315,6 +337,10 @@ class Agent:
                 )
             )
             return
+        if support >= cfg.decline_fallback_min_support and not guard:
+            done = yield from self._closest_passages(sink, decision, question, sources, attempts)
+            if done:
+                return
         yield from self._refuse(
             sink,
             decision,
@@ -341,7 +367,7 @@ class Agent:
                 chunk_ids=[h.chunk_id for h in found],
             )
         )
-        return (found, [], missing) if g.passed else ([], found, missing)
+        return (found, [], missing, g.support) if g.passed else ([], found, missing, g.support)
 
     def _graph_step(
         self,
@@ -581,6 +607,43 @@ class Agent:
                 attempts=1,
             )
         )
+
+    def _closest_passages(
+        self,
+        sink: EventSink,
+        decision: RouteDecided,
+        question: str,
+        sources: list[ctx.Source],
+        attempts: int,
+    ):
+        """Deterministic fallback when the model declined or failed its check although the gate
+        passed with high support: the best sentences of the shown excerpts, verbatim, nothing
+        else. Returns False (nothing emitted) when no honest passage can be shown."""
+        text = ctx.closest_passages(sources, question, self.idf)
+        if text is None:
+            return False
+        chk = self_check(text, sources, self.cfg.min_quote_chars, 0.0, allow_uncited=True)
+        if not chk.ok:  # cannot happen: every quote is copied from a shown window
+            log.error("closest-passages template failed its own check: %s", chk.problems)
+            return False
+        for tok in re.findall(r"\S+\s*|\s+", text):
+            yield sink.emit(AnswerToken(attempt=attempts + 1, text=tok))
+        yield sink.emit(
+            CitationCheck(attempt=attempts, ok=True, citations=chk.traces, action="partial")
+        )
+        cites, labels = citations_for(text, sources)
+        yield sink.emit(
+            Final(
+                status="partial",
+                verified=True,
+                answer=text,
+                citations=cites,
+                provenance=labels,
+                route=decision,
+                attempts=attempts,
+            )
+        )
+        return True
 
     def _refuse(
         self,
