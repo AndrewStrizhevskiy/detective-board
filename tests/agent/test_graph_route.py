@@ -178,17 +178,14 @@ def test_ambiguous_alibi_is_skipped_with_the_candidates():
     assert "tool_call" not in [e.type for e in ev if getattr(e, "tool", "") == "check_alibi"]
 
 
-def test_person_without_events_widens_the_scan_once_and_says_so():
+def test_person_known_only_through_claims_is_scanned_without_widening():
+    # R-19: a speaker with no events is a known person; the first call answers, no retry
     ev, llm = _run(_graph(baynes=True), "Is there a conflict in what Baynes said?")
     results = [e for e in ev if e.type == "tool_result"]
-    assert [r.step_id for r in results] == [
-        "tool-find_contradictions",
-        "tool-find_contradictions-2",
-    ]
-    assert results[0].error["code"] == "not_found" and results[1].ok
+    assert [r.step_id for r in results] == ["tool-find_contradictions"] and results[0].ok
     calls = [e.arguments for e in ev if e.type == "tool_call"]
-    assert calls == [{"story": S, "person_id": f"p:{S}:baynes"}, {"story": S}]
-    assert f"SCOPE WIDENED: p:{S}:baynes has no events" in llm.calls[0][1]["content"]
+    assert calls == [{"story": S, "person_id": f"p:{S}:baynes"}]
+    assert "SCOPE WIDENED" not in llm.calls[0][1]["content"]
 
 
 def test_ambiguous_across_unretrieved_stories_runs_no_tool():

@@ -15,7 +15,13 @@ from pydantic import ValidationError
 
 from detective_board.mcp import tools
 from detective_board.mcp.errors import ToolError, error_payload
-from detective_board.mcp.source import ENV_ALLOW, ENV_FACTS, JsonFileFactSource
+from detective_board.mcp.source import (
+    ENV_ALLOW,
+    ENV_FACTS,
+    ENV_GRAPH,
+    GraphDbFactSource,
+    JsonFileFactSource,
+)
 from detective_board.mcp.tools import SIZE_CAP_BYTES, Window
 from detective_board.symbolic.api import FactSource
 
@@ -35,6 +41,7 @@ def _result(payload: dict[str, Any], is_error: bool = False) -> CallToolResult:
     )
 
 
+SERVER_VERSION = "0.2.0"  # 0.2: --graph (read-only, all stories)
 ENV_DEADLINE = "DETECTIVE_BOARD_TOOL_DEADLINE_S"
 DEFAULT_DEADLINE_S = 4.0  # below the client's default 5 s, so the server answers first
 
@@ -90,7 +97,7 @@ class DeadlineRunner:
 
 
 def build_server(source: FactSource, deadline_s: float | None = None) -> MCPServer:
-    mcp = MCPServer("timeline-alibi")
+    mcp = MCPServer("timeline-alibi", version=SERVER_VERSION)
     _run = DeadlineRunner(deadline_s if deadline_s is not None else deadline_from_env())
 
     @mcp.tool()
@@ -168,12 +175,20 @@ def build_server(source: FactSource, deadline_s: float | None = None) -> MCPServ
 
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="timeline-alibi")
-    ap.add_argument("--facts", help=f"FactBase JSON file (default: ${ENV_FACTS})")
+    ap.add_argument("--facts", help=f"FactBase JSON file, one story (default: ${ENV_FACTS})")
+    ap.add_argument(
+        "--graph", help=f"graph.sqlite, opened read-only, all stories (default: ${ENV_GRAPH})"
+    )
     ap.add_argument("--allow", help=f"allowed dirs, os.pathsep separated (default: ${ENV_ALLOW})")
     ns = ap.parse_args(argv)
-    path = ns.facts or os.environ.get(ENV_FACTS)
     allow = ns.allow or os.environ.get(ENV_ALLOW)
-    build_server(JsonFileFactSource(path, allow)).run()
+    graph = ns.graph or os.environ.get(ENV_GRAPH)
+    source: FactSource
+    if graph and not ns.facts:  # --facts given explicitly wins over an inherited env graph
+        source = GraphDbFactSource(graph, allow)
+    else:
+        source = JsonFileFactSource(ns.facts or os.environ.get(ENV_FACTS), allow)
+    build_server(source).run()
 
 
 if __name__ == "__main__":

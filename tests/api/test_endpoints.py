@@ -225,10 +225,11 @@ def test_health_mcp_and_warm_fields(client, tmp_path):
     fixture.build_graph(str(tmp_path / "g.sqlite")).close()
     with TestClient(build_app(cfg, ollama_probe=lambda: MODELS), base_url="http://localhost") as c:
         m = c.get("/api/health").json()["mcp"]
-        assert m == {
+        assert m == {  # graph present, no facts_path: stdio is the default (not started yet)
             "configured": True,
-            "mode": "in-process",
-            "server": "timeline-alibi[in-process]",
+            "mode": "stdio",
+            "server": "timeline-alibi",
+            "started": False,
         }
     cfg2 = _real_cfg(tmp_path, facts_path="f.json")
     with TestClient(build_app(cfg2, ollama_probe=lambda: MODELS), base_url="http://localhost") as c:

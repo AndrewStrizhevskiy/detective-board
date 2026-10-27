@@ -19,6 +19,19 @@ HARD_CAP_S = 15.0
 START_TIMEOUT_S = 10.0
 
 
+def graph_server_params(
+    graph: str, allow: str, *, extra_env: dict[str, str] | None = None
+) -> StdioServerParameters:
+    """Parameters for the `timeline-alibi` server over the graph database (read-only)."""
+    from detective_board.mcp.source import ENV_ALLOW, ENV_GRAPH
+
+    src_dir = str(Path(__file__).resolve().parents[2])
+    env = {ENV_GRAPH: graph, ENV_ALLOW: allow, "PYTHONPATH": src_dir, **(extra_env or {})}
+    return StdioServerParameters(
+        command=sys.executable, args=["-m", "detective_board.mcp.server"], env=env
+    )
+
+
 def server_params(
     facts: str, allow: str, *, extra_env: dict[str, str] | None = None
 ) -> StdioServerParameters:
@@ -36,6 +49,15 @@ def server_params(
 class McpSession:
     def __init__(self, client: Client) -> None:
         self._client = client
+
+    async def describe(self) -> dict[str, Any]:
+        """Server name/version and tool names, as the handshake reported them."""
+        info = self._client.server_info
+        return {
+            "server": getattr(info, "name", None),
+            "version": getattr(info, "version", None),
+            "tools": await self.list_tools(),
+        }
 
     async def list_tools(self) -> list[str]:
         with anyio.fail_after(START_TIMEOUT_S):

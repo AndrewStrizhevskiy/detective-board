@@ -8,6 +8,7 @@ from __future__ import annotations
 import dataclasses
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from detective_board.agent import LLM, Agent, HybridRetriever, OllamaLLM, ToolClient
@@ -74,17 +75,25 @@ class Services:
         self.graph.close()
 
 
-def mcp_status(cfg: ApiConfig, graph_present: bool) -> dict[str, Any]:
-    """How the rule tools are reached, mirroring `build_services`: what `tool_call.server` shows."""
+def mcp_status(cfg: ApiConfig, graph_present: bool, tools: Any = None) -> dict[str, Any]:
+    """How the rule tools are reached, mirroring `build_services`: what `tool_call.server` shows.
+    `tools` is the live ask-side client, when one exists: it tells whether the stdio server is
+    up (then `version` and `tools` are reported) or the labelled in-process fallback took over."""
     if cfg.fake and not fixture.demo_mode():
         return {"configured": True, "mode": "fake", "server": "timeline-alibi"}
-    if cfg.fake or (not cfg.facts_path and graph_present):
+    if cfg.fake:
         return {"configured": True, "mode": "in-process", "server": InProcessRulesClient.server}
-    if cfg.facts_path:
-        return {"configured": True, "mode": "stdio", "server": "timeline-alibi"}
-    if graph_present:
+    if not cfg.facts_path and not graph_present:
+        return {"configured": False, "mode": "none", "server": None}
+    if isinstance(tools, InProcessRulesClient):  # the stdio server could not start
         return {"configured": True, "mode": "in-process", "server": InProcessRulesClient.server}
-    return {"configured": False, "mode": "none", "server": None}
+    out: dict[str, Any] = {"configured": True, "mode": "stdio", "server": "timeline-alibi"}
+    info = getattr(tools, "info", None)
+    out["started"] = bool(getattr(tools, "started", False))
+    if out["started"] and info:
+        out["version"] = info.get("version")
+        out["tools"] = info.get("tools")
+    return out
 
 
 def _mcp_tools(cfg: ApiConfig) -> SyncToolClient | None:
@@ -97,6 +106,25 @@ def _mcp_tools(cfg: ApiConfig) -> SyncToolClient | None:
         cfg.facts_allow or str(cfg.resolve(cfg.facts_path).parent),
     )
     return SyncToolClient(lambda: open_session(params))
+
+
+def _graph_tools(cfg: ApiConfig, graph: GraphStore, gpath: Path) -> RuleTools:
+    """Default rule tools: the stdio `timeline-alibi` server over the graph file, read-only,
+    spawned now and kept for the session. If it cannot start, the same tool functions run
+    in-process, labelled `timeline-alibi[in-process]` in the trace."""
+    try:
+        from detective_board.mcp.client import graph_server_params, open_session
+
+        params = graph_server_params(str(gpath), str(gpath.parent))
+        client = SyncToolClient(lambda: open_session(params))
+        if client.start():
+            return client
+        client.close()
+    except Exception as exc:  # noqa: BLE001 - a missing `mcp` package or a spawn error: fall back
+        print(f"warning: MCP stdio server unavailable ({type(exc).__name__})", file=sys.stderr)
+    else:
+        print("warning: MCP stdio server did not start; using in-process rules", file=sys.stderr)
+    return InProcessRulesClient(graph)
 
 
 def build_services(
@@ -134,8 +162,8 @@ def build_services(
             timeout=cfg.llm_timeout_s,
         )
         tools = None
-        if with_agent:  # stdio MCP over a FactBase file if configured, else the same tools
-            tools = _mcp_tools(cfg) or (InProcessRulesClient(graph) if gpath.exists() else None)
+        if with_agent:  # stdio MCP: FactBase file if configured, else the graph file
+            tools = _mcp_tools(cfg) or (_graph_tools(cfg, graph, gpath) if gpath.exists() else None)
     svc = Services(
         store, graph, tools=tools, graph_present=cfg.fake or cfg.resolve(cfg.graph_path).exists()
     )

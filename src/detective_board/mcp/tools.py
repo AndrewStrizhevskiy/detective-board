@@ -76,7 +76,11 @@ def _check_limit(limit: int, hi: int) -> None:
 
 
 def _known_person(fb: FactBase, person_id: str) -> None:
-    if not any(person_id in e.participants for e in fb.events):
+    # a person known only through claims (speaks, takes part in no event) is known too
+    if not (
+        any(person_id in e.participants for e in fb.events)
+        or any(c.speaker_id == person_id for c in fb.claims)
+    ):
         raise ToolError("not_found", f"unknown person: {person_id!r}")
 
 

@@ -427,7 +427,7 @@ def build_app(
                 "index": index,
                 "graph": graph,
                 "sentence_index": sentence_index,
-                "mcp": mcp_status(cfg, bool(data and data["graph_present"])),
+                "mcp": mcp_status(cfg, bool(data and data["graph_present"]), rt.ask_tools),
                 "warm": warm.status(),
                 "busy": rt.busy,
                 "versions": {
