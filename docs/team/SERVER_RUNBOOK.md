@@ -204,6 +204,20 @@ and `data/graph/presence-*.sqlite`. Write into the report: facts kept per model,
 recall (the gold has only 4 strict items), and the R1/R3 findings that the new graph gives
 (`InProcessRulesClient(GraphStore(path)).call("find_contradictions", {"story": ...})`).
 
+## 5c. Sentence index (optional, 5-10 minutes on a GPU; about 20 minutes on a laptop CPU)
+
+The extractive answers can choose from sentences found by a hybrid search over the whole corpus instead of only
+the sentences of the top chunks (`docs/api.md`, "Sentence index"). It needs only `bge-m3` (pull it if the
+extraction models were pulled without it) and `data/chunks.jsonl`; no LLM runs.
+```bash
+ollama pull bge-m3
+uv run python -m detective_board.index.sentences      # or `just sentences`; about 11000 sentences, resumable: run it again if the window dies
+```
+Progress goes to stderr (`embedded N/total`); it ends with `OK` and a count. Bring back
+`data/index/sentences.sqlite` and `data/cache/sentences-emb.sqlite` (the embedding cache, so a rebuild on the
+laptop costs nothing) together with the other files of section 5. Do not copy it onto a laptop whose
+`data/chunks.jsonl` differs (the manifest holds the chunk file's sha256; a mismatch triggers a rebuild).
+
 ## 6. Cleanup
 
 Use the cleanup checklist in the TL;DR. Stop `ollama serve`, delete the working copy and the pulled models if the admin asks, leave no keys or

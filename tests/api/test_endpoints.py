@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from starlette.testclient import TestClient
 
@@ -231,3 +233,27 @@ def test_health_mcp_and_warm_fields(client, tmp_path):
     cfg2 = _real_cfg(tmp_path, facts_path="f.json")
     with TestClient(build_app(cfg2, ollama_probe=lambda: MODELS), base_url="http://localhost") as c:
         assert c.get("/api/health").json()["mcp"]["mode"] == "stdio"
+
+
+def test_health_sentence_index_absent_then_present(tmp_path):
+    from detective_board.index.sentences import build_sentences
+    from detective_board.retrieval import EmbeddingConfig, HashEmbedder
+
+    store, _ = fixture.build_store(str(tmp_path / "i.sqlite"))
+    store.close()
+    fixture.build_graph(str(tmp_path / "g.sqlite")).close()
+    sent = tmp_path / "s.sqlite"
+    cfg = _real_cfg(tmp_path, agent={"sentence_index_path": str(sent)})
+    probe = lambda: MODELS[:1] + ["fake-hash"]  # noqa: E731
+    with TestClient(build_app(cfg, ollama_probe=probe), base_url="http://localhost") as c:
+        d = c.get("/api/health").json()
+        assert d["status"] == "ok" and d["sentence_index"] == {"present": False, "sentences": 0}
+    emb_cfg = EmbeddingConfig("fake-hash", 64, "doc: ", "q: ")
+    chunks = tmp_path / "chunks.jsonl"
+    chunks.write_text(
+        json.dumps({"chunk_id": "s-0", "story": "s", "text": "Holmes lit his pipe slowly."}) + "\n"
+    )
+    build_sentences(chunks, sent, HashEmbedder(emb_cfg), emb_cfg, 4, progress=lambda s: None)
+    with TestClient(build_app(cfg, ollama_probe=probe), base_url="http://localhost") as c:
+        d = c.get("/api/health").json()
+        assert d["status"] == "ok" and d["sentence_index"] == {"present": True, "sentences": 1}

@@ -17,6 +17,7 @@ from detective_board.api.config import ApiConfig, graph_missing_message, index_m
 from detective_board.api.tool_client import SyncToolClient
 from detective_board.graph import GraphStore
 from detective_board.retrieval import EmbeddingConfig, OllamaEmbedder, Store
+from detective_board.retrieval.sentences import SentenceIndexError, SentenceStore
 
 RuleTools = SyncToolClient | InProcessRulesClient | fixture.FakeToolClient
 
@@ -62,8 +63,11 @@ class Services:
     tools: RuleTools | None = None
     index_present: bool = True
     graph_present: bool = True
+    sentences: SentenceStore | None = None  # optional sentence index (extractive candidates)
 
     def close(self) -> None:
+        if self.sentences is not None:
+            self.sentences.close()
         if self.tools is not None:
             self.tools.close()
         self.store.close()
@@ -99,6 +103,7 @@ def build_services(
     cfg: ApiConfig, *, with_agent: bool, is_cancelled: Any = lambda: False
 ) -> Services:
     tools: RuleTools | None
+    sentences: SentenceStore | None = None
     if cfg.fake:
         store, emb = fixture.build_store()
         graph = fixture.build_graph()
@@ -116,6 +121,7 @@ def build_services(
         if not index.exists():  # never create an empty index implicitly
             raise FileNotFoundError(index_missing_message(cfg))
         store = Store(index, emb_cfg)
+        sentences = _open_sentences(cfg, emb_cfg)
         graph = GraphStore(str(gpath)) if gpath.exists() else GraphStore()
         if not gpath.exists():
             print(f"warning: {graph_missing_message(cfg)}", file=sys.stderr)
@@ -133,16 +139,35 @@ def build_services(
     svc = Services(
         store, graph, tools=tools, graph_present=cfg.fake or cfg.resolve(cfg.graph_path).exists()
     )
+    svc.sentences = sentences
     if with_agent:
         client: ToolClient | None = tools
         svc.agent = Agent(
             CancellableLLM(llm, is_cancelled),  # type: ignore[arg-type]
-            HybridRetriever(store, emb),
+            HybridRetriever(store, emb, sentences=svc.sentences),
             graph=graph,  # type: ignore[arg-type]
             tools=client,
             config=_agent_cfg(cfg),
         )
     return svc
+
+
+def _open_sentences(cfg: ApiConfig, emb_cfg: EmbeddingConfig) -> SentenceStore | None:
+    """The optional sentence index; absent or incompatible -> None (the agent falls back)."""
+    path = cfg.resolve(cfg.agent_config().sentence_index_path)
+    if not path.exists():  # never create an empty one implicitly
+        print(f"note: no sentence index at {path} (`just sentences`)", file=sys.stderr)
+        return None
+    try:
+        st = SentenceStore(path, emb_cfg)
+    except SentenceIndexError as e:
+        print(f"warning: sentence index ignored: {e}", file=sys.stderr)
+        return None
+    if st.manifest().get("complete") != "1":
+        print(f"warning: sentence index {path} is incomplete (rebuild it)", file=sys.stderr)
+        st.close()
+        return None
+    return st
 
 
 def _agent_cfg(cfg: Any) -> Any:
