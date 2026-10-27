@@ -34,6 +34,11 @@ test-live:
 index:
     uv run python -m detective_board.index.build
 
+# Build data/index/sentences.sqlite (sentence-level hybrid index for the extractive answers). Needs
+# Ollama with bge-m3; resumable (cache: data/cache/sentences-emb.sqlite); about 20 min on the laptop CPU.
+sentences *args:
+    uv run python -m detective_board.index.sentences {{args}}
+
 # Build data/graph/graph.sqlite from the extraction cache(s) and normalise it. Resumable (cache hits).
 # Optional shard caches are merged into data/cache/extract-cache.sqlite first, for example:
 #   just graph qwen3:4b 20 "data/cache/extract-cache-qwen3_4b-shard*.sqlite"
