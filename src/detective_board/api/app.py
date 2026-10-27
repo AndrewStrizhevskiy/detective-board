@@ -420,7 +420,7 @@ def build_app(
                 "ollama": ollama,
                 "index": index,
                 "graph": graph,
-                "mcp": mcp_status(cfg, bool(data and data["graph_present"])),
+                "mcp": mcp_status(cfg, bool(data and data["graph_present"]), rt.ask_tools),
                 "warm": warm.status(),
                 "busy": rt.busy,
                 "versions": {

@@ -111,6 +111,12 @@ class Runtime:
             put(_SENTINEL_END)
 
     @property
+    def ask_tools(self) -> Any:
+        """The ask side's rule-tool client once it exists (None before the first question)."""
+        svc = self._ask_svc
+        return svc.tools if svc is not None else None
+
+    @property
     def busy(self) -> bool:
         return self._busy.locked()
 
