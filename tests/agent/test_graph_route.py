@@ -105,7 +105,7 @@ def _run(g, question=QUESTION, llm=None):
     rule-first path has its own tests in test_rule_first.py."""
     llm = llm or FakeLLM(_answer)
     retr = FakeRetriever([hit(1, T1, story=S), hit(2, T2, story=S)])
-    cfg = AgentConfig(rule_first=False)
+    cfg = AgentConfig(answer_mode="generate", rule_first=False)
     agent = make_agent(llm, retr, graph=g, tools=InProcessRulesClient(g), config=cfg)
     return list(agent.ask(question)), llm
 

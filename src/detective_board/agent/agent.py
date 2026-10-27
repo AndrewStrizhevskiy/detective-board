@@ -14,6 +14,7 @@ from typing import Any
 from detective_board.symbolic.api import Explanation
 
 from . import context as ctx
+from . import extractive as ex
 from . import rule_first as rf
 from .answer import CheckResult, citations_for, self_check, strip_reasoning
 from .backends import GraphBackend, Retriever, ToolClient
@@ -155,10 +156,23 @@ class Agent:
             if err:
                 tool_errors.append(f"{tool}: {err}")
 
-        if cfg.rule_first and decision.tools:  # the answer is the rule result, not a model's text
-            yield from self._rule_first_answer(
-                sink, decision, question, story, link, hits, outcomes, headers
-            )
+        # the answer is the rule result, not a model's text, but only when a rule tool really ran
+        # (or the person is ambiguous, which is reported); a tool that was skipped or failed says
+        # nothing about the question, which then goes the normal text way
+        ran = [o for o in outcomes if o.error is None]
+        ambiguous = (link is not None and link.status == "ambiguous") or any(
+            (o.error or {}).get("code") == "ambiguous" for o in outcomes
+        )
+        if cfg.rule_first and decision.tools and (ran or ambiguous):
+            if cfg.answer_mode == "extractive" and ran and not rf.has_rule_verdict(outcomes):
+                # the rule engine found nothing: the rule line first, then what the text says
+                yield from self._rule_then_text_answer(
+                    sink, decision, question, story, link, hits, outcomes, headers, gate_missing
+                )
+            else:
+                yield from self._rule_first_answer(
+                    sink, decision, question, story, link, hits, outcomes, headers
+                )
             return
         # any other route that carried a rule result: an empty one must not read as agreement
         guard = bool(decision.tools) and not rf.has_rule_verdict(outcomes)
@@ -189,6 +203,11 @@ class Agent:
                 yield from self._refuse(
                     sink, decision, "no_evidence", ctx.REFUSAL_TEXT, gate_missing, SEARCHED
                 )
+            return
+
+        if cfg.answer_mode == "extractive":
+            vec = [s for s in sources if s.origin == "vector"]
+            yield from self._extractive_answer(sink, decision, question, vec, None, gate_missing)
             return
 
         memory = summarize(history, cfg.memory_turns, cfg.memory_max_chars)
@@ -529,6 +548,132 @@ class Agent:
                 return srcs, [note, *hdr], e2, payload
         return srcs, hdr, (summary if err else None), payload
 
+    def _rule_then_text_answer(
+        self,
+        sink: EventSink,
+        decision: RouteDecided,
+        question: str,
+        story: str | None,
+        link: Link | None,
+        hits: list[Any],
+        outcomes: list[rf.ToolOutcome],
+        headers: list[str],
+        missing: list[str],
+    ):
+        """Rule tool ran and found nothing: the rule line (never a claim of consistency), then the
+        text answer to the same question, chosen by the model from the retrieved sentences."""
+        cfg = self.cfg
+        rule = rf.build_answer(
+            question=question,
+            story=story,
+            outcomes=outcomes,
+            link=link,
+            notes=headers,
+            hits=[],  # the text part is the extractive one, not the template's passages
+            coverage=rf.coverage_for(self.tools, self.graph, story),
+            idf=self.idf,
+            min_quote_chars=cfg.min_quote_chars,
+        )
+        vec = ctx.sources_from_hits(
+            hits,
+            question,
+            cfg.window_words,
+            start=len(rule.sources) + 1,
+            idf=self.idf,
+            full_top1=cfg.strategy == "rank_full",
+        )
+        yield from self._extractive_answer(sink, decision, question, vec, rule, missing)
+
+    def _extractive_answer(
+        self,
+        sink: EventSink,
+        decision: RouteDecided,
+        question: str,
+        vec: list[ctx.Source],
+        rule: rf.RuleAnswer | None,
+        missing: list[str],
+    ):
+        """The model picks one or two sentences from a numbered list (JSON enum, a few tokens);
+        the answer text is a template over the picks, so every quote is verbatim by construction.
+        NONE, an invalid id or unparsable output is a plain refusal. With `rule` the template
+        text goes after the rule engine's line."""
+        cfg = self.cfg
+        prompt = ex.build_prompt(
+            question,
+            vec,
+            self.idf,
+            per_source=cfg.extract_per_source,
+            total=cfg.extract_max_sentences,
+            max_tokens=cfg.max_prompt_tokens,
+        )
+        sources = [*(rule.sources if rule else []), *vec]
+        yield sink.emit(
+            EnrichedQuery(
+                attempt=1,
+                prompt_chars=prompt.chars,
+                prompt_tokens_estimate=prompt.tokens,
+                max_prompt_tokens=cfg.max_prompt_tokens,
+                strategy="extractive" if rule is None else "rule-first (empty) + extractive",
+                window_words=cfg.window_words,
+                sources=_source_traces(sources),
+                graph_facts=0,
+                rule_facts=0,
+                injection_suspects=[s.n for s in sources if s.suspect],
+            )
+        )
+        chosen: list[ex.Candidate] = []
+        if prompt.candidates:
+            raw = "".join(
+                self.llm.chat(
+                    prompt.messages,
+                    temperature=cfg.temperature,
+                    seed=cfg.seed,
+                    format=prompt.schema,
+                )
+            )
+            chosen = ex.parse_choice(strip_reasoning(raw), prompt.candidates)
+        if rule is None:
+            if not chosen:
+                yield sink.emit(
+                    CitationCheck(
+                        attempt=1, ok=False, problems=[ex.NO_ANSWER_PROBLEM], action="refuse"
+                    )
+                )
+                yield from self._refuse(
+                    sink, decision, "no_evidence", ctx.REFUSAL_TEXT, missing, SEARCHED
+                )
+                return
+            text = ex.render_answer(chosen)
+            checked = text
+        else:
+            checked = rule.text + ("\n" + ex.render_answer(chosen, ex.TEXT_INTRO) if chosen else "")
+            text = checked if chosen else rule.text + "\n" + ctx.REFUSAL_TEXT
+        for tok in re.findall(r"\S+\s*|\s+", text):
+            yield sink.emit(AnswerToken(attempt=1, text=tok))
+        chk = self_check(checked, sources, cfg.min_quote_chars, 0.0, allow_uncited=True)
+        if not chk.ok:  # cannot happen: every quote is copied from a shown excerpt
+            log.error("extractive answer failed its own check: %s", chk.problems)
+            yield sink.emit(
+                CitationCheck(attempt=1, ok=False, problems=chk.problems, action="refuse")
+            )
+            yield from self._refuse(
+                sink, decision, "selfcheck_failed", ctx.REFUSAL_TEXT, chk.problems[:5], SEARCHED
+            )
+            return
+        yield sink.emit(CitationCheck(attempt=1, ok=True, citations=chk.traces, action="accept"))
+        cites, labels = citations_for(checked, sources)
+        yield sink.emit(
+            Final(
+                status="answered",
+                verified=True,
+                answer=text,
+                citations=cites,
+                provenance=labels,
+                route=decision,
+                attempts=1,
+            )
+        )
+
     def _rule_first_answer(
         self,
         sink: EventSink,
@@ -666,6 +811,25 @@ class Agent:
                 refusal_code=code,
             )
         )
+
+
+def _source_traces(sources: list[ctx.Source]) -> list[SourceTrace]:
+    return [
+        SourceTrace(
+            n=s.n,
+            chunk_id=s.chunk_id,
+            story=s.story,
+            char_start=s.char_start,
+            char_end=s.char_end,
+            origin=s.origin,
+            label=s.label,
+            window_start=s.win_start,
+            window_end=s.window_end,
+            window_char_start=s.char_start + s.win_start,
+            window_char_end=s.char_start + s.window_end,
+        )
+        for s in sources
+    ]
 
 
 def _tool_provenance(payload: dict[str, Any]) -> str | None:

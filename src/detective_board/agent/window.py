@@ -187,3 +187,14 @@ def best_window(
     start = 0 if i == 0 else spans[i][0]
     end = len(text) if j == len(spans) - 1 else spans[j][1]
     return Window(start, end, j - i + 1, sum(score[i : j + 1]))
+
+
+def sentence_scores(
+    text: str, question: str, idf: Mapping[str, float] | None = None
+) -> list[tuple[int, int, float]]:
+    """(start, end, score) of every sentence of `text`, in text order; the score is the window
+    scorer's raw one: the summed weight of the question words the sentence holds."""
+    spans = sentence_spans(text)
+    q = content_words(question)
+    weight = _weights(q, question, idf)
+    return [(a, b, sum(weight[w] for w in q & content_words(text[a:b]))) for a, b in spans]

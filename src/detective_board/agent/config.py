@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 STRATEGIES = ("rank_full", "uniform")
+ANSWER_MODES = ("extractive", "generate")
 
 
 @dataclass(frozen=True)
@@ -28,6 +29,10 @@ class AgentConfig:
     memory_max_chars: int = 600
     use_llm_router: bool = False  # LLM classifier fallback when no rule matched
     tool_timeout_s: float = 5.0
+    answer_mode: str = "extractive"  # extractive: the model picks sentences, text is a template
+    # generate: the model writes a cited answer (kept for A/B)
+    extract_per_source: int = 6  # extractive: best-scoring sentences kept per source
+    extract_max_sentences: int = 24  # extractive: sentences offered to the model in total
     rule_first: bool = True  # rule questions: deterministic template from the rule result, no LLM
     temperature: float = 0.0
     seed: int = 42
@@ -35,3 +40,5 @@ class AgentConfig:
     def __post_init__(self) -> None:
         if self.strategy not in STRATEGIES:
             raise ValueError(f"strategy must be one of {STRATEGIES}, got {self.strategy!r}")
+        if self.answer_mode not in ANSWER_MODES:
+            raise ValueError(f"answer_mode must be one of {ANSWER_MODES}, got {self.answer_mode!r}")

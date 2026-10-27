@@ -41,10 +41,12 @@ class CancellableLLM:
                 raise RunCancelled
             yield tok
 
-    def chat(self, messages, *, temperature: float = 0.0, seed: int | None = None):
+    def chat(self, messages, *, temperature: float = 0.0, seed: int | None = None, format=None):
         if self._is_cancelled():
             raise RunCancelled
-        return self._wrap(self._inner.chat(messages, temperature=temperature, seed=seed))
+        return self._wrap(
+            self._inner.chat(messages, temperature=temperature, seed=seed, format=format)
+        )
 
     def generate(self, prompt, *, temperature: float = 0.0, seed: int | None = None):
         if self._is_cancelled():
@@ -150,4 +152,6 @@ def _agent_cfg(cfg: Any) -> Any:
         chunks = cfg.resolve("data/chunks.jsonl")
         if chunks.exists():
             ac = dataclasses.replace(ac, idf_chunks=str(chunks))
+    if cfg.fake and "answer_mode" not in cfg.agent:  # the canned fixture model writes answers
+        ac = dataclasses.replace(ac, answer_mode="generate")
     return ac

@@ -13,6 +13,7 @@ from typing import Any
 
 from detective_board.agent import OllamaLLM
 from detective_board.agent.context import SYSTEM_PROMPT
+from detective_board.agent.extractive import SELECT_SYSTEM_PROMPT
 from detective_board.api.config import ApiConfig
 from detective_board.retrieval import EmbeddingConfig, OllamaEmbedder
 
@@ -84,8 +85,12 @@ class Warmup:
         if llm is not None:
             try:
                 # the real static system prompt first, so its KV prefix is reusable by answers
+                extractive = self.cfg.agent_config().answer_mode == "extractive"
                 msgs = [
-                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {
+                        "role": "system",
+                        "content": SELECT_SYSTEM_PROMPT if extractive else SYSTEM_PROMPT,
+                    },
                     {"role": "user", "content": "ok"},
                 ]
                 for _ in _chat(llm, msgs):

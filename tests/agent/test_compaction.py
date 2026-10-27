@@ -91,7 +91,9 @@ def test_budget_drops_lowest_ranked_source_and_renumbers():
 
 def test_agent_reports_windows_budget_and_tokens():
     hits = [hit(i, LONG) for i in (1, 2, 3)]
-    cfg = AgentConfig(max_prompt_tokens=450, window_words=60, strategy="uniform")
+    cfg = AgentConfig(
+        answer_mode="generate", max_prompt_tokens=450, window_words=60, strategy="uniform"
+    )
     ev = list(make_agent(FakeLLM("x"), FakeRetriever(hits), config=cfg).ask("What snake?", ()))
     eq = next(e for e in ev if e.type == "enriched_query")
     assert eq.prompt_tokens_estimate == estimate_tokens(eq.prompt_chars) <= 450
@@ -104,7 +106,7 @@ def test_agent_reports_windows_budget_and_tokens():
 def test_default_top_k_is_four():
     r = FakeRetriever([hit(i, "A snake. ") for i in range(1, 8)])
     list(make_agent(FakeLLM("x"), r).ask("What snake?", ()))
-    assert r.calls[0][1] == 4 == AgentConfig().top_k
+    assert r.calls[0][1] == 4 == AgentConfig(answer_mode="generate").top_k
 
 
 # ---- reasoning leak ---------------------------------------------------------
@@ -136,7 +138,7 @@ def test_real_chunks_fit_budget_for_golden_questions():
     qs = [json.loads(x) for x in (ROOT / "eval/golden/questions.jsonl").read_text().splitlines()]
     qs = [q for q in qs if q["answerable"] and q["gold_quotes"]][:12]
     assert qs
-    cfg = AgentConfig()
+    cfg = AgentConfig(answer_mode="generate")
     for q in qs:
         gold = q["gold_quotes"][0]
         c = next(
@@ -189,7 +191,7 @@ def test_g001_window_keeps_swamp_adder():
 def test_agent_uses_idf_chunks(tmp_path):
     f = tmp_path / "chunks.jsonl"
     f.write_text(json.dumps({"text": LONG, "story": "s"}) + "\n")
-    ag = make_agent(FakeLLM("x"), config=AgentConfig(idf_chunks=str(f)))
+    ag = make_agent(FakeLLM("x"), config=AgentConfig(answer_mode="generate", idf_chunks=str(f)))
     assert ag.idf and ag.idf["adder"] > 0
 
 
@@ -208,10 +210,10 @@ def test_abbreviation_does_not_split_claim():
 def test_defaults_and_strategy_validation():
     import pytest
 
-    c = AgentConfig()
+    c = AgentConfig(answer_mode="generate")
     assert (c.top_k, c.strategy, c.window_words, c.max_prompt_tokens) == (4, "rank_full", 60, 1200)
     with pytest.raises(ValueError, match="strategy"):
-        AgentConfig(strategy="nope")
+        AgentConfig(answer_mode="generate", strategy="nope")
 
 
 def test_rank_full_top1_whole_others_windows():
@@ -237,7 +239,7 @@ def test_trace_reports_strategy_and_full_top1_is_citable():
         make_agent(
             FakeLLM(f'Mist. [1: "{quote}"]'),
             FakeRetriever(hs),
-            config=AgentConfig(strategy="uniform"),
+            config=AgentConfig(answer_mode="generate", strategy="uniform"),
         ).ask("What kind of snake?", ())
     )
     assert next(e for e in uni if e.type == "enriched_query").strategy == "uniform"
@@ -252,7 +254,7 @@ def test_real_chunks_rank_full_budget_never_cuts_top1():
         q["id"]: q
         for q in map(json.loads, (ROOT / "eval/golden/questions.jsonl").read_text().splitlines())
     }
-    cfg = AgentConfig()
+    cfg = AgentConfig(answer_mode="generate")
     for qid in ("g001", "g007", "g028"):
         q = qs[qid]
         quote = q["gold_quotes"][0]["quote"][:25]
