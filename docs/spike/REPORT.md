@@ -172,3 +172,43 @@ Files: `docs/spike/results/answers-20261023-v3.md` and `answers-20261023-v3-<mod
 1. Human spot-check of the gold sets (all claims and relations of 4 extraction chunks, and 10 golden questions).
 2. Extraction scope: full corpus or demo stories only (orchestrator default: priority stories first, see STATUS.md).
 3. Acceptance that the answer model stays open until the check runs, and that the extraction model rests on thin evidence.
+
+## Addendum 2026-10-27
+
+Appended after the first runs of the real stack; sections 1-11 above are unchanged and still describe the 2026-10-23 state (retrieval-only path, graph and MCP off). Every number here is from a named file; n is small everywhere, so read all of it as pilot.
+
+### A1. The two real-API runs of the 12 control questions
+
+Same 12 questions as section 9, now through `POST /api/ask` on the target laptop with the real index (596 chunks), a graph of 8 stories (231 chunks) plus curated demo facts, live bge-m3 embeddings and qwen3:4b-instruct. One run each, temperature 0, seed 42. Files: `results/api12-20261027-generative.md` (before) and `results/api12-20261027-extractive.md` (after); decision record: ADR-0009.
+
+| | Generative (decline-retry, closest-passages fallback) | Extractive (model chooses sentences) |
+|---|---|---|
+| time per question that called the model | 45.7-140.8 s | 8.1-20.2 s |
+| g001 | partial (closest passages; 7.3 s only through Ollama prompt cache) | answered, 9.3 s, verbatim swamp-adder sentence |
+| g047 / g056 / g057 | refused / partial / partial | refused / refused / refused |
+| g007, g016 | partial | refused (model chose NONE) |
+| g062 (Russian) | refused by the gate | refused by the gate |
+| g028, g022 | rule-first template although they are text questions (regression, fixed afterwards) | g028: rule line plus text evidence; g022 answered from text |
+
+Caveats (from the files): n=12, one run; "answered" means a quoted sentence, not a correct one; no human has judged the answers; the 4B model is wording-sensitive (one clause of the selection prompt flipped g001 to NONE), so the prompt wording is frozen; the generative table was measured on the same day before the extractive mode existed, so the two runs differ in the code, not only the mode.
+
+### A2. What the real extraction showed (symbolic readiness)
+
+- Raw qwen3:4b output with `extract-2.1` over 64 cached Wisteria/Boscombe chunks: participants empty in all events (178/178 in the brief of 2026-10-27; `docs/symbolic-layer.md` 11.2 counts 177 events and 226 claims), `polarity=deny` in 222 of 226 claims (98%), time and place copied from the chunk start. R1/R3 found nothing (133 `DENIAL_NOT_MODELLED`, 0 dated events).
+- After the deterministic repair (STATUS 2026-10-26; produced with `scripts/eval/repair_eval.py`, not re-run for this addendum): participants non-empty in 122 of 177 events, deny share 16%, copied time/place demoted to low inherited context.
+- First real run, wisteria-lodge, repaired: 107 events, 137 claims, 0 exact clock times, 0 story days, 1 usable presence proposition; R1 examined 19 pairs and could not decide 16. So R1/R3 still find nothing automatically on real data: the text rarely gives exact times and days.
+- Prompt v2.2 (12 gold chunks, `results/prompt-v2-2-20261026.md`): participants non-empty 33% vs 0%, deny share 12% vs 91%, but strict F1 entities 0.000 vs 0.557 and relations 0.026 vs 0.136; claims 0.283 vs 0.200. Not adopted (ADR-0012). The repair reproduces the polarity gain on v2.1 output.
+
+### A3. Targeted presence pass
+
+Three c001 chunks only. presence-1 (qwen3:4b-instruct 16 facts, qwen3:8b 12 facts): strict grounding kept 0, lenient kept 2, because the models write pronouns as the person. presence-2.1 (graph candidate names as a JSON-schema enum plus carry-over from earlier chunks): qwen3:4b-instruct 7 facts, 1 kept (one chunk truncated); qwen3:8b 15 facts, 11 kept, the key fact right and several wrong persons or places. The presence-2.1 counts were reported by the team lead and are not in a committed result file. Precision is unmeasured. The demo therefore uses five curated facts (`data/curated/presence_demo.jsonl`, ADR-0011), marked as such everywhere.
+
+### A4. Time to first token
+
+Prefill is about 21 tokens/s; threads, batch size and num_ctx change nothing beyond noise; only the system-prompt prefix cache helps (42.7 s against 52.7 s for the 1080-token g001 prompt; `docs/perf/ttft-levers-2026-10-26.md`, one run per variant). The extractive prompt is about a third of the generative one, which is where the 8-20 s per question comes from.
+
+### A5. Server and what remains unmeasured
+
+Department server: i7-12700K, 96 GB, RTX 4070 12 GB, fully ours until 2026-11-01; slots Tue 27 Oct from 14:30 and Wed 28 Oct 12:00-18:00; organizers approved precomputing elsewhere; freeze Wed 18:00. The laptop cache of 231 chunks (8 stories, `data/extraction/laptop-cache-qwen3_4b-extract-2.1.sqlite`) seeds the server run.
+
+Unmeasured at the time of writing: extraction on all 596 chunks (counts of events with exact times and days); precision and recall of automatic presence facts; qwen3:8b against qwen3:4b on the gold12 with v2.1; contradiction precision/recall on a real graph; human-judged correctness of extractive answers; the extractive mode on more than 12 questions or more than one run; the human re-check of the curated facts; GPU versus CPU differences in cached extraction outputs.
