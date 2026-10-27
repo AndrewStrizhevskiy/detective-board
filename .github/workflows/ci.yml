@@ -73,9 +73,8 @@ jobs:
   eval-short:
     runs-on: ubuntu-latest
     needs: [test]
-    # TODO: enable when scripts/eval/run.py exists; must use the deterministic mock LLM
-    # (no Ollama) and a small fixed question subset. See docs/test-plan.md section 7.
-    if: ${{ false }}
+    # eval/run_eval.py --short: 8 dev questions, FakeLLM, the 10-chunk fixture index, no network,
+    # well under 60 s. It tests the pipeline and the metric code, not model quality (docs/test-plan.md 7).
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
@@ -84,4 +83,4 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           enable-cache: true
       - run: uv sync --locked --group dev
-      - run: uv run python scripts/eval/run.py --short --llm mock
+      - run: uv run python eval/run_eval.py --short

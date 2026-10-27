@@ -61,9 +61,10 @@ normalise:
 gold12 *args:
     scripts/server_gold12.sh {{args}}
 
-# TODO: scripts/eval/run.py does not exist yet. Pass `--short` for the CI subset.
+# Eval runner (eval/run_eval.py). `just eval --short`: CI subset, fake LLM, no network.
+# `just eval --split dev`: real stack (Ollama + index + graph); `--split test` once per frozen config.
 eval *args:
-    uv run python scripts/eval/run.py {{args}}
+    uv run python eval/run_eval.py {{args}}
 
 # Web UI + API on http://127.0.0.1:8000. Use `just run --fake` for canned demo data without Ollama.
 # Full wiring to the real index/graph/MCP: see docs/api.md and docs/HANDOFF.md (open items).
