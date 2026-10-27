@@ -178,7 +178,7 @@ class Agent:
             if cfg.answer_mode == "extractive" and ran and not rf.has_rule_verdict(outcomes):
                 # the rule engine found nothing: the rule line first, then what the text says
                 yield from self._rule_then_text_answer(
-                    sink, decision, question, story, link, hits, outcomes, headers, gate_missing
+                    sink, decision, question, story, link, hits, outcomes, headers, gate_missing, rq
                 )
             else:
                 yield from self._rule_first_answer(
@@ -222,7 +222,9 @@ class Agent:
 
         if cfg.answer_mode == "extractive":
             vec = [s for s in sources if s.origin == "vector"]
-            yield from self._extractive_answer(sink, decision, question, vec, None, gate_missing)
+            yield from self._extractive_answer(
+                sink, decision, question, vec, None, gate_missing, rq
+            )
             return
 
         memory = summarize(history, cfg.memory_turns, cfg.memory_max_chars)
@@ -574,6 +576,7 @@ class Agent:
         outcomes: list[rf.ToolOutcome],
         headers: list[str],
         missing: list[str],
+        rq: str | None = None,
     ):
         """Rule tool ran and found nothing: the rule line (never a claim of consistency), then the
         text answer to the same question, chosen by the model from the retrieved sentences."""
@@ -597,7 +600,7 @@ class Agent:
             idf=self.idf,
             full_top1=cfg.strategy == "rank_full",
         )
-        yield from self._extractive_answer(sink, decision, question, vec, rule, missing)
+        yield from self._extractive_answer(sink, decision, question, vec, rule, missing, rq)
 
     def _extractive_answer(
         self,
@@ -607,21 +610,54 @@ class Agent:
         vec: list[ctx.Source],
         rule: rf.RuleAnswer | None,
         missing: list[str],
+        rq: str | None = None,
     ):
         """The model picks one or two sentences from a numbered list (JSON enum, a few tokens);
         the answer text is a template over the picks, so every quote is verbatim by construction.
         NONE, an invalid id or unparsable output is a plain refusal. With `rule` the template
         text goes after the rule engine's line."""
         cfg = self.cfg
-        prompt = ex.build_prompt(
-            question,
-            vec,
-            self.idf,
-            per_source=cfg.extract_per_source,
-            total=cfg.extract_max_sentences,
-            max_tokens=min(cfg.max_prompt_tokens, cfg.extract_max_tokens),
-            order=cfg.extract_order,
-        )
+        max_tokens = min(cfg.max_prompt_tokens, cfg.extract_max_tokens)
+        strategy = "extractive"
+        found = None
+        search = getattr(self.retriever, "sentence_search", None)
+        if search is not None and cfg.extract_sentence_k > 0:
+            try:
+                found = search(rq or question, cfg.extract_sentence_k)
+            except Exception as e:  # a broken sentence index must not kill the answer
+                log.warning("sentence search failed, using chunk sentences: %s", e)
+                strategy = "extractive (sentence search failed: sentences of the top chunks only)"
+            else:
+                if found is None:
+                    strategy = (
+                        "extractive (sentence index absent: sentences of the top chunks only)"
+                    )
+        if found is not None:
+            prompt, vec = ex.build_hybrid_prompt(
+                question,
+                vec,
+                found,
+                self.idf,
+                top_sentences=cfg.extract_sentence_k,
+                safety_chunks=cfg.extract_safety_chunks,
+                safety_per_chunk=cfg.extract_safety_per_chunk,
+                total=cfg.extract_max_sentences,
+                max_tokens=max_tokens,
+                start=(len(rule.sources) if rule else 0) + 1,
+            )
+            strategy = "extractive + sentence index"
+        else:
+            prompt = ex.build_prompt(
+                question,
+                vec,
+                self.idf,
+                per_source=cfg.extract_per_source,
+                total=cfg.extract_max_sentences,
+                max_tokens=max_tokens,
+                order=cfg.extract_order,
+            )
+        if rule is not None:
+            strategy = f"rule-first (empty) + {strategy}"
         sources = [*(rule.sources if rule else []), *vec]
         yield sink.emit(
             EnrichedQuery(
@@ -629,7 +665,7 @@ class Agent:
                 prompt_chars=prompt.chars,
                 prompt_tokens_estimate=prompt.tokens,
                 max_prompt_tokens=cfg.max_prompt_tokens,
-                strategy="extractive" if rule is None else "rule-first (empty) + extractive",
+                strategy=strategy,
                 window_words=cfg.window_words,
                 sources=_source_traces(sources),
                 graph_facts=0,

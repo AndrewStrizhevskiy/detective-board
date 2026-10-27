@@ -57,6 +57,24 @@ CREATE TABLE index_manifest (
 
 Fusion: RRF done in Python over the two ranked lists (db-research.md recommendation). Both stores sit behind `VectorStore` / `Bm25Store` interfaces so LanceDB (fallback) or `bm25s` (comparison arm) can replace them. Unknown: whether sqlite-vec offers metadata filtering by `story` **[U]**; fallback is post-filtering.
 
+## 2b. Sentence index (separate file `data/index/sentences.sqlite`)
+
+Same chunks, one row per sentence; built by `python -m detective_board.index.sentences` (`just sentences`), searched by `retrieval.sentences.sentence_search`. Splitter: `agent.window.sentence_spans`; units of fewer than 4 words are merged into the following sentence (the previous one at the end of a chunk), so nothing is dropped and `chunk.text[start:end] == text` always holds. The embedding is computed from the text with whitespace collapsed, no prefixes, same `bge-m3` identity (cosine, 1024) as the chunk index.
+```sql
+CREATE TABLE sent (
+  id INTEGER PRIMARY KEY,                 -- 1..N in chunks.jsonl order, sentence order inside a chunk
+  chunk_id TEXT NOT NULL, story TEXT NOT NULL,
+  start INTEGER NOT NULL, end INTEGER NOT NULL,   -- offsets INSIDE the chunk text
+  text TEXT NOT NULL);
+CREATE INDEX sent_chunk ON sent(chunk_id, start);
+CREATE VIRTUAL TABLE sent_fts USING fts5(text, content='sent', content_rowid='id', tokenize='porter unicode61');
+CREATE VIRTUAL TABLE sent_vec USING vec0(embedding float[1024] distance_metric=cosine);  -- rowid = sent.id
+CREATE TABLE sent_manifest (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+-- schema_version, splitter, min_words, embed_model/dim/doc_prefix/query_prefix/metric,
+-- chunks_sha256 (of the chunk file), sentences, complete ('1' only when every sentence has a vector)
+```
+Rebuild is idempotent (a complete file for the same chunk file, splitter and embedding identity is not touched) and resumable (rows are written in one transaction, vectors per batch; a per-text embedding cache `data/cache/sentences-emb.sqlite` makes even a deleted file cheap to rebuild). A different embedding configuration is refused (`SentenceIndexError`); a changed chunk file or splitter rebuilds the rows. The API opens the file only when `complete = 1`.
+
 ## 3. Graph schema (derived from Extraction v1) [P]
 
 The extraction schema is flat: entities (`person|place|item`), events, claims and relations reference entities **by name string**, each with a verbatim `quote`. The graph layer turns this into typed nodes and edges with source anchors. Engine is **[P]** (Ladybug vs networkx+SQLite); the logical schema below is engine-independent, and the SQLite tables in 3.4 are the authoritative fallback form.

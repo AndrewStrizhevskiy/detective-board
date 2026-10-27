@@ -18,6 +18,10 @@ set is an explicit person-place-time conflict with an established narrator fact.
 the c042 control and how to add a case: `docs/symbolic-layer.md` 11.4; stage wording: `docs/DISCLOSURE.md`
 and `docs/design/demo-script.md` step 2. The facts still need a human re-check.
 
+## 0b. Sentence index (2026-10-27, branch `feat/sentence-index`, not pushed)
+
+`data/index/sentences.sqlite` (`just sentences`; docs/data-schema.md 2b) is a sentence-level hybrid index; with it the extractive mode offers the top 12 sentences of the whole corpus plus the best 2 of each of the top 2 chunks (docs/api.md "Sentence index"). Without the file nothing changes (trace note in `enriched_query.strategy`). Candidate recall without an LLM: `eval/sentence_recall.py`, results in docs/spike/results/sentence-recall-*.md. Whether the model then picks the right sentence is NOT measured yet: run `eval/run_answer_check.py` on the real model before making it the demo default.
+
 ## 1. What the project is
 
 Detective Board: a local, offline, CPU-only neuro-symbolic investigator over 20 Sherlock Holmes stories.
@@ -92,6 +96,7 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
    qwen3:4b-instruct, then `scripts/spike/presence_eval.py`); details and limits in
    `docs/symbolic-layer.md` 11.3. The tests use canned model output: they show the plumbing, not extraction
    quality, and Wisteria Lodge (c001) is only reachable with `--lenient` (context fields, LOW).
+   **Presence verifier (branch `feat/presence-verifier`, NOT measured):** optional `--verify` (one enum-answer check per kept fact) and `--samples N` (majority vote) for the presence pass, off by default, recommended server command in `docs/team/SERVER_RUNBOOK.md` 5b; per-stage precision/recall in `presence_eval.py`; see `docs/symbolic-layer.md` 11.3.
 4. **Build `eval/run_eval.py`** (Package C): bare LLM / vector / vector+rerank / hybrid+graph; heavy runs on
    the strong machine, a short CI mode. Tune the provisional thresholds (min_score 0.018, min_support 0.25,
    min_claim_overlap 0.3; R-13).

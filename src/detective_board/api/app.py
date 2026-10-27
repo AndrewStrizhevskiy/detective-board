@@ -385,7 +385,9 @@ def build_app(
         def local(s):
             n_chunks = s.store.db.execute("SELECT COUNT(*) FROM chunks").fetchone()[0]
             n_vec = s.store.db.execute("SELECT COUNT(*) FROM chunk_vec").fetchone()[0]
+            sent = s.sentences
             return {
+                "sentences": sent.count() if sent is not None else None,
                 "chunks": n_chunks,
                 "vectors": n_vec,
                 "manifest": s.store.manifest(),
@@ -396,6 +398,10 @@ def build_app(
         data, err = await asyncio.to_thread(rt.try_read, local)
         index = {"present": data is not None and data["chunks"] > 0}
         graph = {"present": data is not None and data["graph_present"]}
+        sentence_index = {
+            "present": bool(data and data["sentences"]),
+            "sentences": (data or {}).get("sentences") or 0,
+        }
         if data:
             index |= {"chunks": data["chunks"], "vectors": data["vectors"]}
             graph |= {"counts": data["graph"]}
@@ -420,6 +426,7 @@ def build_app(
                 "ollama": ollama,
                 "index": index,
                 "graph": graph,
+                "sentence_index": sentence_index,
                 "mcp": mcp_status(cfg, bool(data and data["graph_present"]), rt.ask_tools),
                 "warm": warm.status(),
                 "busy": rt.busy,
@@ -442,7 +449,9 @@ def build_app(
                     "embedding": "fake-hash" if cfg.fake else cfg.embed_model,
                 },
                 "llm_options": {"num_ctx": cfg.num_ctx, "keep_alive": cfg.keep_alive},
-                "agent": {k: v for k, v in vars(cfg.agent_config()).items()},
+                "agent": {  # no filesystem paths in the view
+                    k: v for k, v in vars(cfg.agent_config()).items() if not k.endswith("_path")
+                },
                 "limits": {
                     "max_body_bytes": cfg.max_body_bytes,
                     "max_question_chars": cfg.max_question_chars,

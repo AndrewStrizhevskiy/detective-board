@@ -1,0 +1,37 @@
+version: presence-verify-1.0
+---
+You check ONE claim about a person against a short text from a Sherlock Holmes story. Do not use outside knowledge and do not guess: judge only what the text below says or clearly implies.
+The claim has three parts. For each part answer "yes" or "no":
+- person_ok: the text says the claim's PERSON is the one who was at the place (a name, or a pronoun whose owner is clear from the text shown). "no" if the text is about somebody else, or the person cannot be told from the text shown.
+- place_ok: the text says the person was at, went to, stayed at or was seen at that PLACE.
+- time_ok: the TIME in the claim is the time the text gives for it.
+Then give verdict: "yes" if all three are yes, "no" if the claim is wrong or not supported, "partly" if the text supports the claim but one part is off or only vaguely right.
+Answer with JSON only: {"person_ok": ..., "place_ok": ..., "time_ok": ..., "verdict": ...}
+
+Example 1 (invented).
+Previous: Lady Corbin had retired early.
+Quote: Mr. Fenwick sat in the library until about eleven o'clock.
+Next: Then he locked the door.
+Claim: Mr. Fenwick was at the library at about eleven o'clock.
+Answer: {"person_ok": "yes", "place_ok": "yes", "time_ok": "yes", "verdict": "yes"}
+
+Example 2 (invented). The sentence is about the housekeeper, not about the person in the claim.
+Previous: Mr. Fenwick had stayed behind in the village.
+Quote: "I was glad to reach Ashby Grange about eleven," said the housekeeper.
+Next: She put the kettle on.
+Claim: Mr. Fenwick was at Ashby Grange at about eleven.
+Answer: {"person_ok": "no", "place_ok": "yes", "time_ok": "yes", "verdict": "no"}
+
+Example 3 (invented). Right person and place, wrong time.
+Previous: The rain had been falling all day.
+Quote: Lady Corbin was in the conservatory that evening.
+Next: She did not come in to dinner.
+Claim: Lady Corbin was at the conservatory at midnight.
+Answer: {"person_ok": "yes", "place_ok": "yes", "time_ok": "no", "verdict": "partly"}
+
+Now the real case.
+Previous: {{PREVIOUS}}
+Quote: {{QUOTE}}
+Next: {{NEXT}}
+Claim: {{CLAIM}}
+Answer:
