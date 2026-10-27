@@ -33,6 +33,14 @@ export function editDistance(a, b) {
   return prev[b.length];
 }
 
+const NEGATIONS = new Set(["not", "no", "never", "nor", "neither", "nobody", "nothing", "none", "without", "isnt", "wasnt", "doesnt", "didnt", "dont", "cant", "cannot", "couldnt", "wouldnt", "hasnt", "havent", "hadnt", "arent", "werent"]);
+
+// True when one question has a negation word the other lacks: a few characters, opposite meaning.
+function negationDiffers(a, b) {
+  const neg = (s) => s.split(" ").filter((w) => NEGATIONS.has(w)).sort().join(" ");
+  return neg(a) !== neg(b);
+}
+
 // The stored run for a question: the same question after normalisation, else one within a few
 // characters of it (a typo, a dropped "Dr" or "the": at most `maxEdits`, and at most 8 % of the
 // length). Never a loose guess: one added word ("...Roylott's sister?") is another question and
@@ -47,6 +55,7 @@ export function findRecording(recordings, question, { maxEdits = 6 } = {}) {
   let best = null;
   let bestD = Infinity;
   for (const r of list) {
+    if (negationDiffers(q, normQuestion(r.question))) continue; // "...not contradict..." is the opposite question
     const d = editDistance(q, normQuestion(r.question));
     if (d < bestD || (d === bestD && best && r.kind === "real" && best.kind !== "real")) { best = r; bestD = d; }
   }

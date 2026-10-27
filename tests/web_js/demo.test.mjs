@@ -24,6 +24,7 @@ test("the stored run of a question: exact, near-exact, never a different questio
   assert.equal(findRecording(recs, "What kind of dog killed Sir Charles?"), null);
   assert.equal(findRecording(recs, "What kind of snake killed Dr. Grimesby Roylott's sister?"), null, "one added word is another question");
   assert.equal(findRecording(recs, "What kind of snake killed Dr. Grimesby Roylot?").file, "real-g001-agent.json", "a typo still matches");
+  assert.equal(findRecording(recs, "Does James McCarthy's testimony not contradict what the gamekeeper William Crowder saw?"), null, "an added negation is the opposite question");
   assert.equal(findRecording(recs, ""), null);
   assert.equal(findRecording(null, "x"), null);
 });
