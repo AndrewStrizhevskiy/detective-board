@@ -1,6 +1,6 @@
 name: release
 
-# A pushed tag rc<N> (release candidate, marked prerelease) or v<X.Y> creates a GitHub release with
+# A pushed tag rc<N> or v<X.Y>-rc<N> (release candidate, marked prerelease) or v<X.Y> creates a GitHub release with
 # the source archive at that tag and its SHA256SUMS. The offline archive (models, data, wheels;
 # several GB) is built on Linux x86_64 with scripts/pack_offline.sh --tag <tag>, checked on the
 # laptop with verify_offline.sh, and attached by hand: `gh release upload <tag> dist/*.tar*`.
@@ -51,6 +51,6 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           pre=""
-          case "$TAG" in rc*) pre="--prerelease" ;; esac
+          case "$TAG" in rc*|*-rc*) pre="--prerelease" ;; esac
           gh release create "$TAG" dist/* $pre --verify-tag --title "$TAG" \
             --notes "Source at $TAG ($GITHUB_SHA) and SHA256SUMS. The offline archive is built with scripts/pack_offline.sh --tag $TAG and attached separately; check it with verify_offline.sh (docs/team/CLEAN_INSTALL.md)."
