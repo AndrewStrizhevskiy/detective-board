@@ -40,6 +40,14 @@
         <button id="history-clear" type="button">Clear history</button>
       </div>
     </details>
+    <details id="recordings" class="history recordings"><summary>Recordings <span id="rec-count">(0)</span></summary>
+      <div class="history-pop db-paper">
+        <p class="muted">Stored runs, played back from their saved events. Each one carries the RECORDING badge and never counts as live.</p>
+        <ul id="rec-list" class="rec-list"></ul>
+        <p class="muted">Key <kbd>c</kbd>: the stored run for the current question; during a recording, back to live.</p>
+      </div>
+    </details>
+    <span id="stored-hint" class="stored-hint" hidden>stored run available: <kbd>c</kbd></span>
     <button id="save-run" type="button" hidden>Save run as JSON</button>
     <label class="inline"><input type="checkbox" id="keep-graph"> Keep previous graph</label>
     <span id="replay-note" class="muted" hidden></span>
@@ -128,7 +136,7 @@
   <span id="strip-graph">board: 0 cards / 0 strings</span>
   <span id="strip-rate">~tok/s: -</span>
   <span id="strip-api">API: -</span>
-  <span class="muted">Keys: / question &middot; g list view &middot; t latest step &middot; Esc stop or clear</span>
+  <span class="muted">Keys: / question &middot; c stored run / live &middot; g list view &middot; t latest step &middot; Esc stop or clear</span>
 </footer>
 <div id="sr-announce" class="sr" role="status" aria-live="polite"></div>
 <script type="module" src="js/app.js"></script>

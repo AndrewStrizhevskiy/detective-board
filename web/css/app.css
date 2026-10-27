@@ -467,6 +467,8 @@ button.primary { background: #9e2219; color: #fff6e6; border-color: #6e140e; fon
 .tag-label.always.up { --hang: translate(-50%, calc(-100% - 15px)); transform-origin: 50% calc(100% + 15px); padding-top: 3px; padding-bottom: 13px; }
 /* a hanging tag: a short loop of thread from the string down through a brass eyelet */
 .tag-label.always::before { content: ""; position: absolute; left: 50%; bottom: calc(100% - 8px); width: 1.6px; height: 23px; margin-left: -.8px; background: var(--db-thread); box-shadow: 0 0 0 .6px var(--db-thread-casing); }
+.tag-label.always.up::before { bottom: auto; top: calc(100% - 8px); }
+.tag-label.always.up::after { top: auto; bottom: 3px; }
 .tag-label.always::after { content: ""; position: absolute; left: 50%; top: 3px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--db-cork); box-shadow: inset 0 1px 2px rgba(0, 0, 0, .65), 0 0 0 1.5px #b08a4a; }
 .tag-label.finding { color: var(--db-stamp); border-width: 1.5px; }
 .tag-label .tag-title { display: block; font: 14px/1.2 var(--db-font-type); letter-spacing: .14em; text-transform: uppercase; }
@@ -515,7 +517,7 @@ button.primary { background: #9e2219; color: #fff6e6; border-color: #6e140e; fon
 :root[data-motion="off"] .lamp-glow, :root[data-motion="off"] .lamp-shade { transition: none; }
 @media (prefers-reduced-motion: reduce) { .lamp-glow, .lamp-shade { transition: none; } }
 
-@media (max-width: 1499px) { .panel.board .search input { width: 150px; } .panel.board .panel-head { gap: 6px; } .panel.board .panel-head h2 { font-size: 18px; } }
+@media (max-width: 1499px) { .panel.board .search input { width: 132px; } .panel.board .panel-head { gap: 5px; } .panel.board .panel-head h2 { font-size: 18px; } .panel.board .panel-head button { padding: 2px 8px; } #graph-count { display: none; } }
 
 /* the run clock says what it is showing: ticking (red dot), finished (tick), or nothing yet */
 .clock[data-state="idle"] { color: var(--db-text-muted); }

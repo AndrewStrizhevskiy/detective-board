@@ -5,6 +5,7 @@ import { traceRows, TYPE_LABEL, fmtSeconds, fmtElapsed, healthSummary } from "./
 import { splitHighlights, parseAnswer } from "./highlight.js";
 import { normaliseRecording, playReplay, safeReplayPath } from "./replay.js";
 import { createGraph, isDerived, KIND_GLYPH, KIND_WORD } from "./graph.js";
+import { findRecording, recordingLabel, recoveryActions, stalled, STALL_MS, STORED_RUN_CAP_MS } from "./demo.js";
 
 // replaceChildren() would print the text "null" for skipped optional children; drop them.
 const _replace = Element.prototype.replaceChildren;
@@ -28,10 +29,14 @@ const store = {
 };
 
 const params = new URLSearchParams(location.search);
-const replayPath = safeReplayPath(params.get("replay"));
-const replayRequested = params.has("replay");
+// Replay state is mutable: the picker and key `c` switch between live and a recording without a reload.
+let replayPath = safeReplayPath(params.get("replay"));
+let replayRequested = params.has("replay");
 const recordMode = params.get("record") === "1";
-const replayOpts = { speed: Number(params.get("speed")) || 1, cap: params.has("cap") ? Number(params.get("cap")) * 1000 : Infinity };
+let replayOpts = { speed: Number(params.get("speed")) || 1, cap: params.has("cap") ? Number(params.get("cap")) * 1000 : Infinity };
+// ?stall=<seconds> shortens the connection-lost timeout for rehearsals and browser checks
+const stallMs = params.has("stall") ? Math.max(1, Number(params.get("stall")) || 1) * 1000 : STALL_MS;
+let recordings = []; // web/replay/index.json
 
 // ---------------------------------------------------------------- state
 
@@ -184,26 +189,139 @@ async function runLive(question) {
   dispatch({ type: "run_start", question, mode: "live", now: Date.now(), keepGraph: $("keep-graph").checked });
   abortCtl = new AbortController();
   const ctl = abortCtl;
+  // R-03: a run with no byte from the server for stallMs (keepalives included) is a lost connection
+  let lastActivity = Date.now();
+  let stalledOut = false;
+  const watchdog = setInterval(() => {
+    if (stalled(lastActivity, Date.now(), stallMs)) { stalledOut = true; clearInterval(watchdog); ctl.abort(); }
+  }, 1000);
   try {
-    for await (const ev of askStream(question, historyPayload(), { signal: ctl.signal })) {
+    for await (const ev of askStream(question, historyPayload(), { signal: ctl.signal, onActivity: () => { lastActivity = Date.now(); } })) {
       recorded.push(ev);
       dispatch({ type: "event", event: ev, now: Date.now() });
     }
-    dispatch({ type: "stream_end", now: Date.now() });
+    if (stalledOut) lostConnection(question);
+    else {
+      dispatch({ type: "stream_end", now: Date.now() });
+      if (state.phase === "error") offerRecovery(question, "Connection lost: the agent closed the stream before the run finished.");
+    }
   } catch (e) {
     const fe = friendlyError(e);
-    if (fe.kind === "aborted") return;
+    if (fe.kind === "aborted") {
+      if (stalledOut) lostConnection(question);
+      return;
+    }
     if (fe.kind === "busy") {
       dispatch({ type: "reset" });
       banner({ ...fe, retry: () => runLive(question) });
     } else {
       dispatch({ type: "event", event: { type: "run_error", code: "unavailable", message: fe.text }, now: Date.now() });
-      banner({ kind: fe.kind === "input" ? "input" : "error", text: fe.text, retry: () => runLive(question) });
+      if (fe.kind === "input") banner({ kind: "input", text: fe.text, retry: () => runLive(question) });
+      else offerRecovery(question, fe.text);
     }
   } finally {
+    clearInterval(watchdog);
     if (abortCtl === ctl) abortCtl = null;
     onRunEnd();
   }
+}
+
+function lostConnection(question) {
+  const secs = Math.round(stallMs / 1000);
+  dispatch({ type: "event", event: { type: "run_error", code: "connection_lost", message: `No data from the agent for ${secs} s.` }, now: Date.now() });
+  offerRecovery(question, `Connection lost: no data from the agent for ${secs} s.`);
+}
+
+// After a failed live run: the stored run of the same question if there is one, else the picker.
+function offerRecovery(question, text) {
+  const run = { replay: (a) => () => startStoredRun(a.file), pick: () => openPicker, retry: () => () => runLive(question) };
+  banner({ kind: "error", text, actions: recoveryActions(question, recordings).map((a) => ({ label: a.label, run: run[a.kind](a) })) });
+}
+
+// ---------------------------------------------------------------- stored runs (R-02, R-03)
+
+async function loadRecordings() {
+  try {
+    const res = await fetch("replay/index.json", { headers: { accept: "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const j = await res.json();
+    recordings = Array.isArray(j.recordings) ? j.recordings.filter((r) => r && safeReplayPath(`replay/${r.file}`)) : [];
+  } catch {
+    recordings = [];
+  }
+  renderRecordings();
+  queueRender();
+}
+
+function renderRecordings() {
+  $("rec-count").textContent = `(${recordings.length})`;
+  const ul = $("rec-list");
+  if (!recordings.length) { ul.replaceChildren(h("li", { class: "muted" }, "No recordings listed in web/replay/index.json.")); return; }
+  ul.replaceChildren(...recordings.map((r) => {
+    const l = recordingLabel(r);
+    const playing = replayPath === `replay/${r.file}`;
+    return h("li", null, h("button", { type: "button", class: "rec-item", "aria-current": playing ? "true" : false, onclick: () => startStoredRun(r.file) },
+      h("span", { class: "rec-badge" + (r.kind === "synthetic" ? " syn" : "") }, l.badge),
+      h("span", { class: "rec-q" }, r.question),
+      h("span", { class: "rec-meta" }, l.line)));
+  }));
+}
+
+function openPicker() {
+  const d = $("recordings");
+  d.open = true;
+  const first = d.querySelector(".rec-item");
+  if (first) first.focus();
+}
+
+function setReplayParam(file) {
+  const u = new URL(location.href);
+  for (const k of ["replay", "speed", "cap"]) u.searchParams.delete(k);
+  // keep the slash readable (?replay=replay/x.json), so the address can be read out or pasted
+  const rest = u.searchParams.toString();
+  const search = [file ? `replay=replay/${encodeURIComponent(file)}` : "", rest].filter(Boolean).join("&");
+  window.history.replaceState(null, "", `${u.pathname}${search ? "?" + search : ""}${u.hash}`); // `history` here is the question history
+}
+
+// Play a stored run without reloading: always labelled RECORDING, gaps capped so a long CPU
+// prefill does not stall the stage.
+function startStoredRun(file, { cap = STORED_RUN_CAP_MS } = {}) {
+  const path = safeReplayPath(`replay/${file}`);
+  if (!path) return;
+  stop(true);
+  replayPath = path;
+  replayRequested = true;
+  replayOpts = { speed: 1, cap };
+  setReplayParam(file);
+  $("recordings").open = false;
+  banner(null);
+  renderRecordings();
+  const rec = recordings.find((r) => r.file === file);
+  announce(`Stored run, a recording: ${rec ? rec.question : file}`);
+  runReplay();
+}
+
+function goLive() {
+  stop(true);
+  replayPath = null;
+  replayRequested = false;
+  replayOpts = { speed: 1, cap: Infinity };
+  setReplayParam(null);
+  dispatch({ type: "reset" });
+  resetBoard();
+  banner(null);
+  renderRecordings();
+  announce("Live mode.");
+  requestAnimationFrame(() => $("question").focus());
+}
+
+// Key `c`: in a recording, back to live; live, the stored run of the current question.
+function toggleStoredRun() {
+  if (replayRequested) { goLive(); return; }
+  const q = $("question").value.trim() || state.question || lastQuestion;
+  const rec = findRecording(recordings, q);
+  if (rec) { startStoredRun(rec.file); return; }
+  banner({ kind: "input", text: q ? `No stored run for "${q}".` : "No question yet: type one, or pick a recording.", actions: [{ label: "Pick a recording", run: openPicker }] });
 }
 
 async function runReplay() {
@@ -262,6 +380,7 @@ $("ask-form").addEventListener("submit", (e) => {
   const q = $("question").value.trim();
   if (!q || state.phase === "running") return;
   if (replayPath) return;
+  $("question").blur(); // operator keys (c, g, t) work during the run
   runLive(q);
 });
 $("stop-btn").addEventListener("click", () => stop(false));
@@ -278,7 +397,8 @@ function banner(b) {
   el.hidden = false;
   el.dataset.kind = b.kind;
   const icon = b.kind === "busy" ? "⏳" : b.kind === "input" ? "⚠" : "✖";
-  el.replaceChildren(h("span", { "aria-hidden": "true" }, icon), h("span", null, b.text), b.retry ? h("button", { type: "button", onclick: () => { banner(null); b.retry(); } }, "Try again") : null, h("button", { type: "button", onclick: () => banner(null), "aria-label": "Dismiss" }, "×"));
+  const act = (label, fn) => h("button", { type: "button", onclick: () => { banner(null); fn(); } }, label);
+  el.replaceChildren(h("span", { "aria-hidden": "true" }, icon), h("span", null, b.text), b.retry ? act("Try again", b.retry) : null, ...(b.actions || []).map((a) => act(a.label, a.run)), h("button", { type: "button", onclick: () => banner(null), "aria-label": "Dismiss" }, "×"));
 }
 
 // ---------------------------------------------------------------- render
@@ -308,8 +428,14 @@ function renderTop() {
   $("save-run").hidden = !(state.mode === "live" && recorded.length && !running);
   const rn = $("replay-note");
   rn.hidden = !replayRequested;
-  rn.textContent = replayRequested ? `Recording playback: ${replayPath || "invalid path"}${replayOpts.speed !== 1 ? ` at ${replayOpts.speed}x` : " at original timing"}. ` : "";
-  if (replayRequested && !running) { rn.append(h("button", { type: "button", onclick: () => replayPath && runReplay() }, "Play again")); }
+  const playing = replayRequested && replayPath ? recordings.find((r) => `replay/${r.file}` === replayPath) : null;
+  const pace = `${replayOpts.speed !== 1 ? ` at ${replayOpts.speed}x` : ""}${Number.isFinite(replayOpts.cap) ? `, gaps over ${replayOpts.cap / 1000} s shortened` : ", original timing"}`;
+  rn.textContent = !replayRequested ? "" : playing ? `${recordingLabel(playing).badge}: ${recordingLabel(playing).line}${pace}. ` : `Recording playback: ${replayPath || "invalid path"}${pace}. `;
+  if (replayRequested && !running) rn.append(h("button", { type: "button", onclick: () => replayPath && runReplay() }, "Play again"), " ");
+  if (replayRequested) rn.append(h("button", { type: "button", onclick: goLive }, "Back to live (c)"));
+  const hint = $("stored-hint");
+  const typed = $("question").value.trim();
+  hint.hidden = replayRequested || !findRecording(recordings, typed || state.question);
   const chips = $("route-chips");
   const routes = state.route ? state.route.routes : [];
   chips.replaceChildren(...routes.map((r) => h("span", { class: "chip", title: state.route.reason }, `${r.toUpperCase()} (${state.route.method})`)));
@@ -460,6 +586,7 @@ export function provBadge(label, conf) {
 
 function statusInfo() {
   const f = state.final;
+  if (state.phase === "running" && state.refusal) return { cls: "st-refused", icon: "◆", text: refusalText(state.refusal.code) };
   switch (state.phase) {
     case "idle": return { cls: "st-run", icon: "○", text: "Ready" };
     case "running": return { cls: "st-run", icon: "…", text: "Investigating..." };
@@ -470,6 +597,10 @@ function statusInfo() {
       if (f.status === "partial") return { cls: "st-partial", icon: "▲", text: "Partial answer: part unknown" };
       return { cls: f.verified ? "st-done" : "st-partial", icon: f.verified ? "✓" : "▲", text: f.verified ? "Answer (verified)" : "Answer (not verified)" };
   }
+}
+
+function refusalText(code) {
+  return code === "out_of_scope" || code === "no_evidence" ? "Refusal: not in the corpus" : `Refusal: ${code || "no answer"}`;
 }
 
 function citationFor(n) {
@@ -547,6 +678,9 @@ function renderEvidence() {
   box.replaceChildren(...cards);
   if (state.refusal && (!f || f.status === "refused")) {
     const r = state.refusal;
+    const g = state.gate;
+    const modelCalled = state.events.some((e) => e.type === "enriched_query" || e.type === "answer_token");
+    const n3 = (x) => (Number.isFinite(x) ? x.toFixed(3) : "-");
     rf.hidden = false;
     rf.replaceChildren(h("strong", null, "Not in the corpus"), h("p", null, r.message), (r.missing || []).length ? h("p", null, "Missing: " + r.missing.join(", ")) : null, h("p", null, "Searched: " + ((r.searched || []).join("; ") || "-")),
       g && !g.passed ? h("p", { class: "gate" }, `Relevance gate: ${g.reason}; best score ${n3(g.best_score)} vs threshold ${n3(g.threshold)}, support ${n3(g.support)} vs ${n3(g.min_support)}.`) : null,
@@ -588,7 +722,6 @@ function passageEl(data, variant, label) {
 async function showSources(header, items) {
   const token = ++srcToken;
   const box = $("source");
-  if (state.phase === "running" && state.refusal) return { cls: "st-refused", icon: "◆", text: refusalText(state.refusal.code) };
   box.replaceChildren(...header, h("p", { class: "muted" }, "Loading source..."));
   try {
     const datas = await Promise.all(items.map(fetchSource));
@@ -599,10 +732,6 @@ async function showSources(header, items) {
     const fe = friendlyError(e);
     box.replaceChildren(...header, h("p", { class: "empty" }, `Source unavailable: ${fe.text}`));
   }
-}
-
-function refusalText(code) {
-  return code === "out_of_scope" || code === "no_evidence" ? "Refusal: not in the corpus" : `Refusal: ${code || "no answer"}`;
 }
 
 function showChunk(chunkId, extra = {}) {
@@ -680,9 +809,6 @@ async function renderSelection() {
       } catch (e) { /* shown below */ }
       if (!sel || sel.id !== n.id) return;
     }
-    const g = state.gate;
-    const modelCalled = state.events.some((e) => e.type === "enriched_query" || e.type === "answer_token");
-    const n3 = (x) => (Number.isFinite(x) ? x.toFixed(3) : "-");
     if (!anchors || !anchors.length) { $("source").replaceChildren(...hdr, h("p", { class: "empty" }, "No source quote is available for this node.")); return; }
     showSources(hdr, anchors.slice(0, 3).map((a, i) => anchorItem(a, `mention ${i + 1} of ${n.anchor_total || anchors.length}`)));
   } else if (sel.kind === "edge") {
@@ -873,6 +999,7 @@ document.addEventListener("keydown", (e) => {
   if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === "/") { e.preventDefault(); $("question").focus(); }
   else if (e.key === "g") setListMode(!listMode);
+  else if (e.key === "c") { e.preventDefault(); toggleStoredRun(); }
   else if (e.key === "t") { jumpLatest(); $("panel-trace").focus?.(); }
 });
 
@@ -893,7 +1020,9 @@ applyTheme(store.get("db-theme", "auto"));
 applyMotion(store.get("db-motion", "on") !== "off");
 renderHistory();
 refreshHealth();
+loadRecordings();
 render();
+$("question").addEventListener("input", () => queueRender());
 $("panel-trace").tabIndex = -1;
 if (replayRequested) {
   if (!replayPath) banner({ kind: "error", text: "Invalid ?replay= path. Use a relative path such as replay/run.json." });
