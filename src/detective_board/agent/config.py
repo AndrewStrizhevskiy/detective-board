@@ -32,10 +32,10 @@ class AgentConfig:
     tool_timeout_s: float = 5.0
     answer_mode: str = "extractive"  # extractive: the model picks sentences, text is a template
     # generate: the model writes a cited answer (kept for A/B)
-    extract_top_k: int = 4  # extractive: chunks retrieved (the generative path uses top_k)
+    extract_top_k: int = 6  # extractive: chunks retrieved (the generative path uses top_k)
     extract_per_source: int = 8  # extractive: best-scoring sentences kept per chunk (whole text)
     extract_max_sentences: int = 40  # extractive: sentences offered to the model in total
-    extract_max_tokens: int = 700  # extractive: prompt estimate; the lowest-scoring sentences go
+    extract_max_tokens: int = 850  # extractive: prompt estimate; the lowest-scoring sentences go
     extract_order: str = (
         "score"  # what the sentence cap drops: "score" (lowest) | "rank" (worst chunks)
     )
