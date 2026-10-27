@@ -63,7 +63,7 @@ The eval runner is `eval/run_eval.py` (issue #6). It runs four configurations wi
 | configuration | what it is |
 |---|---|
 | `bare` | the question to the model, no retrieval, no sources |
-| `vector` | bge-m3 vector search only, top 4 chunks into the agent's answer path |
+| `vector` | bge-m3 vector search only, top 4 chunks into the agent's answer path; one RRF arm cannot reach the two-arm relevance threshold (best 1/61 < 0.018), so its gate has its own `--vector-min-score` (default 0: term support only), recorded in the output; tune it on dev |
 | `vector+rerank` | reported as `not run`: the repo has no local reranker (`retrieval/rerank.py` is a stub) |
 | `hybrid+graph` | the real agent: hybrid retrieval, sentence index, graph, rules, extractive answers |
 
@@ -74,11 +74,11 @@ just eval --split dev        # real stack: Ollama with qwen3:4b-instruct and bge
 just eval --split test       # the frozen test split: once per frozen configuration, refused with uncommitted changes
 ```
 
-Output: `docs/spike/results/eval-<date>-<split>.md` (tables), `.json` (one row per question and configuration, the git SHA, whether the tree was clean, a hash of the configuration) and `.svg` (behaviour correct per configuration with intervals); short runs go to `eval/runs/` (git-ignored).
+Output: `docs/spike/results/eval-<date>-<split>-<sha7>-<config hash>-<time>.md` (tables), `.json` (one row per question and configuration, the git SHA, whether the tree was clean, the configuration hash and what it covers: generator, embedding model, agent and vector settings, the identity of the index, graph and sentence index files; and what was really present: graph, sentence index, rule tools) and `.svg` (behaviour correct per configuration with intervals). No result is ever overwritten, and a test-split run for a commit and configuration that already has one is refused. Short runs go to `eval/runs/` (git-ignored).
 
 Protocol: tune thresholds on the dev split only (`eval/golden/split.json`, checked by `scripts/eval/split_check.py`); run the test split once per frozen configuration and quote its SHA and config hash with every number. Heavy runs go to the GPU server; on the target laptop only latency is meaningful.
 
-What the numbers are: mechanical proxies, no judge model. Behaviour correct: an answerable question answered with key-fact coverage >= 0.5, an out-of-corpus one refused. Citation correct: the quote is verbatim in the cited chunk and that chunk is a gold chunk. Answer-sentence hit: a cited quote overlaps a gold quote. Refusal precision, recall and false refusals; chunk recall@1/4/6; contradiction detection (rules only) on `eval/golden/contradictions.jsonl`. Every share has a Wilson 95 % interval and its n; configurations are compared pairwise with an exact McNemar test. The gold sets are AI-written until the human review of issue #9 is done, and every table says so.
+What the numbers are: mechanical proxies, no judge model. Behaviour correct: an answerable question answered with key-fact coverage >= 0.5, an out-of-corpus one refused. Citation correct: the quote is verbatim in the cited chunk and that chunk is a gold chunk. Answer-sentence hit: a cited quote overlaps a gold quote. Refusal precision, recall and false refusals; chunk recall@1/4/6; contradiction detection (rules only) on `eval/golden/contradictions.jsonl`. Sentence recall@1/5/20 from the sentence index for `hybrid+graph` (reported as not computed when the index is absent). Query embeddings are computed once per question and shared; the retrieval itself runs per configuration, since the configurations retrieve differently. Every share has a Wilson 95 % interval and its n; configurations are compared pairwise with an exact McNemar test. The gold sets are AI-written until the human review of issue #9 is done, and every table says so.
 
 ## Docs
 
