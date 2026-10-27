@@ -7,8 +7,8 @@ private and the server is a shared department machine: put NO GitHub credentials
 
 Before leaving (on the laptop, in the repo, on the commit to run):
 ```bash
-git rev-parse HEAD > /tmp/COMMIT                                       # the archive has no history; the report reads COMMIT
-git archive --format=tar.gz --add-file=/tmp/COMMIT -o detective-board.tar.gz HEAD   # no .git, no secrets
+scripts/make_server_archive.sh                                          # builds detective-board.tar.gz from HEAD (+COMMIT file) and verifies it in a clean copy (about 3 minutes)
+# manual equivalent: git rev-parse HEAD > /tmp/COMMIT; git archive --format=tar.gz --add-file=/tmp/COMMIT -o detective-board.tar.gz HEAD
 scp detective-board.tar.gz USER@SERVER:~/                              # or copy the file to a USB stick
 ```
 On the server (use `tmux new -s extract` first, so a dropped terminal does not matter):
