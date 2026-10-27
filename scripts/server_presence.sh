@@ -10,7 +10,8 @@
 #
 # Usage: scripts/server_presence.sh [--models "qwen3:8b qwen3:4b-instruct"] [--all] [--limit N]
 #                                   [--lenient] [--literal] [--candidates graph|cache|text]
-#                                   [--prompt FILE] [--pull] [--dry-run]
+#                                   [--verify] [--verify-model M] [--verify-accept-partly]
+#                                   [--samples N] [--prompt FILE] [--pull] [--dry-run]
 #   --models LIST  Ollama tags, space separated (default: qwen3:8b qwen3:4b-instruct)
 #   --all          after the demo stories, run every story (demo chunks are cache hits)
 #   --limit N      only the first N chunks of each selected set (smoke test)
@@ -19,9 +20,17 @@
 #   --literal      person/place must literally appear in the quote (presence-2 strict variant)
 #   --candidates M candidate source: graph (default, falls back to cache, then text), cache, text
 #   --prompt FILE  prompt file (default prompts/extract/presence_v2.txt; presence_v1.txt = old pass)
+#   --verify       RECOMMENDED: one short verification call per kept fact (quote + neighbouring
+#                  sentences + claim; enum answer yes/partly/no); wrong facts are dropped as
+#                  VERIFY_REJECTED. Off by default; own cache keys (prefix verify:), resumable. Extra time:
+#                  about 3-6 s per fact on the CPU, much less on the GPU. Quality UNMEASURED.
+#   --verify-model M  model of the verifier (default: the extraction model of the run)
+#   --verify-accept-partly  keep 'partly' facts with the failing place/time nulled (LOW)
+#   --samples N    RECOMMENDED 3: run the presence call N times (seeds seed+k, temperature 0.3), keep
+#                  facts found in at least N//2+1 samples; N times the extraction time. Default 1.
 #   --pull         `ollama pull` a model that the server does not list
 #   --dry-run      print the commands, run nothing
-# Output: data/cache/server/presence/<model>.jsonl (+ -lenient and/or -literal), eval.json; caches data/cache/presence-cache-<model>.sqlite;
+# Output: data/cache/server/presence/<model>.jsonl (+ -lenient, -literal, -s<N>, -verify), eval.json; caches data/cache/presence-cache-<model>.sqlite;
 #         graphs data/graph/presence-<model>.sqlite (copies of graph.sqlite + the presence facts).
 set -u
 cd "$(dirname "$0")/.."
@@ -29,6 +38,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 MODELS="qwen3:8b qwen3:4b-instruct"
 DEMO="wisteria-lodge boscombe-valley-mystery silver-blaze thor-bridge abbey-grange"
+VERIFY=0; VMODEL=""; PARTLY=0; SAMPLES=1
 ALL=0; LIMIT=0; LENIENT=0; LITERAL=0; PULL=0; DRY=0; CAND=graph; PROMPT=prompts/extract/presence_v2.txt
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -39,9 +49,13 @@ while [ $# -gt 0 ]; do
     --literal) LITERAL=1; shift ;;
     --candidates) CAND="${2:?}"; shift 2 ;;
     --prompt) PROMPT="${2:?}"; shift 2 ;;
+    --verify) VERIFY=1; shift ;;
+    --verify-model) VMODEL="${2:?}"; shift 2 ;;
+    --verify-accept-partly) PARTLY=1; shift ;;
+    --samples) SAMPLES="${2:?}"; shift 2 ;;
     --pull) PULL=1; shift ;;
     --dry-run) DRY=1; shift ;;
-    -h|--help) sed -n '2,28p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,38p' "$0"; exit 0 ;;
     *) echo "unknown argument: $1 (try --help)" >&2; exit 2 ;;
   esac
 done
@@ -66,6 +80,12 @@ extra=(); SUF=""
 [ "$LIMIT" -gt 0 ] && extra+=(--limit "$LIMIT")
 extra+=(--prompt "$PROMPT" --candidates "$CAND")
 [ "$LENIENT" -eq 1 ] && { extra+=(--lenient); SUF="-lenient"; }
+[ "$SAMPLES" -gt 1 ] && { extra+=(--samples "$SAMPLES"); SUF="$SUF-s$SAMPLES"; }
+[ "$VERIFY" -eq 1 ] && {
+  extra+=(--verify); SUF="$SUF-verify"
+  [ -n "$VMODEL" ] && extra+=(--verify-model "$VMODEL")
+  [ "$PARTLY" -eq 1 ] && { extra+=(--verify-accept-partly); SUF="$SUF-partly"; }
+}
 [ "$LITERAL" -eq 1 ] && { extra+=(--literal); SUF="$SUF-literal"; }
 
 preds=()

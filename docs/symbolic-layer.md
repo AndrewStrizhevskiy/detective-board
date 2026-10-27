@@ -624,6 +624,28 @@ are `context` resolved (LOW). The report has `PERSON_UNKNOWN` / `PLACE_UNKNOWN` 
 `offered_by_chunk` (first 12 names offered per chunk); dropped facts carry the model's raw
 person/place/time_text.
 
+**Verification and self-consistency (`extract/presence_verify.py`, branch `feat/presence-verifier`; off by
+default; UNMEASURED, tested with fake clients only).** Real runs of `presence-2.1` on the three c001 chunks kept wrong
+facts (qwen3:8b 15 facts / 11 kept, several with a wrong person or place, e.g. "About eleven I was glad to go to bed" given
+to Garcia; qwen3:4b-instruct 7 / 1, wrong person). Two optional steps work on the grounded facts. Order: sample ->
+ground -> vote -> verify. (1) `--verify`: per kept fact one call with the verbatim quote, the previous and next sentence of the
+chunk and the claim "PERSON was (NOT) at PLACE at TIME"; the answer is a closed enum schema
+`{person_ok, place_ok, time_ok: yes|no, verdict: yes|partly|no}` (field verdicts first, verdict last, so the model decides the parts before the whole).
+`yes` keeps the fact; `no`, a wrong person (`person_ok: no`, always), unparseable output or a call error rejects it with
+reason `VERIFY_REJECTED` (+ `verify.detail` and the field verdicts in `dropped`); `partly` is rejected unless
+`--verify-accept-partly`, which keeps it with the failing place/time moved into `context` (LOW, the time is not written
+to the event, the place edge is weak; code `VERIFY_PARTLY`). A person is never nulled. The verification record and prompt
+version are in `GroundedFact.verify`; confidence rules are unchanged (a verified `yes` never raises confidence; a
+context-resolved person stays LOW). Wording: `prompts/extract/presence_verify_v1.txt` (versioned, invented worked
+examples); cache: the extraction cache file, keys `verify:` + hash of the rendered prompt, verifier model, prompt and schema
+version, options. Known limit: a fact whose person is only known from outside the three sentences shown (a pronoun resolved
+from the candidate list) will be judged `no` by an honest verifier, so `--verify` costs recall on exactly the context-resolved facts. (2) `--samples N`: the presence call runs N
+times (seed + k, temperature `--sample-temperature` 0.3, each sample cached); a fact is kept when at least N//2+1 samples
+agree (same polarity, normalised person, place and time_text, overlapping quote); `votes`/`samples` are stored on the fact,
+the others are dropped as `VOTE_BELOW_MAJORITY`; a failed sample counts as a vote for nothing. The report has `funnel`
+(model / grounded / voted / verified) and `presence_eval.py` scores precision and recall per stage. Whether either step
+improves precision, and what it costs in recall, has NOT been measured; the GPU run decides the default.
+
 Graph. `GraphStore.ingest_presence(chunk, facts)` is independent of `ingest`: node ids are
 `e:<chunk>:p<i>` and `c:<chunk>:p<i>`, and the set is replaced as a whole (unchanged input is a no-op,
 hash in `g_meta` key `presence:<chunk>`). A generic re-ingest of the chunk purges the presence nodes too,
