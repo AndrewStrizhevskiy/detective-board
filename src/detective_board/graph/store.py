@@ -428,6 +428,12 @@ class GraphStore:
             base["person_resolution"] = "context"  # chosen from the candidate list (presence-2)
         if f.place_resolution == "context":
             base["place_resolution"] = "context"
+        if f.verify:
+            base["verify"] = f.verify.get(
+                "detail"
+            )  # yes | partly_accepted (extract/presence_verify)
+        if f.votes is not None:
+            base["votes"] = f"{f.votes}/{f.samples}"
         weak = a.weak or pweak or bool(context)
         if not deny:
             place, _ = self._ref(ctx, f.place, ("place",), a, create=True)

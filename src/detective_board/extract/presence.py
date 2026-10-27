@@ -26,6 +26,11 @@ compare against the strict default, not as the default.
 CLI: python -m detective_board.extract.presence --model M --chunks data/chunks.jsonl
        [--story S ...] [--limit N] --cache data/cache/presence-cache.sqlite
        --graph-db data/graph/graph.sqlite [--out FILE.jsonl] [--lenient]
+       [--verify [--verify-model M] [--verify-accept-partly]] [--samples N]
+
+`--samples N` (self-consistency) and `--verify` (one verification call per kept fact) live in
+`presence_verify.py`; order: sample, ground, vote, verify. Both are off by default; their quality
+is UNMEASURED until a GPU run (docs/symbolic-layer.md 11.3).
 """
 
 from __future__ import annotations
@@ -65,6 +70,15 @@ from detective_board.extract.presence_schema import (
     PresenceFact,
     ollama_format_schema,
 )
+from detective_board.extract.presence_verify import (
+    REJECTED,
+    PresenceVerifier,
+    VerifyConfig,
+    load_verify_prompt,
+    needed_votes,
+    vote,
+)
+from detective_board.extract.presence_verify import VERIFY_PROMPT as DEFAULT_VERIFY_PROMPT
 from detective_board.extract.repair import (
     _NOT_NAMES,
     _ChunkIndex,
@@ -155,6 +169,9 @@ class PresenceConfig:
         False  # presence-2: person/place must literally be in the quote (grounding only)
     )
 
+    samples: int = 1  # self-consistency: run the presence call N times, keep the majority
+    sample_temperature: float = 0.3  # used for every sample when samples > 1
+
     def options(self) -> dict[str, Any]:
         return {
             "temperature": self.temperature,
@@ -162,6 +179,15 @@ class PresenceConfig:
             "num_ctx": self.num_ctx,
             "num_predict": self.num_predict,
         }
+
+    def sample_options(self, k: int) -> dict[str, Any]:
+        """Options of sample k: the plain options for one sample; with N > 1 seed + k and the
+        sample temperature (so each sample has its own cache key)."""
+        o = self.options()
+        if self.samples > 1:
+            o["seed"] = self.seed + k
+            o["temperature"] = self.sample_temperature
+        return o
 
 
 # --------------------------------------------------------------------------- grounding
@@ -458,6 +484,10 @@ class PresenceResult:
     prompt_version: str = ""
     schema_version: str = SCHEMA_VERSION
     candidates: dict[str, Any] = field(default_factory=dict)  # presence-2: source, sizes, sha
+    # facts after each stage: grounded (first sample), voted (majority), verified (= `facts`)
+    stages: dict[str, list[dict[str, Any]]] = field(default_factory=dict)
+    voting: dict[str, int] = field(default_factory=dict)  # samples, clusters, kept, below, errors
+    verification: dict[str, int] = field(default_factory=dict)  # calls, cached, accepted, ...
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -466,11 +496,26 @@ class PresenceResult:
             "error": self.error, "model": self.model, "prompt_version": self.prompt_version,
             "schema_version": self.schema_version, "grounding": self.grounding,
             "n_model_facts": self.n_model_facts, "dropped": self.dropped, "facts": self.facts,
-            "candidates": self.candidates,
+            "candidates": self.candidates, "stages": self.stages, "voting": self.voting,
+            "verification": self.verification,
         }  # fmt: skip
 
     def grounded_facts(self) -> list[GroundedFact]:
         return [GroundedFact.model_validate(f) for f in self.facts]
+
+
+@dataclass
+class _Sample:
+    """One presence call of a chunk, parsed and grounded."""
+
+    rec: dict | None = None
+    cached: bool = False
+    err: str | None = None
+    status: str = "error"
+    parse_error: str | None = None
+    n_model_facts: int = 0
+    dropped: list[dict[str, Any]] = field(default_factory=list)
+    outcome: GroundOutcome | None = None
 
 
 class PresenceExtractor:
@@ -480,11 +525,13 @@ class PresenceExtractor:
         cfg: PresenceConfig,
         cache: ExtractCache | None = None,
         prompt: Prompt | None = None,
+        verifier: PresenceVerifier | None = None,
     ) -> None:
         self.client = client
         self.cfg = cfg
         self.cache = cache
         self.prompt = prompt or load_prompt(DEFAULT_PROMPT)
+        self.verifier = verifier
         # a prompt with {{PEOPLE}}/{{PLACES}} is presence-2: candidate lists in prompt and schema
         self.v2 = PEOPLE_MARK in self.prompt.template
         self.schema_version = SCHEMA_VERSION_V2 if self.v2 else SCHEMA_VERSION
@@ -503,20 +550,26 @@ class PresenceExtractor:
             )
         return Prompt(self.prompt.version, t).render(text)
 
-    def key(self, text: str, cands: Candidates | None = None) -> str:
-        """Model, prompt version, schema version ('presence-2') and options are all in the key;
-        for presence-2 also a hash of the two candidate lists, so a changed graph invalidates."""
-        opts = self.cfg.options()
+    def key(self, text: str, cands: Candidates | None = None, sample: int = 0) -> str:
+        """Model, prompt version, schema version ('presence-2') and options (seed and temperature
+        of this sample) are all in the key; for presence-2 also a hash of the two candidate lists,
+        so a changed graph invalidates."""
+        opts = self.cfg.sample_options(sample)
         if self.v2 and cands is not None:
             opts = {**opts, "candidates": cands.sha()}
         return cache_key(text, self.cfg.model, self.prompt.version, self.schema_version, opts)
 
-    def _raw(self, text: str, cands: Candidates | None) -> tuple[dict | None, bool, str | None]:
-        key = self.key(text, cands)
+    def _raw(
+        self, text: str, cands: Candidates | None, sample: int = 0
+    ) -> tuple[dict | None, bool, str | None]:
+        key = self.key(text, cands, sample)
         if self.cache is not None and (hit := self.cache.get(key)) is not None:
             return hit, True, None
         req = GenRequest(
-            self.cfg.model, self.prompt_for(text, cands), self.schema_for(cands), self.cfg.options()
+            self.cfg.model,
+            self.prompt_for(text, cands),
+            self.schema_for(cands),
+            self.cfg.sample_options(sample),
         )
         try:
             r = self.client.generate(req)
@@ -528,6 +581,55 @@ class PresenceExtractor:
             self.cache.put(key, rec)
         return rec, False, None
 
+    def _sample(
+        self,
+        text: str,
+        known: KnownEntities | None,
+        cands: Candidates | None,
+        sample: int,
+    ) -> _Sample:
+        """Call (or read from the cache) one sample, parse and ground it."""
+        s = _Sample()
+        s.rec, s.cached, s.err = self._raw(text, cands, sample)
+        if s.rec is None:
+            return s
+        parsed = parse_output(s.rec["text"])
+        s.status, s.parse_error = parsed.status, parsed.error
+        if parsed.data is None:
+            return s
+        items = parsed.data.get("facts", [])
+        if not isinstance(items, list):
+            s.dropped.append({"kind": "facts", "idx": -1, "reason": "not_a_list", "quote": None})
+            return s
+        valid: list[PresenceFact] = []
+        known_keys = set(PresenceFact.model_fields)
+        for idx, it in enumerate(items):
+            q = it.get("quote") if isinstance(it, dict) else None
+            if not isinstance(it, dict):
+                s.dropped.append(
+                    {"kind": "facts", "idx": idx, "reason": "not_an_object", "quote": None}
+                )
+                continue
+            try:
+                valid.append(
+                    PresenceFact.model_validate({k: v for k, v in it.items() if k in known_keys})
+                )
+            except ValidationError as e:
+                err0 = e.errors()[0]
+                reason = f"{err0['type']}:{'.'.join(str(x) for x in err0['loc'])}"[:80]
+                s.dropped.append({"kind": "facts", "idx": idx, "reason": reason, "quote": q})
+        s.n_model_facts = len(items)
+        s.outcome = ground_facts(
+            valid,
+            text,
+            known,
+            fuzzy_threshold=self.cfg.fuzzy_threshold,
+            lenient=self.cfg.lenient,
+            candidates=cands,
+            literal=self.cfg.literal,
+        )
+        return s
+
     def extract_chunk(
         self,
         chunk_id: str,
@@ -536,6 +638,7 @@ class PresenceExtractor:
         known: KnownEntities | None = None,
         cands: Candidates | None = None,
     ) -> PresenceResult:
+        """sample(s) -> grounding -> majority vote (samples > 1) -> verification (if a verifier)."""
         res = PresenceResult(
             chunk_id,
             story,
@@ -553,50 +656,73 @@ class PresenceExtractor:
             }  # fmt: skip
         else:
             cands = None
-        rec, cached, err = self._raw(text, cands)
-        if rec is None:
-            res.error = err
+        n = max(1, self.cfg.samples)
+        first = self._sample(text, known, cands, 0)
+        if first.rec is None:
+            res.error = first.err
             return res
-        res.cached, res.wall_s = cached, float(rec.get("wall_s") or 0.0)
-        res.truncated = rec.get("done_reason") == "length"
-        parsed = parse_output(rec["text"])
-        res.status, res.error = parsed.status, parsed.error
-        if parsed.data is None:
+        res.cached, res.wall_s = first.cached, float(first.rec.get("wall_s") or 0.0)
+        res.truncated = first.rec.get("done_reason") == "length"
+        res.status, res.error = first.status, first.parse_error
+        res.dropped += first.dropped
+        if first.outcome is None:
             return res
-        items = parsed.data.get("facts", [])
-        if not isinstance(items, list):
-            res.dropped.append({"kind": "facts", "idx": -1, "reason": "not_a_list", "quote": None})
-            return res
-        valid: list[PresenceFact] = []
-        known_keys = set(PresenceFact.model_fields)
-        for idx, it in enumerate(items):
-            q = it.get("quote") if isinstance(it, dict) else None
-            if not isinstance(it, dict):
+        res.n_model_facts = first.n_model_facts
+        res.dropped += first.outcome.dropped
+        res.grounding = first.outcome.grounding
+        grounded = first.outcome.facts
+        res.stages["grounded"] = [f.model_dump() for f in grounded]
+
+        voted = grounded
+        if n > 1:
+            per_sample = [grounded]
+            errors = 0
+            for k in range(1, n):
+                sk = self._sample(text, known, cands, k)
+                if sk.outcome is None:
+                    errors += 1  # a failed sample votes for nothing
+                    per_sample.append([])
+                    continue
+                res.cached = res.cached and sk.cached
+                res.wall_s += float(sk.rec.get("wall_s") or 0.0) if sk.rec else 0.0
+                res.truncated = res.truncated or (sk.rec or {}).get("done_reason") == "length"
+                per_sample.append(sk.outcome.facts)
+            vo = vote(per_sample, text, n)
+            voted = vo.kept
+            need = needed_votes(n)
+            for f, votes in vo.below:
                 res.dropped.append(
-                    {"kind": "facts", "idx": idx, "reason": "not_an_object", "quote": None}
-                )
-                continue
-            try:
-                valid.append(
-                    PresenceFact.model_validate({k: v for k, v in it.items() if k in known_keys})
-                )
-            except ValidationError as e:
-                err0 = e.errors()[0]
-                reason = f"{err0['type']}:{'.'.join(str(x) for x in err0['loc'])}"[:80]
-                res.dropped.append({"kind": "facts", "idx": idx, "reason": reason, "quote": q})
-        res.n_model_facts = len(items)
-        out = ground_facts(
-            valid,
-            text,
-            known,
-            fuzzy_threshold=self.cfg.fuzzy_threshold,
-            lenient=self.cfg.lenient,
-            candidates=cands,
-            literal=self.cfg.literal,
-        )
-        res.dropped += out.dropped
-        res.grounding = out.grounding
-        res.facts = [f.model_dump() for f in out.facts]
+                    {"kind": "facts", "idx": -1, "reason": "VOTE_BELOW_MAJORITY", "quote": f.quote,
+                     "model": {"person": f.person, "place": f.place, "time_text": f.time_text},
+                     "votes": votes, "needed": need, "samples": n}
+                )  # fmt: skip
+            res.voting = {
+                "samples": n, "needed": need, "clusters": vo.clusters,
+                "kept": len(vo.kept), "below": len(vo.below), "errors": errors,
+            }  # fmt: skip
+        res.stages["voted"] = [f.model_dump() for f in voted]
+
+        final = voted
+        if self.verifier is not None:
+            final = []
+            v = {"calls": 0, "cached": 0, "yes": 0, "partly_accepted": 0, "rejected": 0}
+            for f in voted:
+                kept, rec = self.verifier.apply(text, f)
+                v["calls"] += 1
+                v["cached"] += bool(rec.get("cached"))
+                if kept is None:
+                    v["rejected"] += 1
+                    res.dropped.append(
+                        {"kind": "facts", "idx": -1, "reason": REJECTED, "quote": f.quote,
+                         "model": {"person": f.person, "place": f.place, "time_text": f.time_text},
+                         "verify": rec}
+                    )  # fmt: skip
+                else:
+                    v["partly_accepted" if rec["detail"] == "partly_accepted" else "yes"] += 1
+                    final.append(kept)
+            res.verification = v
+        res.stages["verified"] = [f.model_dump() for f in final]
+        res.facts = [f.model_dump() for f in final]
         return res
 
 
@@ -615,6 +741,16 @@ def build_report(results: Sequence[PresenceResult]) -> dict:
             reasons[d["reason"]] = reasons.get(d["reason"], 0) + 1
     model_facts = sum(r.n_model_facts for r in results)
     kept = [f for r in results for f in r.facts]
+    stage = {
+        name: sum(len(r.stages.get(name, r.facts if name != "grounded" else [])) for r in results)
+        for name in ("grounded", "voted", "verified")
+    }
+    verify_detail: dict[str, int] = {}
+    for r in results:
+        for d in r.dropped:
+            if d["reason"] == REJECTED:
+                k = d["verify"]["detail"]
+                verify_detail[k] = verify_detail.get(k, 0) + 1
     return {
         "chunks": n,
         "from_cache": sum(r.cached for r in results),
@@ -626,6 +762,14 @@ def build_report(results: Sequence[PresenceResult]) -> dict:
         "chunks_with_facts": sum(bool(r.facts) for r in results),
         "facts_model": model_facts,
         "facts_kept": len(kept),
+        # funnel: model -> grounding -> vote (--samples) -> verification (--verify)
+        "funnel": {"model": model_facts, **stage},
+        "vote_below_majority": reasons.get("VOTE_BELOW_MAJORITY", 0),
+        "verify_rejected": reasons.get(REJECTED, 0),
+        "verify_rejected_by_detail": dict(sorted(verify_detail.items())),
+        "verify_calls": sum(r.verification.get("calls", 0) for r in results),
+        "verify_from_cache": sum(r.verification.get("cached", 0) for r in results),
+        "verify_partly_accepted": sum(r.verification.get("partly_accepted", 0) for r in results),
         "facts_dropped": len([d for r in results for d in r.dropped]),
         "fact_survival_rate": round(len(kept) / model_facts, 3) if model_facts else 0.0,
         "dropped_by_reason": dict(sorted(reasons.items())),
@@ -695,14 +839,46 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
         "--lenient", action="store_true", help="keep values not found in the quote (LOW)"
     )
     ap.add_argument("--no-normalise", action="store_true", help="do not run the normaliser")
+    ap.add_argument(
+        "--samples", type=int, default=1,
+        help="self-consistency: run the presence call N times (seeds seed+k, --sample-temperature)"
+        " and keep facts found in at least N//2+1 samples (default 1 = off)",
+    )  # fmt: skip
+    ap.add_argument(
+        "--sample-temperature", type=float, default=0.3,
+        help="temperature of every sample when --samples > 1 (default 0.3)",
+    )  # fmt: skip
+    ap.add_argument(
+        "--verify", action="store_true",
+        help="one short verification call per kept fact (recommended on the server)",
+    )  # fmt: skip
+    ap.add_argument("--verify-model", help="model of the verifier (default: --model)")
+    ap.add_argument(
+        "--verify-prompt", type=Path, default=DEFAULT_VERIFY_PROMPT,
+        help="verifier prompt file (versioned; default prompts/extract/presence_verify_v1.txt)",
+    )  # fmt: skip
+    ap.add_argument(
+        "--verify-accept-partly", action="store_true",
+        help="keep 'partly' facts with the failing place/time nulled (LOW); default: reject them",
+    )  # fmt: skip
     a = ap.parse_args(argv)
+    if a.samples < 1:
+        ap.error("--samples must be >= 1")
 
     cfg = PresenceConfig(
         a.model, a.num_ctx, a.num_predict, a.seed,
         fuzzy_threshold=a.fuzzy_threshold, lenient=a.lenient, literal=a.literal,
+        samples=a.samples, sample_temperature=a.sample_temperature,
     )  # fmt: skip
     cache = ExtractCache(a.cache)
-    ex = PresenceExtractor(client or OllamaClient(a.host), cfg, cache, load_prompt(a.prompt))
+    llm = client or OllamaClient(a.host)
+    verifier = None
+    if a.verify:
+        vcfg = VerifyConfig(
+            a.verify_model or a.model, seed=a.seed, accept_partly=a.verify_accept_partly
+        )
+        verifier = PresenceVerifier(llm, vcfg, cache, load_verify_prompt(a.verify_prompt))
+    ex = PresenceExtractor(llm, cfg, cache, load_prompt(a.prompt), verifier)
     recs = select_chunks(a.chunks, a.story, a.limit)
     store = None
     known_by_story: dict[str, KnownEntities] = {}
@@ -750,7 +926,10 @@ def main(argv: Sequence[str] | None = None, client: LLMClient | None = None) -> 
     report = build_report(results)
     report.update(
         model=a.model, prompt_version=ex.prompt.version, schema_version=ex.schema_version,
-        lenient=a.lenient, literal=a.literal,
+        lenient=a.lenient, literal=a.literal, samples=a.samples,
+        verify=a.verify, verify_model=verifier.cfg.model if verifier else None,
+        verify_prompt_version=verifier.prompt.version if verifier else None,
+        verify_accept_partly=a.verify_accept_partly if verifier else None,
         candidates=a.candidates if ex.v2 else None, carry=a.carry,
         total_s=round(time.perf_counter() - t0, 1),
     )  # fmt: skip

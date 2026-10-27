@@ -96,3 +96,9 @@ class GroundedFact(BaseModel):
     place_resolution: Resolution = "quote"
     codes: list[str] = Field(default_factory=list)  # grounding reason codes (audit)
     model_values: dict[str, Any] = Field(default_factory=dict)  # the model's original fields
+    # verification (extract/presence_verify.py): the verifier's answer, its prompt version and the
+    # fields that were nulled (LOW, via `context`) when a 'partly' verdict was accepted; None = the
+    # fact was not verified. `votes`/`samples`: agreement count of --samples N self-consistency.
+    verify: dict[str, Any] | None = None
+    votes: int | None = None
+    samples: int | None = None
