@@ -3,7 +3,7 @@
 // through the CSSOM. Cards are revealed one by one in arrival order; placed cards never move
 // unless the user drags them (layout.js).
 import { placeNew, boundsOf, BOX } from "./layout.js";
-import { personArt, placeArt, itemArt, exhibitLetter, stringGeom, shadowVector, initialName, storyTitle, hashStr } from "./board-art.js";
+import { personArt, placeArt, itemArt, exhibitLetter, stringGeom, shadowVector, initialName, storyTitle, hashStr, tagSpot } from "./board-art.js";
 
 // The card's form carries the entity type together with the word on the card (never colour alone).
 export const KIND_SHAPE = { person: "cabinet portrait", place: "landscape print", item: "exhibit tag", event: "newspaper clipping", claim: "index card", source: "torn book page" };
@@ -413,6 +413,16 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
     return { g, hitG, parts };
   }
 
+  function cardRects() {
+    const out = [];
+    for (const cid of cards.keys()) {
+      const p = positions[cid];
+      const [w, h] = dimsOf(cid);
+      out.push({ x0: p.x - w / 2, y0: p.y - h / 2, x1: p.x + w / 2, y1: p.y + h / 2 });
+    }
+    return out;
+  }
+
   function placeString(id) {
     const s = strings.get(id);
     const a = pinAt(s.e.src), b = pinAt(s.e.dst);
@@ -421,10 +431,17 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
     for (const k of ["hit", "shadow", "halo", "casing", "core", "twist"]) p[k].setAttribute("d", g1.d);
     if (s.double) { const g2 = stringGeom(a, b, 5); for (const k of ["casing2", "core2", "twist2"]) p[k].setAttribute("d", g2.d); }
     if (s.arrow) p.dir.setAttribute("transform", `translate(${g1.mid.x} ${g1.mid.y}) rotate(${g1.angle})`);
-    if (s.tag) {
-      s.tag.style.left = `${g1.mid.x}px`;
-      // a hover label sits on the thread; an always-shown tag hangs from it (from the lower line of a double)
-      s.tag.style.top = `${g1.mid.y + (s.double ? 5 : 0)}px`;
+    if (s.tag && s.tag.classList.contains("always")) {
+      // an always-shown tag hangs from its thread (the lower line of a double) where it covers the
+      // fewest cards, below the thread or, if that is crowded, above it
+      const size = { w: s.tag.offsetWidth || 240, h: s.tag.offsetHeight || 56 };
+      const spot = tagSpot(a, b, size, cardRects(), { offset: s.double ? 5 : 0 });
+      s.tag.style.left = `${spot.x}px`;
+      s.tag.style.top = `${spot.y}px`;
+      s.tag.classList.toggle("up", spot.side === "up");
+    } else if (s.tag) {
+      s.tag.style.left = `${g1.mid.x}px`; // a hover label sits on the thread
+      s.tag.style.top = `${g1.mid.y}px`;
     }
   }
 
@@ -608,7 +625,8 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
       if (on && s.tag.animate) {
         s.tag.classList.remove("fresh");
         const sway = parseFloat(s.tag.style.getPropertyValue("--sway")) || -5;
-        const at = (d) => ({ transform: `translate(-50%, 15px) rotate(${sway + d}deg)` });
+        const hang = s.tag.classList.contains("up") ? "translate(-50%, calc(-100% - 15px))" : "translate(-50%, 15px)";
+        const at = (d) => ({ transform: `${hang} rotate(${sway + d}deg)` });
         s.tag.animate([at(0), at(11), at(-7), at(3), at(0)], { duration: motionMs() * 3.4, easing: "ease-out" });
       }
     }

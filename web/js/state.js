@@ -99,6 +99,28 @@ export function citedGraphIds(graph, citations) {
   return { nodes, edges };
 }
 
+// A rule finding (tool_result with a violated Explanation) names the facts it rests on. The board
+// draws it as a rule-made thread between the first two of them, carrying the tool's provenance and
+// the Explanation (so Why? works), unless the graph already links them with a contradiction. Nothing
+// is invented: no finding, no thread; the cards appear only if those facts are on the board.
+export function findingEdge(ev) {
+  const x = ev && ev.explanation;
+  if (!x || x.verdict !== "violated") return null;
+  const facts = (x.facts || []).map((f) => f && f.fact_id).filter(Boolean);
+  if (facts.length < 2 || facts[0] === facts[1]) return null;
+  const [src, dst] = facts;
+  const provenance = ev.provenance === "derived" || ev.provenance === "conditional" ? ev.provenance : x.conditional ? "conditional" : "derived";
+  return { id: `finding:${x.rule_id || "rule"}:${src}:${dst}`, rel: "CONTRADICTS", src, dst, provenance, explanation: x, props: { rule: x.rule_id, verdict: x.verdict } };
+}
+
+function hasConflictBetween(graph, a, b) {
+  return graph.edgeOrder.some((id) => {
+    const e = graph.edges[id];
+    const ends = (e.src === a && e.dst === b) || (e.src === b && e.dst === a);
+    return ends && /CONTRADICT|CONFLICT/i.test(`${e.rel} ${(e.props && e.props.verdict) || ""}`);
+  });
+}
+
 export function reduce(state, action) {
   switch (action.type) {
     case "reset":
@@ -140,9 +162,12 @@ function applyEvent(state, ev, now) {
     case "graph_results":
       s.graph = mergeGraph(s.graph, ev.nodes, ev.edges);
       break;
-    case "tool_result":
+    case "tool_result": {
       s.findings = [...s.findings, { tool: ev.tool, ok: ev.ok, provenance: ev.provenance || null, summary: ev.summary, explanation: ev.explanation || null, seq: ev.seq }];
+      const fe = findingEdge(ev);
+      if (fe && !hasConflictBetween(s.graph, fe.src, fe.dst)) s.graph = mergeGraph(s.graph, [], [fe]);
       break;
+    }
     case "enriched_query":
       s.sources = ev.sources || [];
       break;

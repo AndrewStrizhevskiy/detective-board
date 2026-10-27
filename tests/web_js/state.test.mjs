@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initialState, reduce, mergeGraph, emptyGraph, citedGraphIds, answerText, waitingStage, progressSteps } from "../../web/js/state.js";
+import { initialState, reduce, mergeGraph, emptyGraph, citedGraphIds, answerText, waitingStage, progressSteps, findingEdge } from "../../web/js/state.js";
 
 const run = (events, now = 1000) => {
   let s = reduce(initialState(), { type: "run_start", question: "q", now });
@@ -134,4 +134,24 @@ test("rule-first run (no model call): tokens stream from the template and every 
   assert.equal(answerText(s), "The rule engine found no violation among the facts.");
   const steps = progressSteps(s, 5000);
   assert.ok(steps.every((x) => x.status === "done" || x.status === "skipped"));
+});
+
+test("a violated rule finding becomes one rule-made thread between its first two facts", () => {
+  const expl = { rule_id: "R1", verdict: "violated", conditional: true, facts: [{ fact_id: "e:a" }, { fact_id: "e:b" }, { fact_id: "e:c" }] };
+  const tool = { type: "tool_result", tool: "find_contradictions", ok: true, provenance: "conditional", explanation: expl };
+  const fe = findingEdge(tool);
+  assert.deepEqual([fe.src, fe.dst, fe.rel, fe.provenance], ["e:a", "e:b", "CONTRADICTS", "conditional"]);
+  assert.equal(fe.explanation, expl, "Why? reads the same Explanation");
+  assert.equal(findingEdge({ ...tool, explanation: { ...expl, verdict: "consistent" } }), null, "no violation, no thread");
+  assert.equal(findingEdge({ ...tool, explanation: { ...expl, facts: [{ fact_id: "e:a" }] } }), null);
+  assert.equal(findingEdge({ type: "tool_result" }), null);
+  let s = reduce(initialState(), { type: "run_start", question: "q", now: 0 });
+  s = reduce(s, { type: "event", event: { ...tool, seq: 1 }, now: 1 });
+  assert.equal(s.graph.edgeOrder.length, 1);
+  s = reduce(s, { type: "event", event: { ...tool, seq: 2 }, now: 2 });
+  assert.equal(s.graph.edgeOrder.length, 1, "the same finding twice is one thread");
+  let g = reduce(initialState(), { type: "run_start", question: "q", now: 0 });
+  g = reduce(g, { type: "event", event: { type: "graph_results", seq: 1, nodes: [], edges: [{ id: 9, rel: "CONTRADICTS", src: "e:b", dst: "e:a", provenance: "derived" }] }, now: 1 });
+  g = reduce(g, { type: "event", event: { ...tool, seq: 2 }, now: 2 });
+  assert.deepEqual(g.graph.edgeOrder, ["9"], "an existing contradiction edge is not doubled");
 });

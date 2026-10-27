@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { fmtElapsed } from "../../web/js/trace.js";
-import { hashStr, personArt, placeArt, itemArt, exhibitLetter, stringGeom, shadowVector, initialName, storyTitle } from "../../web/js/board-art.js";
+import { hashStr, personArt, placeArt, itemArt, exhibitLetter, stringGeom, shadowVector, initialName, storyTitle, pointOnString, tagSpot } from "../../web/js/board-art.js";
 
 test("hash and portrait variants are deterministic", () => {
   assert.equal(hashStr("p:x:james"), hashStr("p:x:james"));
@@ -72,4 +72,18 @@ test("run clock: ms under a second, tenths, then minutes", () => {
   assert.equal(fmtElapsed(2900), "2.9 s");
   assert.equal(fmtElapsed(75000), "1:15");
   assert.equal(fmtElapsed(null), "0.0 s");
+});
+
+test("a hanging tag avoids covering the cards", () => {
+  const a = { x: 0, y: 100 }, b = { x: 400, y: 100 };
+  assert.deepEqual(pointOnString(a, b, 0.5), stringGeom(a, b).mid, "same curve as the drawn thread");
+  const size = { w: 200, h: 60 };
+  const free = tagSpot(a, b, size, []);
+  assert.deepEqual([free.t, free.side, free.cover], [0.5, "down", 0], "nothing in the way: middle, below");
+  // a card right under the middle of the thread
+  const under = [{ x0: 120, y0: 120, x1: 280, y1: 360 }];
+  const moved = tagSpot(a, b, size, under);
+  assert.equal(moved.cover, 0, "finds a spot that covers no card");
+  assert.ok(moved.side === "up" || moved.t !== 0.5);
+  assert.deepEqual(tagSpot(a, b, size, under), moved, "deterministic");
 });
