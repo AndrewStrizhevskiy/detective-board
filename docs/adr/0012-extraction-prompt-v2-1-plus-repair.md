@@ -11,17 +11,17 @@ The generic extraction (qwen3:4b, prompt `extract-2.1`, ADR-0007) fills the grap
 
 A v2.2 prompt with a worked example was tried (`docs/spike/results/prompt-v2-2-20261026.md`, 12 gold chunks, one run each, temperature 0, seed 42):
 
-| metric | v2.1 | v2.2 |
-|---|---|---|
-| event participants non-empty | 0% | 33% |
-| claim polarity=deny share | 91% | 12% |
-| event time_text filled / found in own quote | 100% / 47% | 12% / 75% |
-| strict F1 entities | 0.557 | 0.000 |
-| strict F1 claims | 0.200 | 0.283 |
-| strict F1 relations | 0.136 | 0.026 |
-| seconds per chunk | 233.7 | 170.5 |
+| metric | v2.1 | v2.2 first run (example without entities/relations) | v2.2 after the example fix |
+|---|---|---|---|
+| event participants non-empty | 0% | 33% | n/a (not in the gold12 table) |
+| claim polarity=deny share | 91% | 12% | 12% |
+| claims with a person / place / time filled | 91% / 77% / 89% | 21% / 16% / 9% | 6% / 0% / 0% |
+| strict F1 entities | 0.557 | 0.000 | 0.506 |
+| strict F1 claims | 0.200 | 0.283 | 0.200 |
+| strict F1 relations | 0.136 | 0.026 | 0.060 |
+| seconds per chunk | 233.7 | 170.5 | 152.0 |
 
-(The STATUS of 2026-10-26 quotes entities 0.51 vs 0.56 and relations 0.06 vs 0.14 for an earlier v2.2 run; the table above is the committed result file.)
+Sources: `docs/spike/results/prompt-v2-2-20261026.md` and `gold12-v22.md` (v2.1 and the first v2.2 run), `gold12-20261026-210753.md` (v2.2 after the example was completed so that the model keeps entities and relations). The earlier STATUS figures (entities 0.51, relations 0.06) are the fixed run.
 
 ## Options
 
