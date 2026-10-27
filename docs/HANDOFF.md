@@ -96,6 +96,7 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
    qwen3:4b-instruct, then `scripts/spike/presence_eval.py`); details and limits in
    `docs/symbolic-layer.md` 11.3. The tests use canned model output: they show the plumbing, not extraction
    quality, and Wisteria Lodge (c001) is only reachable with `--lenient` (context fields, LOW).
+   **Presence verifier (branch `feat/presence-verifier`, NOT measured):** optional `--verify` (one enum-answer check per kept fact) and `--samples N` (majority vote) for the presence pass, off by default, recommended server command in `docs/team/SERVER_RUNBOOK.md` 5b; per-stage precision/recall in `presence_eval.py`; see `docs/symbolic-layer.md` 11.3.
 4. **Build `eval/run_eval.py`** (Package C): bare LLM / vector / vector+rerank / hybrid+graph; heavy runs on
    the strong machine, a short CI mode. Tune the provisional thresholds (min_score 0.018, min_support 0.25,
    min_claim_overlap 0.3; R-13).
