@@ -1,6 +1,6 @@
 // Detective Board UI: wiring between the pure modules, the DOM and the API.
 import { askStream, getHealth, getEntities, getSubgraph, getSource, friendlyError } from "./api.js";
-import { initialState, reduce, answerText, waitingStage, emptyGraph, boardGraph, citedBoard, progressSteps } from "./state.js";
+import { initialState, reduce, answerText, waitingStage, emptyGraph, boardGraph, citedBoard, progressSteps, refusalView, refusalText } from "./state.js";
 import { traceRows, TYPE_LABEL, fmtSeconds, fmtElapsed, healthSummary } from "./trace.js";
 import { splitHighlights, parseAnswer } from "./highlight.js";
 import { normaliseRecording, playReplay, safeReplayPath } from "./replay.js";
@@ -203,7 +203,7 @@ async function runLive(question) {
     if (stalledOut) lostConnection(question);
     else {
       dispatch({ type: "stream_end", now: Date.now() });
-      if (state.phase === "error") offerRecovery(question, "Connection lost: the agent closed the stream before the run finished.");
+      if (state.phase === "error") offerRecovery(question, state.error && state.error.code === "connection_lost" ? "Connection lost: the agent closed the stream before the run finished." : errorText(state.error));
     }
   } catch (e) {
     const fe = friendlyError(e);
@@ -329,20 +329,26 @@ async function runReplay() {
   recorded = [];
   banner(null);
   resetBoard();
+  // the controller exists before the file is fetched, so Stop, `c` or another pick cancels a
+  // replay that is still loading and two replays never mix in one state
+  abortCtl = new AbortController();
+  const ctl = abortCtl;
+  const path = replayPath;
   let rec;
   try {
-    const res = await fetch(replayPath);
+    const res = await fetch(path, { signal: ctl.signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     rec = normaliseRecording(await res.json());
   } catch (e) {
-    banner({ kind: "error", text: `Cannot load the recording "${replayPath}": ${e.message}`, retry: runReplay });
+    if (ctl.signal.aborted) return;
+    if (abortCtl === ctl) abortCtl = null;
+    banner({ kind: "error", text: `Cannot load the recording "${path}": ${e.message}`, retry: runReplay });
     return;
   }
+  if (ctl.signal.aborted || abortCtl !== ctl) return;
   const q = rec.meta.question || "(recorded run)";
   $("question").value = q;
   dispatch({ type: "run_start", question: q, mode: "replay", now: Date.now() });
-  abortCtl = new AbortController();
-  const ctl = abortCtl;
   for await (const ev of playReplay(rec.events, { ...replayOpts, signal: ctl.signal })) dispatch({ type: "event", event: ev, now: Date.now() });
   if (!ctl.signal.aborted) dispatch({ type: "stream_end", now: Date.now() });
   if (abortCtl === ctl) abortCtl = null;
@@ -586,7 +592,8 @@ export function provBadge(label, conf) {
 
 function statusInfo() {
   const f = state.final;
-  if (state.phase === "running" && state.refusal) return { cls: "st-refused", icon: "◆", text: refusalText(state.refusal.code) };
+  const rv = state.phase === "running" ? refusalView(state) : null;
+  if (rv) return { cls: "st-refused", icon: "◆", text: rv.status };
   switch (state.phase) {
     case "idle": return { cls: "st-run", icon: "○", text: "Ready" };
     case "running": return { cls: "st-run", icon: "…", text: "Investigating..." };
@@ -597,10 +604,6 @@ function statusInfo() {
       if (f.status === "partial") return { cls: "st-partial", icon: "▲", text: "Partial answer: part unknown" };
       return { cls: f.verified ? "st-done" : "st-partial", icon: f.verified ? "✓" : "▲", text: f.verified ? "Answer (verified)" : "Answer (not verified)" };
   }
-}
-
-function refusalText(code) {
-  return code === "out_of_scope" || code === "no_evidence" ? "Refusal: not in the corpus" : `Refusal: ${code || "no answer"}`;
 }
 
 function citationFor(n) {
@@ -676,15 +679,12 @@ function renderEvidence() {
     }
   }
   box.replaceChildren(...cards);
-  if (state.refusal && (!f || f.status === "refused")) {
-    const r = state.refusal;
-    const g = state.gate;
-    const modelCalled = state.events.some((e) => e.type === "enriched_query" || e.type === "answer_token");
-    const n3 = (x) => (Number.isFinite(x) ? x.toFixed(3) : "-");
+  const rv = refusalView(state);
+  if (rv) {
     rf.hidden = false;
-    rf.replaceChildren(h("strong", null, "Not in the corpus"), h("p", null, r.message), (r.missing || []).length ? h("p", null, "Missing: " + r.missing.join(", ")) : null, h("p", null, "Searched: " + ((r.searched || []).join("; ") || "-")),
-      g && !g.passed ? h("p", { class: "gate" }, `Relevance gate: ${g.reason}; best score ${n3(g.best_score)} vs threshold ${n3(g.threshold)}, support ${n3(g.support)} vs ${n3(g.min_support)}.`) : null,
-      !modelCalled ? h("p", { class: "muted" }, "Decided before any model call.") : null,
+    rf.replaceChildren(h("strong", null, "Not in the corpus"), h("p", null, rv.message), rv.missing.length ? h("p", null, "Missing: " + rv.missing.join(", ")) : null, h("p", null, "Searched: " + (rv.searched.join("; ") || "-")),
+      rv.gate ? h("p", { class: "gate" }, rv.gate) : null,
+      !rv.modelCalled ? h("p", { class: "muted" }, "Decided before any model call.") : null,
       state.hits.length ? h("details", null, h("summary", null, `Nearest chunks, rejected as unrelated (${state.hits.length})`), h("ul", null, state.hits.map((x) => h("li", null, h("button", { type: "button", class: "hit", onclick: () => showChunk(x.chunk_id) }, x.chunk_id))))) : null);
   } else if (state.phase === "error") {
     rf.hidden = false;

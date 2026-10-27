@@ -1,8 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
-import { normQuestion, findRecording, recordingLabel, stalled, recoveryActions, STALL_MS, STORED_RUN_CAP_MS } from "../../web/js/demo.js";
+import { normQuestion, editDistance, findRecording, recordingLabel, stalled, recoveryActions, STALL_MS, STORED_RUN_CAP_MS } from "../../web/js/demo.js";
 import { askStream } from "../../web/js/api.js";
+import { normaliseRecording } from "../../web/js/replay.js";
+import { initialState, reduce } from "../../web/js/state.js";
 
 const REPLAY = new URL("../../web/replay/", import.meta.url);
 const index = JSON.parse(readFileSync(new URL("index.json", REPLAY), "utf8"));
@@ -20,6 +22,8 @@ test("the stored run of a question: exact, near-exact, never a different questio
   assert.equal(findRecording(recs, "Are there contradictions in James McCarthy’s account?").file, "fake-mccarthy.json");
   assert.equal(findRecording(recs, "What kind of snake killed Grimesby Roylott?").file, "real-g001-agent.json", "one word missing still matches");
   assert.equal(findRecording(recs, "What kind of dog killed Sir Charles?"), null);
+  assert.equal(findRecording(recs, "What kind of snake killed Dr. Grimesby Roylott's sister?"), null, "one added word is another question");
+  assert.equal(findRecording(recs, "What kind of snake killed Dr. Grimesby Roylot?").file, "real-g001-agent.json", "a typo still matches");
   assert.equal(findRecording(recs, ""), null);
   assert.equal(findRecording(null, "x"), null);
 });
@@ -78,4 +82,21 @@ test("askStream reports activity for keepalive-only chunks too (R-03 watchdog)",
   for await (const e of askStream("q", [], { fetchImpl: async () => new Response(body, { status: 200 }), onActivity: () => ticks++ })) got.push(e.type);
   assert.deepEqual(got, ["final"]);
   assert.ok(ticks >= 4, `headers + 3 chunks, got ${ticks}`);
+});
+
+test("edit distance", () => {
+  assert.equal(editDistance("kitten", "sitting"), 3);
+  assert.equal(editDistance("", "abc"), 3);
+  assert.equal(editDistance("same", "same"), 0);
+});
+
+test("every recording plays through the reducer to its final event", () => {
+  for (const r of recs) {
+    const rec = normaliseRecording(JSON.parse(readFileSync(new URL(r.file, REPLAY), "utf8")));
+    let s = reduce(initialState(), { type: "run_start", question: rec.meta.question, mode: "replay", now: 0 });
+    rec.events.forEach((ev, i) => { s = reduce(s, { type: "event", event: ev, now: i + 1 }); });
+    assert.equal(s.phase, "done", r.file);
+    assert.equal(s.mode, "replay", r.file);
+    assert.ok(s.final && ["answered", "refused", "partial"].includes(s.final.status), `${r.file}: ${s.final && s.final.status}`);
+  }
 });

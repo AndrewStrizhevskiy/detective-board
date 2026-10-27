@@ -113,12 +113,23 @@ export function findingEdge(ev) {
   return { id: `finding:${x.rule_id || "rule"}:${src}:${dst}`, rel: "CONTRADICTS", src, dst, provenance, explanation: x, props: { rule: x.rule_id, verdict: x.verdict } };
 }
 
-function hasConflictBetween(graph, a, b) {
+function hasConflictBetween(graph, a, b, skip = null) {
   return graph.edgeOrder.some((id) => {
+    if (id === skip) return false;
     const e = graph.edges[id];
     const ends = (e.src === a && e.dst === b) || (e.src === b && e.dst === a);
     return ends && /CONTRADICT|CONFLICT/i.test(`${e.rel} ${(e.props && e.props.verdict) || ""}`);
   });
+}
+
+// A finding thread is the board's stand-in; once the graph itself links the same facts with a
+// contradiction (it can arrive after the tool result), the stand-in goes, so there is one thread.
+function dropShadowedFindings(graph) {
+  const gone = graph.edgeOrder.filter((id) => id.startsWith("finding:") && hasConflictBetween(graph, graph.edges[id].src, graph.edges[id].dst, id));
+  if (!gone.length) return graph;
+  const edges = { ...graph.edges };
+  for (const id of gone) delete edges[id];
+  return { ...graph, edges, edgeOrder: graph.edgeOrder.filter((id) => !gone.includes(id)) };
 }
 
 export function reduce(state, action) {
@@ -160,7 +171,7 @@ function applyEvent(state, ev, now) {
       s.gate = ev.gate || null;
       break;
     case "graph_results":
-      s.graph = mergeGraph(s.graph, ev.nodes, ev.edges);
+      s.graph = dropShadowedFindings(mergeGraph(s.graph, ev.nodes, ev.edges));
       break;
     case "tool_result": {
       s.findings = [...s.findings, { tool: ev.tool, ok: ev.ok, provenance: ev.provenance || null, summary: ev.summary, explanation: ev.explanation || null, seq: ev.seq }];
@@ -205,6 +216,27 @@ function applyEvent(state, ev, now) {
       break; // unknown/parse_error events are kept in the trace only
   }
   return s;
+}
+
+// The refusal as the answer panel shows it (R-01), from the `refusal` event itself, before `final`:
+// null when there is none or the final status is not a refusal.
+export function refusalText(code) {
+  return code === "out_of_scope" || code === "no_evidence" ? "Refusal: not in the corpus" : `Refusal: ${code || "no answer"}`;
+}
+export function refusalView(state) {
+  const r = state.refusal;
+  const f = state.final;
+  if (!r || (f && f.status !== "refused")) return null;
+  const g = state.gate;
+  const n3 = (x) => (Number.isFinite(x) ? x.toFixed(3) : "-");
+  return {
+    status: refusalText((f && f.refusal_code) || r.code),
+    message: r.message || "",
+    missing: r.missing || [],
+    searched: r.searched || [],
+    gate: g && !g.passed ? `Relevance gate: ${g.reason}; best score ${n3(g.best_score)} vs threshold ${n3(g.threshold)}, support ${n3(g.support)} vs ${n3(g.min_support)}.` : null,
+    modelCalled: state.events.some((e) => e.type === "enriched_query" || e.type === "answer_token"),
+  };
 }
 
 // Text to show in the answer panel: the final (verified) answer once known, else the current draft.

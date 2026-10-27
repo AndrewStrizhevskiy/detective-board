@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { initialState, reduce, mergeGraph, emptyGraph, citedGraphIds, answerText, waitingStage, progressSteps, findingEdge } from "../../web/js/state.js";
+import { initialState, reduce, mergeGraph, emptyGraph, citedGraphIds, answerText, waitingStage, progressSteps, findingEdge, refusalView } from "../../web/js/state.js";
 
 const run = (events, now = 1000) => {
   let s = reduce(initialState(), { type: "run_start", question: "q", now });
@@ -154,4 +154,32 @@ test("a violated rule finding becomes one rule-made thread between its first two
   g = reduce(g, { type: "event", event: { type: "graph_results", seq: 1, nodes: [], edges: [{ id: 9, rel: "CONTRADICTS", src: "e:b", dst: "e:a", provenance: "derived" }] }, now: 1 });
   g = reduce(g, { type: "event", event: { ...tool, seq: 2 }, now: 2 });
   assert.deepEqual(g.graph.edgeOrder, ["9"], "an existing contradiction edge is not doubled");
+});
+
+test("R-01: a refusal is shown from its own event, before final, with the gate's reason", () => {
+  const gate = { passed: false, reason: "weak", best_score: 0.012, threshold: 0.018, support: 0, min_support: 0.25 };
+  let s = reduce(initialState(), { type: "run_start", question: "What is the capital of Mars?", now: 0 });
+  s = reduce(s, { type: "event", event: { type: "retrieval_results", seq: 1, hits: [], gate }, now: 1 });
+  assert.equal(refusalView(s), null, "no refusal yet");
+  s = reduce(s, { type: "event", event: { type: "refusal", seq: 2, code: "no_evidence", message: "Nothing about this.", missing: ["mars"], searched: ["hybrid"] }, now: 2 });
+  assert.equal(s.phase, "running", "final has not come");
+  const v = refusalView(s);
+  assert.equal(v.status, "Refusal: not in the corpus");
+  assert.equal(v.gate, "Relevance gate: weak; best score 0.012 vs threshold 0.018, support 0.000 vs 0.250.");
+  assert.deepEqual([v.message, v.missing, v.searched, v.modelCalled], ["Nothing about this.", ["mars"], ["hybrid"], false]);
+  const asked = reduce(s, { type: "event", event: { type: "enriched_query", seq: 3, sources: [] }, now: 3 });
+  assert.equal(refusalView(asked).modelCalled, true, "a prompt was built, so the model was involved");
+  const done = reduce(s, { type: "event", event: { type: "final", seq: 4, status: "refused", refusal_code: "out_of_scope", answer: "", citations: [], provenance: [] }, now: 4 });
+  assert.equal(refusalView(done).status, "Refusal: not in the corpus");
+  const answered = reduce(s, { type: "event", event: { type: "final", seq: 4, status: "answered", answer: "x", citations: [], provenance: [] }, now: 4 });
+  assert.equal(refusalView(answered), null, "an answered run shows no refusal card");
+});
+
+test("a contradiction edge arriving later in the graph replaces the finding thread", () => {
+  const tool = { type: "tool_result", seq: 1, ok: true, provenance: "derived", explanation: { rule_id: "R3", verdict: "violated", facts: [{ fact_id: "c:1" }, { fact_id: "e:2" }] } };
+  let s = reduce(initialState(), { type: "run_start", question: "q", now: 0 });
+  s = reduce(s, { type: "event", event: tool, now: 1 });
+  assert.equal(s.graph.edgeOrder.length, 1);
+  s = reduce(s, { type: "event", event: { type: "graph_results", seq: 2, nodes: [], edges: [{ id: 25, rel: "CONTRADICTS", src: "c:1", dst: "e:2", provenance: "derived" }] }, now: 2 });
+  assert.deepEqual(s.graph.edgeOrder, ["25"], "one thread between the two facts");
 });

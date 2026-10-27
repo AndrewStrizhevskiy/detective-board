@@ -22,28 +22,35 @@ export function normQuestion(q) {
     .trim();
 }
 
-const words = (q) => new Set(normQuestion(q).split(" ").filter(Boolean));
+// Edit distance between two strings (insertions, deletions, substitutions).
+export function editDistance(a, b) {
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[b.length];
+}
 
-// The stored run for a question: the same question after normalisation, else the closest one if
-// its words overlap at least `minOverlap` (Jaccard), so a typo or a missing "the" still matches.
-// Never a loose guess: a different question must not get somebody else's recording.
-export function findRecording(recordings, question, { minOverlap = 0.8 } = {}) {
+// The stored run for a question: the same question after normalisation, else one within a few
+// characters of it (a typo, a dropped "Dr" or "the": at most `maxEdits`, and at most 8 % of the
+// length). Never a loose guess: one added word ("...Roylott's sister?") is another question and
+// must not get somebody else's recording.
+export function findRecording(recordings, question, { maxEdits = 6 } = {}) {
   const q = normQuestion(question);
   if (!q || !Array.isArray(recordings)) return null;
   const list = recordings.filter((r) => r && r.file && r.question);
   const exact = list.filter((r) => normQuestion(r.question) === q);
   if (exact.length) return preferReal(exact);
-  const mine = words(question);
+  const limit = Math.min(maxEdits, Math.floor(q.length * 0.08));
   let best = null;
-  let bestScore = 0;
+  let bestD = Infinity;
   for (const r of list) {
-    const theirs = words(r.question);
-    let common = 0;
-    for (const w of mine) if (theirs.has(w)) common++;
-    const score = common / (mine.size + theirs.size - common || 1);
-    if (score > bestScore || (score === bestScore && best && r.kind === "real" && best.kind !== "real")) { best = r; bestScore = score; }
+    const d = editDistance(q, normQuestion(r.question));
+    if (d < bestD || (d === bestD && best && r.kind === "real" && best.kind !== "real")) { best = r; bestD = d; }
   }
-  return bestScore >= minOverlap ? best : null;
+  return bestD <= limit ? best : null;
 }
 
 // Several recordings of the same question: a real run wins over a fake-backend one.
