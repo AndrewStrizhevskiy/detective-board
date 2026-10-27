@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 STRATEGIES = ("rank_full", "uniform")
 ANSWER_MODES = ("extractive", "generate")
+EXTRACT_ORDERS = ("score", "rank")
 
 
 @dataclass(frozen=True)
@@ -31,8 +32,13 @@ class AgentConfig:
     tool_timeout_s: float = 5.0
     answer_mode: str = "extractive"  # extractive: the model picks sentences, text is a template
     # generate: the model writes a cited answer (kept for A/B)
-    extract_per_source: int = 6  # extractive: best-scoring sentences kept per source
-    extract_max_sentences: int = 24  # extractive: sentences offered to the model in total
+    extract_top_k: int = 6  # extractive: chunks retrieved (the generative path uses top_k)
+    extract_per_source: int = 8  # extractive: best-scoring sentences kept per chunk (whole text)
+    extract_max_sentences: int = 40  # extractive: sentences offered to the model in total
+    extract_max_tokens: int = 850  # extractive: prompt estimate; the lowest-scoring sentences go
+    extract_order: str = (
+        "score"  # what the sentence cap drops: "score" (lowest) | "rank" (worst chunks)
+    )
     rule_first: bool = True  # rule questions: deterministic template from the rule result, no LLM
     temperature: float = 0.0
     seed: int = 42
@@ -42,3 +48,5 @@ class AgentConfig:
             raise ValueError(f"strategy must be one of {STRATEGIES}, got {self.strategy!r}")
         if self.answer_mode not in ANSWER_MODES:
             raise ValueError(f"answer_mode must be one of {ANSWER_MODES}, got {self.answer_mode!r}")
+        if self.extract_order not in EXTRACT_ORDERS:
+            raise ValueError(f"extract_order must be one of {EXTRACT_ORDERS}")

@@ -85,6 +85,17 @@ class Agent:
         yield from self._run(sink, question, list(history))  # type: ignore[misc]
 
     # ------------------------------------------------------------------ pipeline
+    def _k(self) -> int:
+        """Chunks retrieved first: the extractive mode offers sentences, not excerpts, so it can
+        afford more of them than the generative prompt."""
+        c = self.cfg
+        return c.extract_top_k if c.answer_mode == "extractive" else c.top_k
+
+    def _window_words(self) -> int:
+        """Extractive sources are whole chunks (every sentence is scored and may be offered);
+        the generative prompt shows query-focused windows."""
+        return 0 if self.cfg.answer_mode == "extractive" else self.cfg.window_words
+
     def _ms(self, t0: float) -> int:
         return int((self._mono() - t0) * 1000)
 
@@ -112,7 +123,7 @@ class Agent:
 
         # 1. vector retrieval (always: it also supplies source text and the story)
         hits, rejected, gate_missing, support = yield from self._retrieve(
-            sink, question, rq, cfg.top_k, 1
+            sink, question, rq, self._k(), 1
         )
         story = (hits or rejected or [None])[0].story if (hits or rejected) else None
 
@@ -179,7 +190,11 @@ class Agent:
 
         def assemble(h: list[Any], gs: list[ctx.Source], ts: list[ctx.Source]) -> list[ctx.Source]:
             out = ctx.sources_from_hits(
-                h, question, cfg.window_words, idf=self.idf, full_top1=cfg.strategy == "rank_full"
+                h,
+                question,
+                self._window_words(),
+                idf=self.idf,
+                full_top1=cfg.strategy == "rank_full",
             )
             n = len(out) + 1
             out += [_renum(s, n + i) for i, s in enumerate(gs)]
@@ -577,7 +592,7 @@ class Agent:
         vec = ctx.sources_from_hits(
             hits,
             question,
-            cfg.window_words,
+            self._window_words(),
             start=len(rule.sources) + 1,
             idf=self.idf,
             full_top1=cfg.strategy == "rank_full",
@@ -604,7 +619,8 @@ class Agent:
             self.idf,
             per_source=cfg.extract_per_source,
             total=cfg.extract_max_sentences,
-            max_tokens=cfg.max_prompt_tokens,
+            max_tokens=min(cfg.max_prompt_tokens, cfg.extract_max_tokens),
+            order=cfg.extract_order,
         )
         sources = [*(rule.sources if rule else []), *vec]
         yield sink.emit(

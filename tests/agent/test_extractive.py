@@ -74,7 +74,8 @@ def test_choice_gives_a_verbatim_template_answer():
     # one constrained call, schema with an enum of the offered ids plus NONE
     assert len(llm.calls) == 1
     schema = llm.formats[0]
-    assert schema["properties"]["choice"]["enum"] == ["S1", "S2", "S3", "S4", "NONE"]
+    enum = schema["properties"]["choice"]["enum"]
+    assert enum == [f"S{i}" for i in range(1, len(enum))] + ["NONE"] and len(enum) > 4
     assert schema["required"] == ["choice"]
     print("\nEXTRACTIVE ANSWER:", fin.answer)
 
@@ -245,3 +246,78 @@ def test_findings_keep_the_rule_first_template_without_a_model_call():
     assert llm.calls == []
     assert ev[-1].answer.startswith("Rule engine result for wl: 1 finding.")
     assert next(e for e in ev if e.type == "enriched_query").strategy.startswith("rule-first")
+
+
+def _ranked_hits(n: int = 8):
+    """Eight chunks; only the 7th holds the sentence that answers the question."""
+    hs = [
+        hit(i, f"Lord Ashby sat in the library, number {i}, and nothing else.")
+        for i in range(1, n + 1)
+    ]
+    gold = "The chandelier fell exactly on Lord Ashby in the library at midnight."
+    hs[6] = hit(7, f"Rain fell all night. {gold} Nobody heard a sound.")
+    return hs, gold
+
+
+def test_sentence_from_a_chunk_ranked_7_can_be_chosen_with_exact_offsets():
+    hs, gold = _ranked_hits()
+    cfg = AgentConfig(idf_chunks=CHUNKS, extract_top_k=8)
+    llm = FakeLLM(pick("chandelier"))
+    agent = make_agent(llm, FakeRetriever(hs), config=cfg)
+    ev = list(agent.ask("What fell on Lord Ashby in the library?"))
+    fin = ev[-1]
+    assert fin.status == "answered" and fin.verified
+    assert fin.answer == f'From the sources: [7: "{gold}"]'
+    c = fin.citations[0]
+    h7 = hs[6]
+    assert c.anchor.chunk_id == h7.chunk_id and c.quote == gold
+    assert h7.text[c.anchor.char_start - h7.char_start : c.anchor.char_end - h7.char_start] == gold
+    # the retrieval step is the normal one, with the extractive k
+    started = next(e for e in ev if e.type == "retrieval_started")
+    done = next(e for e in ev if e.type == "retrieval_results")
+    assert started.k == 8 and len(done.chunk_ids) == 8 and done.gate.passed
+    assert agent.retriever.calls == [("What fell on Lord Ashby in the library?", 8)]
+    assert types(ev).count("retrieval_started") == 1
+
+
+def test_extractive_k_does_not_change_the_generative_path():
+    r = FakeRetriever([hit(i, T1) for i in range(1, 9)])
+    agent = make_agent(FakeLLM("x"), r, config=AgentConfig(answer_mode="generate", extract_top_k=8))
+    list(agent.ask("What was the speckled band?"))
+    assert r.calls[0][1] == AgentConfig().top_k
+
+
+def test_caps_are_respected_and_selection_is_deterministic():
+    text = " ".join(f"Sentence number {i} mentions the snake and Roylott." for i in range(30))
+    from detective_board.agent import context as ctx
+
+    srcs = ctx.sources_from_hits([hit(i, text) for i in range(1, 9)], "snake Roylott", 0)
+    q = "snake Roylott"
+    a = ex.build_prompt(q, srcs, None, per_source=8, total=40, max_tokens=10**6)
+    assert (
+        len(a.candidates) == 40
+        and a.candidates
+        == ex.build_prompt(q, srcs, None, per_source=8, total=40, max_tokens=10**6).candidates
+    )
+    assert [c.id for c in a.candidates] == [f"S{i}" for i in range(1, 41)]
+    assert max(sum(c.n == n for c in a.candidates) for n in range(1, 9)) == 8
+    rank = ex.candidates_for(srcs, q, None, 8, 24, order="rank")
+    assert len(rank) == 24 and {c.n for c in rank} == {1, 2, 3}  # the worst-ranked chunks drop
+    small = ex.build_prompt(q, srcs, None, per_source=8, total=40, max_tokens=500)
+    assert small.tokens <= 500 and 0 < len(small.candidates) < 40
+    with pytest.raises(ValueError):
+        AgentConfig(extract_order="nope")
+
+
+def test_whole_chunk_text_is_scored_not_only_the_window():
+    decoy = "Lord Ashby loved the library and its chandelier."
+    target = "Nobody heard anything until midnight."
+    filler = " ".join(f"Filler sentence {i} about nothing." for i in range(60))
+    text = f"{decoy} {filler} {target}"
+    from detective_board.agent import context as ctx
+
+    q = "chandelier library Ashby midnight"
+    windowed = ctx.sources_from_hits([hit(1, text)], q, 60)
+    whole = ctx.sources_from_hits([hit(1, text)], q, 0)
+    assert not any("midnight" in c.quote for c in ex.candidates_for(windowed, q))
+    assert any("midnight" in c.quote for c in ex.candidates_for(whole, q))
