@@ -7,6 +7,7 @@ from detective_board.agent.events import TraceEvent
 from detective_board.agent.memory import summarize
 from detective_board.agent.router import Router, extract_names, parse_time_window
 from detective_board.graph.results import EdgeHit, GraphResult, NodeHit
+from detective_board.retrieval import Hit
 from detective_board.symbolic.model import Anchor
 
 from .conftest import T1, T2, T3, FakeRetriever, FakeTools, hit, make_agent, types
@@ -251,16 +252,123 @@ def test_retry_fails_partial_answer_unverified():
 
 
 def test_retry_fails_refusal():
-    ev = run(make_agent(FakeLLM("Totally uncited statement.")))
+    cfg = AgentConfig(decline_fallback_min_support=2.0)  # no closest-passages fallback
+    ev = run(make_agent(FakeLLM("Totally uncited statement."), config=cfg))
     assert types(ev)[-2:] == ["refusal", "final"]
     assert ev[-2].code == "selfcheck_failed" and [
         e.action for e in ev if e.type == "citation_check"
     ] == ["retry", "refuse"]
 
 
+DECLINE = "In these materials there is nothing about this."
+
+
 def test_model_declines_gives_refusal():
-    ev = run(make_agent(FakeLLM("In these materials there is nothing about this.")))
-    assert ev[-1].status == "refused"
+    cfg = AgentConfig(decline_fallback_min_support=2.0)
+    ev = run(make_agent(FakeLLM(DECLINE), config=cfg))
+    assert ev[-1].status == "refused" and ev[-1].refusal_code == "no_evidence"
+
+
+# ---- decline retry and closest passages -------------------------------------
+def _swamp_adder_hits():
+    import json
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[2] / "data" / "chunks.jsonl"
+    rows = {}
+    for line in path.read_text().splitlines():
+        r = json.loads(line)
+        if r["chunk_id"] in ("speckled-band-0030", "speckled-band-0024", "speckled-band-0032"):
+            rows[r["chunk_id"]] = r
+    return [
+        Hit(
+            cid, r["story"], r["char_start"], r["char_end"], 0.033,
+            {"bm25": -3.0, "vec": 0.2}, {"bm25": i, "vec": i}, r["text"],
+        )
+        for i, cid in enumerate(("speckled-band-0030", "speckled-band-0024", "speckled-band-0032"), 1)
+        for r in [rows[cid]]
+    ]  # fmt: skip
+
+
+G001 = "What kind of snake killed Dr. Grimesby Roylott?"
+SWAMP = "“It is a swamp adder!” cried Holmes"
+
+
+def test_decline_then_answer_on_retry():
+    r = FakeRetriever(_swamp_adder_hits())
+    llm = FakeLLM([DECLINE, 'It was a swamp adder. [1: "It is a swamp adder!"]'])
+    ev = run(make_agent(llm, r), G001)
+    fin = ev[-1]
+    assert fin.status == "answered" and fin.verified and fin.attempts == 2
+    checks = [e for e in ev if e.type == "citation_check"]
+    assert [c.action for c in checks] == ["retry", "accept"]
+    assert checks[0].problems == ["model declined, retrying with a firmer instruction"]
+    assert len(r.calls) == 1  # no re-retrieve: the sources are identical
+    first, second = llm.calls[0][1]["content"], llm.calls[1][1]["content"]
+    assert second.startswith(first) and "contain relevant text" in second[len(first) :]
+    assert "contain relevant text" not in first
+    assert llm.calls[0][0] == llm.calls[1][0]  # same system prompt
+
+
+def _idf_cfg():
+    from pathlib import Path
+
+    return AgentConfig(
+        idf_chunks=str(Path(__file__).resolve().parents[2] / "data" / "chunks.jsonl")
+    )
+
+
+def test_decline_twice_high_support_gives_closest_passages():
+    r = FakeRetriever(_swamp_adder_hits())
+    llm = FakeLLM(DECLINE)
+    ev = run(make_agent(llm, r, config=_idf_cfg()), G001)
+    fin = ev[-1]
+    assert len(llm.calls) == 2
+    assert fin.status == "partial" and fin.verified and fin.refusal_code is None
+    assert fin.answer.startswith(
+        "I could not compose a verified answer, but these passages from the sources are the "
+        "closest to your question:\n"
+    )
+    assert "swamp adder" in fin.answer and "nothing about this" not in fin.answer
+    assert 1 <= len(fin.citations) <= 2
+    assert all(c.label == "source_text" for c in fin.citations)
+    chunks = {h.chunk_id: h.text for h in _swamp_adder_hits()}
+    for c in fin.citations:  # every quote is a verbatim slice of its chunk
+        assert chunks[c.anchor.chunk_id].count(c.quote) >= 1
+    assert fin.citations[0].anchor.chunk_id == "speckled-band-0030"
+    assert fin.citations[0].quote.startswith(SWAMP)
+    assert [e.action for e in ev if e.type == "citation_check"] == ["retry", "partial"]
+    assert "refusal" not in types(ev)
+
+
+def test_closest_passages_deterministic():
+    a = run(make_agent(FakeLLM(DECLINE), FakeRetriever(_swamp_adder_hits())), G001)
+    b = run(make_agent(FakeLLM(DECLINE), FakeRetriever(_swamp_adder_hits())), G001)
+    assert [e.model_dump() for e in a] == [e.model_dump() for e in b]
+
+
+def test_decline_low_support_keeps_plain_refusal():
+    r = FakeRetriever([hit(1, T2, score=0.03)])
+    llm = FakeLLM(DECLINE)
+    ev = run(make_agent(llm, r), "Who stole the cheetah at Christmas?")
+    gate = next(e for e in ev if e.type == "retrieval_results").gate
+    assert gate.passed and gate.support < 0.5
+    assert ev[-1].status == "refused" and ev[-1].refusal_code == "no_evidence"
+    assert ev[-1].answer == DECLINE and len(llm.calls) == 2  # the retry still happened
+
+
+def test_decline_retry_can_be_disabled():
+    llm = FakeLLM(DECLINE)
+    cfg = AgentConfig(decline_retry=False)
+    ev = run(make_agent(llm, config=cfg))
+    assert len(llm.calls) == 1 and ev[-1].status == "partial"
+
+
+def test_gate_refusal_never_reaches_llm_or_fallback():
+    llm = FakeLLM(DECLINE)
+    r = FakeRetriever([hit(1, T2, score=0.03)])
+    ev = run(make_agent(llm, r), "Who stole the blue carbuncle at Christmas?")
+    assert llm.calls == [] and ev[-1].status == "refused"
 
 
 # ---- prompt injection -----------------------------------------------------

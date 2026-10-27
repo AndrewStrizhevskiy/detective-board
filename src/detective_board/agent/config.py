@@ -20,6 +20,8 @@ class AgentConfig:
     max_graph_facts: int = 8
     max_tool_facts: int = 8
     max_retries: int = 1
+    decline_retry: bool = True  # gate passed, model declined: one retry with a firmer instruction
+    decline_fallback_min_support: float = 0.5  # gate support needed for the closest-passages answer
     min_quote_chars: int = 6
     min_claim_overlap: float = 0.3  # [P] content-word share of a claim held by its cited quotes
     memory_turns: int = 3

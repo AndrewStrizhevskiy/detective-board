@@ -124,6 +124,31 @@ def name_words(question: str) -> set[str]:
     return {stem(t.lower()) for t in toks if t[0].isupper() and t != skip}
 
 
+def _weights(q: set[str], question: str, idf: Mapping[str, float] | None) -> dict[str, float]:
+    if idf:  # words absent from the corpus are the rarest of all
+        top = max(idf.values())
+        weight = {w: idf.get(w, top) for w in q}
+        for w in name_words(question) & weight.keys():
+            weight[w] *= NAME_FACTOR
+        return weight
+    return dict.fromkeys(q, 1.0)
+
+
+def best_sentence(
+    text: str, question: str, idf: Mapping[str, float] | None = None
+) -> tuple[int, int, float]:
+    """The sentence of `text` that scores highest for the question: (start, end, score); the
+    first one on ties. (0, 0, 0.0) when the text has no sentence."""
+    spans = sentence_spans(text)
+    if not spans:
+        return 0, 0, 0.0
+    q = content_words(question)
+    weight = _weights(q, question, idf)
+    raw = [sum(weight[w] for w in q & content_words(text[a:b])) for a, b in spans]
+    i = max(range(len(spans)), key=lambda k: (raw[k], -k))
+    return spans[i][0], spans[i][1], raw[i]
+
+
 def best_window(
     text: str, question: str, window_words: int = 110, idf: Mapping[str, float] | None = None
 ) -> Window:
@@ -137,13 +162,7 @@ def best_window(
         return Window(0, len(text), len(spans), 0.0)
     q = content_words(question)
     sent_words = [content_words(text[a:b]) for a, b in spans]
-    if idf:  # words absent from the corpus are the rarest of all
-        top = max(idf.values())
-        weight = {w: idf.get(w, top) for w in q}
-    else:
-        weight = dict.fromkeys(q, 1.0)
-    for w in (name_words(question) & weight.keys()) if idf else ():
-        weight[w] *= NAME_FACTOR
+    weight = _weights(q, question, idf)
     raw = [sum(weight[w] for w in q & sw) for sw in sent_words]
     best = max(range(len(spans)), key=lambda i: (raw[i], -i))  # first best sentence
     score = list(raw)
