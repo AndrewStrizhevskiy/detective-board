@@ -17,7 +17,7 @@ from detective_board.symbolic.model import (
     Step,
     Verdict,
 )
-from detective_board.symbolic.time import fmt_span
+from detective_board.symbolic.time import fmt_human
 
 _RANK = {Verdict.VIOLATED: 0, Verdict.UNKNOWN: 1, Verdict.CONSISTENT: 2}
 
@@ -33,7 +33,8 @@ def event_fact(e: EventRec, confidence: str | None = None) -> FactRef:
         kind="event",
         provenance="extracted",
         confidence=conf,  # type: ignore[arg-type]
-        summary=f"{e.description} [{fmt_span(e.time)}]" + (f" {CURATED_MARK}" if e.curated else ""),
+        summary=f"{e.description} [{fmt_human(e.time, e.day_label)}]"
+        + (f" {CURATED_MARK}" if e.curated else ""),
         anchors=list(e.anchors),
         curated=e.curated,
     )

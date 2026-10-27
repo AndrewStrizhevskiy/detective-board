@@ -63,6 +63,24 @@ def fmt_abs(t: int) -> str:
     return f"d{day} {minute // 60:02d}:{minute % 60:02d}"
 
 
+def _clock(m: int | None) -> str:
+    return "?" if m is None else f"{m // 60:02d}:{m % 60:02d}"
+
+
+def fmt_human(t: TimeSpec | None, day_label: str | None = None) -> str:
+    """User-visible time: the clock time plus a human day label, never a synthetic day number.
+    `day_label` is given for curated day keys and assumed days; without it the day is "day unknown"
+    (or "day set from the text" when the day is known but has no human name)."""
+    if t is None:
+        return "no time"
+    clock = _clock(t.lo) if t.lo == t.hi else f"{_clock(t.lo)}-{_clock(t.hi)}"
+    if t.lo is not None and t.hi is not None and not t.exact and t.lo != t.hi:
+        clock += " (fuzzy)"
+    if day_label:
+        return f"{day_label}, {clock}"
+    return f"{clock}, day unknown" if t.day is None else f"{clock}, day set from the text"
+
+
 def fmt_span(t: TimeSpec | None) -> str:
     if t is None:
         return "no time"
