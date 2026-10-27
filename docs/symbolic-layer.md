@@ -611,6 +611,14 @@ person in the chunk. **Run `presence-2` AFTER the generic extraction and graph b
 come from the graph.** `enum` in `format`: the Ollama docs (api.md, structured-outputs) do not mention
 it; the llama.cpp JSON-schema-to-grammar converter Ollama builds on supports string enums. Quality is
 UNMEASURED until a real run.
+Carry-over (`--carry N`, default 3, prompt `presence-2.1`): a real run with chunk-local lists dropped
+everything (`PERSON_UNKNOWN`, `PLACE_UNKNOWN`) because the dead man of -0010 is only "he". Candidates are now
+this chunk's names (never cut), then those of the previous N chunks of the story (chunk index from the id,
+nearest first), then the story's top 8 persons and top 5 places by mentions, de-duplicated, at most 30. The
+carry setting is part of the candidates hash in the cache key. Names that come only from earlier chunks
+are `context` resolved (LOW). The report has `PERSON_UNKNOWN` / `PLACE_UNKNOWN` counts and
+`offered_by_chunk` (first 12 names offered per chunk); dropped facts carry the model's raw
+person/place/time_text.
 
 Graph. `GraphStore.ingest_presence(chunk, facts)` is independent of `ingest`: node ids are
 `e:<chunk>:p<i>` and `c:<chunk>:p<i>`, and the set is replaced as a whole (unchanged input is a no-op,

@@ -83,8 +83,11 @@ def test_prompt_and_schema_sent_to_the_model_carry_the_lists(tmp_path):
     ex = PresenceExtractor(client, PresenceConfig("m"), ExtractCache(), load_prompt(DEFAULT_PROMPT))
     ex.extract_chunk("c1", "s", TEXT, None, Candidates(("Ann",), ("the inn",), {"Ann": ("Annie",)}))
     (req,) = client.calls
-    assert "Known people in this passage: Ann (also: Annie)" in req.prompt
-    assert "Known places in this passage: the inn" in req.prompt
+    assert (
+        "Candidate people (this passage first, then earlier in the story): Ann (also: Annie)"
+        in req.prompt
+    )
+    assert "Candidate places (this passage first, then earlier in the story): the inn" in req.prompt
     assert "{{" not in req.prompt and req.prompt.rstrip().endswith(TEXT)
     assert req.schema is not None
     assert req.schema["properties"]["facts"]["items"]["properties"]["person"]["enum"] == [
@@ -95,7 +98,7 @@ def test_prompt_and_schema_sent_to_the_model_carry_the_lists(tmp_path):
 
 def test_prompt_v2_example_is_invented_and_self_consistent():
     p = load_prompt(DEFAULT_PROMPT)
-    assert p.version == "presence-2"
+    assert p.version == "presence-2.1"
     head = p.template.split("Example passage:\n", 1)[1]
     passage, rest = head.split("\n\nExample output:\n", 1)
     out = json.loads(rest.split("\n(", 1)[0])
@@ -186,7 +189,7 @@ def test_cache_key_has_prompt_schema_and_candidate_hash():
     assert ex.key(TEXT, a) == ex.key(TEXT, cands())
     assert ex.key(TEXT, a) != ex.key(TEXT, b)
     assert ex.key(TEXT, a) != ex.key(TEXT, cands(places=("the inn", "the pier")))
-    assert ex.schema_version == "presence-2" and ex.prompt.version == "presence-2"
+    assert ex.schema_version == "presence-2" and ex.prompt.version == "presence-2.1"
     v1 = PresenceExtractor(
         FakeClient([]), PresenceConfig("m"), None, load_prompt(presence.PROMPT_V1)
     )
@@ -284,12 +287,14 @@ def test_wisteria_c001_candidates_resolve_garcia_to_a_conditional_r1_finding(tmp
     ids = (f"{WL}-0006", f"{WL}-0010")
     chunks = write_chunks(tmp_path / "chunks.jsonl", *ids)
     db = tmp_path / "g.sqlite"
-    # what a generic extraction could have found (canned): the dead man of 0010 is Garcia
+    # the generic extraction found Garcia and Oxshott Common in 0006/0009, but in 0010 the dead
+    # man is only "he": chunk-local lists would not help, the carry-over (3 chunks back) does
     seed(db, {
         ids[0]: [Entity(name="Garcia", type="person", quote="Garcia"),
                  Entity(name="Wisteria Lodge", type="place", quote="Wisteria Lodge")],
-        ids[1]: [Entity(name="Garcia", type="person", quote=S2),
-                 Entity(name="Oxshott Common", type="place", quote=S2)],
+        f"{WL}-0009": [Entity(name="Garcia", type="person", quote="Garcia"),
+                       Entity(name="Oxshott Common", type="place", quote="Oxshott")],
+        ids[1]: [Entity(name="Inspector Baynes", type="person", quote="Inspector Baynes")],
     }).close()  # fmt: skip
     client = fake_by_passage({
         "Some time later Garcia looked in": [
@@ -303,7 +308,10 @@ def test_wisteria_c001_candidates_resolve_garcia_to_a_conditional_r1_finding(tmp
             "--graph-db", str(db)]  # fmt: skip
     # day_text "that night" is in neither quote: the day comes from --lenient (LOW context)
     assert presence.main([*args, "--lenient"], client=client) == 0
-    assert "Known people in this passage: Garcia" in client.calls[0].prompt
+    assert (
+        "Candidate people (this passage first, then earlier in the story): Garcia"
+        in client.calls[0].prompt
+    )
     g = GraphStore(str(db))
     res = InProcessRulesClient(g).call("find_contradictions", {"story": WL}, timeout=1)
     assert res["status"] == "ok" and [f["rule"] for f in res["findings"]] == ["R1"]
@@ -357,3 +365,94 @@ def test_boscombe_c042_with_candidates_is_still_not_flagged(tmp_path):
     assert g.stats()["event"] >= 2
     res = InProcessRulesClient(g).call("find_contradictions", {"story": BV}, timeout=1)
     assert res == {"status": "ok", "findings": [], "truncated": False}
+
+
+# --- carry-over
+
+
+def _chunk_graph(tmp_path, per_chunk: dict[int, list[Entity]]) -> GraphStore:
+    return seed(tmp_path / "carry.sqlite", {f"{WL}-{i:04d}": e for i, e in per_chunk.items()})
+
+
+def P(n: str, q: str | None = None) -> Entity:
+    return Entity(name=n, type="person", quote=q or n)
+
+
+def L(n: str, q: str | None = None) -> Entity:
+    return Entity(name=n, type="place", quote=q or n)
+
+
+def test_carry_order_current_first_then_previous_then_story_top(tmp_path):
+    g = _chunk_graph(
+        tmp_path,
+        {
+            10: [P("Inspector Baynes")],
+            9: [P("Garcia"), L("Oxshott Common", "Oxshott")],
+            8: [P("Garcia"), P("Inspector Baynes")],
+            1: [P("Holmes")],
+            6: [P("Garcia"), L("Wisteria Lodge")],
+        },
+    )
+    c10 = f"{WL}-0010"
+    c0 = candidates_from_graph(g, c10, carry=0, top_people=0, top_places=0)
+    assert c0 is not None and c0.people == ("Inspector Baynes",) and c0.places == ()
+    c3 = candidates_from_graph(g, c10, carry=3, top_people=0, top_places=0)
+    assert c3 is not None and c3.people == ("Inspector Baynes", "Garcia")
+    assert c3.places == ("Oxshott Common",)  # 0006/0005 are beyond 3 chunks back
+    top = candidates_from_graph(g, c10, carry=3, top_people=8, top_places=5)
+    assert top is not None and top.people[:2] == ("Inspector Baynes", "Garcia")
+    assert top.people[2:] == ("Holmes",) and top.places == (
+        "Oxshott Common",
+        "Wisteria Lodge",
+    )
+    assert len({c0.sha(), c3.sha(), top.sha()}) == 3  # the carry setting changes the hash
+    assert (
+        Candidates(c3.people, c3.places, {}, "graph", carry=1).sha()
+        != Candidates(c3.people, c3.places, {}, "graph", carry=3).sha()
+    )
+    assert candidates_from_graph(g, f"{WL}-0000", carry=3) is None  # story top alone: fall back
+    assert candidates_from_graph(g, "nope-0001", carry=3) is None
+
+
+def test_carry_never_cuts_the_current_chunk_and_caps_the_rest(tmp_path):
+    names = [f"Person {chr(65 + i)}{chr(97 + i)}" for i in range(12)]
+    g = _chunk_graph(
+        tmp_path, {9: [P(n, "Garcia") for n in names[:6]], 10: [P(n, "Baynes") for n in names[6:]]}
+    )
+    c = candidates_from_graph(g, f"{WL}-0010", cap=8, carry=3, top_people=8)
+    assert c is not None and len(c.people) == 8
+    assert set(c.people[:6]) == set(names[6:])  # all of this chunk's names are in, first
+    assert candidates_from_graph(g, f"{WL}-0010", carry=3) is not None
+
+
+def test_report_shows_unknown_counts_and_offered_names(tmp_path, capsys):
+    ids = (f"{WL}-0006", f"{WL}-0010")
+    chunks = write_chunks(tmp_path / "chunks.jsonl", *ids)
+    db = tmp_path / "g.sqlite"
+    seed(db, {f"{WL}-0009": [P("Garcia"), L("Oxshott Common", "Oxshott")]}).close()
+    client = fake_by_passage(
+        {
+            "He had been there since one o’clock": [
+                fact(person="UNKNOWN", place="UNKNOWN", time_text="since one o’clock", quote=S2)
+            ]
+        }
+    )
+    args = [
+        "--model",
+        "fake",
+        "--chunks",
+        str(chunks),
+        "--cache",
+        str(tmp_path / "c"),
+        "--graph-db",
+        str(db),
+    ]
+    assert presence.main(args, client=client) == 0
+    rep = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert rep["PERSON_UNKNOWN"] == 1 and rep["PLACE_UNKNOWN"] == 0 and rep["carry"] == 3
+    assert rep["offered_by_chunk"][ids[1]]["people"] == ["Garcia"]
+    assert len(rep["offered_by_chunk"][ids[0]]["people"]) <= 12
+    assert "Garcia" in client.calls[1].prompt
+    # --carry 0 and a changed carry never share cache entries
+    assert presence.main([*args, "--carry", "0"], client=client) == 0
+    assert len(client.calls) > 2

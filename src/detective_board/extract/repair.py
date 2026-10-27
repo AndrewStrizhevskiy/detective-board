@@ -53,6 +53,8 @@ _TIME_CUE = re.compile(
     + "|".join(_NUMBER_WORDS)
     + r"|o'clock|morning|afternoon|evening|night|noon|midnight|"
     r"midday|dawn|dusk|sunset|sunrise|today|yesterday|tomorrow|to-night|to-morrow|to-day|tonight|"
+    r"o['’]clock|early|late|earlier|quarter|half|past|presently|meanwhile|instant|fortnight|"
+    r"thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|"
     r"day|days|week|weeks|month|months|year|years|hour|hours|minute|minutes|moment|time|ago|"
     r"before|after|since|until|till|during|while|when|once|twice|then|later|soon|"
     r"breakfast|luncheon|lunch|dinner|supper|tea|"
