@@ -1,0 +1,56 @@
+name: release
+
+# A pushed tag rc<N> (release candidate, marked prerelease) or v<X.Y> creates a GitHub release with
+# the source archive at that tag and its SHA256SUMS. The offline archive (models, data, wheels;
+# several GB) is built on Linux x86_64 with scripts/pack_offline.sh --tag <tag>, checked on the
+# laptop with verify_offline.sh, and attached by hand: `gh release upload <tag> dist/*.tar*`.
+
+on:
+  push:
+    tags: ["rc*", "v*"]
+
+permissions:
+  contents: read
+
+env:
+  UV_VERSION: "0.13.4"
+  PYTHON_VERSION: "3.12"  # same as .python-version
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+          enable-cache: true
+      - run: uv sync --locked --group dev
+      - run: uv run pytest -m "not live and not e2e"
+      - run: node --test tests/web_js/*.test.mjs
+      - run: python3 scripts/check_vendor_hashes.py
+
+  release:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Source archive and checksums
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          mkdir dist
+          git archive --format=tar.gz --prefix="detective-board-$TAG/" -o "dist/detective-board-$TAG-src.tar.gz" HEAD
+          (cd dist && sha256sum *.tar.gz > SHA256SUMS && cat SHA256SUMS)
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          pre=""
+          case "$TAG" in rc*) pre="--prerelease" ;; esac
+          gh release create "$TAG" dist/* $pre --verify-tag --title "$TAG" \
+            --notes "Source at $TAG ($GITHUB_SHA) and SHA256SUMS. The offline archive is built with scripts/pack_offline.sh --tag $TAG and attached separately; check it with verify_offline.sh (docs/team/CLEAN_INSTALL.md)."
