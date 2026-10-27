@@ -466,7 +466,7 @@ function statusInfo() {
     case "cancelled": return { cls: "st-error", icon: "■", text: "Stopped" };
     case "error": return { cls: "st-error", icon: "✖", text: "Error" };
     default:
-      if (f.status === "refused") return { cls: "st-refused", icon: "◆", text: f.refusal_code === "out_of_scope" || f.refusal_code === "no_evidence" ? "Refusal: not in the corpus" : `Refusal: ${f.refusal_code || "no answer"}` };
+      if (f.status === "refused") return { cls: "st-refused", icon: "◆", text: refusalText(f.refusal_code) };
       if (f.status === "partial") return { cls: "st-partial", icon: "▲", text: "Partial answer: part unknown" };
       return { cls: f.verified ? "st-done" : "st-partial", icon: f.verified ? "✓" : "▲", text: f.verified ? "Answer (verified)" : "Answer (not verified)" };
   }
@@ -545,10 +545,12 @@ function renderEvidence() {
     }
   }
   box.replaceChildren(...cards);
-  if (f && f.status === "refused" && state.refusal) {
+  if (state.refusal && (!f || f.status === "refused")) {
     const r = state.refusal;
     rf.hidden = false;
-    rf.replaceChildren(h("strong", null, "Not in the corpus"), h("p", null, r.message), r.missing.length ? h("p", null, "Missing: " + r.missing.join(", ")) : null, h("p", null, "Searched: " + (r.searched.join("; ") || "-")),
+    rf.replaceChildren(h("strong", null, "Not in the corpus"), h("p", null, r.message), (r.missing || []).length ? h("p", null, "Missing: " + r.missing.join(", ")) : null, h("p", null, "Searched: " + ((r.searched || []).join("; ") || "-")),
+      g && !g.passed ? h("p", { class: "gate" }, `Relevance gate: ${g.reason}; best score ${n3(g.best_score)} vs threshold ${n3(g.threshold)}, support ${n3(g.support)} vs ${n3(g.min_support)}.`) : null,
+      !modelCalled ? h("p", { class: "muted" }, "Decided before any model call.") : null,
       state.hits.length ? h("details", null, h("summary", null, `Nearest chunks, rejected as unrelated (${state.hits.length})`), h("ul", null, state.hits.map((x) => h("li", null, h("button", { type: "button", class: "hit", onclick: () => showChunk(x.chunk_id) }, x.chunk_id))))) : null);
   } else if (state.phase === "error") {
     rf.hidden = false;
@@ -586,6 +588,7 @@ function passageEl(data, variant, label) {
 async function showSources(header, items) {
   const token = ++srcToken;
   const box = $("source");
+  if (state.phase === "running" && state.refusal) return { cls: "st-refused", icon: "◆", text: refusalText(state.refusal.code) };
   box.replaceChildren(...header, h("p", { class: "muted" }, "Loading source..."));
   try {
     const datas = await Promise.all(items.map(fetchSource));
@@ -596,6 +599,10 @@ async function showSources(header, items) {
     const fe = friendlyError(e);
     box.replaceChildren(...header, h("p", { class: "empty" }, `Source unavailable: ${fe.text}`));
   }
+}
+
+function refusalText(code) {
+  return code === "out_of_scope" || code === "no_evidence" ? "Refusal: not in the corpus" : `Refusal: ${code || "no answer"}`;
 }
 
 function showChunk(chunkId, extra = {}) {
@@ -673,6 +680,9 @@ async function renderSelection() {
       } catch (e) { /* shown below */ }
       if (!sel || sel.id !== n.id) return;
     }
+    const g = state.gate;
+    const modelCalled = state.events.some((e) => e.type === "enriched_query" || e.type === "answer_token");
+    const n3 = (x) => (Number.isFinite(x) ? x.toFixed(3) : "-");
     if (!anchors || !anchors.length) { $("source").replaceChildren(...hdr, h("p", { class: "empty" }, "No source quote is available for this node.")); return; }
     showSources(hdr, anchors.slice(0, 3).map((a, i) => anchorItem(a, `mention ${i + 1} of ${n.anchor_total || anchors.length}`)));
   } else if (sel.kind === "edge") {
