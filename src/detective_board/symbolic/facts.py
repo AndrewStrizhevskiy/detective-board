@@ -50,6 +50,9 @@ class EventRec(_M):
     narrator: bool = True  # False: reported inside a Claim, not established
     occurrence_id: str | None = None  # equal non-None values = same occurrence (dedup guard)
     curated: bool = False  # human-checked fact (extract/curated.py), shown as "(curated)"
+    # human wording of the story day for summaries only ("same day: night of the murder",
+    # "day 3 (assumed)"); the machine day stays in `time.day`
+    day_label: str | None = None
 
     @field_validator("participants")
     @classmethod

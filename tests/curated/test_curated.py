@@ -328,3 +328,63 @@ def test_without_curated_facts_the_answer_does_not_mention_them():
         coverage=None,
     )
     assert "curated" not in ans.text.lower()
+
+
+# ---- human day labels in user-visible text ------------------------------------------------------
+def test_answer_shows_the_day_key_not_a_synthetic_day_id(graph):
+    import re
+
+    tools = InProcessRulesClient(graph)
+    payload = tools.call("find_contradictions", {"story": WL}, timeout=1)
+    text = build_answer(
+        question=GARCIA_Q,
+        story=WL,
+        outcomes=[ToolOutcome("find_contradictions", payload)],
+        link=None,
+        notes=[],
+        hits=[],
+        coverage=None,
+    ).text
+    assert "same day: night of the murder, 01:00" in text
+    assert not re.search(r"\bd\d+\b", text)
+    # the machine ids in the explanation are unchanged
+    (f,) = payload["findings"]
+    assert all(x["fact_id"].startswith("e:wisteria-lodge-") for x in f["explanation"]["facts"])
+    fb = SqliteFactSource(graph).load(WL)
+    assert {e.time.day for e in fb.events} == {curated_day(WL, "night-of-the-murder")}
+
+
+def test_human_time_labels_for_automatic_and_assumed_days():
+    from detective_board.symbolic.model import TimeSpec
+    from detective_board.symbolic.time import fmt_human
+
+    t = TimeSpec(lo=60, hi=60, exact=True)
+    assert fmt_human(t) == "01:00, day unknown"
+    assert fmt_human(t.model_copy(update={"day": 3}), "day 3 (assumed)") == "day 3 (assumed), 01:00"
+    assert fmt_human(t.model_copy(update={"day": 10001})) == "01:00, day set from the text"
+    assert fmt_human(TimeSpec(lo=360, hi=720)) == "06:00-12:00 (fuzzy), day unknown"
+
+
+def test_assumed_day_is_labelled_and_automatic_days_are_not(tmp_path):
+    g = GraphStore()
+    text = "Ann Hale was at the Rose Inn at nine o'clock."
+    g.ingest(
+        ChunkRef("syn-0001", "syn", 0, len(text), text),
+        Extraction(
+            entities=[Entity(name="Ann Hale", type="person", quote="Ann Hale")],
+        ),
+    )
+    c = ChunkRef("syn-0001", "syn", 0, len(text), text)
+    from detective_board.extract.presence_schema import GroundedFact
+
+    g.ingest_presence(
+        c,
+        [
+            GroundedFact(
+                person="Ann Hale", place="Rose Inn", time_text="nine o'clock", quote=text[:-1]
+            )
+        ],
+    )
+    (plain,) = SqliteFactSource(g).load("syn").events
+    (assumed,) = SqliteFactSource(g, assume_day=5).load("syn").events
+    assert plain.day_label is None and assumed.day_label == "day 5 (assumed)"

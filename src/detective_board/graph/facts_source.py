@@ -72,6 +72,23 @@ class SqliteFactSource:
             time_text=text,
         )
 
+    def _day_label(
+        self,
+        props: dict[str, Any],
+        time: TimeSpec | None,
+        day_ov: tuple[Any, str] | None,
+        time_ov: tuple[Any, str] | None,
+    ) -> str | None:
+        """Human wording of the day for summaries: the curated day key, or "day N (assumed)" when
+        the day came from `assume_day`; None otherwise (the summary then says "day unknown")."""
+        if props.get("curated") and props.get("day_key"):
+            return "same day: " + str(props["day_key"]).replace("-", " ")
+        if time is None or time.day is None or day_ov is not None or self.assume_day is None:
+            return None
+        if time_ov is not None and TimeSpec.model_validate(time_ov[0]).day is not None:
+            return None
+        return f"day {time.day} (assumed)"
+
     def load(self, story: str) -> FactBase:
         conn = self.store.conn
         all_ = story == ALL_STORIES
@@ -118,11 +135,13 @@ class SqliteFactSource:
         events = []
         for r in nodes("event"):
             p = json.loads(r["props_json"])
+            time = self._time(p, days.get(r["id"]), times.get(r["id"]))
             events.append(
                 EventRec(
                     id=r["id"],
                     description=p.get("description", ""),
-                    time=self._time(p, days.get(r["id"]), times.get(r["id"])),
+                    time=time,
+                    day_label=self._day_label(p, time, days.get(r["id"]), times.get(r["id"])),
                     place_ref=where.get(r["id"]),
                     participants=people.get(r["id"], []),
                     anchors=[self._anchor(r)],
