@@ -18,6 +18,10 @@ set is an explicit person-place-time conflict with an established narrator fact.
 the c042 control and how to add a case: `docs/symbolic-layer.md` 11.4; stage wording: `docs/DISCLOSURE.md`
 and `docs/design/demo-script.md` step 2. The facts still need a human re-check.
 
+## 0b. Sentence index (2026-10-27, branch `feat/sentence-index`, not pushed)
+
+`data/index/sentences.sqlite` (`just sentences`; docs/data-schema.md 2b) is a sentence-level hybrid index; with it the extractive mode offers the top 12 sentences of the whole corpus plus the best 2 of each of the top 2 chunks (docs/api.md "Sentence index"). Without the file nothing changes (trace note in `enriched_query.strategy`). Candidate recall without an LLM: `eval/sentence_recall.py`, results in docs/spike/results/sentence-recall-*.md. Whether the model then picks the right sentence is NOT measured yet: run `eval/run_answer_check.py` on the real model before making it the demo default.
+
 ## 1. What the project is
 
 Detective Board: a local, offline, CPU-only neuro-symbolic investigator over 20 Sherlock Holmes stories.
@@ -37,7 +41,7 @@ See `README.md`, `docs/PRD.md`, `docs/architecture/c4.md`.
 | Extraction pipeline (JSON repair, quote grounding, cache, schema v2) | `src/detective_board/extract` | done; real runs only on the 12 spike chunks and ~30 pipeline chunks |
 | Graph store (SQLite) + FactSource | `src/detective_board/graph` | done, tested with hand-built extractions; NOT yet filled from real extraction (wave 1 stopped) |
 | Symbolic rules R1-R3 + explanations | `src/detective_board/symbolic` | done, 70 deterministic tests; real-data behaviour untested |
-| MCP server `timeline-alibi` + client | `src/detective_board/mcp` | done, stdio integration test; serves one story from a FactBase JSON |
+| MCP server `timeline-alibi` + client | `src/detective_board/mcp` | done; stdio server over the real graph (`--graph`, read-only, all stories) is the agent's default tool path when `graph.sqlite` exists (R-19, `docs/mcp-contracts.md` 8.1); in-process only as a labelled fallback; `--facts` serves one story from a FactBase JSON. Not run against real Ollama |
 | Agent (router, relevance gate, cited answers, self-check, trace events) | `src/detective_board/agent` | done on fake LLM and a 12-question live check; graph/MCP route NOT live-tested |
 | API (Starlette + SSE) and UI | `src/detective_board/api`, `web/` | done and browser-checked in `--fake` mode only |
 | Eval | `eval/`, `scripts/spike`, `scripts/eval` | golden sets + spike scorers exist; the 4-configuration A/B runner `eval/run_eval.py` does NOT exist |
@@ -92,6 +96,7 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
    qwen3:4b-instruct, then `scripts/spike/presence_eval.py`); details and limits in
    `docs/symbolic-layer.md` 11.3. The tests use canned model output: they show the plumbing, not extraction
    quality, and Wisteria Lodge (c001) is only reachable with `--lenient` (context fields, LOW).
+   **Presence verifier (branch `feat/presence-verifier`, NOT measured):** optional `--verify` (one enum-answer check per kept fact) and `--samples N` (majority vote) for the presence pass, off by default, recommended server command in `docs/team/SERVER_RUNBOOK.md` 5b; per-stage precision/recall in `presence_eval.py`; see `docs/symbolic-layer.md` 11.3.
 4. **Build `eval/run_eval.py`** (Package C): bare LLM / vector / vector+rerank / hybrid+graph; heavy runs on
    the strong machine, a short CI mode. Tune the provisional thresholds (min_score 0.018, min_support 0.25,
    min_claim_overlap 0.3; R-13).

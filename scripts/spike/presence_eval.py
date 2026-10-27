@@ -21,6 +21,9 @@ Scores per prediction file:
   survival       facts kept / facts the model produced (deterministic grounding drops the rest)
   quote_grounded quote grounded exactly or fuzzily / all model facts, before the other checks
 
+With `stages` in the records (runner with --samples / --verify) the scores are also given per
+stage: grounded, voted, verified (precision, recall by quote and full, F1, number of facts).
+
 Usage: scripts/spike/presence_eval.py PRED.jsonl [PRED2.jsonl ...] [--gold-out eval/presence_gold.jsonl]
        [--gold FILE] [--chunks data/chunks.jsonl] [--json OUT.json]
 """
@@ -247,6 +250,38 @@ def score(gold: list[dict], preds: list[dict], chunks: dict[str, dict]) -> dict:
     return out
 
 
+STAGES = ("grounded", "voted", "verified")
+
+
+def score_stages(gold: list[dict], preds: list[dict], chunks: dict[str, dict]) -> dict:
+    """Precision/recall after each pipeline stage, from the `stages` of the runner's records:
+    grounded (first sample, after deterministic grounding), voted (--samples majority; equal to
+    grounded when samples = 1), verified (--verify; equal to voted without it = the final facts).
+    Records without `stages` (older runs) give no stages."""
+    if not preds or not all("stages" in r for r in preds):
+        return {}
+    out: dict = {}
+    for st in STAGES:
+        recs = [{**r, "facts": r["stages"].get(st, [])} for r in preds]
+        sc = score(gold, recs, chunks)
+        out[st] = {
+            t: {
+                k: sc[t][k]
+                for k in (
+                    "precision",
+                    "recall_quote",
+                    "recall_full",
+                    "f1_full",
+                    "preds_judged",
+                    "gold",
+                )
+            }
+            for t in ("strict", "all")
+        }
+        out[st]["facts"] = sum(len(r["facts"]) for r in recs)
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("pred", nargs="*", type=Path, help="presence --out jsonl file(s)")
@@ -274,6 +309,8 @@ def main(argv: list[str] | None = None) -> int:
     for path in a.pred:
         recs = [json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln]
         results[str(path)] = score(gold, recs, chunks)
+        if stages := score_stages(gold, recs, chunks):
+            results[str(path)]["stages"] = stages
     for name, r in results.items():
         s, al = r["strict"], r["all"]
         print(
@@ -283,6 +320,14 @@ def main(argv: list[str] | None = None) -> int:
             f"facts={r['facts_kept']}/{r['facts_model']}",
             file=sys.stderr,
         )
+    for name, r in results.items():
+        for st, v in r.get("stages", {}).items():
+            print(
+                f"  {name} [{st}] facts={v['facts']} strict P={v['strict']['precision']} "
+                f"Rf={v['strict']['recall_full']} | all P={v['all']['precision']} "
+                f"Rf={v['all']['recall_full']}",
+                file=sys.stderr,
+            )
     doc = {"gold_items": len(gold), "gold_strict": strict, "scores": results}
     if a.json:
         a.json.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

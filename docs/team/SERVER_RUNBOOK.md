@@ -194,7 +194,20 @@ scripts/server_presence.sh                                      # demo stories: 
 scripts/server_presence.sh --all                                # then every story (demo chunks are cache hits)
 scripts/server_presence.sh --literal                            # presence-2 strict variant: person/place must be in the quote
 scripts/server_presence.sh --lenient                            # A/B: keep values not in the quote (LOW); no new model calls
+scripts/server_presence.sh --verify --samples 3                 # RECOMMENDED (see below); own output files (-s3-verify)
 ```
+**Recommended command: `scripts/server_presence.sh --verify --samples 3`** (both are off by default and their
+quality is unmeasured; the point of the run is to measure them). `--verify` adds one short call per kept fact
+(quote + the sentence before and after + the claim; the model answers a four-field enum, about 25 tokens): about
+3-6 s per fact on this CPU, much faster on the GPU; fact counts are in the report (`funnel`, `verify_calls`). `--samples 3`
+runs the presence call 3 times (seeds 42..44, temperature 0.3) and keeps facts found in at least 2: three times the
+extraction time (the verifier then only sees the survivors). `--verify-model M` picks another verifier model,
+`--verify-accept-partly` keeps "partly" facts with the failing place/time nulled (LOW). Everything is cached and resumable
+(verifier keys have the prefix `verify:`). With `--samples 3` the samples use temperature 0.3, so they are new calls, not hits of an earlier plain run. `eval-s3-verify.json` has precision/recall per stage
+(grounded, voted, verified) in `scores.<file>.stages`; the report has `funnel` (model, grounded, voted, verified),
+`verify_rejected_by_detail` and `vote_below_majority`. Prompt wording: `prompts/extract/presence_verify_v1.txt`
+(version in every fact's `verify.prompt_version`; to test another wording copy the file with a new version and pass
+`--verify-prompt`).
 Single model by hand: `uv run python -m detective_board.extract.presence --model qwen3:8b --chunks data/chunks.jsonl
 --story wisteria-lodge --cache data/cache/presence-cache-qwen3_8b.sqlite --graph-db data/graph/presence-qwen3_8b.sqlite
 --out data/cache/server/presence/qwen3_8b.jsonl` (the graph DB is a COPY of `graph.sqlite`; the pass writes into it and runs
@@ -203,6 +216,20 @@ the normaliser). Score without a model: `uv run python scripts/spike/presence_ev
 and `data/graph/presence-*.sqlite`. Write into the report: facts kept per model, `fact_survival_rate`, the strict-gold
 recall (the gold has only 4 strict items), and the R1/R3 findings that the new graph gives
 (`InProcessRulesClient(GraphStore(path)).call("find_contradictions", {"story": ...})`).
+
+## 5c. Sentence index (optional, 5-10 minutes on a GPU; about 20 minutes on a laptop CPU)
+
+The extractive answers can choose from sentences found by a hybrid search over the whole corpus instead of only
+the sentences of the top chunks (`docs/api.md`, "Sentence index"). It needs only `bge-m3` (pull it if the
+extraction models were pulled without it) and `data/chunks.jsonl`; no LLM runs.
+```bash
+ollama pull bge-m3
+uv run python -m detective_board.index.sentences      # or `just sentences`; about 11000 sentences, resumable: run it again if the window dies
+```
+Progress goes to stderr (`embedded N/total`); it ends with `OK` and a count. Bring back
+`data/index/sentences.sqlite` and `data/cache/sentences-emb.sqlite` (the embedding cache, so a rebuild on the
+laptop costs nothing) together with the other files of section 5. Do not copy it onto a laptop whose
+`data/chunks.jsonl` differs (the manifest holds the chunk file's sha256; a mismatch triggers a rebuild).
 
 ## 6. Cleanup
 

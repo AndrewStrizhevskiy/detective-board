@@ -109,3 +109,20 @@ def test_cli_writes_gold_and_scores(tmp_path, capsys):
     assert doc["scores"][str(pf)]["strict"]["recall_full"] == 1.0
     assert pe.main([str(pf), "--gold", str(gold_out)]) == 0  # a stored gold works too
     assert "gold:" in capsys.readouterr().err
+
+
+def test_scores_per_stage_grounded_voted_verified(tmp_path):
+    preds = run_runner(tmp_path, canned_from_gold())
+    old = [{k: v for k, v in p.items() if k != "stages"} for p in preds]
+    assert pe.score_stages(gold(), old, records()) == {}  # older records: nothing to split
+    first = next(p for p in preds if p["facts"])
+    bad = {**first["facts"][0], "place": "Nowhere Hall"}  # wrong place, same quote
+    for p in preds:
+        p["stages"] = {st: list(p["facts"]) for st in pe.STAGES}
+    first["stages"]["grounded"] = [*first["facts"], bad]
+    first["stages"]["voted"] = [*first["facts"], bad]  # the verifier is what removes it
+    st = pe.score_stages(gold(), preds, records())
+    assert st["grounded"]["strict"]["precision"] < 1.0 == st["verified"]["strict"]["precision"]
+    assert st["verified"]["strict"]["recall_full"] == st["grounded"]["strict"]["recall_full"]
+    assert st["grounded"]["facts"] == st["verified"]["facts"] + 1
+    assert list(st) == ["grounded", "voted", "verified"]
