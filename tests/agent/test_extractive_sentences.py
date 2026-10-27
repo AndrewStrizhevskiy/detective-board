@@ -76,7 +76,7 @@ def test_sentence_from_a_chunk_outside_the_top_hits_is_chosen_and_quoted():
         "speckled-band-0001",
         "speckled-band-0002",
     }
-    assert r.sentence_calls == [(Q, 12)]
+    assert r.sentence_calls == [(Q, AgentConfig().extract_sentence_k)]
     assert eq.prompt_tokens_estimate <= 850
     # the sentence hit comes first (hybrid score order), then the lexical safety net
     first = _LINE.findall(llm.calls[0][-1]["content"])[0]
