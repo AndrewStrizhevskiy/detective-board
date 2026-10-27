@@ -25,6 +25,10 @@ def test_scripts_parse_and_have_help(script):
     assert all(line.startswith("#") for line in out.stdout.splitlines())
 
 
+# the dry run resolves the ref with git; the archive's copy of the repo (git archive) has no .git
+needs_git = pytest.mark.skipif(not (ROOT / ".git").exists(), reason="needs a git checkout")
+
+
 def _dry_run(env_extra, tmp_path):
     env = {**os.environ, **env_extra, "PATH": f"{tmp_path / 'bin'}:/usr/bin:/bin"}
     return subprocess.run(
@@ -32,17 +36,20 @@ def _dry_run(env_extra, tmp_path):
     )
 
 
+@needs_git
 def test_dry_run_names_every_missing_input_and_refuses(tmp_path):
     (tmp_path / "bin").mkdir()
     out = _dry_run({"OLLAMA_MODELS": str(tmp_path / "nowhere")}, tmp_path)
     assert out.returncode == 2
     assert "NOT READY" in out.stdout
-    assert "ollama not found on PATH" in out.stdout
+    if not shutil.which("ollama", path="/usr/bin:/bin"):  # some distros install it there
+        assert "ollama not found on PATH" in out.stdout
     for model in ("bge-m3:latest", "qwen3:4b-instruct", "qwen3:4b"):
         assert f"model not pulled: {model}" in out.stdout
     assert "qwen3:8b" not in out.stdout, "the 8B model is optional (--with-8b)"
 
 
+@needs_git
 def test_a_model_with_another_build_is_refused(tmp_path):
     """The manifest's sha256 prefix must equal the ID pinned in docs/team/models.md."""
     models = tmp_path / "models"

@@ -1,12 +1,13 @@
 # Clean install from the offline archive
 
 For anyone on the team, not only the author of the archive: install Detective Board on a Linux
-x86_64 laptop with **the network off**, check it, and start the demo. About 15 minutes, most of it
-copying and the check. This file is shipped in the archive as `INSTALL.md`.
+x86_64 laptop with **the network off**, check it, and start the demo. Aim: under 15 minutes, most
+of it copying and the check (UNVERIFIED until the first clean-install record). This file is shipped in the archive as `INSTALL.md`.
 
 The archive is built with `scripts/pack_offline.sh --tag <tag>` (on Linux x86_64, with the models
 pulled and the data built) and contains: the repo at the tag with the `web/replay` recordings, the
-index, sentence index and graph, `uv`, a Python 3.12 build, a wheelhouse, the Ollama binary, the
+index, sentence index and graph, `uv`, a Python 3.12 build, a uv cache with every locked package
+(`uv-cache/`), the Ollama binary, the
 models `bge-m3`, `qwen3:4b-instruct`, `qwen3:4b` (IDs as in `docs/team/models.md`), `MANIFEST`
 and `SHA256SUMS`.
 
@@ -36,7 +37,7 @@ Tick each step and note the time; the record goes into `docs/perf/clean-install-
    cat MANIFEST                                                     # commit, versions, model IDs
    ```
 3. [ ] **Run the check.** It verifies every file, installs the Python environment from the
-   wheelhouse, runs the fast tests, starts Ollama from the archive, compares the model IDs, starts
+   packed uv cache, runs the fast tests, starts Ollama from the archive, compares the model IDs, starts
    the API like `just run` does and asks the three scripted demo questions plus a second refusal.
    ```bash
    ./verify_offline.sh --require-offline
@@ -50,14 +51,15 @@ Tick each step and note the time; the record goes into `docs/perf/clean-install-
    OLLAMA_MODELS="$PWD/ollama-models" OLLAMA_HOST=127.0.0.1:11434 ollama/bin/ollama serve
 
    # terminal 2: the API and the UI
-   export PATH="$PWD/bin:$PATH" UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_FIND_LINKS="$PWD/wheelhouse"
+   export PATH="$PWD/bin:$PATH" UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_CACHE_DIR="$PWD/uv-cache"
    cd detective-board
    uv run --no-sync python scripts/preflight.py          # Ollama and both models answer
    uv run --no-sync python -m detective_board.api        # http://127.0.0.1:8000
    ```
-   With `just` installed, `just run` in `detective-board/` does the same two commands (it calls
-   `uv run` without `--no-sync`; with the variables above that only checks the environment the
-   check already built; UNVERIFIED on the laptop until the first clean-install record says so).
+   With `just` installed, `just run` in `detective-board/` does the same two commands. It calls
+   `uv run` without `--no-sync`; with the variables above that resolves from the packed cache and
+   needs no network (tested on macOS with the real lock; UNVERIFIED on the laptop until the first
+   clean-install record says so).
 5. [ ] **Ask the scripted questions** in the browser at http://127.0.0.1:8000
    (`docs/design/demo-script.md`):
    - `What kind of snake killed Dr. Grimesby Roylott?` → answered with the quote "It is a swamp adder!".
@@ -66,8 +68,9 @@ Tick each step and note the time; the record goes into `docs/perf/clean-install-
    - `What was the creature that haunted the Baskerville family on the Devonshire moor?` → refused,
      no `llm.call` row in the trace.
    - Recordings work without a model: menu **Recordings**, or key `c` after a question.
-6. [ ] **Stop.** `Ctrl+C` in both terminals. Nothing is left running; nothing was written outside
-   the unpacked folder (the environment is `detective-board/.venv`, the logs `verify-logs/`).
+6. [ ] **Stop.** `Ctrl+C` in both terminals; `verify_offline.sh` stops its own Ollama and API.
+   Written outside the unpacked folder: only the Ollama key pair `~/.ollama/id_ed25519*` (Ollama
+   creates it on first start). Inside: `detective-board/.venv`, new entries in `uv-cache/`, `verify-logs/`.
 
 Done when the checklist passes **twice, on two different laptops**, each with a record.
 
@@ -76,7 +79,7 @@ Done when the checklist passes **twice, on two different laptops**, each with a 
 | Symptom | Likely cause | What to do |
 |---|---|---|
 | `sha256sum -c` reports FAILED | copy damaged | copy again from the stick; if it fails again, the stick copy is bad |
-| `uv sync offline` FAIL, "not found in the package registry" | a wheel missing for this platform | the archive was built on another platform; rebuild on Linux x86_64 |
+| `uv sync offline` FAIL, "Network connectivity is disabled, but the requested data wasn't found in the cache" | the packed cache lacks a wheel for this platform | the archive was built on another platform or Python; rebuild on Linux x86_64 |
 | `ollama` FAIL, "address already in use" | a system Ollama is running | `sudo systemctl stop ollama`, or `--ollama-port N` |
 | `ollama: model IDs differ` | wrong model build packed | rebuild the archive; `pack_offline.sh` refuses IDs that differ from `docs/team/models.md` |
 | `api` FAIL on c001 | the graph has no curated facts for Wisteria Lodge | the archive's graph is not the demo graph; rebuild with the right `data/graph/graph.sqlite` |

@@ -7,7 +7,7 @@
 #   --dry-run   only check that every input exists and print the plan (works on any OS)
 # Contents: the repo at REF (with the web/replay recordings), data/index/db.sqlite,
 # data/index/sentences.sqlite, data/graph/graph.sqlite, uv, a Python build (uv python install), a
-# wheelhouse for an offline `uv sync`, the Ollama binary and only the needed models (bge-m3,
+# uv cache for an offline `uv sync`, the Ollama binary and only the needed models (bge-m3,
 # qwen3:4b-instruct, qwen3:4b; IDs checked against docs/team/models.md), INSTALL.md, MANIFEST and
 # SHA256SUMS (every file).
 # Must run on Linux x86_64 (the target platform): uv installs a Python for the host it runs on,
@@ -76,6 +76,10 @@ sha256_of() { if command -v sha256sum >/dev/null; then sha256sum "$1" | cut -d' 
 for m in "${MODELS[@]}"; do
   want="$(expected_id "$m")"
   mf="$(manifest_path "$m")"
+  if [ -z "$want" ]; then
+    problems+=("model $m: no ID pinned in docs/team/models.md")
+    continue
+  fi
   if [ -z "$OLLAMA_MODELS_DIR" ]; then
     problems+=("model $m: no Ollama models folder found (set OLLAMA_MODELS)")
     continue
@@ -85,7 +89,7 @@ for m in "${MODELS[@]}"; do
     continue
   fi
   have="$(sha256_of "$mf" | cut -c1-12)"
-  if [ -n "$want" ] && [ "$have" != "$want" ]; then
+  if [ "$have" != "$want" ]; then
     problems+=("model $m has ID $have, docs/team/models.md pins $want")
   else
     note "model $m ID $have"
@@ -112,7 +116,7 @@ mkdir -p "$OUT"
 OUT="$(cd "$OUT" && pwd)"
 DIST="$OUT/$NAME"
 [ -e "$DIST" ] && { echo "$DIST exists; remove it first" >&2; exit 2; }
-mkdir -p "$DIST"/{bin,ollama/bin,ollama-models,wheelhouse}
+mkdir -p "$DIST"/{bin,ollama/bin,ollama-models}
 echo "build: $DIST"
 
 # source at REF (tracked files only) plus the git-ignored data the demo needs
@@ -120,24 +124,25 @@ git archive --format=tar --prefix=detective-board/ "$COMMIT" | tar -x -C "$DIST"
 echo "$COMMIT" > "$DIST/detective-board/COMMIT"
 for f in "${DATA[@]}"; do mkdir -p "$DIST/detective-board/$(dirname "$f")"; cp "$f" "$DIST/detective-board/$f"; done
 
-# uv, a Python build, the wheelhouse (runtime + dev group, for the test subset of the check)
+# uv, a Python build, and a uv cache holding every locked wheel (runtime + dev group, for the
+# test subset of the check) plus the build backend for the editable project install. An offline
+# `uv sync` installs locked packages from the cache; it does not take them from --find-links.
 cp -L "$UV_BIN" "$DIST/bin/uv"
 UVX_BIN="$(command -v uvx || true)"; [ -n "$UVX_BIN" ] && cp -L "$UVX_BIN" "$DIST/bin/uvx"
-"$DIST/bin/uv" python install "$PYVER" --install-dir "$DIST/python"
+"$DIST/bin/uv" python install "$PYVER" --install-dir "$DIST/python" --no-bin
+# uv also leaves an absolute symlink cpython-<ver>-<platform> next to the build; dangling once moved
+find "$DIST/python" -maxdepth 1 -type l -delete
 PY="$(ls -d "$DIST"/python/cpython-*/bin/python3 | head -n 1)"
-"$PY" -m pip --version >/dev/null 2>&1 || "$PY" -m ensurepip --upgrade >/dev/null
-(cd "$DIST/detective-board" && "$DIST/bin/uv" export --locked --group dev --no-emit-project \
-  --format requirements-txt --no-header -o "$DIST/wheelhouse/requirements.txt")
-"$PY" -m pip download --require-hashes --no-deps --only-binary=:all: \
-  -r "$DIST/wheelhouse/requirements.txt" -d "$DIST/wheelhouse"
-# the project's build backend (pyproject [build-system]) for the offline `uv sync`
-"$PY" -m pip download --only-binary=:all: -d "$DIST/wheelhouse" hatchling
+(cd "$DIST/detective-board" && UV_CACHE_DIR="$DIST/uv-cache" "$DIST/bin/uv" sync --locked --group dev \
+  --python "$PY" && rm -rf .venv)
 
 # Ollama: the binary, its runner libraries, and only the needed models
 OLLAMA_REAL="$(readlink -f "$OLLAMA_BIN")"
 cp "$OLLAMA_REAL" "$DIST/ollama/bin/ollama"
+# lib/ollama holds the CPU runners too, so it must exist (GPU runtimes in it are copied as well)
 LIBDIR="$(dirname "$OLLAMA_REAL")/../lib/ollama"
-[ -d "$LIBDIR" ] && mkdir -p "$DIST/ollama/lib" && cp -a "$LIBDIR" "$DIST/ollama/lib/"
+[ -d "$LIBDIR" ] || { echo "no $LIBDIR next to the Ollama binary; Ollama cannot run without it" >&2; exit 2; }
+mkdir -p "$DIST/ollama/lib" && cp -a "$LIBDIR" "$DIST/ollama/lib/"
 for m in "${MODELS[@]}"; do
   mf="$(manifest_path "$m")"
   rel="${mf#"$OLLAMA_MODELS_DIR"/}"
@@ -166,7 +171,8 @@ cp scripts/verify_offline.sh "$DIST/verify_offline.sh"
   echo "ollama $("$OLLAMA_BIN" --version 2>/dev/null | tail -n 1)"
   for m in "${MODELS[@]}"; do echo "model $m $(sha256_of "$(manifest_path "$m")" | cut -c1-12)"; done
 } > "$DIST/MANIFEST"
-(cd "$DIST" && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
+# uv rewrites its cache .lock files on every run, so they are not checksummed
+(cd "$DIST" && find . -type f ! -name SHA256SUMS ! -name .lock -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS)
 
 tar -cf "$OUT/$NAME.tar" -C "$OUT" "$NAME"
 (cd "$OUT" && sha256sum "$NAME.tar" > "$NAME.tar.sha256")

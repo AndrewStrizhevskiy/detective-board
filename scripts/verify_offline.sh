@@ -5,12 +5,12 @@
 #   --require-offline  FAIL (not just warn) if the internet is reachable
 #   --port N           API port for the check (default 8765); --ollama-port N (default 11435)
 #   --keep             leave Ollama and the API running afterwards
-# Steps: checksums of every file (SHA256SUMS); offline `uv sync` from the wheelhouse with the
+# Steps: checksums of every file (SHA256SUMS); offline `uv sync` from the packed uv cache with the
 # bundled Python; the fast test subset; Ollama from the archive with the archive's models, IDs
 # compared with MANIFEST; what `just run` does (preflight, API) on the real index and graph; the
 # three scripted demo questions (g001 answered, c001 with R1 violated, g047 refused) plus a second
 # refusal (g056). Prints PASS/FAIL per step; exit 0 only when all pass.
-# Run it with no network: unplug the cable, or (Linux) `unshare -rn sh -c 'ip link set lo up; ./verify_offline.sh'`.
+# Run it with no network: unplug the cable, or (Linux) `unshare -rn sh -c 'ip link set lo up && ./verify_offline.sh'`.
 set -uo pipefail
 
 DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -25,7 +25,7 @@ while [ $# -gt 0 ]; do
     --ollama-port) OPORT="$2"; shift 2 ;;
     --keep) KEEP=1; shift ;;
     -h|--help) sed -n '2,13p' "$0"; exit 0 ;;
-    *) DIR="$(cd "$1" && pwd)"; shift ;;
+    *) DIR="$(cd "$1" && pwd)" || { echo "no such folder: $1" >&2; exit 2; }; shift ;;
   esac
 done
 REPO="$DIR/detective-board"
@@ -55,11 +55,11 @@ else
   pass "network: no internet"
 fi
 
-# 3. Python environment from the wheelhouse, nothing downloaded
-export UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_FIND_LINKS="$DIR/wheelhouse" UV_NO_CACHE=1
+# 3. Python environment from the packed uv cache, nothing downloaded
+export UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_CACHE_DIR="$DIR/uv-cache"
 PY="$(ls -d "$DIR"/python/cpython-*/bin/python3 2>/dev/null | head -n 1)"
 UV="$DIR/bin/uv"
-if [ -n "$PY" ] && (cd "$REPO" && "$UV" sync --locked --group dev --offline --no-index --find-links "$DIR/wheelhouse" --python "$PY" >"$LOG/uv-sync.txt" 2>&1); then
+if [ -n "$PY" ] && (cd "$REPO" && "$UV" sync --locked --group dev --offline --python "$PY" >"$LOG/uv-sync.txt" 2>&1); then
   pass "uv sync offline with $("$PY" -c 'import sys; print(sys.version.split()[0])')"
 else
   fail "uv sync offline: see $LOG/uv-sync.txt"
@@ -93,7 +93,8 @@ if (cd "$REPO" && "$UV" run --offline --no-sync python scripts/preflight.py >"$L
 else
   fail "preflight: see $LOG/preflight.txt"
 fi
-(cd "$REPO" && "$UV" run --offline --no-sync python -m detective_board.api --host 127.0.0.1 --port "$PORT" >"$LOG/api.txt" 2>&1) &
+# exec: $! is then uv itself (it forwards SIGTERM to the API), not a subshell that cleanup would orphan
+(cd "$REPO" && exec "$UV" run --offline --no-sync python -m detective_board.api --host 127.0.0.1 --port "$PORT" >"$LOG/api.txt" 2>&1) &
 PIDS+=($!)
 for _ in $(seq 1 120); do curl -s -m 2 "http://127.0.0.1:$PORT/api/health" >/dev/null 2>&1 && break; sleep 1; done
 if (cd "$REPO" && "$UV" run --offline --no-sync python - "$PORT" >"$LOG/ask.txt" 2>&1) <<'PY'
@@ -108,16 +109,19 @@ ok = True
 for qid, want, rule in CASES:
     req = urllib.request.Request(f"http://127.0.0.1:{port}/api/ask", json.dumps({"question": golden[qid]["question"]}).encode(), {"Content-Type": "application/json"})
     t0, final, verdicts = time.time(), None, []
-    with urllib.request.urlopen(req, timeout=900) as r:
-        for raw in r:
-            line = raw.decode().strip()
-            if not line.startswith("data:"):
-                continue
-            ev = json.loads(line[5:])
-            if ev.get("type") == "final":
-                final = ev
-            elif ev.get("type") == "tool_result" and isinstance(ev.get("explanation"), dict):
-                verdicts.append((ev["explanation"].get("rule_id"), ev["explanation"].get("verdict")))
+    try:
+        with urllib.request.urlopen(req, timeout=900) as r:
+            for raw in r:
+                line = raw.decode().strip()
+                if not line.startswith("data:"):
+                    continue
+                ev = json.loads(line[5:])
+                if ev.get("type") == "final":
+                    final = ev
+                elif ev.get("type") == "tool_result" and isinstance(ev.get("explanation"), dict):
+                    verdicts.append((ev["explanation"].get("rule_id"), ev["explanation"].get("verdict")))
+    except OSError as e:  # HTTP errors and timeouts: report this case, go on with the next
+        final = {"status": f"request failed: {e}"}
     got = final and final.get("status")
     good = got is not None and got != "error" and (want is None or got == want)
     if rule:
