@@ -43,9 +43,15 @@ REFUSAL_TEXT = "In these materials there is nothing about this."
 _INJECTION = re.compile(
     r"ignore (all |any |the )?(previous|prior|above|earlier) (instructions|rules|prompts?)"
     r"|disregard (all |the )?(previous|prior|above)|new instructions?\b|system prompt"
-    r"|you are now\b|call (the |a )?tool|reveal your",
+    r"|you are now\b|call (the |a )?tool|reveal your"
+    r"|игнорируй\w* (все |любые )?(предыдущие|прежние) (инструкции|правила)|системн\w+ промпт",
     re.I,
 )
+
+
+def looks_like_injection(text: str) -> bool:
+    """The router/context detector for instruction-like text (English and a few Russian forms)."""
+    return bool(_INJECTION.search(text))
 
 
 @dataclass(frozen=True)
@@ -75,7 +81,7 @@ class Source:
 
     @property
     def suspect(self) -> bool:
-        return bool(_INJECTION.search(self.text))
+        return looks_like_injection(self.text)
 
 
 def sources_from_hits(

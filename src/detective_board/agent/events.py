@@ -18,6 +18,7 @@ Label = Literal["extracted", "derived", "conditional", "source_text"]
 RouteName = Literal["vector", "graph", "mcp", "refusal"]
 
 DOC_TYPE = {
+    "query_translated": "translate (new)",
     "route_decided": "route",
     "retrieval_started": "retrieve.vector (start)",
     "retrieval_results": "retrieve.vector",
@@ -118,6 +119,18 @@ class ProvenanceLabel(BaseModel):
     explanation: Explanation | None = None  # rule-derived items only (docs/symbolic-layer.md 3.1)
 
 
+class QueryTranslated(_Base):
+    """A Cyrillic question was translated to English; everything after runs on `translated`."""
+
+    type: Literal["query_translated"] = "query_translated"
+    original: str
+    translated: str | None = None  # None when the translation failed
+    model: str
+    ok: bool = True
+    cached: bool = False
+    error: str | None = None
+
+
 class RouteDecided(_Base):
     type: Literal["route_decided"] = "route_decided"
     routes: list[RouteName]
@@ -213,7 +226,9 @@ class CitationCheck(_Base):
 
 class Refusal(_Base):
     type: Literal["refusal"] = "refusal"
-    code: Literal["out_of_scope", "no_evidence", "selfcheck_failed", "tool_error"]
+    code: Literal[
+        "out_of_scope", "no_evidence", "selfcheck_failed", "tool_error", "translation_failed"
+    ]
     message: str
     missing: list[str] = []
     searched: list[str] = []
@@ -229,10 +244,13 @@ class Final(_Base):
     route: RouteDecided | None = None
     attempts: int = 1
     refusal_code: str | None = None
+    original_question: str | None = None  # set when the question was translated to English
+    translated_question: str | None = None
 
 
 TraceEvent = Annotated[
-    RouteDecided
+    QueryTranslated
+    | RouteDecided
     | RetrievalStarted
     | RetrievalResults
     | GraphQuery
@@ -259,8 +277,17 @@ class EventSink:
         self.run_id = run_id
         self._now = now
         self.events: list[_Base] = []
+        # Optional hook: called with the `final` event before it is stamped; may edit it and
+        # return events (for example a last answer token) that are emitted ahead of it.
+        self.on_final: Callable[[Final], list[_Base]] | None = None
 
     def emit(self, ev: _Base) -> _Base:
+        if isinstance(ev, Final) and self.on_final is not None:
+            for extra in self.on_final(ev):
+                self._stamp(extra)
+        return self._stamp(ev)
+
+    def _stamp(self, ev: _Base) -> _Base:
         ev.run_id = self.run_id
         ev.seq = len(self.events)
         ev.ts = self._now().astimezone(UTC).isoformat(timespec="milliseconds")

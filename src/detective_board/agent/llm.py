@@ -19,6 +19,7 @@ class LLM(Protocol):
         temperature: float = 0.0,
         seed: int | None = None,
         format: dict[str, Any] | None = None,
+        num_predict: int | None = None,
     ) -> Iterator[str]: ...
 
     def generate(
@@ -39,6 +40,7 @@ class FakeLLM:
         )
         self.calls: list[list[Message]] = []
         self.formats: list[dict[str, Any] | None] = []  # the `format` schema of each chat call
+        self.num_predicts: list[int | None] = []
 
     def _next(self, messages: Sequence[Message]) -> str:
         self.calls.append([dict(m) for m in messages])
@@ -54,8 +56,10 @@ class FakeLLM:
         temperature: float = 0.0,
         seed: int | None = None,
         format: dict[str, Any] | None = None,
+        num_predict: int | None = None,
     ) -> Iterator[str]:
         self.formats.append(format)
+        self.num_predicts.append(num_predict)
         text = self._next(messages)
         yield from re.findall(r"\S+\s*|\s+", text)
 

@@ -127,6 +127,9 @@ function applyEvent(state, ev, now) {
   }
   const s = { ...state, events: [...state.events, ev], lastEventAt: now, lastSeq: typeof ev.seq === "number" ? ev.seq : state.lastSeq, runId: state.runId || ev.run_id || null };
   switch (ev.type) {
+    case "query_translated":
+      s.translation = ev;
+      break;
     case "route_decided":
       s.route = ev;
       break;

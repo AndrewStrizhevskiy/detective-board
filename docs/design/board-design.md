@@ -186,7 +186,7 @@ Rules: no animation loops after the run ends; nothing blinks faster than 3 Hz; n
 - Motion: section 5; respects `prefers-reduced-motion`.
 - Zoom/size: layout reflows at 200 percent browser zoom (columns become tabs); text resizable.
 - Theme: dark by OS preference, manual override; both themes verified by the same script. The demo uses light on a projector unless the room is dark (decide at the pre-show check).
-- Language: UI strings English. Corpus is English. Russian questions have a weak retrieval smoke result (spike: ru hit@5 0.20, n=5, vs en 1.00, n=15), so the product and demo are English-only; this is a stated limitation, not a design choice to hide.
+- Language: UI strings English. Corpus is English. A Russian question is optional and works through a question-translation step (trace row `question translated: ...`); the answer quotes stay English. Quality is unmeasured (n=1-7), so the demo is English-first.
 - Corpus text is data: every block of corpus text carries a visible "corpus text" tag (trace `enrich` row, quote panel header) and is rendered as plain text (no HTML, no links, no markdown), so an injected instruction (AC-16) cannot do anything and is visibly not an instruction.
 
 ## 7. Empty, loading and error states

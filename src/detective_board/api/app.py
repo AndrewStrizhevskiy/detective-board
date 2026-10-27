@@ -462,6 +462,7 @@ def build_app(
                     "run_timeout_s": cfg.run_timeout_s,
                 },
                 "events": [
+                    "query_translated",
                     "route_decided",
                     "retrieval_started",
                     "retrieval_results",

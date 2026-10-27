@@ -5,6 +5,7 @@ const f3 = (x) => (typeof x === "number" ? x.toFixed(3) : String(x));
 const short = (s, n = 90) => (s && s.length > n ? s.slice(0, n - 1) + "…" : s || "");
 
 export const TYPE_LABEL = {
+  query_translated: "translate",
   route_decided: "route",
   retrieval_started: "retrieve",
   retrieval_results: "retrieve",
@@ -29,6 +30,15 @@ export function describe(ev) {
   let status = "ok";
   let corpus = false;
   switch (ev.type) {
+    case "query_translated":
+      if (ev.ok === false) {
+        summary = `question could not be translated (${ev.error || "error"})`;
+        status = "error";
+      } else {
+        summary = `question translated: ${ev.translated}${ev.cached ? " (cached)" : ""}`;
+      }
+      lines.push(["original", ev.original], ["translated", ev.translated || "-"], ["model", ev.model]);
+      break;
     case "route_decided": {
       const r = (ev.routes || []).join(" + ").toUpperCase() || "NONE";
       summary = `→ ${r} (${ev.method}): ${ev.reason}`;

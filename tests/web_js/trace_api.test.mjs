@@ -74,3 +74,15 @@ test("live: refusal stream and a second concurrent-safe sequence", { skip: !URL_
   assert.equal(s.final.status, "refused");
   assert.equal(s.refusal.code, "no_evidence");
 });
+
+test("query_translated row shows the English question; a failure is an error", () => {
+  const [ok, bad] = traceRows([
+    { seq: 0, type: "query_translated", original: "Кто?", translated: "Who?", model: "m", ok: true, cached: false },
+    { seq: 1, type: "query_translated", original: "Кто?", translated: null, model: "m", ok: false, error: "timeout" },
+  ]);
+  assert.match(ok.summary, /^question translated: Who\?/);
+  assert.equal(bad.status, "error");
+  assert.match(bad.summary, /could not be translated \(timeout\)/);
+  const s = reduce(reduce(initialState(), { type: "run_start", question: "Кто?", now: 1 }), { type: "event", event: { seq: 0, type: "query_translated", original: "Кто?", translated: "Who?" }, now: 2 });
+  assert.equal(s.translation.translated, "Who?");
+});
