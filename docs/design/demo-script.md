@@ -1,9 +1,11 @@
 ---
-status: DRAFT 3, 2026-10-27 (DRAFT 2 updated to the final behaviour: extractive answers, rule-first, curated facts; nothing was executed to write it, every number is copied from a file named next to it)
+status: DRAFT 4, 2026-10-27 (adds section 2a, operator cards matched to the 6:30 deck in docs/slides/deck.md; DRAFT 3 text below is kept; DRAFT 2 updated to the final behaviour: extractive answers, rule-first, curated facts; nothing was executed to write it, every number is copied from a file named next to it)
 owner: demo-director + ux-designer
-show date: 2026-10-30, 7 minutes, English
+show date: 2026-10-30, 7-minute slot, deck timed to 6:30, English
 ---
 # 7-minute demo script (location: docs/design/demo-script.md)
+
+**Which timing wins.** The deck `docs/slides/deck.md` is timed to 6:30 (slots: 0:35, 0:30, 0:35, 0:50, 1:10, 0:35, 0:50, 0:25, 0:40, 0:20). Section 2a below maps the steps of section 2 onto the deck and gives, per step, the live path, the recording fallback, the spoken line and the failure line. The step times in section 0 and 2 are the DRAFT 3 targets for a 7:00 run and are superseded by 2a where they differ.
 
 Read with: `docs/ROADMAP.md` (schedule, risks), `docs/HANDOFF.md` (state of the code), `docs/design/board-design.md` (screen), `docs/spike/REPORT.md` and `docs/spike/results/answers-20261023-v3.md` (numbers), `docs/symbolic-layer.md` sections 11.1 and 11.4 (Wisteria case, curated facts), ADR-0009..0011, `docs/spike/results/api12-20261027-extractive.md`, `eval/golden/contradictions.jsonl` (c001, c042), `eval/golden/questions.jsonl` (g001, g047).
 
@@ -37,10 +39,10 @@ Order differs from DRAFT 1 only by what the customer review asked for (R1 first,
 1. Laptop on mains, performance profile, other apps closed, network off, charger and cooling as in ROADMAP risks.
 2. `just run` (recipe exists: `uv run python -m detective_board.api`) on the real index and graph; UI full screen at 1920x1080.
 3. Warm the model with one throwaway question not on the script (the extractive selection call still needs the model resident; cold load 8-15 s, REPORT section 3).
-4. The recordings exist in `web/replay/` (`real-g001-agent.json`, `real-wisteria-r1-curated.json`, `real-refusal-baskerville.json`, `real-boscombe-control.json`, `real-refusal-fee.json`) and serve as the stored runs for key `c`; then restart the UI so the board is empty. (Stored runs and key `c` are backlog R-02/R-03: if not merged, the ladder skips straight to the full recording.)
+4. The recordings exist in `web/replay/` (`real-g001-agent.json`, `real-wisteria-r1-curated.json`, `real-refusal-baskerville.json`, `real-boscombe-control.json`, `real-refusal-fee.json`) and are the stored runs. Key `c` (backlog R-02/R-03) is NOT implemented in `web/js` as of this commit (no handler found): rung 2 of the ladder is the `?replay=` URL of section 2a, opened in a second browser tab. Restart the UI so the board is empty.
 5. Terminal in `/home/mendax/code/detective-board`, font 20 pt, command for step 4 in shell history.
 6. Full recording (all steps) open in a second window, paused at 0:00; screenshot slides ready.
-7. Operator key sheet: `c` = stored run for the current question, `Esc` = stop, `g` = list view. Clock visible to the presenter.
+7. Operator key sheet: `Esc` = stop, `g` = list view (`c` = stored run only if R-03 is merged; otherwise use the replay tabs of 2a). Clock visible to the presenter.
 
 ## 2. Running order
 
@@ -140,6 +142,28 @@ Fallback ladder, same for every step (details in section 4): **(1) narrate over 
 - **Fallback ladder:** none needed; if late, say limits (2) and (5) only.
 - **Pass criterion:** finishes at or before 7:00 in all three rehearsals; no number on the slide that is not in section 5's checklist.
 
+## 2a. Operator cards (match docs/slides/deck.md)
+
+Base URL for replays: `http://127.0.0.1:8000/` (`just run`, port 8000). A replay plays at its original timing unless `&speed=N` (faster) or `&cap=S` (maximum gap in seconds) is added; the badge reads `RECORDING`. Recording durations from the file meta (`seconds`): g001 39.1 s, wisteria R1 1.4 s, Baskerville refusal 0.3 s, fee refusal 22.6 s, Boscombe control 28.7 s. These were recorded at commit 8491402 (the meta), not d9709d0 as written in section 0; the g001 recording took 39.1 s, not the 10.8 s quoted there, so always add `&speed=4` for it. Open the replay tabs in advance in a second browser window.
+
+Rule for every failure line: say that it is a stored run, never blame the model, never call a recording live.
+
+| Slide (time) | Step | Live path | Recording fallback (`?replay=`) | Spoken line | Failure line |
+|---|---|---|---|---|---|
+| 1 (0:00-0:35) | Hook: bare model error | none; the transcript is on the slide and is itself the recording of the 2026-10-23 run. At the end of the slide: switch to the board, type `What kind of snake killed Dr. Grimesby Roylott?`, Enter, switch back | none needed for the bare model; for the agent run see slide 4 | "Language models answer fluently, with no proof. This is a small model, recorded earlier on this laptop: it says Roylott was not killed by a snake and puts him in the wrong book. The right answer is a swamp adder." | "The board did not take the question; I will show the stored run of it in a minute." |
+| 2, 3 (0:35-1:40) | Idea, architecture | slides; the board with the running g001 answer is behind them | none | "The model only reads and proposes; a graph stores facts with their quotes; rules prove; the text answers by quoting. The tool server is a separate process and never calls a model." | "If the g001 answer is not there yet: the model is still choosing its sentence, ten to twenty seconds is normal on this CPU." (return to the board at 1:35 regardless) |
+| 4 (1:40-2:30) | Demo 1: question with verbatim quote | board with the g001 answer; terminal: `rg -F "It is a swamp adder!" data/clean/speckled-band.txt` (one hit); optional `rg -il "baskerville" data/clean` (no output) | `?replay=replay/real-g001-agent.json&speed=4` | "The same question to our agent, started a minute ago. The model chose one numbered sentence; the answer is that sentence, word for word; a one-second search finds it in the book. Verified means verbatim and supporting, not true." | "The model is still choosing its sentence; to keep to time here is the stored run of the same question, labelled as such." If `rg` is slow: run the first command only. If g001 returns NONE: same line, stored run |
+| 5 (2:30-3:40) | Demo 2: Wisteria Lodge, R1, curated | board: `Is there a conflict about where Aloysius Garcia was at about one o'clock on the night he died?`; trace shows `tool.call` and `tool.result` in ms; click the dashed edge, open Why | `?replay=replay/real-wisteria-r1-curated.json` | "For this case the facts are curated: our team wrote them from the book with a quote for each, because the small model cannot yet tell who 'he' is. The tool call took this many milliseconds and no model was involved. One man cannot be in his bedroom and dead on Oxshott Common at one o'clock; the finding is conditional because the proof rests on 'nearly one' and 'since one' and on two places we resolved by hand." | "The tool call is slow; here is the stored run of the same question, labelled as a recording." If the finding is not `violated`: stored run, and say "the live graph did not reproduce it; this is the recorded run". If the trace shows `timeline-alibi[in-process]`: "the server did not start as a subprocess; the same functions ran in-process" |
+| 6 (3:40-4:15) | Demo 3: honest refusal | board: `What was the creature that haunted the Baskerville family on the Devonshire moor?` Expect refusal, no `llm.call` row, board stays empty | `?replay=replay/real-refusal-baskerville.json`; second refusal only if time: `?replay=replay/real-refusal-fee.json` (22.6 s, passes the gate, model chooses NONE) | "A famous novel that is not among our twenty stories. The agent checks whether its evidence covers the question, finds it does not, and refuses without calling the model. A bare model would tell the story from memory." | If it does not refuse and calls the model: `Esc`, then the replay: "The thresholds are provisional and this live run missed; here is the stored run." |
+| 7 (4:15-5:05) | Measured quality | slide | none; the same slide as PDF | "Pilot numbers on small sets that an AI wrote: six of ten answerable questions got a quoted sentence in the extractive run, both out-of-corpus questions were refused; answered is not correct. The final table with intervals is not here yet." | "That row is not measured yet, so I do not give a number." (for any `TBD` row) |
+| 8 (5:05-5:30) | Constraints | slide | none | "Offline, CPU-only, models of eight billion parameters or less, fixed decoding. About twenty-one tokens a second of reading speed is why the model never writes the answer." | n/a |
+| 9 (5:30-6:10) | Disclosure and limits | slide (mandatory; read all four points) | none | "The graph was precomputed on other hardware with the same models, allowed by the organizers. The Garcia facts are curated and checked by the team, human re-check pending. The gold sets were written by an AI, review date to be filled. Rule R3 has no positive in the corpus." | If late: keep points 1 and 3 |
+| 10 (6:10-6:30) | Next, close | slide | none | "Human review of the gold sets and curated facts, the full graph, contradiction precision and recall with intervals. The model guesses, the rules prove, every step shows its quotes." | n/a |
+
+Whole-system failures (any step): (a) browser or UI frozen: switch to the second window, open the replay of the current step, continue the spoken line; (b) Ollama down or killed: the gate refusal and rule-first steps (5, 6) still work without the model; for step 4 use the replay and say "the model server stopped; this is the stored run"; (c) laptop dead: slides alone carry the transcript, the answer line, the two quotes and the refusal text; say so and continue with slide 7 on paper if needed; (d) over time by more than 20 s at slide 6: skip the `rg` check and drop the second sentence of slide 7.
+
+Not in the deck (kept for questions): Boscombe control `?replay=replay/real-boscombe-control.json` (28.7 s; backup slide B5).
+
 ## 3. Removed and why
 
 - **McCarthy vs Crowder rule step (DRAFT 1 step 2).** Gold c042 (Boscombe Valley) is a *consistent control*: both witnesses agree James went the same way with a gun; they differ only about whether he was deliberately following, which Crowder gives as his belief. The rules correctly do **not** flag it (symbolic-layer.md 11.1), so a step called "contradiction" would either show nothing or be a lie. It moves to the measurements slide (and to the FAQ) as the control the rules pass. Gold note: c042 is low-confidence and conflicts in spirit with g027, which treats the pair as a conflict between accounts; a human has to decide the label.
@@ -150,7 +174,7 @@ Fallback ladder, same for every step (details in section 4): **(1) narrate over 
 ## 4. Fallback ladder (applies to every step)
 
 1. Narrate over the trace. The waiting counter proves it is working. Allowed: 6 s of silence from the screen, 20 s for the model's sentence selection in g001.
-2. Press `c`: stored run, badge `RECORDING`, say "this one is a stored run".
+2. Open the `?replay=` tab of the step (section 2a; key `c` only if R-03 is merged): badge `RECORDING`, say "this one is a stored run".
 3. Play the full recording at the matching timestamp (step start times as in section 0).
 4. Screenshot slides.
 Never: re-ask the same question hoping for a different answer; blame the model; show an unverified quote as verified; call a stored run live.
