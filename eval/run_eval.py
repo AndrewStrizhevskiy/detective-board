@@ -119,11 +119,15 @@ def story_texts() -> dict[str, str]:
 
 
 def file_identity(path: Path) -> str:
-    """Size and modification time: enough to tell a rebuilt index or graph from the old one."""
+    """sha256 of the file's content: the same data gives the same hash on any clone, a rebuilt
+    index or graph a different one (a modification time would do neither)."""
     if not path.exists():
         return "absent"
-    st = path.stat()
-    return f"{st.st_size}:{st.st_mtime_ns}"
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+    return h.hexdigest()[:16]
 
 
 @contextlib.contextmanager
@@ -376,6 +380,8 @@ def sentence_recall(retriever: HybridRetriever, q: dict, gold: dict) -> dict[str
         chunk = res.chunks.get(h.chunk_id)
         if chunk is not None:
             hits.append((h.story, chunk.char_start + h.start, chunk.char_start + h.end))
+    # note: the agent searches the English translation of a Cyrillic question, this searches the
+    # question as asked, so language-ru rows under-report (stated in the report)
     out = {}
     for k in SENTENCE_K:
         top = hits[:k]
@@ -604,7 +610,7 @@ def render_md(meta: dict, summary: dict, contra: dict) -> str:
         f"- generator: `{meta['generator']}`; machine: {meta['machine']}",
         f"- git `{meta['git_sha']}`{' (uncommitted or untracked changes)' if meta['dirty'] else ''}; config hash `{meta['config_hash']}`; questions {meta['n_questions']}, contradiction cases {meta['n_contradictions']}",
         f"- present: graph {pres['graph']}, sentence index {pres['sentence_index']}, rule tools `{pres['rule_tools']}`{', fixture ' + pres['fixture'] if pres['fixture'] else ''}; vector gate min_score {meta['vector_min_score']} (provisional, tune on dev)",
-        "- values: share [Wilson 95 % interval] (k/n); behaviour correct = answerable answered with key-fact coverage >= 0.5, out-of-corpus refused (a mechanical proxy, no judge); recall@k only up to each configuration's own first-retrieval k",
+        "- values: share [Wilson 95 % interval] (k/n); behaviour correct = answerable answered with key-fact coverage >= 0.5, out-of-corpus refused (a mechanical proxy, no judge); recall@k only up to each configuration's own first-retrieval k; sentence recall searches the question as asked, so Russian questions (translated by the agent) under-report",
     ]
     if meta["short"]:
         lines.append(f"- {SHORT_NOTE}")
@@ -734,7 +740,12 @@ def result_stem(out_dir: Path, meta: dict) -> Path:
 
 
 def previous_test_runs(out_dir: Path, sha: str, cfg_hash: str) -> list[Path]:
-    return sorted(out_dir.glob(f"eval-*-test-{sha[:7]}-{cfg_hash}-*.json"))
+    """Earlier test-split results for this commit and configuration, in the chosen output folder
+    and in the default one (so --out elsewhere does not bypass the once-only rule)."""
+    found: set[Path] = set()
+    for d in {out_dir, RESULTS}:
+        found |= set(d.glob(f"eval-*-test-{sha[:7]}-{cfg_hash}-*.json"))
+    return sorted(found)
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
@@ -771,12 +782,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                         run_bare(stack.llm, q, row)
                     else:
                         run_agent(stack.agents[cfg], q, row)
-                        if cfg == "hybrid+graph":
-                            row.update(sentence_recall(stack.retrievers[cfg], q, golds[q["id"]]))
                 except Exception as exc:  # noqa: BLE001 - one failed question is a row, not a crash
                     row.update(
                         error=f"{type(exc).__name__}: {str(exc)[:200]}", ttft_s=None, total_s=None
                     )
+                if cfg == "hybrid+graph" and not row.get("error"):
+                    try:  # a sentence-index failure must not undo an answer that already finished
+                        row.update(sentence_recall(stack.retrievers[cfg], q, golds[q["id"]]))
+                    except Exception as exc:  # noqa: BLE001
+                        row["sentence_recall_error"] = f"{type(exc).__name__}: {str(exc)[:200]}"
                 judge(row, q, golds[q["id"]], stack.chunk_text, stories, stack.retrieval_k.get(cfg))
                 rows.append(row)
                 if not args.quiet:
