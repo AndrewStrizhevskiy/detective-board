@@ -76,6 +76,20 @@ Ollama build; the digests in `docs/team/models.md` identify what we used.
 |---|---|---|
 | Ollama | MIT, Copyright (c) Ollama | github.com/ollama/ollama LICENSE |
 
+## Offline archive extras (`scripts/pack_offline.sh`)
+
+The offline archive also carries the components below; they are not in this repository.
+Checked 2026-10-27 against the GitHub licence API and the installed packages' metadata.
+
+| Component | Licence | Source checked |
+|---|---|---|
+| uv, uvx (binaries) | MIT OR Apache-2.0 (dual; `LICENSE-MIT`, `LICENSE-APACHE`) | github.com/astral-sh/uv |
+| CPython 3.12 (`uv python install`, a python-build-standalone build) | PSF-2.0 for CPython; the build scripts are MPL-2.0. The libraries linked into the build (OpenSSL, SQLite, libffi, zlib, xz, bzip2, Tcl/Tk and others) keep their own licences: UNVERIFIED here, the list ships inside the build | github.com/astral-sh/python-build-standalone |
+| Ollama runner libraries (`lib/ollama`, e.g. ggml, CUDA/ROCm runtimes when present) | UNVERIFIED: depends on the Ollama build packed; GPU runtimes carry vendor licences | the Ollama release that is packed |
+| Wheelhouse: the runtime packages above, plus the dev tools used only by `verify_offline.sh` (pytest 9.1.1 MIT, pytest-cov 7.1.0 MIT, coverage 7.16.2 Apache-2.0, ruff 0.17.1 MIT, pyright 1.1.414 MIT, iniconfig 2.3.1 MIT, pluggy 1.7.0 MIT, packaging 26.3 Apache-2.0 OR BSD-2-Clause, pygments 2.21.0 BSD-2-Clause, nodeenv 1.11.0 BSD) | as listed; the full dev closure is `uv export --group dev` | installed `METADATA` in `.venv` |
+| hatchling (build backend for the offline `uv sync`) | MIT | github.com/pypa/hatch |
+| Model weights `bge-m3`, `qwen3:4b-instruct`, `qwen3:4b` (and `qwen3:8b` with `--with-8b`) | see Models above | `docs/team/models.md` |
+
 ## Corpus
 
 Project Gutenberg texts of works by Arthur Conan Doyle (public domain); see `data/LICENSES.md`
