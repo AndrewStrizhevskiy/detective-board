@@ -1,4 +1,10 @@
-#!/usr/bin/env python3
+"""Record one real run of the API as a replay file for the UI backup recording (stdlib only).
+
+Usage: scripts/record_run.py --question "..." --out web/replay/real-g001.json [--port 8000]
+The API (python -m detective_board.api, real mode) must be running. The file is {meta, events}:
+the SSE trace events exactly as streamed, each with its original `ts`, so
+`?replay=replay/real-g001.json` plays them at the original timing. The meta says what the
+recording is (a RECORDING of a real run on this machine) so the UI can label it.
 """Record one real run of the API as a replay file for the UI backup recording (stdlib only).
 
 Usage: scripts/record_run.py --question "..." --out web/replay/real-g001.json [--port 8000] [--note "..."]
@@ -35,7 +41,7 @@ def record(port: int, question: str, timeout: float = 1800.0) -> tuple[list[dict
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n")[0])
     ap.add_argument("--question", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--port", type=int, default=8000)
