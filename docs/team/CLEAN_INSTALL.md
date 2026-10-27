@@ -51,7 +51,7 @@ Tick each step and note the time; the record goes into `docs/perf/clean-install-
    OLLAMA_MODELS="$PWD/ollama-models" OLLAMA_HOST=127.0.0.1:11434 ollama/bin/ollama serve
 
    # terminal 2: the API and the UI
-   export PATH="$PWD/bin:$PATH" UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_CACHE_DIR="$PWD/uv-cache"
+   export PATH="$PWD/bin:$PATH" UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_CACHE_DIR="$PWD/uv-cache" UV_LINK_MODE=copy
    cd detective-board
    uv run --no-sync python scripts/preflight.py          # Ollama and both models answer
    uv run --no-sync python -m detective_board.api        # http://127.0.0.1:8000

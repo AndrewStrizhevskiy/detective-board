@@ -56,7 +56,8 @@ else
 fi
 
 # 3. Python environment from the packed uv cache, nothing downloaded
-export UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_CACHE_DIR="$DIR/uv-cache"
+# copy, not hardlink: a .venv file edited in place would otherwise change the checksummed cache
+export UV_OFFLINE=1 UV_PYTHON_DOWNLOADS=never UV_CACHE_DIR="$DIR/uv-cache" UV_LINK_MODE=copy
 PY="$(ls -d "$DIR"/python/cpython-*/bin/python3 2>/dev/null | head -n 1)"
 UV="$DIR/bin/uv"
 if [ -n "$PY" ] && (cd "$REPO" && "$UV" sync --locked --group dev --offline --python "$PY" >"$LOG/uv-sync.txt" 2>&1); then

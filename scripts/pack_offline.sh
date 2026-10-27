@@ -133,8 +133,9 @@ UVX_BIN="$(command -v uvx || true)"; [ -n "$UVX_BIN" ] && cp -L "$UVX_BIN" "$DIS
 # uv also leaves an absolute symlink cpython-<ver>-<platform> next to the build; dangling once moved
 find "$DIST/python" -maxdepth 1 -type l -delete
 PY="$(ls -d "$DIST"/python/cpython-*/bin/python3 | head -n 1)"
+# --no-config: no uv.toml or index setting of the packing machine leaks into the cache
 (cd "$DIST/detective-board" && UV_CACHE_DIR="$DIST/uv-cache" "$DIST/bin/uv" sync --locked --group dev \
-  --python "$PY" && rm -rf .venv)
+  --no-config --python "$PY" && rm -rf .venv)
 
 # Ollama: the binary, its runner libraries, and only the needed models
 OLLAMA_REAL="$(readlink -f "$OLLAMA_BIN")"
