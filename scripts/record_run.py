@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Record one real run of the API as a replay file for the UI backup recording (stdlib only).
 
 Usage: scripts/record_run.py --question "..." --out web/replay/real-g001.json [--port 8000]
@@ -5,12 +6,6 @@ The API (python -m detective_board.api, real mode) must be running. The file is 
 the SSE trace events exactly as streamed, each with its original `ts`, so
 `?replay=replay/real-g001.json` plays them at the original timing. The meta says what the
 recording is (a RECORDING of a real run on this machine) so the UI can label it.
-"""Record one real run of the API as a replay file for the UI backup recording (stdlib only).
-
-Usage: scripts/record_run.py --question "..." --out web/replay/real-g001.json [--port 8000] [--note "..."]
-The API (python -m detective_board.api, real mode) must be running. The file is {meta, events}: the SSE trace events
-exactly as streamed, each with its original `ts`, so `?replay=replay/real-g001.json` plays them at the original
-timing. The meta says what the recording is (a RECORDING of a real run on this machine) so the UI can label it.
 """
 
 from __future__ import annotations
@@ -41,13 +36,15 @@ def record(port: int, question: str, timeout: float = 1800.0) -> tuple[list[dict
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n")[0])
+    first_line = (__doc__ or "").split("\n\n")[0]
+    ap = argparse.ArgumentParser(description=first_line)
     ap.add_argument("--question", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--note", default="")
     a = ap.parse_args()
-    health = json.load(urllib.request.urlopen(f"http://127.0.0.1:{a.port}/api/health", timeout=10))
+    url = f"http://127.0.0.1:{a.port}/api/health"
+    health = json.load(urllib.request.urlopen(url, timeout=10))
     if health.get("fake"):
         print("refusing to record: the API runs in --fake mode", file=sys.stderr)
         return 2
@@ -76,7 +73,7 @@ def main() -> int:
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(
-        json.dumps({"meta": meta, "events": events}, ensure_ascii=False, indent=1), encoding="utf-8"
+        json.dumps({"meta": meta, "events": events}, ensure_ascii=False, indent=1), "utf-8"
     )
     print(f"saved {out} ({len(events)} events, {seconds:.1f} s)")
     return 0
