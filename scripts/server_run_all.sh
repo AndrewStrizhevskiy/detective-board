@@ -149,9 +149,9 @@ phase_probe() {
 phase_gold12() {
   if [ "$SKIP_GOLD" -eq 1 ]; then say "gold12: skipped (--skip-gold12)"; return 0; fi
   if done_p gold12; then say "gold12: done already (use --force)"; return 0; fi
-  say "== (c) gold12 quality check (scripts/server_gold12.sh = just gold12; 30-60 min)"
-  if [ "$DRY" -eq 1 ]; then echo "+ scripts/server_gold12.sh > $D/logs/gold12.log"; return 0; fi
-  scripts/server_gold12.sh >"$D/logs/gold12.log" 2>&1 || die "gold12 failed, see $D/logs/gold12.log (re-run to resume, or --skip-gold12)"
+  say "== (c) gold12 quality check (qwen3:4b vs qwen3:8b with prompt v2.1; qwen3:8b must be pulled: bootstrap --with-8b; 15-40 min on a GPU)"
+  if [ "$DRY" -eq 1 ]; then echo "+ scripts/server_gold12.sh --models \"qwen3:4b qwen3:8b\" --prompts prompts/extract/extract_v2_1.txt > $D/logs/gold12.log"; return 0; fi
+  scripts/server_gold12.sh --models "qwen3:4b qwen3:8b" --prompts prompts/extract/extract_v2_1.txt >"$D/logs/gold12.log" 2>&1 || die "gold12 failed, see $D/logs/gold12.log (re-run to resume, or --skip-gold12)"
   tail -n 25 "$D/logs/gold12.log"
   mark gold12
 }

@@ -14,10 +14,15 @@ scp detective-board.tar.gz USER@SERVER:~/                              # or copy
 On the server (use `tmux new -s extract` first, so a dropped terminal does not matter):
 ```bash
 mkdir detective-board && tar xzf detective-board.tar.gz -C detective-board && cd detective-board   # from USB: copy it first
-scripts/server_bootstrap.sh            # 1: checks, uv, Ollama, server settings, models, tests, GPU proof; ends with PASS or FAIL + next step
+scripts/server_bootstrap.sh --with-8b  # 1: checks, uv, Ollama, server settings, models, tests, GPU proof; ends with PASS or FAIL + next step
 scripts/server_run_all.sh              # 2: determinism -> concurrency probe -> gold12 -> full run -> merge/graph/report
 scripts/server_progress.sh             # any time, from a second tmux window: counts per shard, chunks/min, ETA, last log lines
 ```
+Decisions of 2026-10-26 (see docs/STATUS.md): the generic prompt stays extract-2.1 (v2.2 was worse); the gold12 phase now only
+compares qwen3:4b with qwen3:8b on v2.1 (pick the better one for the full run: if qwen3:8b is clearly better on claims and
+relations and fast enough, run the shards with `scripts/extract_shard.sh k N qwen3:8b` instead; the cache key includes the
+model); after `finish` run the presence pass `scripts/server_presence.sh` (presence-2.1, needs the graph) with qwen3:8b and
+qwen3:4b-instruct on the demo stories and check `truncated` in its report (raise `--num-predict` if outputs are cut).
 Preview without changing anything: `scripts/server_bootstrap.sh --check-only`, `scripts/server_run_all.sh --dry-run`.
 Short on time: `scripts/server_run_all.sh --skip-gold12`. Interrupted or a shard died: run the same command again (resumable).
 Options: `--phase determinism,probe,gold12,run,finish`, `--streams N` (skips the probe), `--no-wait`, `--force`;
