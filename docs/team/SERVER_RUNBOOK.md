@@ -18,11 +18,18 @@ scripts/server_bootstrap.sh --with-8b  # 1: checks, uv, Ollama, server settings,
 scripts/server_run_all.sh              # 2: determinism -> concurrency probe -> gold12 -> full run -> merge/graph/report
 scripts/server_progress.sh             # any time, from a second tmux window: counts per shard, chunks/min, ETA, last log lines
 ```
-Decisions of 2026-10-26 (see docs/STATUS.md): the generic prompt stays extract-2.1 (v2.2 was worse); the gold12 phase now only
-compares qwen3:4b with qwen3:8b on v2.1 (pick the better one for the full run: if qwen3:8b is clearly better on claims and
-relations and fast enough, run the shards with `scripts/extract_shard.sh k N qwen3:8b` instead; the cache key includes the
-model); after `finish` run the presence pass `scripts/server_presence.sh` (presence-2.1, needs the graph) with qwen3:8b and
-qwen3:4b-instruct on the demo stories and check `truncated` in its report (raise `--num-predict` if outputs are cut).
+**Order of the Tuesday session (final, 2026-10-27).** If time is short, do 1-3 and 6; the rest is a bonus.
+1. `scripts/server_bootstrap.sh --with-8b` (PASS needed).
+2. `scripts/server_run_all.sh --phase determinism,probe` then the quality check `scripts/server_run_all.sh --phase gold12`
+   (qwen3:4b vs qwen3:8b on prompt v2.1 only; if qwen3:8b is clearly better on claims and relations and fast enough, run the
+   shards with `scripts/extract_shard.sh k N qwen3:8b`; the cache key includes the model). The generic prompt stays extract-2.1
+   (v2.2 was worse). The laptop cache of 231 chunks seeds the shards (cache hits).
+3. `scripts/server_run_all.sh --phase run,finish` (the full corpus, merge, graph, normalise, report).
+4. The sentence index: `uv run python -m detective_board.index.sentences` (about 11000 sentences, minutes on the GPU).
+5. The presence pass on the demo stories with verification and voting: `scripts/server_presence.sh --verify --samples 3`,
+   then `scripts/spike/presence_eval.py` and read the `funnel` and `truncated` in its report (raise `--num-predict` if cut).
+6. Copy back: `data/cache/extract-cache.sqlite`, `data/graph/graph.sqlite`, `data/index/sentences.sqlite`,
+   `data/cache/server/` (report, logs), `data/cache/presence-cache-*.sqlite`, `data/graph/presence-*.sqlite`.
 Preview without changing anything: `scripts/server_bootstrap.sh --check-only`, `scripts/server_run_all.sh --dry-run`.
 Short on time: `scripts/server_run_all.sh --skip-gold12`. Interrupted or a shard died: run the same command again (resumable).
 Options: `--phase determinism,probe,gold12,run,finish`, `--streams N` (skips the probe), `--no-wait`, `--force`;
