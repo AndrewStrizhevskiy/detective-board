@@ -1,7 +1,7 @@
 # Disclosure
 
 What was computed where, what runs at demo time, and what is and is not verified.
-Short and plain on purpose. Last updated 2026-10-26.
+Short and plain on purpose. Last updated 2026-10-27.
 
 ## What runs at demo time
 
@@ -27,6 +27,17 @@ Recorded runs, if shown, are labelled as recordings in the UI.
 Whether precomputing on other hardware is allowed by the organizers: yes, the organizers gave
 their approval (reported by the team lead on 2026-10-26; the written reply is to be attached here:
 TO BE FILLED with its date and wording). We say this on stage regardless.
+
+## Curated facts in the demo cases
+
+The demo cases (Wisteria Lodge, rule R1, and the Boscombe Valley control) use curated facts:
+a small set of "person, place, time" statements in `data/curated/presence_demo.jsonl`, each with a
+verbatim quote, written and checked by the team (AI-assisted, to be re-checked by a human; the
+re-check has not happened yet). They are used because the small extraction models do not resolve
+"he" and "there" on these passages. The screen, the Why panel and the spoken answer say "curated"
+wherever such a fact is an input. The automatic extraction numbers are reported separately and
+are not improved by, or mixed with, the curated facts. A finding built on curated facts shows what
+the rules do when the facts are right, not what a model finds on its own.
 
 ## Models
 

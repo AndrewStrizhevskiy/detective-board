@@ -56,6 +56,7 @@ class FactRef(_M):
     confidence: Confidence | None
     summary: str
     anchors: list[Anchor]
+    curated: bool = False  # entered and checked by the team, not found by the extraction pipeline
 
 
 class EdgeRef(_M):

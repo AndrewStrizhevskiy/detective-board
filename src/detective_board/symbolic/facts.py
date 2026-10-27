@@ -49,6 +49,7 @@ class EventRec(_M):
     confidence: Confidence = "high"
     narrator: bool = True  # False: reported inside a Claim, not established
     occurrence_id: str | None = None  # equal non-None values = same occurrence (dedup guard)
+    curated: bool = False  # human-checked fact (extract/curated.py), shown as "(curated)"
 
     @field_validator("participants")
     @classmethod
@@ -93,6 +94,7 @@ class ClaimRec(_M):
     prop: Prop | None = None
     anchors: list[Anchor] = []
     confidence: Confidence = "high"
+    curated: bool = False
 
     _anchors_sorted = field_validator("anchors")(_sort_anchors)
 

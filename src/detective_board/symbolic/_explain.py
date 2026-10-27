@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 from collections.abc import Iterable, Sequence
 
+from detective_board.extract.curated_schema import CURATED_MARK
 from detective_board.symbolic.facts import EventRec
 from detective_board.symbolic.model import (
     RULE_VERSIONS,
@@ -32,8 +33,9 @@ def event_fact(e: EventRec, confidence: str | None = None) -> FactRef:
         kind="event",
         provenance="extracted",
         confidence=conf,  # type: ignore[arg-type]
-        summary=f"{e.description} [{fmt_span(e.time)}]",
+        summary=f"{e.description} [{fmt_span(e.time)}]" + (f" {CURATED_MARK}" if e.curated else ""),
         anchors=list(e.anchors),
+        curated=e.curated,
     )
 
 
