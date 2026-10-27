@@ -1,0 +1,199 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "real run recorded on the target laptop",
+  "question": "What was the creature that haunted the Baskerville family on the Devonshire moor?",
+  "recorded_at": "2026-10-27T06:40:47+0200",
+  "seconds": 0.3,
+  "commit": "48612c6c38dfb6370f12483cfad72fc73e4465ad",
+  "mcp": {
+   "configured": true,
+   "mode": "in-process",
+   "server": "timeline-alibi[in-process]"
+  },
+  "graph": {
+   "chunks": 231,
+   "claim": 838,
+   "edges": 2040,
+   "event": 655,
+   "item": 28,
+   "person": 306,
+   "place": 226
+  },
+  "versions": {
+   "api": "1",
+   "python": "3.12.3",
+   "starlette": "1.9.0",
+   "index_schema": "1",
+   "index_manifest": {
+    "schema_version": "1",
+    "embed_model": "bge-m3",
+    "embed_dim": "1024",
+    "embed_doc_prefix": "",
+    "embed_query_prefix": "",
+    "embed_metric": "cosine"
+   }
+  },
+  "note": "Out-of-corpus question: refused by the relevance gate without an LLM call"
+ },
+ "events": [
+  {
+   "run_id": "b3504e67-4c92-4920-929d-3398844a45bf",
+   "seq": 0,
+   "ts": "2026-10-27T04:40:47.062+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "vector"
+   ],
+   "tools": [],
+   "method": "rules",
+   "reason": "no special pattern: plain fact question -> hybrid retrieval",
+   "matched": [],
+   "confidence": 0.5
+  },
+  {
+   "run_id": "b3504e67-4c92-4920-929d-3398844a45bf",
+   "seq": 1,
+   "ts": "2026-10-27T04:40:47.062+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "What was the creature that haunted the Baskerville family on the Devonshire moor?",
+   "k": 4,
+   "attempt": 1
+  },
+  {
+   "run_id": "b3504e67-4c92-4920-929d-3398844a45bf",
+   "seq": 2,
+   "ts": "2026-10-27T04:40:47.223+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 160,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "priory-school-0013",
+     "story": "priory-school",
+     "rank": 1,
+     "rrf": 0.029206349206349208,
+     "ranks": {
+      "bm25": 3,
+      "vec": 15
+     },
+     "scores": {
+      "bm25": -5.694528387941471,
+      "vec": 0.5646301507949829
+     }
+    },
+    {
+     "chunk_id": "silver-blaze-0012",
+     "story": "silver-blaze",
+     "rank": 2,
+     "rrf": 0.02758751902587519,
+     "ranks": {
+      "bm25": 13,
+      "vec": 12
+     },
+     "scores": {
+      "bm25": -4.255093183797137,
+      "vec": 0.5617366433143616
+     }
+    },
+    {
+     "chunk_id": "black-peter-0012",
+     "story": "black-peter",
+     "rank": 3,
+     "rrf": 0.026860955056179775,
+     "ranks": {
+      "bm25": 29,
+      "vec": 4
+     },
+     "scores": {
+      "bm25": -3.135860018795128,
+      "vec": 0.5439514517784119
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0037",
+     "story": "wisteria-lodge",
+     "rank": 4,
+     "rrf": 0.026856524873828405,
+     "ranks": {
+      "bm25": 16,
+      "vec": 13
+     },
+     "scores": {
+      "bm25": -4.170779398728214,
+      "vec": 0.5633605122566223
+     }
+    }
+   ],
+   "gate": {
+    "passed": false,
+    "best_score": 0.029206349206349208,
+    "threshold": 0.018,
+    "support": 0.167,
+    "min_support": 0.25,
+    "reason": "top chunks cover 0.17 of the question terms, need 0.25"
+   },
+   "chunk_ids": [
+    "priory-school-0013",
+    "silver-blaze-0012",
+    "black-peter-0012",
+    "wisteria-lodge-0037"
+   ]
+  },
+  {
+   "run_id": "b3504e67-4c92-4920-929d-3398844a45bf",
+   "seq": 3,
+   "ts": "2026-10-27T04:40:47.223+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "refusal",
+   "code": "no_evidence",
+   "message": "In these materials there is nothing about this.",
+   "missing": [
+    "baske",
+    "creat",
+    "devon",
+    "famil",
+    "haunt"
+   ],
+   "searched": [
+    "hybrid retrieval (BM25 + vector) over the Holmes corpus"
+   ]
+  },
+  {
+   "run_id": "b3504e67-4c92-4920-929d-3398844a45bf",
+   "seq": 4,
+   "ts": "2026-10-27T04:40:47.223+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "refused",
+   "verified": true,
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "provenance": [],
+   "route": {
+    "run_id": "b3504e67-4c92-4920-929d-3398844a45bf",
+    "seq": 0,
+    "ts": "2026-10-27T04:40:47.062+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "vector"
+    ],
+    "tools": [],
+    "method": "rules",
+    "reason": "no special pattern: plain fact question -> hybrid retrieval",
+    "matched": [],
+    "confidence": 0.5
+   },
+   "attempts": 1,
+   "refusal_code": "no_evidence"
+  }
+ ]
+}

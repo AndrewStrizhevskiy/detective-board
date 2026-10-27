@@ -1,0 +1,2306 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "real run recorded on the target laptop",
+  "question": "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?",
+  "recorded_at": "2026-10-27T06:40:47+0200",
+  "seconds": 0.2,
+  "commit": "48612c6c38dfb6370f12483cfad72fc73e4465ad",
+  "mcp": {
+   "configured": true,
+   "mode": "in-process",
+   "server": "timeline-alibi[in-process]"
+  },
+  "graph": {
+   "chunks": 231,
+   "claim": 838,
+   "edges": 2040,
+   "event": 655,
+   "item": 28,
+   "person": 306,
+   "place": 226
+  },
+  "versions": {
+   "api": "1",
+   "python": "3.12.3",
+   "starlette": "1.9.0",
+   "index_schema": "1",
+   "index_manifest": {
+    "schema_version": "1",
+    "embed_model": "bge-m3",
+    "embed_dim": "1024",
+    "embed_doc_prefix": "",
+    "embed_query_prefix": "",
+    "embed_metric": "cosine"
+   }
+  },
+  "note": "Control case c042: rules must not flag it"
+ },
+ "events": [
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 0,
+   "ts": "2026-10-27T04:40:47.692+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "mcp",
+    "graph",
+    "vector"
+   ],
+   "tools": [
+    "find_contradictions"
+   ],
+   "method": "rules",
+   "reason": "contradiction question -> graph facts of the named person + rules R1-R3 via timeline-alibi find_contradictions; hybrid retrieval adds source text",
+   "matched": [
+    "contradict"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 1,
+   "ts": "2026-10-27T04:40:47.692+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?",
+   "k": 4,
+   "attempt": 1
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 2,
+   "ts": "2026-10-27T04:40:47.794+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 102,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "boscombe-valley-mystery-0003",
+     "story": "boscombe-valley-mystery",
+     "rank": 1,
+     "rrf": 0.03252247488101534,
+     "ranks": {
+      "bm25": 1,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -21.14120821118019,
+      "vec": 0.42713624238967896
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0007",
+     "story": "boscombe-valley-mystery",
+     "rank": 2,
+     "rrf": 0.03252247488101534,
+     "ranks": {
+      "bm25": 2,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -15.58901440237952,
+      "vec": 0.38841190934181213
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0030",
+     "story": "boscombe-valley-mystery",
+     "rank": 3,
+     "rrf": 0.03125763125763126,
+     "ranks": {
+      "bm25": 3,
+      "vec": 5
+     },
+     "scores": {
+      "bm25": -10.909845564409716,
+      "vec": 0.5221312046051025
+     }
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0012",
+     "story": "boscombe-valley-mystery",
+     "rank": 4,
+     "rrf": 0.030090497737556562,
+     "ranks": {
+      "bm25": 5,
+      "vec": 8
+     },
+     "scores": {
+      "bm25": -9.185277085046645,
+      "vec": 0.5260510444641113
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03252247488101534,
+    "threshold": 0.018,
+    "support": 0.625,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "boscombe-valley-mystery-0003",
+    "boscombe-valley-mystery-0007",
+    "boscombe-valley-mystery-0030",
+    "boscombe-valley-mystery-0012"
+   ]
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 3,
+   "ts": "2026-10-27T04:40:47.794+00:00",
+   "step_id": "graph-1",
+   "duration_ms": null,
+   "type": "graph_query",
+   "query_kind": "neighbours",
+   "args": {
+    "ref": "p:boscombe-valley-mystery:james-mccarthy",
+    "k": 1,
+    "story": "boscombe-valley-mystery",
+    "linked_from": "James McCarthy",
+    "link": "ok"
+   }
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 4,
+   "ts": "2026-10-27T04:40:47.796+00:00",
+   "step_id": "graph-1",
+   "duration_ms": 1,
+   "type": "graph_results",
+   "query_kind": "neighbours",
+   "seeds": [
+    "p:boscombe-valley-mystery:james-mccarthy"
+   ],
+   "node_ids": [
+    "p:boscombe-valley-mystery:james-mccarthy",
+    "c:boscombe-valley-mystery-0007:0",
+    "c:boscombe-valley-mystery-0007:1",
+    "c:boscombe-valley-mystery-0007:2",
+    "c:boscombe-valley-mystery-0007:3",
+    "c:boscombe-valley-mystery-0007:cur-c042-james-father-at-ross",
+    "e:boscombe-valley-mystery-0003:1",
+    "e:boscombe-valley-mystery-0007:0",
+    "e:boscombe-valley-mystery-0007:1",
+    "e:boscombe-valley-mystery-0007:2",
+    "e:boscombe-valley-mystery-0030:0",
+    "p:boscombe-valley-mystery:mccarthy",
+    "pl:boscombe-valley-mystery:bristol"
+   ],
+   "edge_ids": [
+    384,
+    388,
+    400,
+    401,
+    402,
+    403,
+    404,
+    406,
+    407,
+    409,
+    625,
+    2039
+   ],
+   "nodes": [
+    {
+     "id": "p:boscombe-valley-mystery:james-mccarthy",
+     "kind": "person",
+     "name": "James McCarthy"
+    },
+    {
+     "id": "c:boscombe-valley-mystery-0007:0",
+     "kind": "claim",
+     "name": "My father was absent from home at the time of my arrival"
+    },
+    {
+     "id": "c:boscombe-valley-mystery-0007:1",
+     "kind": "claim",
+     "name": "My father had driven over to Ross with John Cobb, the groom"
+    },
+    {
+     "id": "c:boscombe-valley-mystery-0007:2",
+     "kind": "claim",
+     "name": "I had no idea that he was in front of me"
+    },
+    {
+     "id": "c:boscombe-valley-mystery-0007:3",
+     "kind": "claim",
+     "name": "He was not a popular man"
+    },
+    {
+     "id": "c:boscombe-valley-mystery-0007:cur-c042-james-father-at-ross",
+     "kind": "claim",
+     "name": "Charles McCarthy was at Ross, the morning of last Monday, the 3rd"
+    },
+    {
+     "id": "e:boscombe-valley-mystery-0003:1",
+     "kind": "event",
+     "name": "William Crowder saw Mr. James McCarthy"
+    },
+    {
+     "id": "e:boscombe-valley-mystery-0007:0",
+     "kind": "event",
+     "name": "James McCarthy returned home"
+    },
+    {
+     "id": "e:boscombe-valley-mystery-0007:1",
+     "kind": "event",
+     "name": "James McCarthy saw his father leaving home"
+    },
+    {
+     "id": "e:boscombe-valley-mystery-0007:2",
+     "kind": "event",
+     "name": "James McCarthy encountered his father at Boscombe Pool"
+    },
+    {
+     "id": "e:boscombe-valley-mystery-0030:0",
+     "kind": "event",
+     "name": "McCarthy acquitted at Assizes"
+    },
+    {
+     "id": "p:boscombe-valley-mystery:mccarthy",
+     "kind": "person",
+     "name": "McCarthy"
+    },
+    {
+     "id": "pl:boscombe-valley-mystery:bristol",
+     "kind": "place",
+     "name": "Bristol"
+    }
+   ],
+   "edges": [
+    {
+     "id": 384,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "e:boscombe-valley-mystery-0003:1",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0003",
+      "char_start": 4856,
+      "char_end": 4940,
+      "quote": "he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm",
+      "rel_start": 398,
+      "rel_end": 482,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 388,
+     "rel": "RELATION",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "p:boscombe-valley-mystery:mccarthy",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0003",
+      "char_start": 4868,
+      "char_end": 4895,
+      "quote": "his son, Mr. James McCarthy",
+      "rel_start": 410,
+      "rel_end": 437,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 400,
+     "rel": "ASSERTS",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "c:boscombe-valley-mystery-0007:0",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12304,
+      "char_end": 12360,
+      "quote": "My father was absent from home at the time of my arrival",
+      "rel_start": 220,
+      "rel_end": 276,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 401,
+     "rel": "ASSERTS",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "c:boscombe-valley-mystery-0007:1",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12398,
+      "char_end": 12450,
+      "quote": "he had driven over to Ross with John Cobb, the groom",
+      "rel_start": 314,
+      "rel_end": 366,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 402,
+     "rel": "ASSERTS",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "c:boscombe-valley-mystery-0007:2",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12960,
+      "char_end": 13000,
+      "quote": "I had no idea that he was in front of me",
+      "rel_start": 876,
+      "rel_end": 916,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 403,
+     "rel": "ASSERTS",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "c:boscombe-valley-mystery-0007:3",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 14003,
+      "char_end": 14027,
+      "quote": "He was not a popular man",
+      "rel_start": 1919,
+      "rel_end": 1943,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 404,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "e:boscombe-valley-mystery-0007:0",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12239,
+      "char_end": 12303,
+      "quote": "had only just returned upon the morning of last Monday, the 3rd.",
+      "rel_start": 155,
+      "rel_end": 219,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 406,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "e:boscombe-valley-mystery-0007:1",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12551,
+      "char_end": 12601,
+      "quote": "I saw him get out and walk rapidly out of the yard",
+      "rel_start": 467,
+      "rel_end": 517,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 407,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "e:boscombe-valley-mystery-0007:2",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 13148,
+      "char_end": 13182,
+      "quote": "and found him standing by the pool",
+      "rel_start": 1064,
+      "rel_end": 1098,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 409,
+     "rel": "RELATION",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "pl:boscombe-valley-mystery:bristol",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12184,
+      "char_end": 12233,
+      "quote": "had been away from home for three days at Bristol",
+      "rel_start": 100,
+      "rel_end": 149,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 625,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "e:boscombe-valley-mystery-0030:0",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0030",
+      "char_start": 50934,
+      "char_end": 51094,
+      "quote": "James McCarthy was acquitted at the Assizes on the strength of a number of objections which had been drawn out by Holmes and submitted to the defending counsel.",
+      "rel_start": 839,
+      "rel_end": 999,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 2039,
+     "rel": "ASSERTS",
+     "src": "p:boscombe-valley-mystery:james-mccarthy",
+     "dst": "c:boscombe-valley-mystery-0007:cur-c042-james-father-at-ross",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12239,
+      "char_end": 12451,
+      "quote": "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom.",
+      "rel_start": 155,
+      "rel_end": 367,
+      "ambiguous": false
+     }
+    }
+   ],
+   "truncated": false
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 5,
+   "ts": "2026-10-27T04:40:47.796+00:00",
+   "step_id": "tool-find_contradictions",
+   "duration_ms": null,
+   "type": "tool_call",
+   "server": "timeline-alibi[in-process]",
+   "tool": "find_contradictions",
+   "arguments": {
+    "story": "boscombe-valley-mystery",
+    "person_id": "p:boscombe-valley-mystery:james-mccarthy"
+   },
+   "timeout_s": 5.0
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 6,
+   "ts": "2026-10-27T04:40:47.838+00:00",
+   "step_id": "tool-find_contradictions",
+   "duration_ms": 41,
+   "type": "tool_result",
+   "server": "timeline-alibi[in-process]",
+   "tool": "find_contradictions",
+   "ok": true,
+   "summary": "status=ok items=0",
+   "provenance": null,
+   "explanation": null,
+   "error": null
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 7,
+   "ts": "2026-10-27T04:40:47.862+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "boscombe-valley-mystery-0003",
+     "story": "boscombe-valley-mystery",
+     "char_start": 4458,
+     "char_end": 7025,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 686,
+     "window_end": 788,
+     "window_char_start": 5144,
+     "window_char_end": 5246
+    },
+    {
+     "n": 2,
+     "chunk_id": "boscombe-valley-mystery-0007",
+     "story": "boscombe-valley-mystery",
+     "char_start": 12084,
+     "char_end": 14167,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 729,
+     "window_end": 875,
+     "window_char_start": 12813,
+     "window_char_end": 12959
+    },
+    {
+     "n": 3,
+     "chunk_id": "boscombe-valley-mystery-0030",
+     "story": "boscombe-valley-mystery",
+     "char_start": 50095,
+     "char_end": 51318,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 839,
+     "window_end": 999,
+     "window_char_start": 50934,
+     "window_char_end": 51094
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 0,
+   "memory_chars": 0,
+   "prompt_chars": 0,
+   "prompt_tokens_estimate": 0,
+   "max_prompt_tokens": 0,
+   "strategy": "rule-first (empty): no model call",
+   "window_words": 0,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 8,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "The "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 9,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rule "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 10,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "engine "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 11,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "found "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 12,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 13,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "violation "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 14,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "among "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 15,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 16,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "facts "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 17,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "extracted "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 18,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 19,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "boscombe-valley-mystery. "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 20,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "This "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 21,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "does "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 22,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 23,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "show "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 24,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 25,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 26,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "accounts "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 27,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 28,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "consistent: "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 29,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 30,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "graph "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 31,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "holds "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 32,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "86 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 33,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 34,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 35,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "107 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 36,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "claims "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 37,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 38,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "this "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 39,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "story; "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 40,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "4 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 41,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 42,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "have "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 43,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "an "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 44,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "exact "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 45,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 46,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time, "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 47,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "7 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 48,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "have "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 49,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 50,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "story "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 51,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day, "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 52,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 53,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "3 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 54,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "claims "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 55,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "carry "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 56,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 57,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "presence "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 58,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "proposition; "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 59,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rule "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 60,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "R1 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 61,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "examined "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 62,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "18 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 63,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 64,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "pairs "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 65,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 66,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "could "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 67,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 68,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "decide "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 69,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "12 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 70,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 71,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "them.\n"
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 72,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Text "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 73,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "passages "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 74,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 75,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "may "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 76,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "be "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 77,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "relevant "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 78,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(not "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 79,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rule "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 80,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "results):\n"
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 81,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "- "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 82,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "passage "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 83,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 84,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "boscombe-valley-mystery-0003 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 85,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[1: "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 86,
+   "ts": "2026-10-27T04:40:47.863+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"“The "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 87,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "two "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 88,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "McCarthys "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 89,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "were "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 90,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "seen "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 91,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "after "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 92,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 93,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 94,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "when "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 95,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "William "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 96,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Crowder, "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 97,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 98,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "game-keeper, "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 99,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "lost "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 100,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sight "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 101,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 102,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "them.\"]\n"
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 103,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "- "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 104,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "passage "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 105,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 106,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "boscombe-valley-mystery-0007 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 107,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[2: "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 108,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"On "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 109,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 110,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "way "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 111,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 112,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "saw "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 113,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "William "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 114,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Crowder, "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 115,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 116,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "game-keeper, "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 117,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "as "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 118,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "he "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 119,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 120,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stated "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 121,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 122,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "his "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 123,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "evidence; "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 124,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "but "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 125,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "he "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 126,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 127,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "mistaken "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 128,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 129,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "thinking "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 130,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 131,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 132,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 133,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "following "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 134,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 135,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "father.\"]\n"
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 136,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "- "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 137,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "passage "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 138,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 139,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "boscombe-valley-mystery-0030 "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 140,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[3: "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 141,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"James "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 142,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "McCarthy "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 143,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 144,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "acquitted "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 145,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 146,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 147,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Assizes "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 148,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "on "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 149,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 150,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "strength "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 151,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 152,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 153,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "number "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 154,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 155,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "objections "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 156,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "which "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 157,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 158,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "been "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 159,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "drawn "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 160,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "out "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 161,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 162,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Holmes "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 163,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 164,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "submitted "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 165,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 166,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 167,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "defending "
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 168,
+   "ts": "2026-10-27T04:40:47.864+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "counsel.\"]"
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 169,
+   "ts": "2026-10-27T04:40:47.866+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 2,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 3,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+   "seq": 170,
+   "ts": "2026-10-27T04:40:47.867+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "The rule engine found no violation among the facts extracted for boscombe-valley-mystery. This does not show that the accounts are consistent: the graph holds 86 events and 107 claims for this story; 4 events have an exact clock time, 7 have a story day, and 3 claims carry a presence proposition; rule R1 examined 18 event pairs and could not decide 12 of them.\nText passages that may be relevant (not rule results):\n- passage from boscombe-valley-mystery-0003 [1: \"“The two McCarthys were seen after the time when William Crowder, the game-keeper, lost sight of them.\"]\n- passage from boscombe-valley-mystery-0007 [2: \"On my way I saw William Crowder, the game-keeper, as he had stated in his evidence; but he is mistaken in thinking that I was following my father.\"]\n- passage from boscombe-valley-mystery-0030 [3: \"James McCarthy was acquitted at the Assizes on the strength of a number of objections which had been drawn out by Holmes and submitted to the defending counsel.\"]",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "“The two McCarthys were seen after the time when William Crowder, the game-keeper, lost sight of them.",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0003",
+      "char_start": 5144,
+      "char_end": 5246,
+      "quote": "“The two McCarthys were seen after the time when William Crowder, the game-keeper, lost sight of them."
+     },
+     "label": "source_text"
+    },
+    {
+     "n": 2,
+     "quote": "On my way I saw William Crowder, the game-keeper, as he had stated in his evidence; but he is mistaken in thinking that I was following my father.",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0007",
+      "char_start": 12813,
+      "char_end": 12959,
+      "quote": "On my way I saw William Crowder, the game-keeper, as he had stated in his evidence; but he is mistaken in thinking that I was following my father."
+     },
+     "label": "source_text"
+    },
+    {
+     "n": 3,
+     "quote": "James McCarthy was acquitted at the Assizes on the strength of a number of objections which had been drawn out by Holmes and submitted to the defending counsel.",
+     "anchor": {
+      "story": "boscombe-valley-mystery",
+      "chunk_id": "boscombe-valley-mystery-0030",
+      "char_start": 50934,
+      "char_end": 51094,
+      "quote": "James McCarthy was acquitted at the Assizes on the strength of a number of objections which had been drawn out by Holmes and submitted to the defending counsel."
+     },
+     "label": "source_text"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "source_text",
+     "origin": "vector",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "retrieved chunk (rrf 0.0325)",
+     "explanation": null
+    },
+    {
+     "n": 2,
+     "label": "source_text",
+     "origin": "vector",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "retrieved chunk (rrf 0.0325)",
+     "explanation": null
+    },
+    {
+     "n": 3,
+     "label": "source_text",
+     "origin": "vector",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "retrieved chunk (rrf 0.0313)",
+     "explanation": null
+    }
+   ],
+   "route": {
+    "run_id": "908c8903-e0d1-4eb4-99b9-fff4ce7d2536",
+    "seq": 0,
+    "ts": "2026-10-27T04:40:47.692+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "mcp",
+     "graph",
+     "vector"
+    ],
+    "tools": [
+     "find_contradictions"
+    ],
+    "method": "rules",
+    "reason": "contradiction question -> graph facts of the named person + rules R1-R3 via timeline-alibi find_contradictions; hybrid retrieval adds source text",
+    "matched": [
+     "contradict"
+    ],
+    "confidence": 0.8
+   },
+   "attempts": 1,
+   "refusal_code": null
+  }
+ ]
+}
