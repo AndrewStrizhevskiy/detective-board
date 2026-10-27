@@ -64,9 +64,13 @@ def candidates_for(
     idf: Mapping[str, float] | None = None,
     per_source: int = 6,
     total: int = 24,
+    order: str = "score",
 ) -> list[Candidate]:
-    """The best `per_source` sentences of every retrieved excerpt (idf window scorer), at most
-    `total` overall, in source order; sentences that share no question word are not offered."""
+    """The best `per_source` sentences of every retrieved excerpt (idf window scorer) over the
+    text the source shows (the whole chunk when its window is open), at most `total` overall;
+    sentences that share no question word are not offered. When over `total`, order="rank" keeps
+    those of the best-ranked sources, order="score" the highest-scoring ones. The result is in
+    source order either way."""
     picked: list[Candidate] = []
     for s in sources:
         if s.origin != "vector":
@@ -86,8 +90,11 @@ def candidates_for(
         best = sorted(rows, key=lambda r: (-r[0], r[1]))[:per_source]
         picked += [Candidate("", s.n, st, en, q, sc) for sc, st, en, q in best]
     if len(picked) > total:
-        keep = sorted(range(len(picked)), key=lambda i: (-picked[i].score, i))[:total]
-        picked = [picked[i] for i in sorted(keep)]
+        if order == "score":
+            keep = sorted(range(len(picked)), key=lambda i: (-picked[i].score, i))[:total]
+            picked = [picked[i] for i in sorted(keep)]
+        else:
+            picked = picked[:total]
     return _number(picked)
 
 
@@ -120,10 +127,11 @@ def build_prompt(
     per_source: int = 6,
     total: int = 24,
     max_tokens: int = 1200,
+    order: str = "score",
 ) -> SelectPrompt:
     """Static system prompt first (prefix cache), then the fenced sentences, then the question.
     While over `max_tokens` the lowest-scoring sentence is dropped."""
-    cands = candidates_for(sources, question, idf, per_source, total)
+    cands = candidates_for(sources, question, idf, per_source, total, order)
     while True:
         p = _render(question, cands)
         if estimate_tokens(p.chars) <= max_tokens or len(cands) <= 1:
