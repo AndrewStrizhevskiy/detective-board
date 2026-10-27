@@ -98,3 +98,46 @@ def test_allowed_hosts():
     assert ApiConfig().allowed_hosts() == ["localhost", "127.0.0.1", "[::1]"]
     assert ApiConfig(host="0.0.0.0").allowed_hosts() == ["*"]
     assert ApiConfig().host == "127.0.0.1"
+
+
+def test_tool_client_restarts_after_a_transport_failure_and_retries_once():
+    starts = []
+
+    class Dying:
+        def __init__(self, n):
+            self.n = n
+
+        async def call_tool(self, name, arguments, *, timeout=1):
+            if self.n == 0:
+                raise ConnectionError("child died")
+            return {"status": "ok", "session": self.n}
+
+    @asynccontextmanager
+    async def factory():
+        starts.append(1)
+        yield Dying(len(starts) - 1)
+
+    c = SyncToolClient(factory)
+    out = c.call("t", {}, timeout=1)
+    assert out == {"status": "ok", "session": 1} and c.restarts == 1 and len(starts) == 2
+    c.close()
+
+
+def test_tool_client_failed_start_is_not_retried_every_call():
+    now = [0.0]
+    n = []
+
+    @asynccontextmanager
+    async def broken():
+        n.append(1)
+        raise OSError("cannot spawn")
+        yield
+
+    c = SyncToolClient(broken, clock=lambda: now[0])
+    assert c.start() is False
+    for _ in range(3):
+        assert c.call("t", {}, timeout=1)["error"]["code"] == "store_unavailable"
+    assert len(n) == 1
+    now[0] = 31.0
+    c.call("t", {}, timeout=1)
+    assert len(n) == 2

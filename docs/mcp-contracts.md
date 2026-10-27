@@ -215,3 +215,15 @@ Deviations from sections 3 and 5:
 - `build_timeline`: `when` fields may be `null` for partial times; result adds `provenance: "derived"` and `rule_id: "R2"` (no `Explanation`: the API returns facts only). `undated_count` counts events matching the filters.
 - `find_contradictions` is implemented (violated findings only; `person_id` filters R1 by person and R3 by speaker, R2 ignores it). Unknown person/place ids give `not_found`.
 - Response cap: payload lists are halved until under 64 KB and `truncated: true` is set.
+
+### 8.1 Graph source (R-19)
+
+`python -m detective_board.mcp.server --graph PATH --allow DIR` (env `DETECTIVE_BOARD_GRAPH`, `DETECTIVE_BOARD_FACTS_ALLOW`) serves the graph database, ALL stories; the `story` argument selects (`*` is every story at once). `--facts` (one FactBase JSON, one story) still works and wins if both are given.
+
+- `GraphDbFactSource` opens the file on every call as `file:...?mode=ro` plus `PRAGMA query_only=ON` and closes it: no write, no migration (a file without graph tables gives `store_unavailable` and stays untouched), no lock held between calls. A writer in another process (WAL) is not blocked, and its commits are visible to the next call (tested with an open write transaction). The facts come from `SqliteFactSource`, the same code the in-process client uses, so curated and presence facts, overlays and day labels are identical.
+- Same sandbox as the JSON source (`resolve_in_allowlist`: allowlisted directory, `..`, outside-absolute and symlink escape rejected, no path in error text). With only `--graph`, the app passes the graph file's own directory as the allowlist. Unknown story: `not_found`.
+- Same per-call deadline (4 s server side, `DETECTIVE_BOARD_TOOL_DEADLINE_S`); a call that overruns is abandoned and further calls get a retriable `timeout` until it ends.
+- `_known_person` also accepts a person who only speaks (a claim speaker without events), for every source: `check_alibi` answers `unknown`/`insufficient_evidence` instead of `not_found`, and the agent no longer needs the story-wide retry for such a person (it still widens for a person who neither takes part nor speaks).
+- Server version `0.2.0` (reported in the handshake and in `/api/health` `mcp.version`).
+
+Agent side (`api/services.py`): with a graph file present and no `facts_path`, the default tool client is `SyncToolClient` over a subprocess of this server, spawned when the services are built (start timeout 10 s), kept for the session, restarted once and the call repeated if the pipe breaks (a failed start is not retried for 30 s), closed with the app. `PYTHONPATH` and the env go through `server_params` helpers, so it works under `uv run` and from a clean checkout. If the subprocess cannot start, the same tool functions run in-process and the trace says `timeline-alibi[in-process]`. Tests: `tests/mcp/test_graph_source.py` (parity of the four tools stdio vs in-process, byte-identical JSON, on a presence graph and on the curated Wisteria/Garcia graph; the rule-first Garcia answer text is identical), `tests/api/test_stdio_default.py`.

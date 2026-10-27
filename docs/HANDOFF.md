@@ -41,7 +41,7 @@ See `README.md`, `docs/PRD.md`, `docs/architecture/c4.md`.
 | Extraction pipeline (JSON repair, quote grounding, cache, schema v2) | `src/detective_board/extract` | done; real runs only on the 12 spike chunks and ~30 pipeline chunks |
 | Graph store (SQLite) + FactSource | `src/detective_board/graph` | done, tested with hand-built extractions; NOT yet filled from real extraction (wave 1 stopped) |
 | Symbolic rules R1-R3 + explanations | `src/detective_board/symbolic` | done, 70 deterministic tests; real-data behaviour untested |
-| MCP server `timeline-alibi` + client | `src/detective_board/mcp` | done, stdio integration test; serves one story from a FactBase JSON |
+| MCP server `timeline-alibi` + client | `src/detective_board/mcp` | done; stdio server over the real graph (`--graph`, read-only, all stories) is the agent's default tool path when `graph.sqlite` exists (R-19, `docs/mcp-contracts.md` 8.1); in-process only as a labelled fallback; `--facts` serves one story from a FactBase JSON. Not run against real Ollama |
 | Agent (router, relevance gate, cited answers, self-check, trace events) | `src/detective_board/agent` | done on fake LLM and a 12-question live check; graph/MCP route NOT live-tested |
 | API (Starlette + SSE) and UI | `src/detective_board/api`, `web/` | done and browser-checked in `--fake` mode only |
 | Eval | `eval/`, `scripts/spike`, `scripts/eval` | golden sets + spike scorers exist; the 4-configuration A/B runner `eval/run_eval.py` does NOT exist |

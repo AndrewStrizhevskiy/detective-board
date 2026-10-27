@@ -41,6 +41,7 @@ def _result(payload: dict[str, Any], is_error: bool = False) -> CallToolResult:
     )
 
 
+SERVER_VERSION = "0.2.0"  # 0.2: --graph (read-only, all stories)
 ENV_DEADLINE = "DETECTIVE_BOARD_TOOL_DEADLINE_S"
 DEFAULT_DEADLINE_S = 4.0  # below the client's default 5 s, so the server answers first
 
@@ -96,7 +97,7 @@ class DeadlineRunner:
 
 
 def build_server(source: FactSource, deadline_s: float | None = None) -> MCPServer:
-    mcp = MCPServer("timeline-alibi")
+    mcp = MCPServer("timeline-alibi", version=SERVER_VERSION)
     _run = DeadlineRunner(deadline_s if deadline_s is not None else deadline_from_env())
 
     @mcp.tool()

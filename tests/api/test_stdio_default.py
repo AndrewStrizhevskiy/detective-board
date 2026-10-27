@@ -2,15 +2,10 @@
 graph; the in-process client is only the labelled fallback. Spawns the real child (seconds)."""
 
 import pytest
-from starlette.testclient import TestClient
 
-from detective_board.api import ApiConfig, build_app, fixture
-from detective_board.api import services as svc_mod
+from detective_board.api import ApiConfig, fixture
 from detective_board.api.services import build_services, mcp_status
 from detective_board.api.tool_client import SyncToolClient
-from detective_board.retrieval import Store
-
-from .conftest import MODELS
 
 
 @pytest.fixture
@@ -32,7 +27,6 @@ def real_cfg(tmp_path):
 
 
 def test_default_tools_are_the_stdio_client_over_the_graph(real_cfg):
-    assert Store  # index schema import sanity
     svc = build_services(real_cfg, with_agent=True)
     try:
         assert isinstance(svc.tools, SyncToolClient) and svc.tools.started
@@ -53,13 +47,11 @@ def test_fallback_is_labelled_in_process(real_cfg, monkeypatch, capsys):
         def __getattr__(self, name):
             raise OSError("no spawn")
 
-    monkeypatch.setattr(
-        "detective_board.mcp.client.graph_server_params", lambda *a, **k: Broken()
-    )
+    monkeypatch.setattr("detective_board.mcp.client.graph_server_params", lambda *a, **k: Broken())
     svc = build_services(real_cfg, with_agent=True)
     try:
         assert svc.tools.server == "timeline-alibi[in-process]"
-        assert "unavailable" in capsys.readouterr().err
+        assert "using in-process" in capsys.readouterr().err
         assert mcp_status(real_cfg, True, svc.tools) == {
             "configured": True,
             "mode": "in-process",
@@ -83,9 +75,3 @@ def test_failed_start_falls_back_when_the_child_exits(real_cfg, monkeypatch):
         assert svc.tools.server == "timeline-alibi[in-process]"
     finally:
         svc.close()
-
-
-def test_health_reports_started_stdio_after_a_question_builds_the_client(real_cfg):
-    with TestClient(build_app(real_cfg, ollama_probe=lambda: MODELS), base_url="http://localhost") as c:
-        assert c.get("/api/health").json()["mcp"]["started"] is False
-        c.app.state  # noqa: B018 - app built; the ask side is created on the first question

@@ -115,9 +115,12 @@ class GraphDbFactSource:
 
         try:
             with closing(self._connect()) as conn:
-                if story != ALL_STORIES and not conn.execute(
-                    "SELECT 1 FROM g_node WHERE story=? LIMIT 1", (story,)
-                ).fetchone():
+                if (
+                    story != ALL_STORIES
+                    and not conn.execute(
+                        "SELECT 1 FROM g_node WHERE story=? LIMIT 1", (story,)
+                    ).fetchone()
+                ):
                     raise ToolError("not_found", f"unknown story: {story!r}")
                 return SqliteFactSource(_ReadOnlyGraph(conn)).load(story)  # type: ignore[arg-type]
         except sqlite3.Error:

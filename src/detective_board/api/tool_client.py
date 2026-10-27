@@ -61,31 +61,34 @@ class SyncToolClient:
 
     def _ensure_started(self) -> None:
         with self._lock:
-            if self._thread is not None and self._thread.is_alive():
-                return
+            t = self._thread
+            if t is not None and t.is_alive() and (self._session or not self._ready.is_set()):
+                return  # up, or still starting
             if self._failed_at is not None and self._clock() - self._failed_at < (
                 self.RETRY_START_AFTER_S
             ):
                 return
-            self._ready.clear()
+            ready = self._ready = threading.Event()  # one per start: a late old thread can't signal
             self._start_error = None
-            self._thread = threading.Thread(target=self._run, name="mcp-client", daemon=True)
+            self._thread = threading.Thread(
+                target=self._run, args=(ready,), name="mcp-client", daemon=True
+            )
             self._thread.start()
-        self._ready.wait(self.START_WAIT_S)
+        ready.wait(self.START_WAIT_S)
         if self._session is None:
             with self._lock:
                 self._failed_at = self._clock()
 
-    def _run(self) -> None:
+    def _run(self, ready: threading.Event) -> None:
         loop = asyncio.new_event_loop()
         self._loop = loop
         try:
-            loop.run_until_complete(self._main())
+            loop.run_until_complete(self._main(ready))
         finally:
-            self._ready.set()
+            ready.set()
             loop.close()
 
-    async def _main(self) -> None:
+    async def _main(self, ready: threading.Event) -> None:
         self._stop = asyncio.Event()
         try:
             async with self._factory() as session:
@@ -93,13 +96,13 @@ class SyncToolClient:
                 if describe is not None:
                     self.info = await describe()
                 self._session = session
-                self._ready.set()
+                ready.set()
                 await self._stop.wait()
         except BaseException as exc:  # noqa: BLE001 - startup/shutdown failure is reported per call
             self._start_error = type(exc).__name__
         finally:
             self._session = None
-            self._ready.set()
+            ready.set()
 
     def close(self) -> None:
         loop, stop, thread = self._loop, self._stop, self._thread

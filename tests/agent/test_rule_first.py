@@ -366,8 +366,8 @@ def test_ambiguous_person_contradiction_scan_notes_it():
 
 
 def test_widened_scope_is_said():
-    g = _graph(baynes=True)
-    ev, llm = run_rf(g, "Is there a conflict in what Baynes said?")
+    g = _graph(cousins=True)  # Ana Moreno neither takes part in an event nor speaks
+    ev, llm = run_rf(g, "Is there a conflict in what Ana Moreno said?")
     fin = ev[-1]
     assert llm.calls == []
     assert "has no events of their own" in fin.answer and "whole story" in fin.answer
