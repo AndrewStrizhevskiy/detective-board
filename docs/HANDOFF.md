@@ -112,7 +112,7 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
 - `uv run` here uses CPython 3.14; the project requires >= 3.12 and CI should pin 3.12.
 - Gold sets and labels were written by a Claude agent: precision numbers are underestimates, recall is more
   trustworthy; every metric file states its caveats.
-- The Russian question is refused by the relevance gate before the LLM (cross-language support check); optional.
+- A Russian question is translated to English first (`translate_questions`, optional, quality unmeasured, n=1-7); without it the relevance gate refuses it (cross-language support check).
 - Only 4 genuine R1 (person in two places) and 3 R2 (order cycle) cases exist in the corpus; R3 dominates.
 - `docs/security.md` lists open security items (extraction-time injection, non-loopback bind, checksums,
   pip-audit/gitleaks, off-the-shelf MCP server criteria).
