@@ -183,6 +183,17 @@ phase_run() {
     local base; base="$(R baseline --model "$MODEL")"
     R kv "$D/run.json" "streams=$n" "started=$(date +%s)" "baseline=$base"
   fi
+  # Warm start: the laptop already extracted a part of the corpus with the same model, prompt and options; seed every
+  # shard cache with it (idempotent merge; entries with a different key are refused), so those chunks are cache hits.
+  local SEED=data/extraction/laptop-cache-${SLUG}-extract-2.1.sqlite
+  if [ -f "$SEED" ]; then
+    for ((k = 0; k < n; k++)); do
+      uv run python scripts/merge_extract_cache.py merge "data/cache/extract-cache-${SLUG}-shard${k}.sqlite" "$SEED" --model "$MODEL" \
+        2>&1 | tail -n 1 | sed "s/^/seed shard $k: /"
+    done
+  else
+    say "no seed cache $SEED (the full corpus will be extracted)"
+  fi
   local k started=0
   for ((k = 0; k < n; k++)); do
     if shard_alive "$k"; then say "shard $k already running (pid $(cat "$D/pids/shard$k.pid"))"; continue; fi
