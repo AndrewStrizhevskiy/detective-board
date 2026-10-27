@@ -13,7 +13,12 @@ Message = dict[str, str]  # {"role": "system"|"user"|"assistant", "content": str
 
 class LLM(Protocol):
     def chat(
-        self, messages: Sequence[Message], *, temperature: float = 0.0, seed: int | None = None
+        self,
+        messages: Sequence[Message],
+        *,
+        temperature: float = 0.0,
+        seed: int | None = None,
+        format: dict[str, Any] | None = None,
     ) -> Iterator[str]: ...
 
     def generate(
@@ -33,6 +38,7 @@ class FakeLLM:
             [script] if isinstance(script, str) or callable(script) else list(script)
         )
         self.calls: list[list[Message]] = []
+        self.formats: list[dict[str, Any] | None] = []  # the `format` schema of each chat call
 
     def _next(self, messages: Sequence[Message]) -> str:
         self.calls.append([dict(m) for m in messages])
@@ -42,8 +48,14 @@ class FakeLLM:
         return item(messages) if callable(item) else item
 
     def chat(
-        self, messages: Sequence[Message], *, temperature: float = 0.0, seed: int | None = None
+        self,
+        messages: Sequence[Message],
+        *,
+        temperature: float = 0.0,
+        seed: int | None = None,
+        format: dict[str, Any] | None = None,
     ) -> Iterator[str]:
+        self.formats.append(format)
         text = self._next(messages)
         yield from re.findall(r"\S+\s*|\s+", text)
 
@@ -129,6 +141,7 @@ class OllamaLLM:
         temperature: float = 0.0,
         seed: int | None = None,
         num_predict: int | None = None,
+        format: dict[str, Any] | None = None,
     ) -> Iterator[str]:
         payload: dict[str, Any] = {
             "model": self.model,
@@ -137,6 +150,8 @@ class OllamaLLM:
             "think": self.think,
             "options": self._options(temperature, seed, num_predict),
         }
+        if format is not None:  # JSON schema: constrained decoding
+            payload["format"] = format
         if self.keep_alive:
             payload["keep_alive"] = self.keep_alive
         return self._stream("/api/chat", payload, "message")

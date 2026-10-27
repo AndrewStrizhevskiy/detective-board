@@ -36,6 +36,7 @@ def prose(text: str) -> str:
 
 def run_rf(g, question=QUESTION, hits=None, llm=None, tools=None, **cfg):
     llm = llm or FakeLLM("MODEL TEXT MUST NOT APPEAR")
+    cfg.setdefault("answer_mode", "generate")  # the old empty-result template; see test_extractive
     retr = FakeRetriever(hits or [hit(1, T1, story=S), hit(2, T2, story=S)])
     agent = make_agent(
         llm, retr, graph=g, tools=tools or InProcessRulesClient(g), config=AgentConfig(**cfg)
@@ -317,28 +318,32 @@ def test_alibi_supported_uses_the_verdict_the_rule_returned():
 
 
 # ---- (c) errors, ambiguity ------------------------------------------------
-def test_tool_error_says_what_was_missing():
+def test_tool_error_falls_through_to_the_text_path():
+    """A tool that failed says nothing about the question: no rule-first template."""
     tools = FakeTools({"error": {"code": "timeout", "message": "x"}})
-    ev, llm = run_rf(_graph(), tools=tools)
+    llm = FakeLLM('The man looked in at the door. [1: "Some time later Garcia looked in"]')
+    ev, llm = run_rf(_graph(), tools=tools, llm=llm)
     fin = ev[-1]
-    assert llm.calls == [] and fin.status == "answered"
-    assert fin.answer.startswith("The rule engine could not answer this question: ")
-    assert "find_contradictions failed (timeout)" in fin.answer
-    assert "No rule result was produced" in fin.answer
+    assert llm.calls and fin.status == "answered"
+    assert "could not answer this question" not in fin.answer
+    eq = next(e for e in ev if e.type == "enriched_query")
+    assert "rule-first" not in eq.strategy
     assert not asserts_consistency(prose(fin.answer))
 
 
-def test_tool_error_without_any_retrieval_still_answers_with_the_template():
+def test_tool_error_without_any_retrieval_is_a_tool_error_refusal():
     tools = FakeTools({"error": {"code": "timeout", "message": "x"}})
     agent = make_agent(FakeLLM("x"), FakeRetriever([]), tools=tools)
     ev = list(agent.ask("Any contradictions in Holmes?"))
-    assert ev[-1].status == "answered" and "could not answer" in ev[-1].answer
+    assert ev[-1].status == "refused" and ev[-1].refusal_code == "tool_error"
 
 
-def test_no_tool_client_is_reported():
-    agent = make_agent(FakeLLM("x"))
+def test_no_tool_client_falls_through_to_the_text_path():
+    llm = FakeLLM('The band was a snake. [1: "a deadly snake from India"]')
+    agent = make_agent(llm)
     ev = list(agent.ask("Are there contradictions in the Speckled Band story?"))
-    assert "find_contradictions was not run: no MCP client configured" in ev[-1].answer
+    assert llm.calls and ev[-1].status == "answered"
+    assert "rule-first" not in next(e for e in ev if e.type == "enriched_query").strategy
 
 
 def test_ambiguous_person_alibi_lists_the_candidates():
@@ -396,7 +401,7 @@ def test_llm_path_rejects_consistency_claims_on_an_empty_rule_result():
         FakeRetriever([h]),
         graph=g,
         tools=InProcessRulesClient(g),
-        config=AgentConfig(rule_first=False),
+        config=AgentConfig(rule_first=False, answer_mode="generate"),
     )
     ev = list(agent.ask(GARCIA_Q))
     checks = [e for e in ev if e.type == "citation_check"]

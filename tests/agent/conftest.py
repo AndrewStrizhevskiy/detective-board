@@ -61,7 +61,7 @@ def make_agent(llm, retriever=None, **kw):
         c[0] += 0.01
         return c[0]
 
-    cfg = kw.pop("config", AgentConfig())
+    cfg = kw.pop("config", AgentConfig(answer_mode="generate"))
     return Agent(
         llm,
         retriever or FakeRetriever([hit(1, T1), hit(2, T2)]),

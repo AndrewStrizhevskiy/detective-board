@@ -169,7 +169,12 @@ def test_alibi_route_calls_tool_with_derived_label():
     tools = FakeTools(payload)
     llm = FakeLLM('He was a deadly snake. [4: "a deadly snake from India"]')
     ev = run(
-        make_agent(llm, graph=FakeGraph(), tools=tools, config=AgentConfig(rule_first=False)),
+        make_agent(
+            llm,
+            graph=FakeGraph(),
+            tools=tools,
+            config=AgentConfig(answer_mode="generate", rule_first=False),
+        ),
         "Where was Roylott at 9 pm? Check his alibi",
     )
     assert tools.calls[0][0] == "check_alibi"
@@ -200,7 +205,9 @@ def test_contradiction_route_uses_symbolic_tool():
 
 def test_tool_error_without_other_evidence_refuses():
     tools = FakeTools({"error": {"code": "timeout", "message": "x"}})
-    cfg = AgentConfig(rule_first=False)  # the LLM path; rule-first answers with a template
+    cfg = AgentConfig(
+        answer_mode="generate", rule_first=False
+    )  # the LLM path; rule-first answers with a template
     ev = run(
         make_agent(FakeLLM(GOOD), FakeRetriever([]), tools=tools, config=cfg),
         "Any contradictions in Holmes?",
@@ -235,7 +242,9 @@ def test_retry_then_accept():
     checks = [e for e in ev if e.type == "citation_check"]
     assert [c.ok for c in checks] == [False, True] and checks[0].action == "retry"
     assert ev[-1].status == "answered" and ev[-1].attempts == 2
-    assert r.calls[1][1] == AgentConfig().top_k + AgentConfig().retry_extra_k  # re-retrieve
+    assert (
+        r.calls[1][1] == AgentConfig(answer_mode="generate").top_k + AgentConfig().retry_extra_k
+    )  # re-retrieve
     assert "REJECTED" in llm.calls[1][1]["content"]
     assert {e.attempt for e in ev if e.type == "answer_token"} == {1, 2}
 
@@ -252,7 +261,9 @@ def test_retry_fails_partial_answer_unverified():
 
 
 def test_retry_fails_refusal():
-    cfg = AgentConfig(decline_fallback_min_support=2.0)  # no closest-passages fallback
+    cfg = AgentConfig(
+        answer_mode="generate", decline_fallback_min_support=2.0
+    )  # no closest-passages fallback
     ev = run(make_agent(FakeLLM("Totally uncited statement."), config=cfg))
     assert types(ev)[-2:] == ["refusal", "final"]
     assert ev[-2].code == "selfcheck_failed" and [
@@ -264,7 +275,7 @@ DECLINE = "In these materials there is nothing about this."
 
 
 def test_model_declines_gives_refusal():
-    cfg = AgentConfig(decline_fallback_min_support=2.0)
+    cfg = AgentConfig(answer_mode="generate", decline_fallback_min_support=2.0)
     ev = run(make_agent(FakeLLM(DECLINE), config=cfg))
     assert ev[-1].status == "refused" and ev[-1].refusal_code == "no_evidence"
 
@@ -314,7 +325,8 @@ def _idf_cfg():
     from pathlib import Path
 
     return AgentConfig(
-        idf_chunks=str(Path(__file__).resolve().parents[2] / "data" / "chunks.jsonl")
+        answer_mode="generate",
+        idf_chunks=str(Path(__file__).resolve().parents[2] / "data" / "chunks.jsonl"),
     )
 
 
@@ -359,7 +371,7 @@ def test_decline_low_support_keeps_plain_refusal():
 
 def test_decline_retry_can_be_disabled():
     llm = FakeLLM(DECLINE)
-    cfg = AgentConfig(decline_retry=False)
+    cfg = AgentConfig(answer_mode="generate", decline_retry=False)
     ev = run(make_agent(llm, config=cfg))
     assert len(llm.calls) == 1 and ev[-1].status == "partial"
 
@@ -499,7 +511,11 @@ def test_tool_result_and_final_carry_explanation_unchanged():
         f'A witness saw his son James McCarthy going the same way with a gun. [3: "{quote}"]'
     )
     ev = run(
-        make_agent(llm, tools=FakeTools(payload), config=AgentConfig(rule_first=False)),
+        make_agent(
+            llm,
+            tools=FakeTools(payload),
+            config=AgentConfig(answer_mode="generate", rule_first=False),
+        ),
         "Are there contradictions in the Speckled Band story?",
     )
     tr = next(e for e in ev if e.type == "tool_result")
