@@ -40,6 +40,11 @@ class AgentConfig:
         "score"  # what the sentence cap drops: "score" (lowest) | "rank" (worst chunks)
     )
     rule_first: bool = True  # rule questions: deterministic template from the rule result, no LLM
+    translate_questions: bool = True  # Cyrillic question -> English before everything else
+    translate_model: str = "qwen3:4b-instruct"  # "translategemma:4b" is supported (own prompt)
+    translate_max_chars: int = 300  # cap on the translated question
+    translate_timeout_s: float = 30.0  # wall clock for the translation call
+    translate_cache: str = ""  # JSONL file; empty = in-memory cache only
     temperature: float = 0.0
     seed: int = 42
 

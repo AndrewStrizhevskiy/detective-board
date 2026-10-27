@@ -27,6 +27,7 @@ from .events import (
     Final,
     GraphQuery,
     GraphResults,
+    QueryTranslated,
     Refusal,
     RetrievalResults,
     RetrievalStarted,
@@ -44,6 +45,7 @@ from .llm import LLM
 from .memory import Turn, retrieval_query, summarize
 from .retrieval_step import gate, hit_traces
 from .router import Router, extract_names, parse_time_window
+from .translate import Translator, is_mostly_cyrillic
 from .window import idf_from_jsonl
 
 log = logging.getLogger(__name__)
@@ -69,6 +71,7 @@ class Agent:
         config: AgentConfig | None = None,
         *,
         router_llm: LLM | None = None,
+        translate_llm: LLM | None = None,
         now: Callable[[], datetime] = _utc_now,
         mono: Callable[[], float] = time.monotonic,
         run_id: Callable[[], str] = lambda: str(uuid.uuid4()),
@@ -78,6 +81,14 @@ class Agent:
         self.idf = idf_from_jsonl(self.cfg.idf_chunks) if self.cfg.idf_chunks else None
         self.router = Router(router_llm or llm, self.cfg.use_llm_router)
         self._now, self._mono, self._run_id = now, mono, run_id
+        self.translator = Translator(
+            translate_llm or llm,
+            self.cfg.translate_model,
+            max_chars=self.cfg.translate_max_chars,
+            timeout_s=self.cfg.translate_timeout_s,
+            cache_path=self.cfg.translate_cache,
+            mono=mono,
+        )
 
     # ------------------------------------------------------------------ public
     def ask(self, question: str, history: Sequence[Turn] = ()) -> Iterator[TraceEvent]:
@@ -100,6 +111,81 @@ class Agent:
         return int((self._mono() - t0) * 1000)
 
     def _run(self, sink: EventSink, question: str, history: list[Turn]) -> Iterator[_Base]:
+        """Optional step 0: a Cyrillic question is translated to English, then the normal
+        pipeline (router, gate, retrieval, extractive selection) runs on the English text.
+        Never runs for English questions or for text the injection detector flags."""
+        if not (
+            self.cfg.translate_questions
+            and is_mostly_cyrillic(question)
+            and not ctx.looks_like_injection(question)
+        ):
+            yield from self._pipeline(sink, question, history)
+            return
+        t0 = self._mono()
+        tr = self.translator.translate(question)
+        yield sink.emit(
+            QueryTranslated(
+                step_id="translate",
+                duration_ms=tr.duration_ms if not tr.cached else self._ms(t0),
+                original=question,
+                translated=tr.text if tr.ok else None,
+                model=self.cfg.translate_model,
+                ok=tr.ok,
+                cached=tr.cached,
+                error=tr.error or None,
+            )
+        )
+        if tr.ok and ctx.looks_like_injection(tr.text):
+            tr = replace(tr, ok=False, error="injection_pattern")
+        if not tr.ok:
+            msg = (
+                "The question is not in English and could not be translated "
+                f"({tr.error}). Please ask it in English."
+            )
+            decision = RouteDecided(
+                routes=["refusal"],
+                method="rules",
+                reason="question translation failed; nothing was searched",
+            )
+            yield sink.emit(decision)
+
+            def mark_failed(fin: Final) -> list[_Base]:
+                fin.original_question = question
+                return []
+
+            yield from self._hooked(
+                sink, mark_failed, self._refuse(sink, decision, "translation_failed", msg, [], [])
+            )
+            return
+        line = f'Question translated to English: "{tr.text}"'
+
+        def mark_translated(fin: Final) -> list[_Base]:
+            fin.original_question, fin.translated_question = question, tr.text
+            extra: list[_Base] = []
+            if fin.status != "refused":
+                extra.append(AnswerToken(attempt=fin.attempts, text=f"\n\n{line}"))
+            fin.answer = f"{fin.answer}\n\n{line}"
+            return extra
+
+        yield from self._hooked(sink, mark_translated, self._pipeline(sink, tr.text, history))
+
+    @staticmethod
+    def _hooked(sink: EventSink, hook: Callable[[Final], list[_Base]], events: Iterator[_Base]):
+        """Run `events`; `hook` edits the final event and may add events ahead of it (already
+        stamped by the sink, so they are passed on here before the final)."""
+        extras: list[_Base] = []
+
+        def on_final(fin: Final) -> list[_Base]:
+            extras.extend(hook(fin))
+            return list(extras)
+
+        sink.on_final = on_final
+        for ev in events:
+            if isinstance(ev, Final):
+                yield from extras
+            yield ev
+
+    def _pipeline(self, sink: EventSink, question: str, history: list[Turn]) -> Iterator[_Base]:
         cfg = self.cfg
         decision = self.router.decide(question)
         yield sink.emit(decision)

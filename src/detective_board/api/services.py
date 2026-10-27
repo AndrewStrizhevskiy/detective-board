@@ -41,11 +41,25 @@ class CancellableLLM:
                 raise RunCancelled
             yield tok
 
-    def chat(self, messages, *, temperature: float = 0.0, seed: int | None = None, format=None):
+    def chat(
+        self,
+        messages,
+        *,
+        temperature: float = 0.0,
+        seed: int | None = None,
+        format=None,
+        num_predict: int | None = None,
+    ):
         if self._is_cancelled():
             raise RunCancelled
         return self._wrap(
-            self._inner.chat(messages, temperature=temperature, seed=seed, format=format)
+            self._inner.chat(
+                messages,
+                temperature=temperature,
+                seed=seed,
+                format=format,
+                num_predict=num_predict,
+            )
         )
 
     def generate(self, prompt, *, temperature: float = 0.0, seed: int | None = None):
@@ -135,12 +149,23 @@ def build_services(
     )
     if with_agent:
         client: ToolClient | None = tools
+        ac = _agent_cfg(cfg)
+        translate_llm: LLM = llm  # the answer model by default: no second model in RAM
+        if not cfg.fake and ac.translate_model != cfg.llm_model:
+            translate_llm = OllamaLLM(
+                ac.translate_model,
+                cfg.ollama_host,
+                num_ctx=cfg.num_ctx,
+                keep_alive=cfg.keep_alive,
+                timeout=cfg.llm_timeout_s,
+            )
         svc.agent = Agent(
             CancellableLLM(llm, is_cancelled),  # type: ignore[arg-type]
             HybridRetriever(store, emb),
             graph=graph,  # type: ignore[arg-type]
             tools=client,
-            config=_agent_cfg(cfg),
+            config=ac,
+            translate_llm=CancellableLLM(translate_llm, is_cancelled),  # type: ignore[arg-type]
         )
     return svc
 
