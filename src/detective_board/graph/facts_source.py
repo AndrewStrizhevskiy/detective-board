@@ -129,6 +129,7 @@ class SqliteFactSource:
                     confidence=r["confidence"],
                     narrator=bool(p.get("narrator", True)),
                     occurrence_id=p.get("occurrence"),
+                    curated=bool(p.get("curated", False)),
                 )
             )
 
@@ -151,6 +152,7 @@ class SqliteFactSource:
                     prop=prop,
                     anchors=[self._anchor(r)],
                     confidence="low" if "low" in (r["confidence"], pconf) else "high",
+                    curated=bool(p.get("curated", False)),
                 )
             )
         return FactBase(story=story, places=places, events=events, claims=claims)

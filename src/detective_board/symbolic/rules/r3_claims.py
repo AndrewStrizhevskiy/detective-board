@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from detective_board.extract.curated_schema import CURATED_MARK
 from detective_board.symbolic._explain import event_fact, make_finding, sort_findings
 from detective_board.symbolic.facts import ClaimRec, EventRec, FactBase, OrderProp, PresenceProp
 from detective_board.symbolic.model import EdgeRef, FactRef, Finding, Report, Verdict
@@ -25,8 +26,9 @@ def _claim_fact(c: ClaimRec) -> FactRef:
         kind="claim",
         provenance="extracted",
         confidence=c.confidence,
-        summary=c.content,
+        summary=c.content + (f" {CURATED_MARK}" if c.curated else ""),
         anchors=list(c.anchors),
+        curated=c.curated,
     )
 
 

@@ -5,6 +5,19 @@
 Work by the orchestrator stopped here on the customer's request so the team can continue on stronger
 machines. Everything below is committed on `main`. Nothing is running in the background.
 
+## 0. Curated demo facts (2026-10-27, branch `feat/curated-demo-facts`, not pushed)
+
+The automatic presence pass does not give the rules the Garcia facts of the Wisteria case (c001 needs
+coreference). The demo cases therefore use human-checked ("curated") facts in
+`data/curated/presence_demo.jsonl`, loaded into the graph with `python -m detective_board.extract.curated
+--graph-db data/graph/graph.sqlite` (after the graph build and `just normalise`; idempotent; they survive
+generic and presence re-ingests). They are labelled `curated` on the nodes, in the Explanation summaries
+and in the rule-first answer, and the finding stays `conditional`. The automatic pipeline and its
+numbers are untouched and reported separately. R3 positives were NOT added: no case of the contradiction
+set is an explicit person-place-time conflict with an established narrator fact. Details, the limits of
+the c042 control and how to add a case: `docs/symbolic-layer.md` 11.4; stage wording: `docs/DISCLOSURE.md`
+and `docs/design/demo-script.md` step 2. The facts still need a human re-check.
+
 ## 1. What the project is
 
 Detective Board: a local, offline, CPU-only neuro-symbolic investigator over 20 Sherlock Holmes stories.

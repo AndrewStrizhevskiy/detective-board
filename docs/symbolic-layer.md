@@ -83,6 +83,8 @@ CREATE TABLE g_derived (
 );
 ```
 
+A fact entered by the team for the demo cases (section 11.4) is an `extracted`-style input whose origin is a person's decision; it carries the same confidence, anchor and quote, is marked `curated`, and its summary says "(curated)". It does not change the label of a finding: that stays `derived` or `conditional` as section 2.2 decides.
+
 ### 2.1 Confidence of extracted facts
 
 `schema.py` has no model-reported confidence field. Do not invent one. Confidence is computed deterministically upstream from signals the pipeline already has and handed to the layer as `high|low` (plus an optional `score`):
@@ -663,3 +665,84 @@ apologised ... nearly one o'clock", "He had been there since one o'clock") name 
 the place, and the second chunk never mentions Oxshott Common, so strict grounding drops both and the
 same input without `--lenient` gives no finding (also tested). With strict grounding c001 needs
 discourse context that this pass deliberately does not use.
+
+### 11.4 Curated presence facts for the demo cases (`extract/curated.py`, branch `feat/curated-demo-facts`)
+
+**What "curated" means.** On real runs (2026-10-27) the automatic presence extraction with small models
+does not produce the facts the rules need on the demo cases: gold c001 (R1, Garcia "at about one
+o'clock on the night he died") needs coreference ("he", "there") that `qwen3:4b-instruct` gets wrong
+(it chose Baynes and Wisteria Lodge). For the DEMO cases the team therefore enters a small number of
+presence facts by hand, each tied to a verbatim quote, and the system labels them as such everywhere:
+the file is `data/curated/presence_demo.jsonl` (tracked in git), the graph nodes carry `curated: true`,
+`curated_by` ("team (AI-assisted, to be re-checked by a human)") and a `note` that says why this case
+is the way it is, the Explanation facts say `(curated)` in their summary and have `curated: true`, and
+the rule-first answer prints a `Curated:` line. "Curated" is NOT a provenance class of its own: a
+curated fact is an `extracted`-style input (it has a confidence, an anchor and a quote) whose origin is
+a person's decision instead of a model's output; the finding that rests on it is still `derived` or
+`conditional` exactly as the rules decide (section 2.2), because curation does not make a fact true. The
+AI assisted in writing the file and a human has not yet re-checked it; that is what the label says.
+
+**The automatic pipeline is evaluated separately and honestly.** Nothing here changes
+`extract/presence.py`, its grounding, the gold scorer or any reported extraction number. Those numbers
+describe what a model finds on its own; the curated facts describe what the rules do when the facts are
+right. A result that rests on curated facts is never reported as an extraction result.
+
+**Record format** (`extract/curated_schema.py`, `CuratedFact`, one JSON object per line):
+`id`, `story`, `person` and `place` (canonical graph-style names; the same string for the same person),
+`time_text` (verbatim from the quote or null), `day_text` (optional, verbatim), `day_key` (shared
+story-day key: the same key within a story is one day), `polarity` (`affirm`|`deny`), `source`
+(`narrator`|`speech`), `speaker` (speech only), `quote` (verbatim), `curated_by`, `note`, and two optional
+fields: `inferred` (the slots among person, place, time that the quote does not state itself) and
+`confidence` (`low` forces LOW). The loader refuses a fact whose quote is not a verbatim span of
+`data/clean/<story>.txt` (checked after whitespace and quotation-mark normalisation), whose
+`time_text`/`day_text` are not in the quote, or whose person or place is neither in the quote nor declared
+`inferred` (and the reverse); a fact with `inferred` slots needs a note that says how they were resolved.
+
+**Loading** (`python -m detective_board.extract.curated --graph-db data/graph/graph.sqlite [--file
+data/curated/presence_demo.jsonl]`; run it after the graph build and `extract.normalise`). Each fact
+goes through `GraphStore.ingest_curated`, the same shape as `ingest_presence`: an affirmed fact is an
+event (person PARTICIPATED_IN, place OCCURRED_AT, `narrator` from the source, `occurrence` = chunk +
+quote span + person); a fact said in speech by a named speaker is also a claim (ASSERTS, ABOUT, with the
+proposition fields and a `prop` overlay); a denial is a claim only. Node ids are `e:<chunk>:cur-<id>` and
+`c:<chunk>:cur-<id>`, anchored in the real chunk that holds the quote, so the source panel works. The
+time is `normalise_time` of `time_text`, written as a `time` overlay with the story day from the
+`day_key` (`curated_day`: a stable number in 20000-29999, shared by all facts of a story with that key)
+and a `story_day` overlay; overlays with source `curated` win over the normaliser's and survive
+`normalise.apply`. Confidence: HIGH for an exact, explicit clock time with nothing inferred; LOW when a
+slot is `inferred`, when the fact says `confidence: low`, or when the time is approximate ("nearly one
+o'clock", "about three", "since one o'clock" stay LOW exactly as the normaliser decides). The curator's
+day key is trusted (day confidence HIGH); that trust is the point of curation and is stated in the note.
+
+**Survival and idempotence.** Curated nodes and edges carry `"curated":true` in their props and a
+generic re-ingest of their chunk (`_purge_chunk`) skips them; curated entity mentions are stored with
+`implicit=2`, which that purge also keeps, so the people and places stay findable by name. A presence
+re-ingest only purges its own node ids. Re-running the loader is a no-op (hash in `g_meta` key
+`curated:<id>`); a changed fact is replaced without leftovers. A fact that cannot be grounded stops the
+whole load with every problem listed, before anything is written.
+
+**What is in the file, and what is not.**
+
+| Case | Facts | Result |
+|---|---|---|
+| c001 Wisteria Lodge, R1 | Eccles (speech): Garcia at Wisteria Lodge, "nearly one o'clock" (place inferred from the narrative: the quote says "my door"). Baynes (speech): Garcia at Oxshott Common, "since one o'clock" (person and place inferred: "He ... there", resolved from Gregson's line before it). Same day key. | R1 `violated`, `OVERLAP_DIFFERENT_PLACES`, conditional (both input events are LOW), both verbatim quotes |
+| c042 Boscombe (control) | Holmes (speech): McCarthy senior at Ross "in the morning", and at Hatherley "about three in the afternoon", on June 3rd. James (speech): his father had driven to Ross, "the morning of last Monday, the 3rd" (person, time inferred). | no violation (times are disjoint or the places agree) |
+| R3 positives | none | skipped, see below |
+
+R3 positives are NOT in the file. R3 needs a witness's presence claim (person, place, time) against an
+established narrator-voice event of the same person at an overlapping time and a different place. The
+R3 cases of `eval/golden/contradictions.jsonl` (c008-c026) contradict physical evidence, identity, cause
+of death or a legal charge, not a person-place-time statement: the ones that come closest (c011 Randall
+gang in New York "this morning" against Kent "last night"; c022 Isa Whitney's day) differ in time, so
+the rule would call them disjoint, or in the day only, and travel time is not modelled. Encoding them
+would mean inventing a proposition the text does not state. The c042 control is also weaker than its
+label: the disputed point (was James *following* his father) is about intent and has no place or clock
+time, so what is encoded are the explicit parts and the control shows that those do not clash. The
+second sentence of Eccles ("I could swear to it that it was he who addressed me in my bedroom at that
+very hour") has only deictic words and is not encoded separately.
+
+**Adding a case.** (1) Read the passage and decide what the text states; write one line per statement
+in `data/curated/presence_demo.jsonl` with a verbatim quote that contains as many slots as possible;
+(2) declare every slot the quote does not state in `inferred`, set `confidence: low` if in doubt, and
+say in `note` why; (3) give the facts of one day the same `day_key`; (4) run the loader on a copy of the
+graph and ask the question; `uv run pytest tests/curated` checks quotes and slots for every line.
+A case that cannot be expressed without inventing a statement is skipped and documented here.

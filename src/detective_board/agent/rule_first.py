@@ -63,6 +63,7 @@ class RuleItem:
     low_inputs: list[str]
     anchors: list[dict[str, Any]]
     window: str = ""
+    curated: int = 0  # facts of the explanation that are human-checked, not extracted
 
 
 def _plain(text: object) -> str:
@@ -95,6 +96,7 @@ def _item_from_finding(it: dict[str, Any], default: object) -> RuleItem:
         low_inputs=_low_inputs(exp),
         anchors=[a for a in anchors if isinstance(a, dict)],
         window=_plain(exp.subject.get("window", "")) if exp else "",
+        curated=sum(1 for f in exp.facts if f.curated) if exp else 0,
     )
 
 
@@ -279,6 +281,12 @@ def _finding_sentence(it: RuleItem, c: _Cites) -> str:
         line += f"\nConditional because these inputs are low-confidence: {why}."
     else:
         line += "\nDerived: none of the extracted facts it depends on is low-confidence."
+    if it.curated:
+        line += (
+            f"\nCurated: {it.curated} of the facts it rests on were entered and checked by the "
+            "team (AI-assisted, human re-check pending); they are not output of the automatic "
+            "extraction."
+        )
     return "- " + line.replace("\n", "\n  ")
 
 

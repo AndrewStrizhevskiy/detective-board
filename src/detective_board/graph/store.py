@@ -17,6 +17,11 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
 
+from detective_board.extract.curated_schema import (
+    CURATED_SCHEMA_VERSION,
+    CuratedFact,
+    curated_day,
+)
 from detective_board.extract.presence_schema import SCHEMA_VERSION as PRESENCE_SCHEMA_VERSION
 from detective_board.extract.presence_schema import GroundedFact
 from detective_board.extract.schema import SCHEMA_VERSION, Extraction
@@ -108,6 +113,15 @@ class _Ctx:
 
 def _presence_key(chunk_id: str) -> str:
     return f"presence:{chunk_id}"
+
+
+def _curated_key(fact_id: str) -> str:
+    return f"curated:{fact_id}"
+
+
+# Curated nodes and edges carry this JSON fragment in props_json; a generic re-ingest of their chunk
+# must not purge them (docs/symbolic-layer.md 11.4).
+_CURATED_LIKE = '%"curated":true%'
 
 
 def _j(obj: Any) -> str:
@@ -320,6 +334,13 @@ class GraphStore:
         )
 
     def _purge_presence(self, chunk_id: str, old: dict[str, Any]) -> None:
+        self._purge_nodes(old)
+        self.conn.execute(
+            "DELETE FROM g_dropped WHERE chunk_id=? AND item_kind='presence'", (chunk_id,)
+        )
+
+    def _purge_nodes(self, old: dict[str, Any]) -> None:
+        """Delete the nodes and mentions recorded in a g_meta entry, then entities left unused."""
         c = self.conn
         nodes: list[str] = old.get("nodes", [])
         mentions: list[int] = old.get("mentions", [])
@@ -333,9 +354,9 @@ class GraphStore:
         for nid in nodes:
             c.execute("DELETE FROM g_edge WHERE src=? OR dst=?", (nid, nid))
             c.execute("DELETE FROM g_node WHERE id=?", (nid,))
+            c.execute("DELETE FROM g_overlay WHERE node_id=? AND source='curated'", (nid,))
         for m in mentions:
             c.execute("DELETE FROM g_mention WHERE id=?", (m,))
-        c.execute("DELETE FROM g_dropped WHERE chunk_id=? AND item_kind='presence'", (chunk_id,))
         for nid in affected:
             left = c.execute("SELECT 1 FROM g_mention WHERE node_id=? LIMIT 1", (nid,)).fetchone()
             used = c.execute(
@@ -473,6 +494,220 @@ class GraphStore:
             made.append(nid)
         return made
 
+    # ------------------------------------------------------------------ curated facts
+
+    def ingest_curated(
+        self, chunk: ChunkRef, facts: Sequence[CuratedFact], *, force: bool = False
+    ) -> list[IngestReport]:
+        """Upsert human-checked presence facts (extract/curated.py, spec 11.4), one fact at a time.
+
+        Same shape as `ingest_presence` (affirmed fact = event with PARTICIPATED_IN and OCCURRED_AT;
+        a fact said in speech by a named speaker is also a claim), with differences that matter:
+        node ids are `e:<chunk>:cur-<id>` / `c:<chunk>:cur-<id>`; nodes and edges carry
+        `curated: true` in their props, which is what keeps them through a generic re-ingest of the
+        chunk and through `ingest_presence`; the time (`time` overlay), the story day (`story_day`,
+        from the fact's day key) and the claim proposition (`prop`) are written as overlays with
+        source 'curated', which `normalise.apply` never overwrites. A fact is LOW when its quote
+        does not state a slot (`inferred`), when it says so itself (`confidence`), or when its
+        anchor is ambiguous; the time's confidence is the normaliser's (approximate = LOW), except
+        that an exact, explicit clock time is HIGH. A fact that cannot be grounded raises
+        ValueError and rolls back: curated data must work or fail loudly.
+        """
+        reports: list[IngestReport] = []
+        for f in facts:
+            h = _sha(
+                _j(
+                    {
+                        "chunk": [chunk.chunk_id, chunk.story, chunk.char_start, chunk.char_end],
+                        "text": _sha(chunk.text),
+                        "fact": f.model_dump(mode="json"),
+                        "versions": [
+                            CURATED_SCHEMA_VERSION,
+                            GRAPH_BUILD_VERSION,
+                            TIME_NORM_VERSION,
+                        ],
+                    }
+                )
+            )
+            key = _curated_key(f.id)
+            row = self.conn.execute("SELECT value FROM g_meta WHERE key=?", (key,)).fetchone()
+            old = json.loads(row["value"]) if row else None
+            alive = bool(old) and all(
+                self.conn.execute("SELECT 1 FROM g_node WHERE id=?", (n,)).fetchone()
+                for n in old["nodes"]
+            )
+            if old and old["hash"] == h and alive and not force:
+                reports.append(IngestReport(chunk_id=chunk.chunk_id, status="unchanged"))
+                continue
+            ctx = _Ctx(chunk)
+            with self._tx():
+                if not self.conn.execute(
+                    "SELECT 1 FROM g_chunk WHERE chunk_id=?", (chunk.chunk_id,)
+                ).fetchone():
+                    self.conn.execute(
+                        "INSERT INTO g_chunk(chunk_id, story, char_start, char_end, contiguous,"
+                        " text_sha, input_hash) VALUES (?,?,?,?,?,?,?)",
+                        (
+                            chunk.chunk_id,
+                            chunk.story,
+                            chunk.char_start,
+                            chunk.char_end,
+                            int(chunk.contiguous),
+                            _sha(chunk.text),
+                            "curated-only",
+                        ),
+                    )
+                if old:
+                    self._purge_nodes(old)
+                floor = self.conn.execute("SELECT COALESCE(MAX(id), 0) FROM g_mention").fetchone()[
+                    0
+                ]
+                nodes = self._ingest_curated_fact(ctx, f)
+                mentions = [
+                    r[0]
+                    for r in self.conn.execute(
+                        "SELECT id FROM g_mention WHERE chunk_id=? AND id>? ORDER BY id",
+                        (chunk.chunk_id, floor),
+                    )
+                ]
+                self.conn.execute(
+                    "INSERT OR REPLACE INTO g_meta(key, value) VALUES (?,?)",
+                    (key, _j({"hash": h, "nodes": nodes, "mentions": mentions})),
+                )
+                for nid in sorted(ctx.touched):
+                    self._refresh_entity(nid)
+            reports.append(
+                IngestReport(
+                    chunk_id=chunk.chunk_id,
+                    status="replaced" if old else "inserted",
+                    entities=ctx.n_entities,
+                    events=ctx.n_events,
+                    claims=ctx.n_claims,
+                    edges=ctx.n_edges,
+                    ambiguous_anchors=ctx.n_amb,
+                    warnings=ctx.warnings,
+                )
+            )
+        return reports
+
+    def _ingest_curated_fact(self, ctx: _Ctx, f: CuratedFact) -> list[str]:
+        from detective_board.extract.normalise import _APPROX, normalise_time
+        from detective_board.symbolic.facts import PresenceProp
+
+        cid = ctx.chunk.chunk_id
+        a = ctx.anchor(f.quote)
+        if a is None:
+            raise ValueError(f"curated fact {f.id}: quote not found in chunk {cid}")
+        pid, pweak = self._ref_person(ctx, f.person, a)
+        if pid is None:
+            raise ValueError(f"curated fact {f.id}: person {f.person!r} is ambiguous in the graph")
+        speaker, sweak = (None, False)
+        if f.source == "speech":
+            speaker, sweak = self._ref(ctx, str(f.speaker), ("person",), a, create=True)
+            if speaker is None:
+                raise ValueError(f"curated fact {f.id}: speaker {f.speaker!r} is ambiguous")
+        deny = f.polarity == "deny"
+        self._curated_mention(ctx, pid, f.person, "person", a, pweak)
+        if speaker is not None:
+            self._curated_mention(ctx, speaker, str(f.speaker), "person", a, sweak)
+        inferred = set(f.inferred)
+        weak = a.weak or pweak or bool(inferred) or f.confidence == "low"
+        base: dict[str, Any] = {
+            "pass": "curated",
+            "curated": True,
+            "curated_id": f.id,
+            "curated_by": f.curated_by,
+            "curated_version": CURATED_SCHEMA_VERSION,
+            "note": f.note,
+        }
+        if f.day_text:
+            base["day_text"] = f.day_text
+        if f.day_key:
+            base["day_key"] = f.day_key
+        if inferred:
+            base["inferred"] = sorted(inferred)
+        eprops = {"curated": True}
+        made: list[str] = []
+        why = "ambiguous_anchor" if a.weak else "curated_inferred" if weak else ""
+        place: str | None = None
+        time = normalise_time(f.time_text)
+        if time is not None:
+            tt = (f.time_text or "").casefold()
+            explicit = (
+                time.exact and time.rel is None and not _APPROX.search(tt) and "since" not in tt
+            )  # an exact, explicit clock time confirmed by the curator is HIGH
+            time = time.model_copy(
+                update={
+                    "day": curated_day(f.story, f.day_key) if f.day_key else None,
+                    "confidence": "high" if explicit else time.confidence,
+                }
+            )
+        if not deny:
+            place, pl_weak = self._ref(ctx, f.place, ("place",), a, create=True)
+            if place is None:
+                raise ValueError(f"curated fact {f.id}: place {f.place!r} is ambiguous")
+            nid = f"e:{cid}:cur-{f.id}"
+            props: dict[str, Any] = {
+                "description": f"{f.person} at {f.place}"
+                + (f", {f.time_text}" if f.time_text else ""),
+                "time_text": f.time_text,
+                "time_norm": time.model_dump(mode="json") if time else None,
+                "narrator": f.source == "narrator",
+                "occurrence": f"{cid}:{a.rel_start}-{a.rel_end}:{pid}",
+                "transit": False,
+                **base,
+            }
+            self._curated_mention(ctx, place, f.place, "place", a, pl_weak)
+            self._insert_node(ctx, nid, "event", props, a, weak, why)
+            ctx.n_events += 1
+            self._edge(ctx, pid, nid, "PARTICIPATED_IN", a, weak="person" in inferred, props=eprops)
+            self._edge(
+                ctx, nid, place, "OCCURRED_AT", a, weak=pl_weak or "place" in inferred, props=eprops
+            )
+            made.append(nid)
+            if time is not None:
+                self._curated_overlay(nid, "time", time.model_dump(mode="json"), time.confidence)
+                if time.day is not None:
+                    self._curated_overlay(nid, "story_day", time.day, "high")
+        if f.source == "speech" and speaker is not None:
+            verb = "was not" if deny else "was"
+            cprops = {
+                "content": f"{f.person} {verb} at {f.place}"
+                + (f", {f.time_text}" if f.time_text else ""),
+                "speaker": f.speaker,
+                "about": f.person,
+                "about_person": f.person,
+                "about_place": f.place,
+                "about_time_text": f.time_text,
+                "polarity": f.polarity,
+                **base,
+            }
+            nid = f"c:{cid}:cur-{f.id}"
+            self._insert_node(ctx, nid, "claim", cprops, a, weak or sweak, why)
+            ctx.n_claims += 1
+            self._edge(ctx, speaker, nid, "ASSERTS", a, weak=sweak, props=eprops)
+            self._edge(ctx, nid, pid, "ABOUT", a, weak=pweak, props=eprops)
+            made.append(nid)
+            if not deny and time is not None and place is not None and time.lo is not None:
+                prop = PresenceProp(person_id=pid, place_ref=place, time=time)
+                conf = "low" if weak or time.confidence == "low" else "high"
+                self._curated_overlay(nid, "prop", prop.model_dump(mode="json"), conf)
+        return made
+
+    def _curated_mention(
+        self, ctx: _Ctx, nid: str, surface: str, kind: str, a: _A, weak: bool
+    ) -> None:
+        """Mention of a curated entity reference that a generic re-ingest of the chunk keeps (the
+        entity stays findable by name; a name that only matched loosely is stored as an alias)."""
+        self._add_mention(ctx, nid, surface, kind, "alias" if weak else "name", a, 2)
+
+    def _curated_overlay(self, node_id: str, key: str, value: Any, confidence: str) -> None:
+        self.conn.execute(
+            "INSERT OR REPLACE INTO g_overlay(node_id,key,value_json,confidence,source)"
+            " VALUES (?,?,?,?,?)",
+            (node_id, key, _j(value), confidence, "curated"),
+        )
+
     def _purge_chunk(self, chunk_id: str) -> None:
         c = self.conn
         affected = [
@@ -482,9 +717,16 @@ class GraphStore:
                 (chunk_id,),
             )
         ]
-        c.execute("DELETE FROM g_edge WHERE chunk_id=?", (chunk_id,))
-        c.execute("DELETE FROM g_node WHERE chunk_id=?", (chunk_id,))
-        c.execute("DELETE FROM g_mention WHERE chunk_id=?", (chunk_id,))
+        c.execute(
+            "DELETE FROM g_edge WHERE chunk_id=? AND COALESCE(props_json,'') NOT LIKE ?",
+            (chunk_id, _CURATED_LIKE),
+        )
+        c.execute(
+            "DELETE FROM g_node WHERE chunk_id=? AND props_json NOT LIKE ?",
+            (chunk_id, _CURATED_LIKE),
+        )
+        # implicit=2 marks a curated mention: it keeps the curated entities findable by name
+        c.execute("DELETE FROM g_mention WHERE chunk_id=? AND implicit != 2", (chunk_id,))
         c.execute("DELETE FROM g_dropped WHERE chunk_id=?", (chunk_id,))
         c.execute("DELETE FROM g_meta WHERE key=?", (_presence_key(chunk_id),))
         for nid in affected:
@@ -574,7 +816,7 @@ class GraphStore:
         return nid
 
     def _add_mention(
-        self, ctx: _Ctx, nid: str, surface: str, kind: str, role: str, a: _A, implicit: bool
+        self, ctx: _Ctx, nid: str, surface: str, kind: str, role: str, a: _A, implicit: int
     ) -> None:
         self.conn.execute(
             "INSERT INTO g_mention(node_id,chunk_id,surface,surface_norm,role,implicit,char_start,"
@@ -585,7 +827,7 @@ class GraphStore:
                 surface.strip(),
                 normalize_name(surface, kind),
                 role,
-                int(implicit),
+                implicit,
                 a.char_start,
                 a.char_end,
                 a.rel_start,
@@ -869,7 +1111,7 @@ class GraphStore:
                 by_norm[r["surface_norm"]] = min(cur, r["surface"]) if cur else r["surface"]
         props = json.loads(node["props_json"])
         props["aliases"] = sorted(by_norm.values())
-        props["implicit_only"] = all(r["implicit"] for r in rows)
+        props["implicit_only"] = all(r["implicit"] == 1 for r in rows)
         reason = ""
         if node["unnamed"]:
             reason = "unnamed"
