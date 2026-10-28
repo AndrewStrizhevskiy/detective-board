@@ -28,8 +28,8 @@ Rule: a number is on a slide only if it is in this table with a source file and 
 | 22 | 9 | 4 genuine R1 and 3 R2 cases | corpus content | `docs/spike/REPORT.md` section 10 (risk 4) | whole corpus | **outside the allowed source folders**; counted by the spike, no file in `results/`. Remove from the slide if a reviewer insists on the folder rule |
 | 23 | 10 | 596 chunks | corpus size | `docs/STATUS.md` ("596 chunks") | - | descriptive count |
 | 24 | 2, 3 | 20 stories | corpus size | `README.md` | - | descriptive count, not a result |
-| 25 | 5 notes | 1.4 s recorded; milliseconds of the tool call | R1 recording total; live MCP time | `web/replay/real-wisteria-r1-curated.json` meta `seconds`; live ms read from the screen | 1 recording | recording meta is not in the allowed folders; the live ms value is TBD (rehearsal log) |
-| 26 | B5 | 28.7 s | Boscombe recording duration | `web/replay/real-boscombe-control.json` meta | 1 recording | operator information only |
+| 25 | 5 notes | 1.1 s recorded; milliseconds of the tool call | R1 recording total; live MCP time | `web/replay/real-wisteria-r1-curated.json` meta `seconds`; live ms read from the screen | 1 recording | recording meta is not in the allowed folders; the live ms value is TBD (rehearsal log) |
+| 26 | B5 | 2.9 s | Boscombe recording duration | `web/replay/real-boscombe-control.json` meta | 1 recording | operator information only |
 | 27 | 7, 5 notes | 596 of 596 chunks, 20 of 20 stories, 2157 claims, 1698 events; 0 rule findings in 19 of 20 stories; 52.5% / 4.5% / 0.7% | full-corpus graph from the server run | `docs/spike/results/graph-sanity-20261028.md` (server report and normaliser log next to it) | 596 chunks, 1 run | extraction quality not scored beyond 12 gold chunks |
 | 28 | 7 | 5 of 6, 30.3-43.2 s | dev questions answered with a quoted sentence on the full graph, laptop | `docs/perf/laptop-20261028.md` / `.json` | 6 questions, 1 run | not a clean window |
 | 29 | 8 | 5017 MB; 92 C | peak RSS of all llama-server processes; maximum package temperature | same file | 1 run | not final |

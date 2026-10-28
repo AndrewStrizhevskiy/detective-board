@@ -162,7 +162,7 @@ Rule for every failure line: say that it is a stored run, never blame the model,
 
 Whole-system failures (any step): (a) browser or UI frozen: switch to the second window, open the replay of the current step, continue the spoken line; (b) Ollama down or killed: the gate refusal and rule-first steps (5, 6) still work without the model; for step 4 use the replay and say "the model server stopped; this is the stored run"; (c) laptop dead: slides alone carry the transcript, the answer line, the two quotes and the refusal text; say so and continue with slide 7 on paper if needed; (d) over time by more than 20 s at slide 6: skip the `rg` check and drop the second sentence of slide 7.
 
-Not in the deck (kept for questions): Boscombe control `?replay=replay/real-boscombe-control.json` (28.7 s; backup slide B5).
+Not in the deck (kept for questions): Boscombe control `?replay=replay/real-boscombe-control.json` (2.9 s; backup slide B5).
 
 ## 3. Removed and why
 

@@ -141,7 +141,7 @@ CLICK: the dashed conflict edge, open the Why panel, read the two quotes.
 
 NUMBERS: none spoken except milliseconds read from the screen (not pre-measured: TBD rehearsal log). On the full 20-story server graph (graph-sanity-20261028.md) 52.5% of events have a normalised time, 4.5% a story day, 0.7% of claims a presence proposition, and the rules find 0 contradictions in 19 of 20 stories; the only finding is this curated one. Say it if asked.
 
-IF IT GOES WRONG: fallback URL http://127.0.0.1:8000/?replay=replay/real-wisteria-r1-curated.json (1.4 s). Failure line: "The tool call is slow; here is the stored run of the same question, labelled as a recording." Never say the model found this.
+IF IT GOES WRONG: fallback URL http://127.0.0.1:8000/?replay=replay/real-wisteria-r1-curated.json (1.1 s). Failure line: "The tool call is slow; here is the stored run of the same question, labelled as a recording." Never say the model found this.
 -->
 
 # Demo 2: Wisteria Lodge, rule R1
