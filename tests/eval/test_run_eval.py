@@ -172,3 +172,11 @@ def test_agent_overrides_are_typed_and_checked():
     assert R.apply_overrides(AgentConfig(), {}) == AgentConfig()
     with pytest.raises(SystemExit, match="unknown"):
         R.apply_overrides(AgentConfig(), {"nope": "1"})
+
+
+def test_findings_on_curated_facts_are_not_counted_as_system_findings():
+    plain = {"rule": "R1", "explanation": {"facts": [{"id": "e1"}, {"id": "e2"}]}}
+    hand = {"rule": "R1", "explanation": {"facts": [{"id": "e1"}, {"id": "e3", "curated": True}]}}
+    assert R._rests_on_curated(hand) is True
+    assert R._rests_on_curated(plain) is False
+    assert R._rests_on_curated({"rule": "R1"}) is False

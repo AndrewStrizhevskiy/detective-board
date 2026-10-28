@@ -87,8 +87,10 @@ SHORT_NOTE = (
 CONTRA_NOTE = (
     "found = at least one violated rule finding for the people the case names (story-wide when "
     "none resolves); it is not matched to the case's own claims, and R2 is story-wide, so a "
-    "control in a story with another positive counts as a false positive. Skipped cases (story "
-    "not in the graph, rules error) are outside the counts."
+    "control in a story with another positive counts as a false positive. Findings that rest on "
+    "curated facts (entered by hand) are NOT counted as found; they are listed separately in "
+    "the rows (found_with_curated_facts). Skipped cases (story not in the graph, rules error) "
+    "are outside the counts."
 )
 
 
@@ -475,6 +477,12 @@ def judge(
 # ----------------------------------------------------------------------------- contradictions
 
 
+def _rests_on_curated(finding: dict) -> bool:
+    """True when a finding rests on at least one fact entered by hand (marked curated)."""
+    facts = (finding.get("explanation") or {}).get("facts") or []
+    return any(isinstance(f, dict) and f.get("curated") for f in facts)
+
+
 def run_contradictions(stack: Stack, items: list[dict]) -> list[dict]:
     """Rules only: find_contradictions for the people named in each case (story-wide when none is
     found in the graph). found = at least one violated finding (see CONTRA_NOTE)."""
@@ -504,21 +512,30 @@ def run_contradictions(stack: Stack, items: list[dict]) -> list[dict]:
         calls = [{"story": it["story"], "person_id": pid} for pid in people] or [
             {"story": it["story"]}
         ]
-        found, errors, rules = False, [], set()
+        found, found_curated, errors, rules = False, False, [], set()
         for args in calls:
             res = stack.tools.call("find_contradictions", args, timeout=5.0)
             if res.get("error"):
                 errors.append(res["error"].get("code", "error"))
                 continue
             hits = res.get("items") or res.get("findings") or []
-            if hits:
-                found = True
-                rules |= {h.get("rule") for h in hits if isinstance(h, dict)}
+            for h in (h for h in hits if isinstance(h, dict)):
+                if _rests_on_curated(h):
+                    found_curated = True  # entered by hand: never counted as a system finding
+                else:
+                    found = True
+                    rules.add(h.get("rule"))
         if errors and len(errors) == len(calls):
             rows.append({**row, "skipped": f"rules error: {errors[0]}"})
             continue
         rows.append(
-            {**row, "found": found, "rules_found": sorted(r for r in rules if r), "people": people}
+            {
+                **row,
+                "found": found,
+                "found_with_curated_facts": found or found_curated,
+                "rules_found": sorted(r for r in rules if r),
+                "people": people,
+            }
         )
     return rows
 
