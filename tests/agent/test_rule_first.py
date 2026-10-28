@@ -520,9 +520,11 @@ def test_timeline_template_lists_dated_then_undated_with_quotes():
     fin = ev[-1]
     assert fin.status == "answered" and fin.verified
     lines = fin.answer.splitlines()
-    assert lines[0].startswith("Timeline for wl: the graph holds 3 events (1 with a stated time")
+    assert lines[0].startswith(
+        "Timeline for wl: the graph holds 3 events (1 with a stated day and time"
+    )
     assert "3 are shown." in lines[0]
-    assert lines[1].startswith("1. day 1, 13:00 (derived): Garcia looked in at the door [1: ")
+    assert lines[1].startswith("1. day key 1, 13:00 (derived): Garcia looked in at the door [1: ")
     assert lines[2].startswith("2. time not stated (derived): Baynes says")
     assert lines[3].startswith("3. time not stated (curated): Garcia was seen")
     assert (
@@ -544,7 +546,10 @@ def test_timeline_truncated_and_conditional_label():
         _tl_payload(truncated=True, total_events=40, undated_count=38, provenance="conditional")
     )
     a = ev[-1].answer
-    assert "holds 40 events (2 with a stated time, 38 without); 3 are shown, the rest were cut" in a
+    assert (
+        "holds 40 events (2 with a stated day and time, 38 without); 3 are shown, the rest were cut"
+        in a
+    )
     assert "(conditional)" in a
 
 
@@ -552,7 +557,7 @@ def test_timeline_only_undated_says_so():
     p = _tl_payload()
     p["events"] = [e | {"when": None} for e in p["events"]]
     a = run_tl(p)[0][-1].answer
-    assert "None of the events shown has a stated time" in a
+    assert "None of the events shown has both a stated day and time" in a
 
 
 def test_timeline_empty_reports_missing_and_invents_nothing():
@@ -595,3 +600,18 @@ def test_timeline_with_graph_scopes_person_and_story():
     assert args["story"] == S and args["person_id"].endswith("garcia")
     assert args["include_undated"] is True
     assert ev[-1].answer.startswith("Timeline for Garcia in wl: ")
+
+
+def test_timeline_day_wording_dates_keys_and_partial_times():
+    from datetime import date as _d
+
+    from detective_board.agent.rule_first import _when_text
+
+    jun3 = _d(2001, 6, 3).toordinal()
+    w = {"story_day": jun3, "start_min": 900, "end_min": 900, "confidence": "high"}
+    assert _when_text(w) == ("June 3 (date in the text), 15:00", False)
+    w = {"story_day": 20162, "start_min": 60, "end_min": 120, "confidence": "low"}
+    assert _when_text(w) == ("day key 20162, 01:00-02:00 (time uncertain)", True)
+    w = {"story_day": None, "start_min": 360, "end_min": 720, "confidence": "high"}
+    assert _when_text(w)[0] == "06:00-12:00, day not stated"
+    assert _when_text(None) == (None, False)
