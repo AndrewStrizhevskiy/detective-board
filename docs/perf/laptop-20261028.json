@@ -1,0 +1,66 @@
+{
+ "results": [
+  {
+   "id": "g001",
+   "cold": true,
+   "status": "answered",
+   "ttft_s": 43.2,
+   "total_s": 43.2,
+   "answer_tokens_events": 16,
+   "peak_rss_mb": 4373,
+   "max_temp_c": 99.0
+  },
+  {
+   "id": "g002",
+   "cold": false,
+   "status": "answered",
+   "ttft_s": 34.2,
+   "total_s": 34.2,
+   "answer_tokens_events": 71,
+   "peak_rss_mb": 4508,
+   "max_temp_c": 79.0
+  },
+  {
+   "id": "g003",
+   "cold": false,
+   "status": "answered",
+   "ttft_s": 36.0,
+   "total_s": 36.0,
+   "answer_tokens_events": 43,
+   "peak_rss_mb": 4634,
+   "max_temp_c": 84.0
+  },
+  {
+   "id": "g007",
+   "cold": false,
+   "status": "answered",
+   "ttft_s": 33.1,
+   "total_s": 33.1,
+   "answer_tokens_events": 42,
+   "peak_rss_mb": 4764,
+   "max_temp_c": 89.0
+  },
+  {
+   "id": "g009",
+   "cold": false,
+   "status": "refused",
+   "ttft_s": null,
+   "total_s": 35.7,
+   "answer_tokens_events": 0,
+   "peak_rss_mb": 4886,
+   "max_temp_c": 91.0
+  },
+  {
+   "id": "g010",
+   "cold": false,
+   "status": "answered",
+   "ttft_s": 30.3,
+   "total_s": 30.3,
+   "answer_tokens_events": 36,
+   "peak_rss_mb": 5017,
+   "max_temp_c": 92.0
+  }
+ ],
+ "peak_rss_mb_all": 5017,
+ "max_temp_c_all": 99.0
+}
