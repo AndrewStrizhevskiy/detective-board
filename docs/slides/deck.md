@@ -139,7 +139,7 @@ SAY (about 175 words):
 
 CLICK: the dashed conflict edge, open the Why panel, read the two quotes.
 
-NUMBERS: none spoken except milliseconds read from the screen (not pre-measured: TBD rehearsal log). The real automatic run found 0 exact times, 0 story days, 1 usable proposition, R1 examined 19 pairs and could not decide 16 (STATUS.md); say it if asked.
+NUMBERS: none spoken except milliseconds read from the screen (not pre-measured: TBD rehearsal log). On the full 20-story server graph (graph-sanity-20261028.md) 52.5% of events have a normalised time, 4.5% a story day, 0.7% of claims a presence proposition, and the rules find 0 contradictions in 19 of 20 stories; the only finding is this curated one. Say it if asked.
 
 IF IT GOES WRONG: fallback URL http://127.0.0.1:8000/?replay=replay/real-wisteria-r1-curated.json (1.4 s). Failure line: "The tool call is slow; here is the stored run of the same question, labelled as a recording." Never say the model found this.
 -->
@@ -200,6 +200,8 @@ IF IT GOES WRONG: slide only. If late, say only the first row and the TBD row.
 | Real API, extractive mode, 2026-10-27 | quoted sentence for **6 of 10** answerable; **2 of 2** out-of-corpus refused; **8.1-20.2 s** per model call | 12 questions, 1 run | "answered" is not "correct"; no human judging |
 | Retrieval-only check, 2026-10-23 | **5 of 10** answered and verified; behaviour correct **8 of 12**; bare model vs agent on refusal-type questions **1 of 3** vs **2 of 3** | 12 questions, 1 run | AI-written gold; graph and rules off |
 | Gold chunk within top 4 | **70 of 86 = 81%** | 86 questions | retrieval only, no LLM |
+| Full graph from the department server, 2026-10-27 | **596 of 596** chunks, 20 of 20 stories, 2157 claims, 1698 events; rules: **0 findings in 19 of 20 stories** (only the curated Garcia R1) | 596 chunks, 1 run | extraction quality not scored beyond the 12 gold chunks; presence pass not run |
+| Real stack on the full graph, laptop, 2026-10-28 | **5 of 6** dev questions answered with a quoted sentence in **30-43 s**; 1 refused (g009, multi-hop) | 6 questions, 1 run | not a clean window; answered is not correct |
 | Final eval table with intervals | **TBD (issue #16/#6)** | TBD | - |
 | Contradiction precision / recall on the real graph | **TBD (issue #16/#6)** | TBD | not measured yet |
 
@@ -211,7 +213,7 @@ Slide 8, 5:05-5:30 (25 s). Running total 5:30.
 SAY (about 60 words):
 "The constraints. It runs offline, on the CPU of this laptop, with models of eight billion parameters or less: a four-billion answer model, a four-billion extraction model, and an embedding model. Decoding is fixed: temperature zero, seed forty-two. Reading speed on this CPU is about twenty-one tokens a second, which is why the model never writes the answer."
 
-NUMBERS: ~21 tokens/s prefill = docs/perf/ttft-levers-2026-10-26.md (1 run per variant); peak RSS 3195 MiB = llm-20261022-171202.md (n=3 runs). Final laptop perf numbers: TBD (issue #16/#6).
+NUMBERS: ~21 tokens/s prefill = docs/perf/ttft-levers-2026-10-26.md (1 run per variant); peak RSS 3195 MiB = llm-20261022-171202.md (n=3 runs). Measured 2026-10-28 (docs/perf/laptop-20261028.md): 30.3-43.2 s per answered question, peak RSS of all llama-server processes 5017 MB, package temperature up to 92 C; one run, not a clean window, not final.
 
 IF IT GOES WRONG: slide only.
 -->
@@ -221,7 +223,7 @@ IF IT GOES WRONG: slide only.
 - **Offline**: network off during the demo; no cloud model
 - **CPU-only**: no GPU on the demo laptop; prefill about **21 tokens/s**
 - **Models <= 8B**: qwen3:4b-instruct (answers), qwen3:4b (extraction), bge-m3 (embeddings); peak RSS of the answer model **3195 MiB**
-- **Reproducible**: temperature 0, seed 42; `just run` serves the demo; final one-command rebuild and laptop perf table: **TBD (issue #16/#6)**
+- **Reproducible**: temperature 0, seed 42; `just run` serves the demo; laptop run 2026-10-28: **30-43 s** per answer, **5.0 GB** peak, **92 C** (single run, not final); one-command rebuild: **TBD**
 
 ---
 

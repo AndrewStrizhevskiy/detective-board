@@ -30,6 +30,9 @@ Rule: a number is on a slide only if it is in this table with a source file and 
 | 24 | 2, 3 | 20 stories | corpus size | `README.md` | - | descriptive count, not a result |
 | 25 | 5 notes | 1.4 s recorded; milliseconds of the tool call | R1 recording total; live MCP time | `web/replay/real-wisteria-r1-curated.json` meta `seconds`; live ms read from the screen | 1 recording | recording meta is not in the allowed folders; the live ms value is TBD (rehearsal log) |
 | 26 | B5 | 28.7 s | Boscombe recording duration | `web/replay/real-boscombe-control.json` meta | 1 recording | operator information only |
+| 27 | 7, 5 notes | 596 of 596 chunks, 20 of 20 stories, 2157 claims, 1698 events; 0 rule findings in 19 of 20 stories; 52.5% / 4.5% / 0.7% | full-corpus graph from the server run | `docs/spike/results/graph-sanity-20261028.md` (server report and normaliser log next to it) | 596 chunks, 1 run | extraction quality not scored beyond 12 gold chunks |
+| 28 | 7 | 5 of 6, 30.3-43.2 s | dev questions answered with a quoted sentence on the full graph, laptop | `docs/perf/laptop-20261028.md` / `.json` | 6 questions, 1 run | not a clean window |
+| 29 | 8 | 5017 MB; 92 C | peak RSS of all llama-server processes; maximum package temperature | same file | 1 run | not final |
 
 ## Open markers (TBD)
 
@@ -37,8 +40,7 @@ Rule: a number is on a slide only if it is in this table with a source file and 
 |---|---|---|
 | `TBD (issue #16/#6)` final evaluation table with intervals | slide 7 | eval runner |
 | `TBD (issue #16/#6)` contradiction precision / recall on the real graph | slide 7, 10 | eval runner, department-server graph |
-| `TBD (issue #16/#6)` laptop performance table, one-command rebuild | slide 8 | clean-window laptop run |
-| Graph counts of the full graph (events, claims, edges, 596 chunks) | none on slides yet | `just graph` on the merged cache |
+| `TBD` one-command rebuild; clean-window laptop table with 3 repeats and the 8 GB profile | slide 8 | clean-window laptop run |
 | Gold-review date and reviewer | slide 9 | gold-review report |
 | Human re-check of curated facts | slide 9 | team |
 | MCP tool time in ms for step 2 | demo-script rehearsal log | rehearsal 1-3 |
