@@ -110,8 +110,15 @@ def problems(fact: CuratedFact, clean_text: str) -> list[str]:
         out.append(f"{fact.id}: place {fact.place!r} is not in the quote; declare it inferred")
     if place_in and "place" in fact.inferred:
         out.append(f"{fact.id}: place {fact.place!r} is in the quote but declared inferred")
-    if fact.time_text is None and "time" in fact.inferred:
-        out.append(f"{fact.id}: time declared inferred but time_text is null")
+    if fact.time_text is None and fact.time_ref is None and "time" in fact.inferred:
+        out.append(f"{fact.id}: time declared inferred but there is no time_text or time_ref")
+    if fact.time_ref_text:
+        if normalise_quote(fact.time_ref_text).casefold() not in q:
+            out.append(f"{fact.id}: time_ref_text {fact.time_ref_text!r} is not in the quote")
+        if "time" in fact.inferred:
+            out.append(f"{fact.id}: time_ref_text is in the quote but time is declared inferred")
+    elif fact.time_ref is not None and "time" not in fact.inferred:
+        out.append(f"{fact.id}: time_ref without time_ref_text: declare time inferred")
     if fact.inferred and not re.search(r"infer|resolv|context|imply|implied", fact.note, re.I):
         out.append(f"{fact.id}: inferred slots need a note that says why")
     return out

@@ -45,6 +45,8 @@ def _edges(person: str, e: EventRec, idx: PlaceIndex) -> list[EdgeRef]:
 
 
 def _cmp_text(c: TimeCmp) -> str:
+    if c.moment is not None:
+        return f"same moment: {c.moment} (relative time, curated)"
     if c.rel is TimeRel.OVERLAP and c.intersection is not None:
         lo, hi = c.intersection
         return f"overlap [{fmt_abs(lo)},{fmt_abs(hi)})" if lo < hi else f"overlap at {fmt_abs(lo)}"

@@ -21,6 +21,7 @@ from detective_board.extract.curated_schema import (
     CURATED_SCHEMA_VERSION,
     CuratedFact,
     curated_day,
+    moment_id,
 )
 from detective_board.extract.presence_schema import SCHEMA_VERSION as PRESENCE_SCHEMA_VERSION
 from detective_board.extract.presence_schema import GroundedFact
@@ -36,7 +37,7 @@ from detective_board.graph.results import EdgeHit, GraphResult, NodeHit, PathRes
 from detective_board.graph.schema import GRAPH_BUILD_VERSION, migrate
 from detective_board.graph.timenorm import TIME_NORM_VERSION, derive_time_norm
 from detective_board.symbolic.facts import MOTION_VERBS
-from detective_board.symbolic.model import Anchor
+from detective_board.symbolic.model import Anchor, TimeSpec
 
 ENTITY_KINDS = ("person", "place", "item")
 # schema-v2 claim fields kept in the claim's props when a v2 Extraction is ingested (R-11)
@@ -617,7 +618,8 @@ class GraphStore:
         if speaker is not None:
             self._curated_mention(ctx, speaker, str(f.speaker), "person", a, sweak)
         inferred = set(f.inferred)
-        weak = a.weak or pweak or bool(inferred) or f.confidence == "low"
+        # a relative time (time_ref) is always LOW: it is the curator's reading of one moment
+        weak = a.weak or pweak or bool(inferred) or f.confidence == "low" or bool(f.time_ref)
         base: dict[str, Any] = {
             "pass": "curated",
             "curated": True,
@@ -630,6 +632,9 @@ class GraphStore:
             base["day_text"] = f.day_text
         if f.day_key:
             base["day_key"] = f.day_key
+        if f.time_ref:
+            base["time_ref"] = f.time_ref
+            base["time_ref_text"] = f.time_ref_text
         if inferred:
             base["inferred"] = sorted(inferred)
         eprops = {"curated": True}
@@ -637,7 +642,14 @@ class GraphStore:
         why = "ambiguous_anchor" if a.weak else "curated_inferred" if weak else ""
         place: str | None = None
         time = normalise_time(f.time_text)
-        if time is not None:
+        if f.time_ref:  # relative time: an explicit same-moment reference, never a clock time
+            time = TimeSpec(
+                rel="at",
+                ref_event_id=moment_id(f.story, f.time_ref),
+                confidence="low",
+                time_text=f.time_ref_text,
+            )
+        elif time is not None:
             tt = (f.time_text or "").casefold()
             explicit = (
                 time.exact and time.rel is None and not _APPROX.search(tt) and "since" not in tt
@@ -657,7 +669,7 @@ class GraphStore:
                 "description": f"{f.person} at {f.place}"
                 + (f", {f.time_text}" if f.time_text else ""),
                 "time_text": f.time_text,
-                "time_norm": time.model_dump(mode="json") if time else None,
+                "time_norm": time.model_dump(mode="json") if time and not f.time_ref else None,
                 "narrator": f.source == "narrator",
                 "occurrence": f"{cid}:{a.rel_start}-{a.rel_end}:{pid}",
                 "transit": False,
@@ -694,7 +706,12 @@ class GraphStore:
             self._edge(ctx, speaker, nid, "ASSERTS", a, weak=sweak, props=eprops)
             self._edge(ctx, nid, pid, "ABOUT", a, weak=pweak, props=eprops)
             made.append(nid)
-            if not deny and time is not None and place is not None and time.lo is not None:
+            if (
+                not deny
+                and time is not None
+                and place is not None
+                and (time.lo is not None or f.time_ref)
+            ):
                 prop = PresenceProp(person_id=pid, place_ref=place, time=time)
                 conf = "low" if weak or time.confidence == "low" else "high"
                 self._curated_overlay(nid, "prop", prop.model_dump(mode="json"), conf)

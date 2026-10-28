@@ -19,7 +19,7 @@ from detective_board.mcp import tools as mcp_tools
 
 ROOT = Path(__file__).resolve().parents[2]
 FACTS = ROOT / curated.DEFAULT_FILE
-WL, BV = "wisteria-lodge", "boscombe-valley-mystery"
+WL, BV, AG = "wisteria-lodge", "boscombe-valley-mystery", "abbey-grange"
 GARCIA_Q = (
     "Is there a conflict about where Aloysius Garcia was at about one o'clock on the night he died?"
 )
@@ -35,7 +35,7 @@ def facts() -> list[CuratedFact]:
 @pytest.fixture(scope="module")
 def clean() -> dict[str, str]:
     out = {}
-    for story in (WL, BV):
+    for story in (WL, BV, AG):
         p = ROOT / "data" / "clean" / f"{story}.txt"
         if not p.exists():
             pytest.skip("data/clean not available")
@@ -66,10 +66,10 @@ def findings(g, story, **kw):
 # ---- the data file -----------------------------------------------------------------------
 def test_file_has_the_demo_cases_and_every_fact_is_labelled(facts):
     ids = {f.id for f in facts}
-    assert len(ids) == len(facts) >= 5
-    assert {f.story for f in facts} == {WL, BV}
+    assert len(ids) == len(facts) >= 7
+    assert {f.story for f in facts} == {WL, BV, AG}
     assert all(f.curated_by == "team (AI-assisted, to be re-checked by a human)" for f in facts)
-    assert all(f.note.strip() and f.day_key for f in facts)
+    assert all(f.note.strip() and (f.day_key or f.time_ref) for f in facts)
     assert {"c001-eccles-garcia-bedroom", "c001-baynes-garcia-common"} <= ids
 
 
@@ -217,9 +217,9 @@ def test_cli_loads_a_graph_file_and_reports(tmp_path, capsys):
     args = ["--graph-db", str(db), "--file", str(FACTS)]
     args += ["--chunks", str(ROOT / "data/chunks.jsonl"), "--clean-dir", str(ROOT / "data/clean")]
     assert curated.main(args) == 0
-    assert "5 loaded, 0 unchanged" in capsys.readouterr().out
+    assert "7 loaded, 0 unchanged" in capsys.readouterr().out
     assert curated.main(args) == 0
-    assert "0 loaded, 5 unchanged" in capsys.readouterr().out
+    assert "0 loaded, 7 unchanged" in capsys.readouterr().out
 
 
 # ---- the rules on curated facts --------------------------------------------------------------
@@ -388,3 +388,143 @@ def test_assumed_day_is_labelled_and_automatic_days_are_not(tmp_path):
     (plain,) = SqliteFactSource(g).load("syn").events
     (assumed,) = SqliteFactSource(g, assume_day=5).load("syn").events
     assert plain.day_label is None and assumed.day_label == "day 5 (assumed)"
+
+
+# ---- relative time: c002 Abbey Grange (docs/symbolic-layer.md 11.4) ------------------------------
+C002 = ("c002-lady-chair-at-entry", "c002-crocker-window-at-entry")
+MOMENT_Q = "Where was Lady Brackenstall when Sir Eustace entered the dining-room?"
+
+
+def _base(**kw):
+    d = dict(
+        id="x1", story=AG, person="Lady Brackenstall", place="window", time_text=None,
+        source="speech", speaker="Captain Crocker", quote="q", curated_by="team", note="n",
+    )  # fmt: skip
+    return d | kw
+
+
+def test_schema_accepts_time_ref_with_or_without_day_key():
+    f = CuratedFact(**_base(time_ref="sir-eustace-entered", time_ref_text="q"))
+    assert f.time_ref == "sir-eustace-entered" and f.time_text is None
+    CuratedFact(**_base(time_ref="sir-eustace-entered", day_key="the-night"))
+
+
+def test_schema_rejects_day_key_without_time_text_and_without_time_ref():
+    with pytest.raises(ValueError, match="day_key without time_text or time_ref"):
+        CuratedFact(**_base(day_key="the-night"))
+
+
+@pytest.mark.parametrize(
+    "extra, msg",
+    [
+        ({"time_ref": "a", "time_text": "at nine"}, "exclusive"),
+        ({"time_ref_text": "when he came"}, "without time_ref"),
+        ({"time_ref": "Not A Slug"}, "kebab-case"),
+    ],
+)
+def test_schema_rejects_inconsistent_time_ref_fields(extra, msg):
+    with pytest.raises(ValueError, match=msg):
+        CuratedFact(**_base(**extra))
+
+
+def test_c002_facts_are_in_the_file_and_honest(facts, clean):
+    by = {f.id: f for f in facts}
+    assert set(C002) <= set(by)
+    for fid in C002:
+        f = by[fid]
+        assert curated.problems(f, clean[AG]) == []
+        assert f.time_ref == "sir-eustace-entered" and f.time_text is None
+        assert f.time_ref_text and f.confidence == "low" and "person" in f.inferred
+    assert by[C002[0]].speaker == "Lady Brackenstall" and by[C002[1]].speaker == "Captain Crocker"
+
+
+def test_time_ref_text_must_be_in_the_quote_or_time_declared_inferred(facts, clean):
+    f = next(x for x in facts if x.id == C002[0])
+    off = f.model_copy(update={"time_ref_text": "at midnight"})
+    assert any("time_ref_text" in m for m in curated.problems(off, clean[AG]))
+    none = f.model_copy(update={"time_ref_text": None})
+    assert any("declare time inferred" in m for m in curated.problems(none, clean[AG]))
+    ok = none.model_copy(update={"inferred": ["person", "time"]})
+    assert curated.problems(ok, clean[AG]) == []
+    both = f.model_copy(update={"inferred": ["person", "time"]})
+    assert any("declared inferred" in m for m in curated.problems(both, clean[AG]))
+
+
+def test_c002_gives_a_conditional_r1_finding_with_both_quotes(graph, facts):
+    (f,) = [x for x in findings(graph, AG) if x["rule"] == "R1"]
+    assert f["reason_code"] == "OVERLAP_DIFFERENT_PLACES" and f["provenance"] == "conditional"
+    by = {x.id: x for x in facts}
+    quotes = {" ".join(a["quote"].split()) for a in f["anchors"]}
+    assert quotes == {" ".join(by[i].quote.split()) for i in C002}
+    exp = f["explanation"]
+    assert exp["conditional"] and len(exp["weak"]) == 2 and all(x["curated"] for x in exp["facts"])
+    assert all(
+        "relative time" in x["summary"] and CURATED_MARK in x["summary"] for x in exp["facts"]
+    )
+    assert (
+        exp["derivation"][0]["output"]
+        == "same moment: sir eustace entered (relative time, curated)"
+    )
+    assert [x for x in findings(graph, AG) if x["rule"] != "R1"] == []
+
+
+def test_the_relative_facts_carry_no_clock_and_no_day(graph):
+    fb = SqliteFactSource(graph).load(AG)
+    evs = [e for e in fb.events if e.curated]
+    assert len(evs) == 2
+    for e in evs:
+        t = e.time
+        assert t is not None and (t.day, t.lo, t.hi) == (None, None, None)
+        assert t.rel == "at" and t.confidence == "low" and e.eff_confidence == "low"
+    assert not graph.conn.execute(
+        "SELECT 1 FROM g_overlay WHERE source='curated' AND key='story_day' AND node_id LIKE ?",
+        ("%c002%",),
+    ).fetchone()
+
+
+@pytest.mark.parametrize("drop", C002)
+def test_c002_needs_both_sides(tmp_path, facts, chunks, clean, drop):
+    g = GraphStore(str(tmp_path / "g.sqlite"))
+    curated.ingest_facts(g, [f for f in facts if f.id != drop], chunks, clean)
+    assert findings(g, AG) == []
+
+
+def test_c002_other_stories_and_the_controls_are_unchanged(tmp_path, facts, chunks, clean):
+    g = GraphStore(str(tmp_path / "g.sqlite"))
+    old = [f for f in facts if f.id not in C002]
+    curated.ingest_facts(g, old, chunks, clean)
+    before = {s: findings(g, s) for s in (WL, BV)}
+    curated.ingest_facts(g, facts, chunks, clean)
+    assert {s: findings(g, s) for s in (WL, BV)} == before
+    assert findings(g, BV) == [] and len(before[WL]) == 1
+
+
+def test_loader_is_idempotent_for_relative_facts(graph, facts, chunks, clean):
+    rows = [tuple(r) for r in graph.conn.execute("SELECT * FROM g_node ORDER BY id")]
+    ov = [tuple(r) for r in graph.conn.execute("SELECT * FROM g_overlay ORDER BY node_id, key")]
+    rep = curated.ingest_facts(graph, facts, chunks, clean)
+    assert rep.unchanged == len(facts) and rep.loaded == 0
+    assert rows == [tuple(r) for r in graph.conn.execute("SELECT * FROM g_node ORDER BY id")]
+    assert ov == [
+        tuple(r) for r in graph.conn.execute("SELECT * FROM g_overlay ORDER BY node_id, key")
+    ]
+
+
+def test_rule_first_answer_says_the_time_is_relative_and_curated(graph):
+    tools = InProcessRulesClient(graph)
+    payload = tools.call("find_contradictions", {"story": AG}, timeout=1)
+    ans = build_answer(
+        question=MOMENT_Q,
+        story=AG,
+        outcomes=[ToolOutcome("find_contradictions", payload)],
+        link=None,
+        notes=[],
+        hits=[],
+        coverage=coverage_for(tools, graph, AG),
+    )
+    text = ans.text
+    assert ans.kind == "findings"
+    assert "relative time" in text and text.count("(curated)") >= 2
+    assert "label conditional" in text and "human re-check pending" in text
+    assert "oaken chair" in text and "just inside the window" in text
+    assert "no conflict" not in text.lower()

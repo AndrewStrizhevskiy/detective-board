@@ -19,10 +19,27 @@ CURATED_MARK = "(curated)"
 # Story days of curated day keys: above the weekday scale (0..6) and the heuristic presence days
 # (TEXT_DAY_BASE 10000 + n), far below real date ordinals (about 740000): never equal to either.
 CURATED_DAY_BASE = 20_000
+# A relative time ("the moment Sir Eustace entered") has no clock and no day. It is a TimeSpec with
+# rel "at" and this reference id; the symbolic layer treats it as an explicit same-moment relation
+# (docs/symbolic-layer.md 11.4), never as a point on the absolute axis.
+MOMENT_PREFIX = "moment:"
 _ID = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 _KEY = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 
 Slot = Literal["person", "place", "time"]
+
+
+def moment_id(story: str, time_ref: str) -> str:
+    """Reference id of a relative moment: equal for the facts of one story that share `time_ref`."""
+    return f"{MOMENT_PREFIX}{story}:{time_ref}"
+
+
+def moment_label(ref_id: str | None) -> str | None:
+    """Human wording of a moment reference id ("moment:abbey-grange:sir-eustace-entered" ->
+    "sir eustace entered"); None if `ref_id` is not a moment reference."""
+    if ref_id is None or not ref_id.startswith(MOMENT_PREFIX):
+        return None
+    return ref_id.split(":", 2)[-1].replace("-", " ")
 
 
 def curated_day(story: str, day_key: str) -> int:
@@ -47,6 +64,16 @@ class CuratedFact(BaseModel):
     place: str = Field(description="Canonical graph-style place name")
     time_text: str | None = Field(description="Time expression verbatim from the quote, or null")
     day_text: str | None = None
+    time_ref: str | None = Field(
+        default=None,
+        description="Relative time: a slug shared by the facts of one story that the curator "
+        "asserts happened at the same moment (instead of time_text)",
+    )
+    time_ref_text: str | None = Field(
+        default=None,
+        description="Words of the quote that give the anchor of time_ref, verbatim; null if the "
+        "quote does not state it (then 'time' is inferred and the note says why)",
+    )
     day_key: str | None = Field(
         default=None, description="Shared story-day key: the same key within a story is one day"
     )
@@ -75,6 +102,13 @@ class CuratedFact(BaseModel):
             raise ValueError("day_key must be lowercase kebab-case")
         return v
 
+    @field_validator("time_ref")
+    @classmethod
+    def _ref_ok(cls, v: str | None) -> str | None:
+        if v is not None and not _KEY.match(v):
+            raise ValueError("time_ref must be lowercase kebab-case")
+        return v
+
     @field_validator("person", "place", "quote", "curated_by", "note")
     @classmethod
     def _non_empty(cls, v: str) -> str:
@@ -90,6 +124,12 @@ class CuratedFact(BaseModel):
             raise ValueError("a narrator fact has no speaker")
         if self.polarity == "deny" and self.source != "speech":
             raise ValueError("a denial is a claim: it needs source 'speech' and a speaker")
-        if self.day_key is not None and self.time_text is None:
-            raise ValueError("day_key without time_text: the day applies to a timed event")
+        if self.time_ref is not None and self.time_text is not None:
+            raise ValueError("time_ref and time_text are exclusive: a clock time or a moment")
+        if self.time_ref_text is not None and self.time_ref is None:
+            raise ValueError("time_ref_text without time_ref")
+        if self.day_key is not None and self.time_text is None and self.time_ref is None:
+            raise ValueError(
+                "day_key without time_text or time_ref: the day applies to a timed event"
+            )
         return self

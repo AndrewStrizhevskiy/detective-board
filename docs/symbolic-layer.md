@@ -717,7 +717,8 @@ right. A result that rests on curated facts is never reported as an extraction r
 story-day key: the same key within a story is one day), `polarity` (`affirm`|`deny`), `source`
 (`narrator`|`speech`), `speaker` (speech only), `quote` (verbatim), `curated_by`, `note`, and two optional
 fields: `inferred` (the slots among person, place, time that the quote does not state itself) and
-`confidence` (`low` forces LOW). The loader refuses a fact whose quote is not a verbatim span of
+`confidence` (`low` forces LOW); and, for a time given RELATIVE to a named event instead of a clock
+time, `time_ref` and `time_ref_text` (see "Relative time" below). The loader refuses a fact whose quote is not a verbatim span of
 `data/clean/<story>.txt` (checked after whitespace and quotation-mark normalisation), whose
 `time_text`/`day_text` are not in the quote, or whose person or place is neither in the quote nor declared
 `inferred` (and the reverse); a fact with `inferred` slots needs a note that says how they were resolved.
@@ -737,6 +738,27 @@ slot is `inferred`, when the fact says `confidence: low`, or when the time is ap
 o'clock", "about three", "since one o'clock" stay LOW exactly as the normaliser decides). The curator's
 day key is trusted (day confidence HIGH); that trust is the point of curation and is stated in the note.
 
+**Relative time (`time_ref`).** Some conflicts have no clock time on either side: both witnesses place
+the person at "the moment Sir Eustace entered the room" (gold c002; the old schema refused it with
+`day_key without time_text`). A curated fact may carry `time_ref` (a kebab-case slug) instead of
+`time_text`: the curator asserts that all facts of one story with the same `time_ref` happened at the
+same moment. `time_ref_text` is the verbatim words of the quote that name the anchor; if the quote does
+not state it, `time_ref_text` is null, `time` must be declared `inferred` and the note must say why.
+`time_ref` and `time_text` exclude each other; `day_key` may accompany `time_ref` but has no effect on
+it (a moment has no day). Representation, chosen after reading `time.py` and R2: the event's `TimeSpec`
+is `rel="at"`, `ref_event_id="moment:<story>:<time_ref>"`, with no day, no `lo`/`hi`, confidence LOW
+(the layer's own `rel` and `ref_event_id` fields, no new model field, so the digest of every other fact
+base is unchanged). `time.is_moment` recognises it, and: (1) `compare` of two moments with the same
+reference is a definite OVERLAP (the explicit same-moment relation; the R1 step reads "same moment:
+sir eustace entered (relative time, curated)"); (2) any other comparison involving a moment (another
+moment, a clock time) is UNDECIDED, never DISJOINT, so it can neither support nor refute anything;
+(3) `abs_bounds` of a moment is None, so `strictly_before` (R2) and every window check ignore it. A
+synthetic point in a reserved day range was rejected: it would have to be kept apart from real dates
+and curated days by convention only, and R2 would order it against them. Because the fact is always LOW
+(the curator's reading that two accounts mean one moment), a finding on it is `conditional`, never
+"violated with certainty". Summaries say "at the moment sir eustace entered, relative time" and "(curated)".
+Not encoded: c003 (Norwood Builder) and c004 (Reigate), see the note under "What is in the file".
+
 **Survival and idempotence.** Curated nodes and edges carry `"curated":true` in their props and a
 generic re-ingest of their chunk (`_purge_chunk`) skips them; curated entity mentions are stored with
 `implicit=2`, which that purge also keeps, so the people and places stay findable by name. A presence
@@ -749,6 +771,7 @@ whole load with every problem listed, before anything is written.
 | Case | Facts | Result |
 |---|---|---|
 | c001 Wisteria Lodge, R1 | Eccles (speech): Garcia at Wisteria Lodge, "nearly one o'clock" (place inferred from the narrative: the quote says "my door"). Baynes (speech): Garcia at Oxshott Common, "since one o'clock" (person and place inferred: "He ... there", resolved from Gregson's line before it). Same day key. | R1 `violated`, `OVERLAP_DIFFERENT_PLACES`, conditional (both input events are LOW), both verbatim quotes |
+| c002 Abbey Grange, R1 (relative time) | Lady Brackenstall (speech): she, bound to "the oaken chair which stands at the head of the dining-table", "at this instant that my unfortunate husband entered the room". Captain Crocker (speech): he was "standing with her just inside the window ... when he rushed like a madman into the room" (person inferred: "her"). Same `time_ref` `sir-eustace-entered`. | R1 `violated`, `OVERLAP_DIFFERENT_PLACES`, conditional (both inputs LOW), both verbatim quotes; R3 stays `unknown` (`CLAIM_VS_CLAIM`) |
 | c042 Boscombe (control) | Holmes (speech): McCarthy senior at Ross "in the morning", and at Hatherley "about three in the afternoon", on June 3rd. James (speech): his father had driven to Ross, "the morning of last Monday, the 3rd" (person, time inferred). | no violation (times are disjoint or the places agree) |
 | R3 positives | none | skipped, see below |
 
@@ -763,6 +786,14 @@ label: the disputed point (was James *following* his father) is about intent and
 time, so what is encoded are the explicit parts and the control shows that those do not clash. The
 second sentence of Eccles ("I could swear to it that it was he who addressed me in my bedroom at that
 very hour") has only deictic words and is not encoded separately.
+
+c003 and c004 are not in the file. c003 (Norwood Builder): McFarlane's "I spent the night at the Anerley
+Arms" has a place and no moment, and the opposing side is an inference (Lestrade reads a thumb-mark as
+McFarlane fetching his hat "after the crime"; the housekeeper only says the hat was in the hall): no
+quote names McFarlane, the hall and a moment shared with the hotel night. c004 (Reigate): Alec at the
+foot of the stairs is a reported account, and Holmes's opposing statement is a deduction about who must
+have taken the paper, not a statement that Alec was at the body at a named moment; the gold entry itself
+is marked low and borderline. Encoding either would mean inventing the link, so they stay unencoded.
 
 **Adding a case.** (1) Read the passage and decide what the text states; write one line per statement
 in `data/curated/presence_demo.jsonl` with a verbatim quote that contains as many slots as possible;
