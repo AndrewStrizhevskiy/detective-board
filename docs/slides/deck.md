@@ -184,11 +184,11 @@ IF IT GOES WRONG: if it does not refuse and calls the model: stop it with Esc, t
 Slide 7, 4:15-5:05 (50 s). Running total 5:05.
 
 SAY (about 125 words):
-"What we measured, with its caveats on the slide. Twelve control questions through the real API on the laptop, one run: the extractive mode quoted a sentence for six of the ten answerable questions and refused both out-of-corpus ones, each model call in eight to twenty seconds. 'Answered' means a quoted sentence, not a correct one; nobody has judged correctness yet. In the earlier retrieval-only check, five of ten were answered and verified. Retrieval puts the right chunk in the top four for seventy of eighty-six answerable questions. These are pilot numbers on small sets written by an AI, so one question is noise. The full evaluation table with intervals is not here yet, and I will not invent it."
+"What we measured, with its caveats on the slide. On the first thirty-four questions, three configurations: the bare model, vector search only, and our agent. By a strict mechanical test, the answer must contain half of the key facts of the reference answer, the scores are twelve, twenty-one and eighteen percent. The agent is not better than plain vector search on that test, and the differences are within noise. Where it does help: the right chunk is in the top four for seventy-eight percent of questions against sixty-seven, and out-of-corpus questions are refused six times out of seven. The rules found nothing on the automatically extracted graph, zero of fourteen; the findings you saw come from curated facts. These are numbers on small sets written by an AI, one run, and I will not round them up."
 
-NUMBERS: every cell has a file in numbers.md. Fill the TBD row from issue #16 / #6 before the final deck; if it is still TBD on the day, say "not yet measured".
+NUMBERS: every cell has a file in numbers.md (rows 5-11 and 30-32). The test split was NOT run; do not claim test results.
 
-IF IT GOES WRONG: slide only. If late, say only the first row and the TBD row.
+IF IT GOES WRONG: slide only. If late, say only the dev-split row and the 0/14 row.
 -->
 
 <!-- _class: small -->
