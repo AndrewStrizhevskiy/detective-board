@@ -37,6 +37,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import statistics
 import subprocess
 import sys
@@ -53,7 +54,7 @@ for p in (ROOT / "src", ROOT / "scripts" / "spike", ROOT / "eval"):
 
 import metrics as M  # noqa: E402
 from chunk_gold import find_spans  # noqa: E402
-from run_answer_check import _REFUSE_PHRASES, coverage, gold_for, refusal_correct  # noqa: E402
+from run_answer_check import _REFUSE_PHRASES, content_words, gold_for, refusal_correct  # noqa: E402
 
 from detective_board.agent import Agent, HybridRetriever, OllamaLLM  # noqa: E402
 from detective_board.api.config import ApiConfig  # noqa: E402
@@ -92,6 +93,19 @@ CONTRA_NOTE = (
 
 
 # ----------------------------------------------------------------------------- inputs
+
+
+_WRAP = re.compile(r'\[\d+\s*:\s*"|"\s*\]|\[\d+\s*\]')
+
+
+def answer_coverage(expected: str, answer: str) -> float:
+    """Share of content words of the expected answer found in the answer text. The quotes of the
+    extractive answer ARE the answer, so only the citation wrappers ([n: " and "]) are removed;
+    run_answer_check.coverage strips whole citations and so scores every extractive answer 0."""
+    want = content_words(expected)
+    if not want:
+        return 0.0
+    return len(want & content_words(_WRAP.sub(" ", answer))) / len(want)
 
 
 def read_jsonl(path: Path) -> list[dict]:
@@ -405,7 +419,7 @@ def judge(
         row.update(correct=False, refused=False)
         return row
     refused = row["status"] == "refused"
-    cov = coverage(q["expected_answer"], row.get("answer", "")) if q["answerable"] else None
+    cov = answer_coverage(q["expected_answer"], row.get("answer", "")) if q["answerable"] else None
     behaviour = refusal_correct(q, row["status"], row.get("answer", ""))
     correct = behaviour and (not q["answerable"] or (cov or 0) >= COVERAGE_OK)
     verdicts = M.citation_verdicts(row.get("citations", []), chunk_text, gold["chunks"], find_spans)

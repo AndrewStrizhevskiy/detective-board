@@ -112,6 +112,13 @@ def test_test_split_needs_a_clean_tree(monkeypatch):
         R.main(["--split", "test", "--quiet"])
 
 
+def test_coverage_counts_the_words_inside_extractive_quotes():
+    answer = 'From the sources: [1: "an appreciable quantity of powdered opium"]'
+    assert R.answer_coverage("Powdered opium.", answer) == 1.0
+    assert R.answer_coverage("Curried mutton.", answer) == 0.0
+    assert R.answer_coverage("", answer) == 0.0
+
+
 def test_split_all_follows_the_test_protocol(monkeypatch, tmp_path):
     monkeypatch.setattr(R, "git_state", lambda: ("abc", True))
     with pytest.raises(SystemExit, match="frozen"):
