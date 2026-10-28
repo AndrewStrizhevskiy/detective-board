@@ -1,0 +1,3147 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "real run recorded on the target laptop",
+  "question": "Give the timeline of the night Aloysius Garcia died.",
+  "recorded_at": "2026-10-28T19:03:09+0200",
+  "seconds": 0.2,
+  "commit": "9dcf685c79188694ed4d2322fb4ae040b31092bd",
+  "mcp": {
+   "configured": true,
+   "mode": "stdio",
+   "server": "timeline-alibi",
+   "started": true,
+   "version": "0.2.0",
+   "tools": [
+    "build_timeline",
+    "check_alibi",
+    "find_contradictions",
+    "find_overlaps"
+   ]
+  },
+  "graph": {
+   "chunks": 596,
+   "claim": 2159,
+   "edges": 5267,
+   "event": 1700,
+   "item": 49,
+   "person": 743,
+   "place": 631
+  },
+  "versions": {
+   "api": "1",
+   "python": "3.12.3",
+   "starlette": "1.9.0",
+   "index_schema": "1",
+   "index_manifest": {
+    "schema_version": "1",
+    "embed_model": "bge-m3",
+    "embed_dim": "1024",
+    "embed_doc_prefix": "",
+    "embed_query_prefix": "",
+    "embed_metric": "cosine"
+   }
+  },
+  "note": "Chronology answer from build_timeline over the graph (2 curated events), no model call"
+ },
+ "events": [
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 0,
+   "ts": "2026-10-28T17:03:09.091+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "mcp",
+    "graph",
+    "vector"
+   ],
+   "tools": [
+    "build_timeline"
+   ],
+   "method": "rules",
+   "reason": "chronology question -> graph events of the story (and person) ordered by build_timeline, no model call; hybrid retrieval adds source text",
+   "matched": [
+    "timeline"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 1,
+   "ts": "2026-10-28T17:03:09.091+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "Give the timeline of the night Aloysius Garcia died.",
+   "k": 6,
+   "attempt": 1
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 2,
+   "ts": "2026-10-28T17:03:09.160+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 68,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "wisteria-lodge-0003",
+     "story": "wisteria-lodge",
+     "rank": 1,
+     "rrf": 0.03278688524590164,
+     "ranks": {
+      "bm25": 1,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -10.850089034776026,
+      "vec": 0.5202575325965881
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0023",
+     "story": "wisteria-lodge",
+     "rank": 2,
+     "rrf": 0.03200204813108039,
+     "ranks": {
+      "bm25": 2,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -7.413213818166343,
+      "vec": 0.5687505006790161
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0033",
+     "story": "wisteria-lodge",
+     "rank": 3,
+     "rrf": 0.031054405392392875,
+     "ranks": {
+      "bm25": 7,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -5.4981345496538125,
+      "vec": 0.5424776077270508
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0015",
+     "story": "wisteria-lodge",
+     "rank": 4,
+     "rrf": 0.030536130536130537,
+     "ranks": {
+      "bm25": 6,
+      "vec": 5
+     },
+     "scores": {
+      "bm25": -5.502211418332232,
+      "vec": 0.5778990387916565
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0034",
+     "story": "wisteria-lodge",
+     "rank": 5,
+     "rrf": 0.030309988518943745,
+     "ranks": {
+      "bm25": 5,
+      "vec": 7
+     },
+     "scores": {
+      "bm25": -5.565581519832974,
+      "vec": 0.5826871395111084
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0027",
+     "story": "wisteria-lodge",
+     "rank": 6,
+     "rrf": 0.029957522915269395,
+     "ranks": {
+      "bm25": 3,
+      "vec": 11
+     },
+     "scores": {
+      "bm25": -6.1995105144418385,
+      "vec": 0.6137100458145142
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03278688524590164,
+    "threshold": 0.018,
+    "support": 0.5,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "wisteria-lodge-0003",
+    "wisteria-lodge-0023",
+    "wisteria-lodge-0033",
+    "wisteria-lodge-0015",
+    "wisteria-lodge-0034",
+    "wisteria-lodge-0027"
+   ]
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 3,
+   "ts": "2026-10-28T17:03:09.161+00:00",
+   "step_id": "graph-1",
+   "duration_ms": null,
+   "type": "graph_query",
+   "query_kind": "neighbours",
+   "args": {
+    "ref": "p:wisteria-lodge:aloysius-garcia",
+    "k": 1,
+    "story": "wisteria-lodge",
+    "linked_from": "Aloysius Garcia",
+    "link": "ok"
+   }
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 4,
+   "ts": "2026-10-28T17:03:09.162+00:00",
+   "step_id": "graph-1",
+   "duration_ms": 0,
+   "type": "graph_results",
+   "query_kind": "neighbours",
+   "seeds": [
+    "p:wisteria-lodge:aloysius-garcia"
+   ],
+   "node_ids": [
+    "p:wisteria-lodge:aloysius-garcia",
+    "c:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+    "c:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+    "e:wisteria-lodge-0003:2",
+    "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+    "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common"
+   ],
+   "edge_ids": [
+    4437,
+    5260,
+    5263,
+    5264,
+    5267
+   ],
+   "nodes": [
+    {
+     "id": "p:wisteria-lodge:aloysius-garcia",
+     "kind": "person",
+     "name": "Aloysius Garcia"
+    },
+    {
+     "id": "c:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+     "kind": "claim",
+     "name": "Aloysius Garcia was at Wisteria Lodge, nearly one o’clock"
+    },
+    {
+     "id": "c:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+     "kind": "claim",
+     "name": "Aloysius Garcia was at Oxshott Common, since one o’clock"
+    },
+    {
+     "id": "e:wisteria-lodge-0003:2",
+     "kind": "event",
+     "name": "Death"
+    },
+    {
+     "id": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+     "kind": "event",
+     "name": "Aloysius Garcia at Wisteria Lodge, nearly one o’clock"
+    },
+    {
+     "id": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+     "kind": "event",
+     "name": "Aloysius Garcia at Oxshott Common, since one o’clock"
+    }
+   ],
+   "edges": [
+    {
+     "id": 4437,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:wisteria-lodge:aloysius-garcia",
+     "dst": "e:wisteria-lodge-0003:2",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0003",
+      "char_start": 5685,
+      "char_end": 5728,
+      "quote": "the death last night of Mr. Aloysius Garcia",
+      "rel_start": 330,
+      "rel_end": 373,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5260,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:wisteria-lodge:aloysius-garcia",
+     "dst": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0006",
+      "char_start": 10060,
+      "char_end": 10270,
+      "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+      "rel_start": 495,
+      "rel_end": 705,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5263,
+     "rel": "ABOUT",
+     "src": "c:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+     "dst": "p:wisteria-lodge:aloysius-garcia",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0006",
+      "char_start": 10060,
+      "char_end": 10270,
+      "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+      "rel_start": 495,
+      "rel_end": 705,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5264,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:wisteria-lodge:aloysius-garcia",
+     "dst": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0010",
+      "char_start": 17623,
+      "char_end": 17741,
+      "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+      "rel_start": 1182,
+      "rel_end": 1300,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5267,
+     "rel": "ABOUT",
+     "src": "c:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+     "dst": "p:wisteria-lodge:aloysius-garcia",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0010",
+      "char_start": 17623,
+      "char_end": 17741,
+      "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+      "rel_start": 1182,
+      "rel_end": 1300,
+      "ambiguous": false
+     }
+    }
+   ],
+   "truncated": false
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 5,
+   "ts": "2026-10-28T17:03:09.162+00:00",
+   "step_id": "tool-build_timeline",
+   "duration_ms": null,
+   "type": "tool_call",
+   "server": "timeline-alibi",
+   "tool": "build_timeline",
+   "arguments": {
+    "story": "wisteria-lodge",
+    "person_id": "p:wisteria-lodge:aloysius-garcia",
+    "include_undated": true,
+    "limit": 15
+   },
+   "timeout_s": 5.0
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 6,
+   "ts": "2026-10-28T17:03:09.211+00:00",
+   "step_id": "tool-build_timeline",
+   "duration_ms": 48,
+   "type": "tool_result",
+   "server": "timeline-alibi",
+   "tool": "build_timeline",
+   "ok": true,
+   "summary": "status=ok items=3",
+   "provenance": "derived",
+   "explanation": null,
+   "error": null
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 7,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "wisteria-lodge-0003",
+     "story": "wisteria-lodge",
+     "char_start": 5685,
+     "char_end": 5728,
+     "origin": "tool",
+     "label": "derived",
+     "window_start": 0,
+     "window_end": 43,
+     "window_char_start": 5685,
+     "window_char_end": 5728
+    },
+    {
+     "n": 2,
+     "chunk_id": "wisteria-lodge-0006",
+     "story": "wisteria-lodge",
+     "char_start": 10060,
+     "char_end": 10270,
+     "origin": "tool",
+     "label": "derived",
+     "window_start": 0,
+     "window_end": 210,
+     "window_char_start": 10060,
+     "window_char_end": 10270
+    },
+    {
+     "n": 3,
+     "chunk_id": "wisteria-lodge-0010",
+     "story": "wisteria-lodge",
+     "char_start": 17623,
+     "char_end": 17741,
+     "origin": "tool",
+     "label": "derived",
+     "window_start": 0,
+     "window_end": 118,
+     "window_char_start": 17623,
+     "window_char_end": 17741
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 3,
+   "memory_chars": 0,
+   "prompt_chars": 0,
+   "prompt_tokens_estimate": 0,
+   "max_prompt_tokens": 0,
+   "strategy": "rule-first (timeline): no model call",
+   "window_words": 0,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 8,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Timeline "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 9,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 10,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Aloysius "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 11,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 12,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 13,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "wisteria-lodge: "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 14,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 15,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "graph "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 16,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "holds "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 17,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "3 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 18,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 19,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(2 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 20,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 21,
+   "ts": "2026-10-28T17:03:09.257+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 22,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stated "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 23,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 24,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 25,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 26,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "1 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 27,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "without); "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 28,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "3 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 29,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 30,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "shown.\n"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 31,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "1. "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 32,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "22:00-23:59, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 33,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 34,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 35,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stated "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 36,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(time "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 37,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "uncertain) "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 38,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(derived): "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 39,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Death "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 40,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[1: "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 41,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 42,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "death "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 43,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "last "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 44,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "night "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 45,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 46,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Mr. "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 47,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Aloysius "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 48,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia\"]\n"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 49,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "2. "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 50,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 51,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 52,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "inferred "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 53,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 54,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 55,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "text, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 56,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "01:00 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 57,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(time "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 58,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "uncertain) "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 59,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(curated): "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 60,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Aloysius "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 61,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 62,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 63,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Wisteria "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 64,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Lodge, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 65,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "nearly "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 66,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 67,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 68,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[2: "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 69,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"Some "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 70,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 71,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "later "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 72,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 73,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "looked "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 74,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 75,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 76,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 77,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "door—the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 78,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "room "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 79,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 80,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "dark "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 81,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 82,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 83,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time—and "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 84,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "asked "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 85,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "me "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 86,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "if "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 87,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 88,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 89,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rung. "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 90,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 91,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "said "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 92,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 93,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 94,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 95,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not. "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 96,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "He "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 97,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "apologised "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 98,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 99,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "having "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 100,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "disturbed "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 101,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "me "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 102,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "so "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 103,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "late, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 104,
+   "ts": "2026-10-28T17:03:09.258+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "saying "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 105,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 106,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "it "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 107,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 108,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "nearly "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 109,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 110,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock.\"]\n"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 111,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "3. "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 112,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 113,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 114,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "inferred "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 115,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 116,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 117,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "text, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 118,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "01:00 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 119,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(time "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 120,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "uncertain) "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 121,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(curated): "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 122,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Aloysius "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 123,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 124,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 125,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Oxshott "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 126,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Common, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 127,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "since "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 128,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 129,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 130,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[3: "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 131,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"He "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 132,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 133,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "been "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 134,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "there "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 135,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "since "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 136,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 137,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock. "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 138,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "There "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 139,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 140,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rain "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 141,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "about "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 142,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 143,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 144,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 145,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "his "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 146,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "death "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 147,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 148,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "certainly "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 149,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "been "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 150,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "before "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 151,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 152,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rain.\"]\n"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 153,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Events "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 154,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 155,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 156,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "date "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 157,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stated "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 158,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 159,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 160,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "text "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 161,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "come "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 162,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "first, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 163,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "ordered "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 164,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 165,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 166,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "date "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 167,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 168,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time; "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 169,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 170,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "others "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 171,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "follow "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 172,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 173,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "order "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 174,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 175,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "narration, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 176,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "which "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 177,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 178,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 179,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "necessarily "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 180,
+   "ts": "2026-10-28T17:03:09.259+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 181,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "order "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 182,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 183,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "which "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 184,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "they "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 185,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "happened.\n"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 186,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"A "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 187,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 188,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "inferred "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 189,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 190,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 191,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "text\" "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 192,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "groups "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 193,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 194,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 195,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 196,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "extraction "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 197,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 198,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "on "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 199,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 200,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 201,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 202,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "weekday "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 203,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "or "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 204,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "relative "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 205,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "wording; "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 206,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "it "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 207,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 208,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 209,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 210,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "calendar "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 211,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "date, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 212,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 213,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "such "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 214,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "days "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 215,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "cannot "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 216,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "be "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 217,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "ordered "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 218,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "against "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 219,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "each "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 220,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "other "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 221,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "or "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 222,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "against "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 223,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stated "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 224,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "dates.\n"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 225,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Curated: "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 226,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "2 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 227,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 228,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 229,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 230,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "were "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 231,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "entered "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 232,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 233,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "checked "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 234,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 235,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 236,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "team "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 237,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(AI-assisted, "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 238,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "human "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 239,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "re-check "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 240,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "pending); "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 241,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "they "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 242,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 243,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 244,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "output "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 245,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 246,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 247,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "automatic "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 248,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "extraction.\n"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 249,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Label "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 250,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "derived: "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 251,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 252,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "order "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 253,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 254,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "computed "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 255,
+   "ts": "2026-10-28T17:03:09.260+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 256,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rule "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 257,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "R2 "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 258,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 259,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 260,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 261,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "extracted "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 262,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 263,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 264,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "text."
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 265,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 2,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 3,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+   "seq": 266,
+   "ts": "2026-10-28T17:03:09.261+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "Timeline for Aloysius Garcia in wisteria-lodge: the graph holds 3 events (2 with a stated day and time, 1 without); 3 are shown.\n1. 22:00-23:59, day not stated (time uncertain) (derived): Death [1: \"the death last night of Mr. Aloysius Garcia\"]\n2. a day inferred from the text, 01:00 (time uncertain) (curated): Aloysius Garcia at Wisteria Lodge, nearly one o’clock [2: \"Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.\"]\n3. a day inferred from the text, 01:00 (time uncertain) (curated): Aloysius Garcia at Oxshott Common, since one o’clock [3: \"He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.\"]\nEvents with a date stated in the text come first, ordered by that date and time; the others follow in order of narration, which is not necessarily the order in which they happened.\n\"A day inferred from the text\" groups events that the extraction placed on one day by weekday or relative wording; it is not a calendar date, and such days cannot be ordered against each other or against stated dates.\nCurated: 2 of the events were entered and checked by the team (AI-assisted, human re-check pending); they are not output of the automatic extraction.\nLabel derived: the order is computed by rule R2 from the events extracted from the text.",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "the death last night of Mr. Aloysius Garcia",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0003",
+      "char_start": 5685,
+      "char_end": 5728,
+      "quote": "the death last night of Mr. Aloysius Garcia"
+     },
+     "label": "derived"
+    },
+    {
+     "n": 2,
+     "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0006",
+      "char_start": 10060,
+      "char_end": 10270,
+      "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock."
+     },
+     "label": "derived"
+    },
+    {
+     "n": 3,
+     "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0010",
+      "char_start": 17623,
+      "char_end": 17741,
+      "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain."
+     },
+     "label": "derived"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "derived",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R2",
+     "summary": "R2 timeline: Death",
+     "explanation": null
+    },
+    {
+     "n": 2,
+     "label": "derived",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R2",
+     "summary": "R2 timeline: Aloysius Garcia at Wisteria Lodge, nearly one o’clock",
+     "explanation": null
+    },
+    {
+     "n": 3,
+     "label": "derived",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R2",
+     "summary": "R2 timeline: Aloysius Garcia at Oxshott Common, since one o’clock",
+     "explanation": null
+    }
+   ],
+   "route": {
+    "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
+    "seq": 0,
+    "ts": "2026-10-28T17:03:09.091+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "mcp",
+     "graph",
+     "vector"
+    ],
+    "tools": [
+     "build_timeline"
+    ],
+    "method": "rules",
+    "reason": "chronology question -> graph events of the story (and person) ordered by build_timeline, no model call; hybrid retrieval adds source text",
+    "matched": [
+     "timeline"
+    ],
+    "confidence": 0.8
+   },
+   "attempts": 1,
+   "refusal_code": null,
+   "original_question": null,
+   "translated_question": null
+  }
+ ]
+}

@@ -26,11 +26,25 @@
    "step": "demo step 3 (gate refusal, g047)"
   },
   {
+   "file": "real-abbey-grange-r1-curated.json",
+   "question": "Is there a conflict about where Lady Brackenstall was when Sir Eustace burst into the dining-room?",
+   "kind": "real",
+   "recorded_at": "2026-10-28T19:03:08+0200",
+   "seconds": 1.0
+  },
+  {
    "file": "real-boscombe-control.json",
    "question": "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?",
    "kind": "real",
    "recorded_at": "2026-10-28T18:46:21+0200",
    "seconds": 25.3
+  },
+  {
+   "file": "real-garcia-timeline.json",
+   "question": "Give the timeline of the night Aloysius Garcia died.",
+   "kind": "real",
+   "recorded_at": "2026-10-28T19:03:09+0200",
+   "seconds": 0.2
   },
   {
    "file": "real-refusal-fee.json",

@@ -1,0 +1,3175 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "real run recorded on the target laptop",
+  "question": "Is there a conflict about where Lady Brackenstall was when Sir Eustace burst into the dining-room?",
+  "recorded_at": "2026-10-28T19:03:08+0200",
+  "seconds": 1.0,
+  "commit": "9dcf685c79188694ed4d2322fb4ae040b31092bd",
+  "mcp": {
+   "configured": true,
+   "mode": "stdio",
+   "server": "timeline-alibi",
+   "started": false
+  },
+  "graph": {
+   "chunks": 596,
+   "claim": 2159,
+   "edges": 5267,
+   "event": 1700,
+   "item": 49,
+   "person": 743,
+   "place": 631
+  },
+  "versions": {
+   "api": "1",
+   "python": "3.12.3",
+   "starlette": "1.9.0",
+   "index_schema": "1",
+   "index_manifest": {
+    "schema_version": "1",
+    "embed_model": "bge-m3",
+    "embed_dim": "1024",
+    "embed_doc_prefix": "",
+    "embed_query_prefix": "",
+    "embed_metric": "cosine"
+   }
+  },
+  "note": "R1 on curated facts with a relative time (the moment Sir Eustace entered), conditional, real stdio MCP server, rule-first answer"
+ },
+ "events": [
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 0,
+   "ts": "2026-10-28T17:03:07.982+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "mcp",
+    "graph",
+    "vector"
+   ],
+   "tools": [
+    "find_contradictions"
+   ],
+   "method": "rules",
+   "reason": "contradiction question -> graph facts of the named person + rules R1-R3 via timeline-alibi find_contradictions; hybrid retrieval adds source text",
+   "matched": [
+    "conflict"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 1,
+   "ts": "2026-10-28T17:03:07.982+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "Is there a conflict about where Lady Brackenstall was when Sir Eustace burst into the dining-room?",
+   "k": 6,
+   "attempt": 1
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 2,
+   "ts": "2026-10-28T17:03:08.103+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 121,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "abbey-grange-0004",
+     "story": "abbey-grange",
+     "rank": 1,
+     "rrf": 0.032266458495966696,
+     "ranks": {
+      "bm25": 3,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -13.453494838419301,
+      "vec": 0.38823235034942627
+     }
+    },
+    {
+     "chunk_id": "abbey-grange-0003",
+     "story": "abbey-grange",
+     "rank": 2,
+     "rrf": 0.03225806451612903,
+     "ranks": {
+      "bm25": 2,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -13.817176218060073,
+      "vec": 0.4260111153125763
+     }
+    },
+    {
+     "chunk_id": "abbey-grange-0010",
+     "story": "abbey-grange",
+     "rank": 3,
+     "rrf": 0.03125763125763126,
+     "ranks": {
+      "bm25": 5,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -12.72534961800525,
+      "vec": 0.4447614848613739
+     }
+    },
+    {
+     "chunk_id": "abbey-grange-0002",
+     "story": "abbey-grange",
+     "rank": 4,
+     "rrf": 0.030886196246139225,
+     "ranks": {
+      "bm25": 1,
+      "vec": 9
+     },
+     "scores": {
+      "bm25": -13.863305219189359,
+      "vec": 0.5026376247406006
+     }
+    },
+    {
+     "chunk_id": "abbey-grange-0006",
+     "story": "abbey-grange",
+     "rank": 5,
+     "rrf": 0.030776515151515152,
+     "ranks": {
+      "bm25": 4,
+      "vec": 6
+     },
+     "scores": {
+      "bm25": -13.025304272269722,
+      "vec": 0.4756507873535156
+     }
+    },
+    {
+     "chunk_id": "abbey-grange-0005",
+     "story": "abbey-grange",
+     "rank": 6,
+     "rrf": 0.030536130536130537,
+     "ranks": {
+      "bm25": 6,
+      "vec": 5
+     },
+     "scores": {
+      "bm25": -11.706643945682247,
+      "vec": 0.4708932638168335
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.032266458495966696,
+    "threshold": 0.018,
+    "support": 0.5,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "abbey-grange-0004",
+    "abbey-grange-0003",
+    "abbey-grange-0010",
+    "abbey-grange-0002",
+    "abbey-grange-0006",
+    "abbey-grange-0005"
+   ]
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 3,
+   "ts": "2026-10-28T17:03:08.104+00:00",
+   "step_id": "graph-1",
+   "duration_ms": null,
+   "type": "graph_query",
+   "query_kind": "neighbours",
+   "args": {
+    "ref": "p:abbey-grange:brackenstall",
+    "k": 1,
+    "story": "abbey-grange",
+    "linked_from": "Lady Brackenstall",
+    "link": "ok"
+   }
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 4,
+   "ts": "2026-10-28T17:03:08.106+00:00",
+   "step_id": "graph-1",
+   "duration_ms": 1,
+   "type": "graph_results",
+   "query_kind": "neighbours",
+   "seeds": [
+    "p:abbey-grange:brackenstall"
+   ],
+   "node_ids": [
+    "p:abbey-grange:brackenstall",
+    "c:abbey-grange-0003:0",
+    "c:abbey-grange-0003:1",
+    "c:abbey-grange-0003:2",
+    "c:abbey-grange-0003:3",
+    "c:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+    "c:abbey-grange-0010:2",
+    "c:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+    "e:abbey-grange-0003:0",
+    "e:abbey-grange-0003:1",
+    "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+    "e:abbey-grange-0006:2",
+    "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+    "p:abbey-grange:theresa-wright"
+   ],
+   "edge_ids": [
+    1407,
+    1408,
+    1409,
+    1410,
+    1411,
+    1412,
+    1437,
+    1438,
+    1439,
+    1440,
+    1441,
+    1471,
+    5280,
+    5282,
+    5283,
+    5284,
+    5287
+   ],
+   "nodes": [
+    {
+     "id": "p:abbey-grange:brackenstall",
+     "kind": "person",
+     "name": "Lady Brackenstall"
+    },
+    {
+     "id": "c:abbey-grange-0003:0",
+     "kind": "claim",
+     "name": "Lady Brackenstall is in the morning-room"
+    },
+    {
+     "id": "c:abbey-grange-0003:1",
+     "kind": "claim",
+     "name": "She has had a most dreadful experience"
+    },
+    {
+     "id": "c:abbey-grange-0003:2",
+     "kind": "claim",
+     "name": "She has a swelling on her eye"
+    },
+    {
+     "id": "c:abbey-grange-0003:3",
+     "kind": "claim",
+     "name": "She has red spots on her limb"
+    },
+    {
+     "id": "c:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+     "kind": "claim",
+     "name": "Lady Brackenstall was at oaken chair"
+    },
+    {
+     "id": "c:abbey-grange-0010:2",
+     "kind": "claim",
+     "name": "they were themselves so disturbed by the death of Sir Eustace"
+    },
+    {
+     "id": "c:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+     "kind": "claim",
+     "name": "Lady Brackenstall was at window"
+    },
+    {
+     "id": "e:abbey-grange-0003:0",
+     "kind": "event",
+     "name": "Lady Brackenstall is in the morning-room"
+    },
+    {
+     "id": "e:abbey-grange-0003:1",
+     "kind": "event",
+     "name": "Lady Brackenstall has a swelling on her eye"
+    },
+    {
+     "id": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+     "kind": "event",
+     "name": "Lady Brackenstall at oaken chair"
+    },
+    {
+     "id": "e:abbey-grange-0006:2",
+     "kind": "event",
+     "name": "Found Lady Brackenstall injured"
+    },
+    {
+     "id": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+     "kind": "event",
+     "name": "Lady Brackenstall at window"
+    },
+    {
+     "id": "p:abbey-grange:theresa-wright",
+     "kind": "person",
+     "name": "Theresa Wright"
+    }
+   ],
+   "edges": [
+    {
+     "id": 1407,
+     "rel": "ASSERTS",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "c:abbey-grange-0003:0",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0003",
+      "char_start": 4897,
+      "char_end": 4937,
+      "quote": "Lady Brackenstall is in the morning-room",
+      "rel_start": 40,
+      "rel_end": 80,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1408,
+     "rel": "ASSERTS",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "c:abbey-grange-0003:1",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0003",
+      "char_start": 4939,
+      "char_end": 4988,
+      "quote": "Poor lady, she has had a most dreadful experience",
+      "rel_start": 82,
+      "rel_end": 131,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1409,
+     "rel": "ASSERTS",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "c:abbey-grange-0003:2",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0003",
+      "char_start": 5514,
+      "char_end": 5565,
+      "quote": "over one eye rose a hideous, plum-coloured swelling",
+      "rel_start": 657,
+      "rel_end": 708,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1410,
+     "rel": "ASSERTS",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "c:abbey-grange-0003:3",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0003",
+      "char_start": 6600,
+      "char_end": 6662,
+      "quote": "Two vivid red spots stood out on one of the white, round limbs",
+      "rel_start": 1743,
+      "rel_end": 1805,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1411,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "e:abbey-grange-0003:0",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0003",
+      "char_start": 4897,
+      "char_end": 4937,
+      "quote": "Lady Brackenstall is in the morning-room",
+      "rel_start": 40,
+      "rel_end": 80,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1412,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "e:abbey-grange-0003:1",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0003",
+      "char_start": 5514,
+      "char_end": 5565,
+      "quote": "over one eye rose a hideous, plum-coloured swelling",
+      "rel_start": 657,
+      "rel_end": 708,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1437,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "e:abbey-grange-0006:2",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0006",
+      "char_start": 12026,
+      "char_end": 12088,
+      "quote": "to find her, poor lamb, just as she says, and him on the floor",
+      "rel_start": 517,
+      "rel_end": 579,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1438,
+     "rel": "RELATION",
+     "src": "p:abbey-grange:theresa-wright",
+     "dst": "p:abbey-grange:brackenstall",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0006",
+      "char_start": 12665,
+      "char_end": 12685,
+      "quote": "Nursed her as a baby",
+      "rel_start": 1156,
+      "rel_end": 1176,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1439,
+     "rel": "RELATION",
+     "src": "p:abbey-grange:theresa-wright",
+     "dst": "p:abbey-grange:brackenstall",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0006",
+      "char_start": 12691,
+      "char_end": 12715,
+      "quote": "came with her to England",
+      "rel_start": 1182,
+      "rel_end": 1206,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1440,
+     "rel": "RELATION",
+     "src": "p:abbey-grange:theresa-wright",
+     "dst": "p:abbey-grange:brackenstall",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0006",
+      "char_start": 12613,
+      "char_end": 12647,
+      "quote": "She has been with her all her life",
+      "rel_start": 1104,
+      "rel_end": 1138,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1441,
+     "rel": "RELATION",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "p:abbey-grange:theresa-wright",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0006",
+      "char_start": 12769,
+      "char_end": 12795,
+      "quote": "Theresa Wright is her name",
+      "rel_start": 1260,
+      "rel_end": 1286,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 1471,
+     "rel": "ASSERTS",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "c:abbey-grange-0010:2",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0010",
+      "char_start": 18808,
+      "char_end": 18970,
+      "quote": "Lady Brackenstall thinks that they were themselves so disturbed by the death of Sir Eustace that they did not ransack the house, as they would otherwise have done",
+      "rel_start": 875,
+      "rel_end": 1037,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5280,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0005",
+      "char_start": 9888,
+      "char_end": 10155,
+      "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+      "rel_start": 1397,
+      "rel_end": 1664,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5282,
+     "rel": "ASSERTS",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "c:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0005",
+      "char_start": 9888,
+      "char_end": 10155,
+      "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+      "rel_start": 1397,
+      "rel_end": 1664,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5283,
+     "rel": "ABOUT",
+     "src": "c:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+     "dst": "p:abbey-grange:brackenstall",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0005",
+      "char_start": 9888,
+      "char_end": 10155,
+      "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+      "rel_start": 1397,
+      "rel_end": 1664,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5284,
+     "rel": "PARTICIPATED_IN",
+     "src": "p:abbey-grange:brackenstall",
+     "dst": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0026",
+      "char_start": 44237,
+      "char_end": 44365,
+      "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+      "rel_start": 1784,
+      "rel_end": 1912,
+      "ambiguous": false
+     }
+    },
+    {
+     "id": 5287,
+     "rel": "ABOUT",
+     "src": "c:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+     "dst": "p:abbey-grange:brackenstall",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0026",
+      "char_start": 44237,
+      "char_end": 44365,
+      "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+      "rel_start": 1784,
+      "rel_end": 1912,
+      "ambiguous": false
+     }
+    }
+   ],
+   "truncated": false
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 5,
+   "ts": "2026-10-28T17:03:08.106+00:00",
+   "step_id": "tool-find_contradictions",
+   "duration_ms": null,
+   "type": "tool_call",
+   "server": "timeline-alibi",
+   "tool": "find_contradictions",
+   "arguments": {
+    "story": "abbey-grange",
+    "person_id": "p:abbey-grange:brackenstall"
+   },
+   "timeout_s": 5.0
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 6,
+   "ts": "2026-10-28T17:03:08.947+00:00",
+   "step_id": "tool-find_contradictions",
+   "duration_ms": 841,
+   "type": "tool_result",
+   "server": "timeline-alibi",
+   "tool": "find_contradictions",
+   "ok": true,
+   "summary": "status=ok items=2",
+   "provenance": "conditional",
+   "explanation": {
+    "rule_id": "R1",
+    "rule_version": "1",
+    "verdict": "violated",
+    "conditional": true,
+    "reason_code": "OVERLAP_DIFFERENT_PLACES",
+    "facts": [
+     {
+      "fact_id": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "low",
+      "summary": "Lady Brackenstall at oaken chair [at the moment sir eustace entered, relative time] (curated)",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0005",
+        "char_start": 9888,
+        "char_end": 10155,
+        "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+        "rel_start": 1397,
+        "rel_end": 1664,
+        "ambiguous": false
+       }
+      ],
+      "curated": true
+     },
+     {
+      "fact_id": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "low",
+      "summary": "Lady Brackenstall at window [at the moment sir eustace entered, relative time] (curated)",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0026",
+        "char_start": 44237,
+        "char_end": 44365,
+        "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+        "rel_start": 1784,
+        "rel_end": 1912,
+        "ambiguous": false
+       }
+      ],
+      "curated": true
+     }
+    ],
+    "edges": [
+     {
+      "edge_id": "OCCURRED_AT:e:abbey-grange-0005:cur-c002-lady-chair-at-entry:pl:abbey-grange:oaken-chair",
+      "rel": "OCCURRED_AT",
+      "src": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+      "dst": "pl:abbey-grange:oaken-chair",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0005",
+        "char_start": 9888,
+        "char_end": 10155,
+        "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+        "rel_start": 1397,
+        "rel_end": 1664,
+        "ambiguous": false
+       }
+      ]
+     },
+     {
+      "edge_id": "OCCURRED_AT:e:abbey-grange-0026:cur-c002-crocker-window-at-entry:pl:abbey-grange:window",
+      "rel": "OCCURRED_AT",
+      "src": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+      "dst": "pl:abbey-grange:window",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0026",
+        "char_start": 44237,
+        "char_end": 44365,
+        "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+        "rel_start": 1784,
+        "rel_end": 1912,
+        "ambiguous": false
+       }
+      ]
+     },
+     {
+      "edge_id": "PARTICIPATED_IN:p:abbey-grange:brackenstall:e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+      "rel": "PARTICIPATED_IN",
+      "src": "p:abbey-grange:brackenstall",
+      "dst": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0005",
+        "char_start": 9888,
+        "char_end": 10155,
+        "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+        "rel_start": 1397,
+        "rel_end": 1664,
+        "ambiguous": false
+       }
+      ]
+     },
+     {
+      "edge_id": "PARTICIPATED_IN:p:abbey-grange:brackenstall:e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+      "rel": "PARTICIPATED_IN",
+      "src": "p:abbey-grange:brackenstall",
+      "dst": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0026",
+        "char_start": 44237,
+        "char_end": 44365,
+        "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+        "rel_start": 1784,
+        "rel_end": 1912,
+        "ambiguous": false
+       }
+      ]
+     }
+    ],
+    "derivation": [
+     {
+      "step": 1,
+      "op": "interval_compare",
+      "inputs": [
+       "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+       "e:abbey-grange-0026:cur-c002-crocker-window-at-entry"
+      ],
+      "output": "same moment: sir eustace entered (relative time, curated)"
+     },
+     {
+      "step": 2,
+      "op": "place_rel",
+      "inputs": [
+       "pl:abbey-grange:oaken-chair",
+       "pl:abbey-grange:window"
+      ],
+      "output": "DISTINCT"
+     }
+    ],
+    "anchors": [
+     {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0005",
+      "char_start": 9888,
+      "char_end": 10155,
+      "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+      "rel_start": 1397,
+      "rel_end": 1664,
+      "ambiguous": false
+     },
+     {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0026",
+      "char_start": 44237,
+      "char_end": 44365,
+      "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+      "rel_start": 1784,
+      "rel_end": 1912,
+      "ambiguous": false
+     }
+    ],
+    "depends_on_extracted": [
+     {
+      "fact_id": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "low",
+      "summary": "Lady Brackenstall at oaken chair [at the moment sir eustace entered, relative time] (curated)",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0005",
+        "char_start": 9888,
+        "char_end": 10155,
+        "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+        "rel_start": 1397,
+        "rel_end": 1664,
+        "ambiguous": false
+       }
+      ],
+      "curated": true
+     },
+     {
+      "fact_id": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+      "kind": "event",
+      "provenance": "extracted",
+      "confidence": "low",
+      "summary": "Lady Brackenstall at window [at the moment sir eustace entered, relative time] (curated)",
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0026",
+        "char_start": 44237,
+        "char_end": 44365,
+        "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+        "rel_start": 1784,
+        "rel_end": 1912,
+        "ambiguous": false
+       }
+      ],
+      "curated": true
+     }
+    ],
+    "weak": [
+     "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+     "e:abbey-grange-0026:cur-c002-crocker-window-at-entry"
+    ],
+    "missing": [],
+    "notes": [
+     "travel time between places is not modelled"
+    ],
+    "subject": {
+     "person_id": "p:abbey-grange:brackenstall"
+    },
+    "suspects": []
+   },
+   "error": null
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 7,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "abbey-grange-0005",
+     "story": "abbey-grange",
+     "char_start": 9888,
+     "char_end": 10155,
+     "origin": "tool",
+     "label": "conditional",
+     "window_start": 0,
+     "window_end": 267,
+     "window_char_start": 9888,
+     "window_char_end": 10155
+    },
+    {
+     "n": 2,
+     "chunk_id": "abbey-grange-0026",
+     "story": "abbey-grange",
+     "char_start": 44237,
+     "char_end": 44365,
+     "origin": "tool",
+     "label": "conditional",
+     "window_start": 0,
+     "window_end": 128,
+     "window_char_start": 44237,
+     "window_char_end": 44365
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 2,
+   "memory_chars": 0,
+   "prompt_chars": 0,
+   "prompt_tokens_estimate": 0,
+   "max_prompt_tokens": 0,
+   "strategy": "rule-first (findings): no model call",
+   "window_words": 0,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 8,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Rule "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 9,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "engine "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 10,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "result "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 11,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 12,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "abbey-grange: "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 13,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "1 "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 14,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "finding.\n"
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 15,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "- "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 16,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "R1 "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 17,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "reports "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 18,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "verdict "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 19,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "violated "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 20,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(OVERLAP_DIFFERENT_PLACES), "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 21,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "label "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 22,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "conditional: "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 23,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Lady "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 24,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Brackenstall "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 25,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 26,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "oaken "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 27,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "chair "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 28,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 29,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 30,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "moment "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 31,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sir "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 32,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "eustace "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 33,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "entered, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 34,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "relative "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 35,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time) "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 36,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(curated); "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 37,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Lady "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 38,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Brackenstall "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 39,
+   "ts": "2026-10-28T17:03:08.983+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 40,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "window "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 41,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 42,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 43,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "moment "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 44,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sir "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 45,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "eustace "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 46,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "entered, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 47,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "relative "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 48,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time) "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 49,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(curated). "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 50,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[1: "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 51,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"secured "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 52,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "me "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 53,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "tightly "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 54,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 55,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 56,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "oaken "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 57,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "chair "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 58,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "which "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 59,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stands "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 60,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 61,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 62,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "head "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 63,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 64,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 65,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "dining-table. "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 66,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 67,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 68,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "so "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 69,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "firmly "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 70,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "bound "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 71,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 72,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 73,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "could "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 74,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 75,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "move, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 76,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 77,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 78,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "handkerchief "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 79,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "round "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 80,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 81,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "mouth "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 82,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "prevented "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 83,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "me "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 84,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "from "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 85,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "uttering "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 86,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 87,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sound. "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 88,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "It "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 89,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 90,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 91,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "this "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 92,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "instant "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 93,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 94,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my\"] "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 95,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[2: "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 96,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"I "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 97,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 98,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "standing "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 99,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 100,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "her "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 101,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "just "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 102,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "inside "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 103,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 104,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "window, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 105,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 106,
+   "ts": "2026-10-28T17:03:08.984+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "all "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 107,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "innocence, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 108,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "as "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 109,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "God "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 110,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 111,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 112,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "judge, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 113,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "when "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 114,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "he "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 115,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rushed "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 116,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "like "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 117,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 118,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "madman "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 119,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "into "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 120,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 121,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "room\"]\n  "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 122,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Conditional "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 123,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "because "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 124,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "these "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 125,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "inputs "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 126,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 127,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "low-confidence: "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 128,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Lady "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 129,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Brackenstall "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 130,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 131,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "oaken "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 132,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "chair "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 133,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 134,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 135,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "moment "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 136,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sir "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 137,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "eustace "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 138,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "entered, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 139,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "relative "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 140,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time) "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 141,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(curated); "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 142,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Lady "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 143,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Brackenstall "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 144,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 145,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "window "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 146,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(at "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 147,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 148,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "moment "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 149,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sir "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 150,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "eustace "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 151,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "entered, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 152,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "relative "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 153,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time) "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 154,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(curated).\n  "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 155,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Curated: "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 156,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "2 "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 157,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 158,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 159,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "facts "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 160,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "it "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 161,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rests "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 162,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "on "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 163,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "were "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 164,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "entered "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 165,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 166,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "checked "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 167,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 168,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 169,
+   "ts": "2026-10-28T17:03:08.985+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "team "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 170,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(AI-assisted, "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 171,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "human "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 172,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "re-check "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 173,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "pending); "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 174,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "they "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 175,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 176,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 177,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "output "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 178,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 179,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 180,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "automatic "
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 181,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "extraction."
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 182,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 2,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+   "seq": 183,
+   "ts": "2026-10-28T17:03:08.986+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "Rule engine result for abbey-grange: 1 finding.\n- R1 reports verdict violated (OVERLAP_DIFFERENT_PLACES), label conditional: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated). [1: \"secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my\"] [2: \"I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room\"]\n  Conditional because these inputs are low-confidence: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated).\n  Curated: 2 of the facts it rests on were entered and checked by the team (AI-assisted, human re-check pending); they are not output of the automatic extraction.",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0005",
+      "char_start": 9888,
+      "char_end": 10117,
+      "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my"
+     },
+     "label": "conditional"
+    },
+    {
+     "n": 2,
+     "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+     "anchor": {
+      "story": "abbey-grange",
+      "chunk_id": "abbey-grange-0026",
+      "char_start": 44237,
+      "char_end": 44365,
+      "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room"
+     },
+     "label": "conditional"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "conditional",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R1",
+     "summary": "R1 OVERLAP_DIFFERENT_PLACES",
+     "explanation": {
+      "rule_id": "R1",
+      "rule_version": "1",
+      "verdict": "violated",
+      "conditional": true,
+      "reason_code": "OVERLAP_DIFFERENT_PLACES",
+      "facts": [
+       {
+        "fact_id": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at oaken chair [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at window [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "edges": [
+       {
+        "edge_id": "OCCURRED_AT:e:abbey-grange-0005:cur-c002-lady-chair-at-entry:pl:abbey-grange:oaken-chair",
+        "rel": "OCCURRED_AT",
+        "src": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "dst": "pl:abbey-grange:oaken-chair",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "OCCURRED_AT:e:abbey-grange-0026:cur-c002-crocker-window-at-entry:pl:abbey-grange:window",
+        "rel": "OCCURRED_AT",
+        "src": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "dst": "pl:abbey-grange:window",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:abbey-grange:brackenstall:e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:abbey-grange:brackenstall",
+        "dst": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:abbey-grange:brackenstall:e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:abbey-grange:brackenstall",
+        "dst": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "derivation": [
+       {
+        "step": 1,
+        "op": "interval_compare",
+        "inputs": [
+         "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+         "e:abbey-grange-0026:cur-c002-crocker-window-at-entry"
+        ],
+        "output": "same moment: sir eustace entered (relative time, curated)"
+       },
+       {
+        "step": 2,
+        "op": "place_rel",
+        "inputs": [
+         "pl:abbey-grange:oaken-chair",
+         "pl:abbey-grange:window"
+        ],
+        "output": "DISTINCT"
+       }
+      ],
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0005",
+        "char_start": 9888,
+        "char_end": 10155,
+        "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+        "rel_start": 1397,
+        "rel_end": 1664,
+        "ambiguous": false
+       },
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0026",
+        "char_start": 44237,
+        "char_end": 44365,
+        "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+        "rel_start": 1784,
+        "rel_end": 1912,
+        "ambiguous": false
+       }
+      ],
+      "depends_on_extracted": [
+       {
+        "fact_id": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at oaken chair [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at window [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "weak": [
+       "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+       "e:abbey-grange-0026:cur-c002-crocker-window-at-entry"
+      ],
+      "missing": [],
+      "notes": [
+       "travel time between places is not modelled"
+      ],
+      "subject": {
+       "person_id": "p:abbey-grange:brackenstall"
+      },
+      "suspects": []
+     }
+    },
+    {
+     "n": 2,
+     "label": "conditional",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R1",
+     "summary": "R1 OVERLAP_DIFFERENT_PLACES",
+     "explanation": {
+      "rule_id": "R1",
+      "rule_version": "1",
+      "verdict": "violated",
+      "conditional": true,
+      "reason_code": "OVERLAP_DIFFERENT_PLACES",
+      "facts": [
+       {
+        "fact_id": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at oaken chair [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at window [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "edges": [
+       {
+        "edge_id": "OCCURRED_AT:e:abbey-grange-0005:cur-c002-lady-chair-at-entry:pl:abbey-grange:oaken-chair",
+        "rel": "OCCURRED_AT",
+        "src": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "dst": "pl:abbey-grange:oaken-chair",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "OCCURRED_AT:e:abbey-grange-0026:cur-c002-crocker-window-at-entry:pl:abbey-grange:window",
+        "rel": "OCCURRED_AT",
+        "src": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "dst": "pl:abbey-grange:window",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:abbey-grange:brackenstall:e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:abbey-grange:brackenstall",
+        "dst": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:abbey-grange:brackenstall:e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:abbey-grange:brackenstall",
+        "dst": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "derivation": [
+       {
+        "step": 1,
+        "op": "interval_compare",
+        "inputs": [
+         "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+         "e:abbey-grange-0026:cur-c002-crocker-window-at-entry"
+        ],
+        "output": "same moment: sir eustace entered (relative time, curated)"
+       },
+       {
+        "step": 2,
+        "op": "place_rel",
+        "inputs": [
+         "pl:abbey-grange:oaken-chair",
+         "pl:abbey-grange:window"
+        ],
+        "output": "DISTINCT"
+       }
+      ],
+      "anchors": [
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0005",
+        "char_start": 9888,
+        "char_end": 10155,
+        "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+        "rel_start": 1397,
+        "rel_end": 1664,
+        "ambiguous": false
+       },
+       {
+        "story": "abbey-grange",
+        "chunk_id": "abbey-grange-0026",
+        "char_start": 44237,
+        "char_end": 44365,
+        "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+        "rel_start": 1784,
+        "rel_end": 1912,
+        "ambiguous": false
+       }
+      ],
+      "depends_on_extracted": [
+       {
+        "fact_id": "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at oaken chair [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0005",
+          "char_start": 9888,
+          "char_end": 10155,
+          "quote": "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room.",
+          "rel_start": 1397,
+          "rel_end": 1664,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:abbey-grange-0026:cur-c002-crocker-window-at-entry",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Lady Brackenstall at window [at the moment sir eustace entered, relative time] (curated)",
+        "anchors": [
+         {
+          "story": "abbey-grange",
+          "chunk_id": "abbey-grange-0026",
+          "char_start": 44237,
+          "char_end": 44365,
+          "quote": "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room",
+          "rel_start": 1784,
+          "rel_end": 1912,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "weak": [
+       "e:abbey-grange-0005:cur-c002-lady-chair-at-entry",
+       "e:abbey-grange-0026:cur-c002-crocker-window-at-entry"
+      ],
+      "missing": [],
+      "notes": [
+       "travel time between places is not modelled"
+      ],
+      "subject": {
+       "person_id": "p:abbey-grange:brackenstall"
+      },
+      "suspects": []
+     }
+    }
+   ],
+   "route": {
+    "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
+    "seq": 0,
+    "ts": "2026-10-28T17:03:07.982+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "mcp",
+     "graph",
+     "vector"
+    ],
+    "tools": [
+     "find_contradictions"
+    ],
+    "method": "rules",
+    "reason": "contradiction question -> graph facts of the named person + rules R1-R3 via timeline-alibi find_contradictions; hybrid retrieval adds source text",
+    "matched": [
+     "conflict"
+    ],
+    "confidence": 0.8
+   },
+   "attempts": 1,
+   "refusal_code": null,
+   "original_question": null,
+   "translated_question": null
+  }
+ ]
+}

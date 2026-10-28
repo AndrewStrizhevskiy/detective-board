@@ -162,6 +162,10 @@ Rule for every failure line: say that it is a stored run, never blame the model,
 
 Whole-system failures (any step): (a) browser or UI frozen: switch to the second window, open the replay of the current step, continue the spoken line; (b) Ollama down or killed: the gate refusal and rule-first steps (5, 6) still work without the model; for step 4 use the replay and say "the model server stopped; this is the stored run"; (c) laptop dead: slides alone carry the transcript, the answer line, the two quotes and the refusal text; say so and continue with slide 7 on paper if needed; (d) over time by more than 20 s at slide 6: skip the `rg` check and drop the second sentence of slide 7.
 
+**Two more recordings (2026-10-28, after the relative-time and chronology work):**
+- `?replay=replay/real-abbey-grange-r1-curated.json` (1.0 s): a SECOND red conflict, Lady Brackenstall bound to the chair at the head of the table versus standing at the window, both at the moment Sir Eustace entered. It is a conditional R1 finding on two curated facts whose time is relative (not a clock time); say so, and say that Holmes later shows she was bound only after the death.
+- `?replay=replay/real-garcia-timeline.json` (0.2 s): a chronology answer for Garcia from the graph (no model). Say that only events with a date stated in the text are ordered; the rest follow the narration, which need not be the order in which things happened.
+
 Not in the deck (kept for questions): Boscombe control `?replay=replay/real-boscombe-control.json` (25.3 s; backup slide B5).
 
 ## 3. Removed and why

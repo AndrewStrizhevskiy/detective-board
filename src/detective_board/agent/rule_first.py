@@ -343,8 +343,8 @@ def _error_reason(o: ToolOutcome) -> str:
 
 # ---------------------------------------------------------------------------- timeline
 TIMELINE_ORDER_NOTE = (
-    "Dated events are ordered by the time stated in the text; the others follow in order of "
-    "narration, which is not necessarily the order in which they happened."
+    "Events with a date stated in the text come first, ordered by that date and time; the others "
+    "follow in order of narration, which is not necessarily the order in which they happened."
 )
 DESCRIPTION_CAP = 200
 
@@ -368,7 +368,7 @@ def _day_text(day: object) -> tuple[str, bool]:
             return f"{when.strftime('%B')} {when.day} (date in the text)", False
         except ValueError:
             pass
-    return f"day key {d}", True
+    return "a day inferred from the text", True
 
 
 def _when_text(when: object) -> tuple[str | None, bool]:
@@ -389,6 +389,29 @@ def _when_text(when: object) -> tuple[str | None, bool]:
         return None, False
     text = ", ".join(parts)
     return text + (" (time uncertain)" if when.get("confidence") == "low" else ""), key
+
+
+def _real_date(ev: Mapping[str, Any]) -> bool:
+    w = ev.get("when")
+    return isinstance(w, Mapping) and int(w.get("story_day") or 0) >= DATE_ORDINAL_MIN
+
+
+def _narration_pos(ev: Mapping[str, Any]) -> int:
+    for a in ev.get("anchors") or []:
+        if isinstance(a, Mapping) and isinstance(a.get("char_start"), int):
+            return a["char_start"]
+    return 10**12
+
+
+def _chronological(events: Sequence[Mapping[str, Any]]) -> list[Mapping[str, Any]]:
+    """Events with a date stated in the text first (by date, then time), then the rest in the order
+    of narration. Day labels of other kinds are not comparable, so they are never ordered."""
+    dated = sorted(
+        (e for e in events if _real_date(e)),
+        key=lambda e: (e["when"]["story_day"], e["when"].get("start_min") or 0, _narration_pos(e)),
+    )
+    rest = sorted((e for e in events if not _real_date(e)), key=_narration_pos)
+    return [*dated, *rest]
 
 
 def _ordered_by_time(ev: Mapping[str, Any]) -> bool:
@@ -461,6 +484,7 @@ def build_timeline_answer(
         f"time, {undated_total} without); {shown} {'is' if shown == 1 else 'are'} shown"
         + (", the rest were cut off." if p.get("truncated") else ".")
     )
+    events = _chronological(events)
     lines = [_timeline_line(i, e, label, c) for i, e in enumerate(events, 1)]
     tail = [TIMELINE_ORDER_NOTE]
     if dated_shown == 0:
@@ -470,8 +494,9 @@ def build_timeline_answer(
         )
     if any(_when_text(e.get("when"))[1] for e in events):
         tail.append(
-            "A day key is an internal label that groups events of one day, not a calendar date; "
-            "keys from different kinds of cue (date, weekday, relative) do not share one scale."
+            '"A day inferred from the text" groups events that the extraction placed on one day by '
+            "weekday or relative wording; it is not a calendar date, and such days cannot be "
+            "ordered against each other or against stated dates."
         )
     curated = sum(1 for e in events if e.get("curated"))
     if curated:

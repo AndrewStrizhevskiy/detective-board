@@ -524,11 +524,13 @@ def test_timeline_template_lists_dated_then_undated_with_quotes():
         "Timeline for wl: the graph holds 3 events (1 with a stated day and time"
     )
     assert "3 are shown." in lines[0]
-    assert lines[1].startswith("1. day key 1, 13:00 (derived): Garcia looked in at the door [1: ")
-    assert lines[2].startswith("2. time not stated (derived): Baynes says")
-    assert lines[3].startswith("3. time not stated (curated): Garcia was seen")
+    assert lines[1].startswith(
+        "1. a day inferred from the text, 13:00 (derived): Garcia looked in at the door [1: "
+    )
+    assert lines[2].startswith("2. time not stated (curated): Garcia was seen")
+    assert lines[3].startswith("3. time not stated (derived): Baynes says")
     assert (
-        "Dated events are ordered by the time stated in the text; the others follow in order"
+        "Events with a date stated in the text come first, ordered by that date and time; the others"
         in (fin.answer)
     )
     assert "which is not necessarily the order in which they happened." in fin.answer
@@ -611,7 +613,34 @@ def test_timeline_day_wording_dates_keys_and_partial_times():
     w = {"story_day": jun3, "start_min": 900, "end_min": 900, "confidence": "high"}
     assert _when_text(w) == ("June 3 (date in the text), 15:00", False)
     w = {"story_day": 20162, "start_min": 60, "end_min": 120, "confidence": "low"}
-    assert _when_text(w) == ("day key 20162, 01:00-02:00 (time uncertain)", True)
+    assert _when_text(w) == ("a day inferred from the text, 01:00-02:00 (time uncertain)", True)
     w = {"story_day": None, "start_min": 360, "end_min": 720, "confidence": "high"}
     assert _when_text(w)[0] == "06:00-12:00, day not stated"
     assert _when_text(None) == (None, False)
+
+
+def test_timeline_puts_stated_dates_first_and_never_orders_other_day_labels():
+    from datetime import date as _d
+
+    from detective_board.agent.rule_first import _chronological
+
+    jun3 = _d(2001, 6, 3).toordinal()
+    jun4 = jun3 + 1
+
+    def ev(i, day, start, pos):
+        when = {"story_day": day, "start_min": start, "end_min": start, "confidence": "high"}
+        return {
+            "event_id": i,
+            "when": when if day is not None else None,
+            "anchors": [{"char_start": pos}],
+        }
+
+    events = [
+        ev("late-narration", None, None, 900),
+        ev("label-day", 20162, 60, 100),
+        ev("jun4", jun4, 600, 50),
+        ev("jun3-evening", jun3, 1200, 700),
+        ev("early-narration", None, None, 10),
+    ]
+    got = [e["event_id"] for e in _chronological(events)]
+    assert got == ["jun3-evening", "jun4", "early-narration", "label-day", "late-narration"]
