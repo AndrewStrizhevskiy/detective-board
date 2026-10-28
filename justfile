@@ -66,6 +66,12 @@ gold12 *args:
 eval *args:
     uv run python eval/run_eval.py {{args}}
 
+# 'Before the reveal' test (eval/pre_reveal.py): validate the cases, then run the agent on the full
+# and the cut corpus and the bare model. Needs Ollama; serialised with the lock the other agents use.
+pre-reveal *args:
+    python3 scripts/eval/validate_pre_reveal.py
+    flock /tmp/db-llm.lock uv run python eval/pre_reveal.py {{args}}
+
 # Web UI + API on http://127.0.0.1:8000. Use `just run --fake` for canned demo data without Ollama.
 # Full wiring to the real index/graph/MCP: see docs/api.md and docs/HANDOFF.md (open items).
 # Unless --fake is among the args, scripts/preflight.py first checks Ollama and the models.
