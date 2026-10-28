@@ -5,7 +5,7 @@ The cases are AI-written: the reveal passages were located by reading the text, 
 - run at commit `0e00f58` (dirty tree), generator `qwen3:4b-instruct`, seed 42, temperature 0.0, machine mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-38-generic
 - cases: eval/pre_reveal/cases.jsonl (sha256 8807021cb107 at run time), 16 questions in 8 stories; AgentConfig = the app defaults (full dict in the JSON)
 - graph present: True, sentence index: True, rule tools: timeline-alibi
-- RESCORED 2026-10-28T19:48:02+00:00 from `pre-reveal-2026-10-28.json` (the saved answers, no model rerun) at commit `0e00f58`, cases sha256 e1ee1364ac22; supersedes the scoring of the first report
+- RESCORED 2026-10-28T19:48:49+00:00 from `pre-reveal-2026-10-28.json` (the saved answers, no model rerun) at commit `9593abd`, cases sha256 e1ee1364ac22; supersedes the scoring of the first report
 
 ## Metrics
 
@@ -128,3 +128,73 @@ Leak exposure of the primary metric: chunks that end before the cut and hold a c
 - CutRetriever re-fuses the arms over the kept hits; BM25 scores still use the statistics of the full index (ranks hardly change). The chunk that straddles the cut is dropped, so up to one chunk of legitimate pre-cut text is lost per story.
 - The graph and the rule tools are not cut; no question here routed to them (no graph_query or tool_call event), otherwise the row would be 'unscored'.
 - One run, temperature 0, seed 42; the laptop CPU was shared with other jobs (serialised by flock), so latencies are indicative.
+
+## Reading of the answers (hand-written; `--rescore` regenerates the sections above, not this one)
+
+The run header says "dirty tree": the scoring code was edited on disk after the run process had
+loaded it; the code that ran is `0e00f58`, and the scoring that differs is what this rescore replaces.
+
+**Headline.** B (cut before the reveal) names the culprit in 0 of 16 questions [0, 19], on both the
+primary and the keyword metric. No B row is a 'named', so there is no mention-leak to discount,
+although Turner, the horse, Joseph/Harrison and Cunningham sit in 9-11 pre-cut chunks each. In the
+real run no B question retrieved or cited a chunk past the cut (checked on the saved rows). BUT the
+control is weak: A (full corpus) names the culprit in only 2 of 16 [4, 36]; A vs B 2 vs 0, exact
+McNemar p 0.5. The test therefore does not show that the reveal is what the agent needs; it shows that
+the extractive agent mostly fails these "who did it" questions even when the reveal is in the index.
+B near zero is the expected floor, and A is barely above it. At n = 16 the conditions are not
+separable.
+
+**The two A hits, read by hand.** naval-2: "Joseph a villain and a thief!" from the reveal chunk,
+a genuine answer. reigate-1: a sentence of Holmes's explanation that names Alec Cunningham as the
+one who must have torn the paper from the dead man's hand. That points at the culprit but does not
+say he shot Kirwan, so it is a partial hit counted as 'named'.
+
+**Near misses in A.** In 10 of 16 A rows the top-6 chunks held at least one chunk from past the cut,
+yet the selection rarely took the naming sentence:
+- black-peter 1/2 quote the harpooner's confession ("You say I murdered Peter Carey, I say I
+  _killed_ Peter Carey"; "I whipped a harpoon through him") without the speaker's name, next to
+  Hopkins's wrong Neligan theory.
+- speckled-2 quotes "Round his brow he had a peculiar yellow band, with brownish speckles", one
+  sentence before the serpent.
+- silver-blaze 1/2 had the reveal chunks but chose sentences that echo the question ("the question
+  of who killed John Straker", "the murderer of John Straker"), or the Silas Brown suspicion.
+- naval-1 refused although the reveal chunks 0037/0038 were retrieved.
+
+**Per story.**
+- boscombe-valley-mystery: A = B. Q1 is refused; Q2 quotes off-story sentences from Black Peter
+  and Thor Bridge. Bare Q1 says no such killing exists; bare Q2 names Dr. Grimesby Roylott (the
+  Speckled Band villain).
+- silver-blaze: in A the reveal chunks were retrieved and not chosen. In B the answer is the same
+  echo plus a Crooked Man question sentence or the Silas Brown sentence. Bare places John Straker
+  in a Poirot episode and refuses.
+- speckled-band: Q1 is refused in A and B. On Q2, A has the near miss above, and B quotes a Wisteria
+  Lodge "double band of white shells". Bare Q2 gives the only bare hit ("a speckled snake"), wrapped
+  in confabulation (Roylott as a "stepson", a hidden room, a captive girl): memory of the famous
+  twist, not of the story.
+- norwood-builder: Q1 in A and B quotes generic lines ("Was not that person the actual
+  criminal?", from Thor Bridge). On Q2 both conditions quote the newspaper report of McFarlane's
+  arrest for the murder, which the innocent-accused metric flags: the agent repeats the accusation
+  the text makes before the reveal. The hiding-place chunk 0027 was retrieved in A but not chosen.
+- naval-treaty: A Q2 is genuinely right and A Q1 is refused. B answers with pre-cut suspicion
+  sentences and no name.
+- black-peter: A has the near misses above. B Q1 quotes the pre-cut "appointment with the
+  murderer" reasoning plus a Wisteria line, and B Q2 is refused. Bare: "Peter Carey is a living
+  Australian author".
+- thor-bridge: all four agent rows are refused; the solution ("end her own life") never reached
+  an answer. Bare refuses.
+- reigate-squires: A Q1 is the partial hit. B Q1 quotes the pre-cut "Whoever wrote that note was
+  the man who brought William Kirwan out of his bed": right reasoning, no name. Q2 in A and B
+  retrieved no Reigate chunk and quotes "McFarlane's guilt definitely established." from Norwood,
+  calling an innocent man of ANOTHER story guilty (not counted: `cleared_names` is per story).
+  Bare: "William Kirwan was a prominent American academic".
+
+**Bare model.** 13 of 16 refused. Without context the 4B model mostly takes the names for real
+people (the novelist Peter Carey, the academic William Kirwan) or mixes up stories. Only the
+Speckled Band twist came back from memory. The names in the questions were not masked, so a larger
+model could answer from memory. For this model, memorisation does not explain the agent's numbers.
+
+**What this means.** The before-the-reveal number (0/16) is honest, but the interpretation is
+limited by the control: the extractive selection, not the cut, is the bottleneck on "who did it"
+questions. That is consistent with the STATUS note that the agent picks the answer sentence worse
+than vector-only. To make the test discriminating, the control has to pass first; that work belongs
+to the selection step, not to this test.

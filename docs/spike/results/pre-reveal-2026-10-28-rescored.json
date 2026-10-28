@@ -71,9 +71,9 @@
     "started": "2026-10-28T19:45:06+00:00",
     "rescored": {
       "from": "pre-reveal-2026-10-28.json",
-      "at": "2026-10-28T19:48:02+00:00",
-      "git_sha": "0e00f58818616949b0170644055dcd6e6c87f52b",
-      "git_dirty": true,
+      "at": "2026-10-28T19:48:49+00:00",
+      "git_sha": "9593abde8a0f6907b585f1119279a194f93e3169",
+      "git_dirty": false,
       "cases_sha256": "e1ee1364ac22b8275a6145f38682afe266f98ea37f7cc685bebffc211dc88c53"
     }
   },
