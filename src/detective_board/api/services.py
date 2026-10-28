@@ -230,6 +230,9 @@ def _agent_cfg(cfg: Any) -> Any:
         chunks = cfg.resolve("data/chunks.jsonl")
         if chunks.exists():
             ac = dataclasses.replace(ac, idf_chunks=str(chunks))
+    scenes = cfg.resolve("data/curated/scenes.jsonl")
+    if not cfg.fake and not ac.scenes_path and scenes.exists():  # curated crime scenes (11.6)
+        ac = dataclasses.replace(ac, scenes_path=str(scenes))
     if cfg.fake and "answer_mode" not in cfg.agent:  # the canned fixture model writes answers
         ac = dataclasses.replace(ac, answer_mode="generate")
     return ac

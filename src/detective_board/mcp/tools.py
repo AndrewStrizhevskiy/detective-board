@@ -22,6 +22,8 @@ from detective_board.symbolic.api import (
     Finding,
     TimeSpec,
 )
+from detective_board.symbolic.places import PlaceIndex, PlaceRel
+from detective_board.symbolic.time import abs_bounds
 
 SIZE_CAP_BYTES = 64 * 1024
 
@@ -282,6 +284,13 @@ def check_alibi(
     _known_person(fb, person_id)
     if claimed_place_id is not None:
         _known_place(fb, claimed_place_id)
+    return _alibi_on(fb, person_id, window, claimed_place_id)
+
+
+def _alibi_on(
+    fb: FactBase, person_id: str, window: Window, claimed_place_id: str | None
+) -> dict[str, Any]:
+    """The body of `check_alibi` over an already loaded FactBase (shared with `scene_board`)."""
     spec = TimeSpec(
         day=window.story_day,
         lo=window.start_min,
@@ -329,6 +338,132 @@ def _alibi_result(f: Finding) -> dict[str, Any]:
         "provenance": _provenance(f.conditional),
         "reason_code": f.reason_code,
         "explanation": _expl(f.explanation),
+    }
+
+
+SCENE_LIMIT = 10
+_BOARD_STATUS = {
+    "contradicted": "excluded",
+    "supported": "placed",
+    "unknown": "not_excluded",
+    "insufficient_evidence": "not_excluded",
+}
+
+
+def _scene_evidence(
+    fb: FactBase, idx: PlaceIndex, scene_place: str, check: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """The evidence of a `check_alibi` result, each item with where it puts the person relative to
+    the scene (`at_scene`), who says so and whether the fact is human-checked."""
+    out: list[dict[str, Any]] = []
+    names = {p.id: p.name for p in fb.places}
+    for item in check["evidence"]:
+        entry = dict(item)
+        ev = fb.event(item["event_id"])
+        if ev is not None:
+            pid = idx.resolve(ev.place_ref)
+            entry["place_id"] = pid
+            entry["place"] = names.get(pid or "", ev.place_ref)
+            entry["at_scene"] = idx.rel(scene_place, ev.place_ref) in (
+                PlaceRel.SAME,
+                PlaceRel.CONTAINS,
+            )
+            entry["kind"] = (
+                "places_person_at_claimed" if entry["at_scene"] else ("places_person_elsewhere")
+            )
+            entry["narrator"] = ev.narrator
+            entry["speaker_id"] = None if ev.narrator else _speaker_of(ev, list(fb.claims))
+            entry["time_text"] = ev.time.time_text if ev.time else None
+            if ev.curated:
+                entry["curated"] = True
+        out.append(entry)
+    return out
+
+
+def _board_entry(
+    fb: FactBase, idx: PlaceIndex, place_id: str, window: Window, person: str
+) -> dict[str, Any]:
+    placed = [e for e in fb.events if person in e.participants and e.place_ref]
+    check = _alibi_on(fb, person, window, place_id)
+    status = _BOARD_STATUS[check["status"]]
+    entry: dict[str, Any] = {
+        "person_id": person,
+        "status": status,
+        "alibi_status": check["status"],
+        "reason_code": check["reason_code"],
+        "provenance": check["provenance"],
+        "placed_events": len(placed),
+        "events_without_day": sum(1 for e in placed if abs_bounds(e.time) is None),
+        "evidence": [],
+        "notes": check["notes"],
+    }
+    if status != "not_excluded":
+        entry["evidence"] = _scene_evidence(fb, idx, place_id, check)
+        entry["explanation"] = check["explanation"]
+        entry["also_at_scene"] = status == "excluded" and any(
+            x.get("at_scene") for x in entry["evidence"]
+        )
+    return entry
+
+
+def scene_board(
+    source: FactSource,
+    *,
+    story: str,
+    place: str,
+    window: Window,
+    person_ids: list[str] | None = None,
+    victim_ids: list[str] | None = None,
+    limit: int = SCENE_LIMIT,
+) -> dict[str, Any]:
+    """Alibi-exclusion board for a crime scene: for every person the graph holds for the story
+    (or only `person_ids`), `check_alibi` against the scene's place and time window. A person the
+    text places elsewhere at that time is `excluded` (testimony, not proof); one it places at the
+    scene is `placed`; the rest are `not_excluded` (no usable event at that time; never
+    "suspected"). No rule of its own, no verdict about guilt. The `victim_ids` are not part of the
+    board; they are checked the same way and returned apart as `victims`. `place` is a place id,
+    name or alias.
+
+    The window needs a story day to be comparable: an event without a day or a clock time cannot
+    place or exclude anyone (the rules never assume a day), it is only counted
+    (`events_without_day`)."""
+    _check_id(story, "story")
+    _check_id(place, "place")
+    _check_limit(limit, 50)
+    if person_ids is not None and len(person_ids) > 300:
+        raise ToolError("invalid_input", "person_ids must hold at most 300 ids")
+    fb = source.load(story)
+    idx = PlaceIndex(fb.places)
+    place_id = idx.resolve(place)
+    if place_id is None:
+        raise ToolError("not_found", f"unknown place: {place!r}")
+    universe = {p for e in fb.events for p in e.participants} | {c.speaker_id for c in fb.claims}
+    victims = set(victim_ids or [])
+    pool = universe if person_ids is None else universe & set(person_ids)
+    entries = [_board_entry(fb, idx, place_id, window, p) for p in sorted(pool - victims)]
+    rank = {"excluded": 0, "placed": 1, "not_excluded": 2}
+    entries.sort(key=lambda x: (rank[x["status"]], -x["placed_events"], x["person_id"]))
+    counts = {k: sum(1 for x in entries if x["status"] == k) for k in rank}
+    shown = entries[:limit]
+    victim_entries = [
+        _board_entry(fb, idx, place_id, window, v) for v in sorted(victims & universe)
+    ]
+    decisive = [x for x in shown if x["status"] != "not_excluded"]
+    return {
+        "status": "ok" if entries else "insufficient_evidence",
+        "story": story,
+        "place_id": place_id,
+        "place": next((p.name for p in fb.places if p.id == place_id), place_id),
+        "window": window.model_dump(),
+        "persons": shown,
+        "total_persons": len(entries),
+        "counts": counts,
+        "victims": victim_entries,
+        "truncated": len(shown) < len(entries),
+        "provenance": (
+            "conditional" if any(x["provenance"] == "conditional" for x in decisive) else "derived"
+        ),
+        "rule_id": "R1",
     }
 
 

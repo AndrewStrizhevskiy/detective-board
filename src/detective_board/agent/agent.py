@@ -46,6 +46,8 @@ from .memory import Turn, retrieval_query, summarize
 from .presence_answer import presence_names, surface_forms
 from .retrieval_step import gate, hit_traces
 from .router import Router, extract_names, parse_time_window
+from .scene_answer import answer_for as scene_answer_for
+from .scene_answer import open_scenes, scene_board_args
 from .translate import Translator, is_mostly_cyrillic
 from .window import idf_from_jsonl
 
@@ -81,7 +83,8 @@ class Agent:
         self.llm, self.retriever, self.graph, self.tools = llm, retriever, graph, tools
         self.cfg = config or AgentConfig()
         self.idf = idf_from_jsonl(self.cfg.idf_chunks) if self.cfg.idf_chunks else None
-        self.router = Router(router_llm or llm, self.cfg.use_llm_router)
+        self.scenes = open_scenes(self.cfg.scenes_path)
+        self.router = Router(router_llm or llm, self.cfg.use_llm_router, scenes=self.scenes)
         self._now, self._mono, self._run_id = now, mono, run_id
         self.translator = Translator(
             translate_llm or llm,
@@ -226,6 +229,8 @@ class Agent:
             person = link.person_id
             if link.status == "ambiguous":
                 headers.append(f"ENTITY LINK: {link.note()}")
+        if "scene_board" in decision.tools and (scene := self.scenes.match(question)):
+            story = scene.story  # the scene names its story, retrieval does not decide it
 
         # 3. graph
         if "graph" in decision.routes and self.graph is not None:
@@ -265,8 +270,8 @@ class Agent:
         # alibi table: a named person who is not in the graph is answered, not sent to the text
         unknown = "presence_table" in decision.tools and bool(link and link.status == "not_found")
         if cfg.rule_first and decision.tools and (ran or ambiguous or unknown):
-            if "build_timeline" in decision.tools or "presence_table" in decision.tools:
-                # chronology / alibi table: always the template
+            if {"build_timeline", "presence_table", "scene_board"} & set(decision.tools):
+                # chronology / alibi table / scene board: always the template
                 yield from self._rule_first_answer(
                     sink, decision, question, story, link, hits, outcomes, headers
                 )
@@ -615,6 +620,13 @@ class Agent:
                     )
                 )
             args |= {"person_id": person, "names": surface_forms(self.graph, person, link)}
+        elif tool == "scene_board":
+            built = scene_board_args(self.graph, self.scenes.match(question))
+            if built is None:
+                return (
+                    yield from self._skip(sink, step, tool, "skipped", "no scene is known here")
+                )
+            args = built
         elif person:
             args["person_id"] = person
         if tool == "build_timeline":
@@ -848,7 +860,9 @@ class Agent:
         (docs/symbolic-layer.md). No model call; the same events as an LLM run, so the UI is
         unchanged: tokens stream from the template, the verbatim self-check runs on it."""
         cfg = self.cfg
-        ans = rf.build_answer(
+        ans = scene_answer_for(
+            self.scenes, self.graph, question, outcomes, cfg.min_quote_chars
+        ) or rf.build_answer(
             question=question,
             story=story,
             outcomes=outcomes,
@@ -1009,7 +1023,7 @@ def _primary_explanation(payload: dict[str, Any]) -> Explanation | None:
     exp = parse_explanation(payload.get("explanation"))
     if exp is not None:
         return exp
-    for key in ("findings", "overlaps"):
+    for key in ("findings", "overlaps", "persons"):
         for it in payload.get(key) or []:
             exp = parse_explanation(it.get("explanation")) if isinstance(it, dict) else None
             if exp is not None:

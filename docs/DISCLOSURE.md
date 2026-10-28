@@ -44,6 +44,8 @@ wherever such a fact is an input. The file has seven facts (two for Wisteria Lod
 are not improved by, or mixed with, the curated facts. A finding built on curated facts shows what
 the rules do when the facts are right, not what a model finds on its own.
 
+A second curated file, `data/curated/scenes.jsonl`, holds the crime scenes of the suspects / alibi-exclusion board (docs/symbolic-layer.md 11.6): for a story a place, a time window, the victim and one verbatim quote that states the crime time or place (today one scene, Wisteria Lodge, 01:00 on Oxshott Common). Like the facts above it is written by the team, AI-assisted, with the human re-check pending, and every board says "curated by team, AI-assisted, human re-check pending". The board reports only where the text places people (testimony, not proof); "excluded" never means innocent, "not excluded" never means suspected, and the system makes no statement about guilt. On the real graph the board excludes nobody (the only decisive content is the victim's own two conflicting accounts): of 1,700 automatic events only 18 have a person, a place, a story day and a clock time, and the board says so on screen.
+
 What the automatic pipeline did on real data (first real run, one story, wisteria-lodge, after the deterministic repair): 107 events, 137 claims, 0 exact clock times, 0 story days, 1 usable presence proposition; rule R1 examined 19 pairs and could not decide 16. The precision of automatic presence facts has not been measured: TO BE FILLED after the department-server run.
 
 ## Models

@@ -44,6 +44,7 @@ class AgentConfig:
     extract_safety_chunks: int = 4  # ... plus the best sentences of this many top chunk hits
     extract_safety_per_chunk: int = 3  # (the former candidate builder, kept as a safety net)
     rule_first: bool = True  # rule questions: deterministic template from the rule result, no LLM
+    scenes_path: str = ""  # curated crime scenes (data/curated/scenes.jsonl); "" = no board routing
     translate_questions: bool = True  # Cyrillic question -> English before everything else
     translate_model: str = "qwen3:4b-instruct"  # "translategemma:4b" is supported (own prompt)
     translate_max_chars: int = 300  # cap on the translated question

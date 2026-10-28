@@ -43,11 +43,37 @@ def test_stdio_roundtrip():
         "find_contradictions",
         "find_overlaps",
         "presence_table",
+        "scene_board",
     ]
     assert ok["status"] == "contradicted"
     assert ok["explanation"]["rule_id"] == "R1" and ok["provenance"] in {"derived", "conditional"}
     assert bad["error"]["code"] == "invalid_input" and "Traceback" not in bad["error"]["message"]
     assert nf["error"]["code"] == "not_found"
+
+
+def test_stdio_scene_board_matches_in_process():
+    from detective_board.mcp import tools
+    from detective_board.mcp.source import JsonFileFactSource
+
+    args = {
+        "story": "s",
+        "place": "B",
+        "window": {"story_day": 1, "start_min": 1300, "end_min": 1310},
+    }
+
+    async def go():
+        async with open_session(_params()) as s:
+            return await s.call_tool("scene_board", args)
+
+    out = anyio.run(_bounded, go)
+    local = tools.scene_board(
+        JsonFileFactSource(str(FIXTURE), str(FIXTURE_DIR)),
+        story="s",
+        place="B",
+        window=tools.Window(**args["window"]),
+    )
+    assert out == local and out["persons"] and out["rule_id"] == "R1"
+    assert any(p["status"] == "excluded" for p in out["persons"])
 
 
 def test_stdio_sandbox_violation_is_error_not_crash():

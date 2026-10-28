@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from detective_board.extract.scenes import SceneIndex
+
 from .events import RouteDecided, RouteName
 from .llm import LLM
 
@@ -50,6 +52,21 @@ _CLOCKISH = re.compile(
 )
 _ALIBI_WHERE = re.compile(r"alibi|where was\b|whereabouts|could .{0,40} have been (at|in)", re.I)
 
+# Suspects / alibi-exclusion board (docs/symbolic-layer.md 11.6). Routed only when a curated scene
+# is known for the story, place or victim the question names; the patterns above win when they
+# match.
+_SCENE = re.compile(
+    r"\bsuspects\b|\bsuspect (?:list|board)\b"
+    r"|\bwho (?:is|are|was|were) (?:the )?(?:main )?suspects?\b"
+    r"|\bwho\b.{0,30}\b(?:could|might|may|can)\b.{0,12}\bhave been\b"
+    r"|\bwho\b.{0,20}\b(?:can|could|may|might)\b.{0,12}"
+    r"\b(?:be )?(?:excluded|ruled out|eliminated)\b"
+    r"|\b(?:excluded|ruled out|eliminated) by (?:an? |the )?alibis?\b"
+    r"|\balibi[- ]exclusion\b"
+    r"|\bwho (?:was|were) (?:not |n['’]t )?(?:at|near|in)\b",
+    re.I,
+)
+
 _CLASSIFY_PROMPT = (
     "Classify the question about the Sherlock Holmes stories into exactly one label: "
     "fact, relation, alibi, contradiction, out_of_scope. Answer with the label only.\n"
@@ -69,6 +86,7 @@ class Router:
     llm: LLM | None = None
     use_llm: bool = False
     matched: list[str] = field(default_factory=list)
+    scenes: SceneIndex | None = None  # curated crime scenes; None / empty: no board routing
 
     def decide(self, question: str) -> RouteDecided:
         q = question.strip()
@@ -86,6 +104,26 @@ class Router:
         matched: list[str] = []
         why: list[str] = []
         presence = _PRESENCE.search(q) or (_PRESENCE_WEAK.search(q) and _WHERE.search(q))
+        if (
+            self.scenes
+            and (m := _SCENE.search(q))
+            and not _CONTRA.search(q)
+            and not _TIMELINE.search(q)
+            and not presence
+            and (scene := self.scenes.match(q)) is not None
+        ):
+            return RouteDecided(
+                routes=["mcp", "vector"],
+                tools=["scene_board"],
+                method="rules",
+                matched=[m.group(0), scene.id],
+                confidence=0.8,
+                reason=(
+                    f"scene question about the known scene {scene.id!r} -> alibi-exclusion board: "
+                    "rule R1 check_alibi per person of the story against the scene's place and "
+                    "time, no model call"
+                ),
+            )
         if (
             (m := _ALIBI_WHERE.search(q) or presence)
             and not _CONTRA.search(q)
