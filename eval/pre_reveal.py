@@ -17,10 +17,13 @@ pinned as in eval/run_eval.py):
          without them (CutRetriever). The graph and the rule tools are NOT cut: a case whose
          question routes to them (graph_query / tool_call events) is reported as unscored.
   bare   the bare model, no retrieval (may know the stories by heart: that is what it shows).
-Outcome per question: named (all keywords of one keyword set in the answer text or its cited
-quotes), refused, wrong (answered, culprit not named). Wilson 95 % intervals, n in every cell.
-The bare model is scored twice: with the same strict keywords, and with the looser free_keywords
-(names and plain words, which also occur before the cut and so cannot be used for the agent).
+Outcomes per question (Wilson 95 % intervals, n in every cell):
+  culprit named (PRIMARY)  an accepted name or alias of the culprit or cause (case field
+                           culprit_names) in the answer text or its cited quotes; else answered
+                           wrong, or refused
+  innocent accused         a cleared person's name (cleared_names) and no culprit alias
+  keyword metric           secondary: reveal-text keyword sets (truth_keywords[_alt])
+Rescore saved answers without the models: uv run python eval/pre_reveal.py --rescore RESULT.json
 """
 
 from __future__ import annotations
@@ -61,9 +64,49 @@ CONDITIONS = ("full", "cut", "bare")
 MAX_VEC_K = 4000  # sqlite-vec limits k to 4096
 GRAPH_EVENTS = ("graph_query", "graph_results", "tool_call", "tool_result")
 NOTE = (
-    "The cases are AI-written (reveal passages located by reading the text, keywords chosen so that "
-    "no sentence and no chunk before the cut holds them together: scripts/eval/validate_pre_reveal.py). "
-    "A 'named' needs the keywords in the answer text or its cited quotes, not a human reading."
+    "The cases are AI-written: the reveal passages were located by reading the text, the cut placed "
+    "before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical "
+    "(names or keywords in the answer and its cited quotes), not a human reading."
+)
+CHUNKS = ROOT / "data" / "chunks.jsonl"
+LABELS = {
+    "full": "A. full corpus (control)",
+    "cut": "B. corpus cut before the reveal",
+    "bare": "C. bare model, no retrieval",
+}
+PRIMARY_NOTE = (
+    "**Primary: culprit named.** An accepted name or alias of the culprit or cause (case field "
+    "`culprit_names`, e.g. Turner / Black Jack, the horse, snake / adder, Cairns, suicide / killed "
+    "herself) occurs in the answer text or its cited quotes, case-insensitive, at a word start. It "
+    "is primary because the question asks WHO or WHAT, and a correct answer can use any wording. "
+    "Its weakness: several aliases also occur long before the cut (Turner, the horse, Joseph and "
+    "Harrison, Oldacre, Cunningham are characters from the start), so in condition B a 'named' can "
+    "be a mere mention; the exposure table below counts the pre-cut chunks that hold an alias, and "
+    "every B 'named' is read by hand in the notes.\n\n"
+    "**Secondary: keyword metric.** Reveal-text keyword sets (`truth_keywords`, "
+    "`truth_keywords_alt`, e.g. 'lessen his guilt', 'her own life', 'murdering their coachman'); "
+    "the validator guarantees that no sentence and no chunk before the cut holds a set, so it is "
+    "leak-free in B, but it is wording-bound: the full-corpus control fails it when the agent quotes "
+    "a different correct sentence. That is why it is not the primary metric.\n\n"
+    "**Innocent accused.** Answered, a cleared person's name (`cleared_names`: James McCarthy, "
+    "Fitzroy Simpson, McFarlane, Neligan, Grace Dunbar; 5 of 8 stories) in the answer or its "
+    "quotes, and no culprit alias. A lexical proxy: a mention is not an accusation, read the rows.\n\n"
+    "**Bare model (C).** Names in the questions were not masked (story titles, victims), and the "
+    "4B model may know the stories by heart; C measures memory and guessing, not reasoning. Its "
+    "refusals are detected with the phrase list of eval/run_answer_check.py."
+)
+LIMITS = (
+    "- n = 16 questions in 8 stories; the two questions of a story are not independent, so the "
+    "intervals are optimistic. Cases and aliases are AI-written, not reviewed by a human.\n"
+    "- The cut is placed by reading; the validator checks verbatim quotes, the cut before every quote "
+    "and keyword leaks, but cannot check paraphrased hints or a culprit named by a description.\n"
+    "- CutRetriever re-fuses the arms over the kept hits; BM25 scores still use the statistics of the "
+    "full index (ranks hardly change). The chunk that straddles the cut is dropped, so up to one "
+    "chunk of legitimate pre-cut text is lost per story.\n"
+    "- The graph and the rule tools are not cut; no question here routed to them (no graph_query or "
+    "tool_call event), otherwise the row would be 'unscored'.\n"
+    "- One run, temperature 0, seed 42; the laptop CPU was shared with other jobs (serialised by "
+    "flock), so latencies are indicative."
 )
 
 
@@ -156,30 +199,86 @@ class CutRetriever:
 
 
 def _find(kw: str, text: str) -> bool:
+    """Case-insensitive; the match starts at a word boundary ('adder' does not match 'ladder')."""
     return re.search(r"(?<![A-Za-z])" + re.escape(kw), text, re.IGNORECASE) is not None
 
 
-def keyword_sets(case: dict, free: bool = False) -> list[list[str]]:
-    if free:
-        return case.get("free_keywords") or [case["truth_keywords"]]
+def keyword_sets(case: dict) -> list[list[str]]:
+    """Secondary metric: reveal-text keywords (no sentence or chunk before the cut holds a set)."""
     return [case["truth_keywords"], *case.get("truth_keywords_alt", [])]
 
 
-def names_culprit(case: dict, answer: str, quotes: list[str], free: bool = False) -> bool:
-    text = answer + "\n" + "\n".join(quotes)
-    return any(all(_find(k, text) for k in kws) for kws in keyword_sets(case, free))
-
-
-def outcome(case: dict, row: dict, free: bool = False) -> str:
-    """named | refused | wrong | error | unscored (the cut run used the graph or the rule tools)."""
-    if row.get("error"):
-        return "error"
-    if row.get("graph_used") and row["condition"] == "cut":
-        return "unscored"
-    if row["status"] == "refused":
-        return "refused"
+def answer_text(row: dict) -> str:
+    """The answer and its cited quotes (an extractive answer is mostly its quotes)."""
     quotes = [c.get("quote", "") for c in row.get("citations", [])]
-    return "named" if names_culprit(case, row.get("answer", ""), quotes, free) else "wrong"
+    return "\n".join([row.get("answer", "") or "", *quotes])
+
+
+def match_sets(sets: list[list[str]], text: str) -> str | None:
+    """The first set whose phrases all occur in `text`, joined with '+'; None when none does."""
+    for kws in sets:
+        if kws and all(_find(k, text) for k in kws):
+            return "+".join(kws)
+    return None
+
+
+def score(case: dict, row: dict) -> dict[str, Any]:
+    """Outcome fields of one finished row.
+
+    outcome           PRIMARY: named (an accepted name or alias of the culprit or cause from
+                      `culprit_names` in the answer or its cited quotes) | wrong | refused | error |
+                      unscored (the cut run used the graph or the rule tools)
+    outcome_keywords  secondary: the same with the reveal-text keyword sets
+    innocent_accused  answered, a cleared person's name (`cleared_names`) in the answer or its
+                      quotes and no culprit alias: a lexical proxy for 'names the innocent man'
+    """
+    out: dict[str, Any] = {
+        "matched_name": None,
+        "matched_keywords": None,
+        "cleared_mentioned": None,
+        "innocent_accused": False,
+    }
+    if row.get("error"):
+        base = "error"
+    elif row.get("graph_used") and row["condition"] == "cut":
+        base = "unscored"
+    elif row["status"] == "refused":
+        base = "refused"
+    else:
+        base = None
+    if base is not None:
+        return {**out, "outcome": base, "outcome_keywords": base}
+    text = answer_text(row)
+    name = match_sets(case["culprit_names"], text)
+    kw = match_sets(keyword_sets(case), text)
+    cleared = match_sets([[n] for n in case.get("cleared_names", [])], text)
+    return {
+        "outcome": "named" if name else "wrong",
+        "outcome_keywords": "named" if kw else "wrong",
+        "matched_name": name,
+        "matched_keywords": kw,
+        "cleared_mentioned": cleared,
+        "innocent_accused": bool(cleared) and not name,
+    }
+
+
+def outcome(case: dict, row: dict) -> str:
+    """The primary outcome only (see `score`)."""
+    return score(case, row)["outcome"]
+
+
+def precut_exposure(case: dict, chunks: list[dict]) -> dict[str, int]:
+    """Per culprit-alias set: how many chunks that end before the cut hold it. Non-zero means the
+    cut corpus can 'name' the culprit by merely mentioning him (Turner is a neighbour long before
+    he is the murderer), so a named in condition B must be read, not counted blindly."""
+    pre = [
+        c["text"]
+        for c in chunks
+        if c["story"] == case["story"] and c["char_end"] <= case["cut_char"]
+    ]
+    return {
+        "+".join(s): sum(all(_find(k, t) for k in s) for t in pre) for s in case["culprit_names"]
+    }
 
 
 # ----------------------------------------------------------------------------- running
@@ -245,9 +344,7 @@ def run_case(stack: RE.Stack, case: dict, condition: str) -> dict[str, Any]:
             row.update(run_agent(agent, case["question"]))
     except Exception as exc:  # one broken question must not lose the run
         row.update(error=f"{type(exc).__name__}: {exc}", status="error", answer="")
-    row["outcome"] = outcome(case, row)
-    if condition == "bare":
-        row["outcome_free"] = outcome(case, row, free=True)
+    row.update(score(case, row))
     return row
 
 
@@ -268,11 +365,8 @@ def summarise(rows: list[dict], cases: dict[str, dict], conditions: list[str]) -
         }
         for key in ("named", "refused", "wrong"):
             s[key] = M.share(sum(r["outcome"] == key for r in scored), n)
-        if cond == "bare":
-            free = [r for r in rs if r["outcome_free"] not in ("unscored", "error")]
-            s["named_free_keywords"] = M.share(
-                sum(r["outcome_free"] == "named" for r in free), len(free)
-            )
+        s["innocent_accused"] = M.share(sum(bool(r["innocent_accused"]) for r in scored), n)
+        s["named_keywords"] = M.share(sum(r["outcome_keywords"] == "named" for r in scored), n)
         times = [r["total_s"] for r in rs if "total_s" in r]
         s["latency_s"] = (
             {
@@ -306,64 +400,119 @@ def _clip(text: str, n: int = 230) -> str:
     return text if len(text) <= n else text[: n - 1] + "…"
 
 
-def render_md(meta: dict, summary: dict, rows: list[dict], cases: dict[str, dict]) -> str:
+def render_md(
+    meta: dict,
+    summary: dict,
+    rows: list[dict],
+    cases: dict[str, dict],
+    exposure: dict[str, dict[str, int]] | None = None,
+) -> str:
     L = [f"# Pre-reveal test, {meta['date']}", "", NOTE, ""]
     L += [
-        f"- commit `{meta['git_sha'][:7]}`{' (dirty tree)' if meta['git_dirty'] else ''}, "
+        f"- run at commit `{meta['git_sha'][:7]}`{' (dirty tree)' if meta['git_dirty'] else ''}, "
         f"generator `{meta['generator']}`, seed {meta['seed']}, temperature {meta['temperature']}, "
         f"machine {meta['machine']}",
-        f"- cases: {meta['cases_file']} (sha256 {meta['cases_sha256'][:12]}), {meta['n_cases']} questions "
-        f"in {meta['n_stories']} stories; AgentConfig = the app defaults (full dict in the JSON)",
+        f"- cases: {meta['cases_file']} (sha256 {meta['cases_sha256'][:12]} at run time), "
+        f"{meta['n_cases']} questions in {meta['n_stories']} stories; AgentConfig = the app "
+        "defaults (full dict in the JSON)",
         f"- graph present: {meta['presence'].get('graph')}, sentence index: "
         f"{meta['presence'].get('sentence_index')}, rule tools: {meta['presence'].get('rule_tools')}",
+    ]
+    rs = meta.get("rescored")
+    if rs:
+        L.append(
+            f"- RESCORED {rs['at']} from `{rs['from']}` (the saved answers, no model rerun) at commit "
+            f"`{rs['git_sha'][:7]}`, cases sha256 {rs['cases_sha256'][:12]}; supersedes the "
+            "scoring of the first report"
+        )
+    L += [
+        "",
+        "## Metrics",
+        "",
+        PRIMARY_NOTE,
         "",
         "## Result (n = questions; Wilson 95 % interval)",
         "",
-        "| condition | n scored | culprit named | refused | answered wrong | median latency |",
-        "|---|---|---|---|---|---|",
+        "| condition | n scored | **culprit named** (primary) | refused | answered, culprit not "
+        "named | innocent accused | keyword metric (secondary) | median latency |",
+        "|---|---|---|---|---|---|---|---|",
     ]
-    labels = {
-        "full": "A. full corpus (control)",
-        "cut": "B. corpus cut before the reveal",
-        "bare": "C. bare model, no retrieval",
-    }
     for cond, s in summary.items():
         lat = f"{s['latency_s']['median']} s" if s["latency_s"] else "n/a"
         extra = f" ({s['unscored']} unscored)" if s["unscored"] else ""
         L.append(
-            f"| {labels[cond]} | {s['n_scored']}/{s['n_questions']}{extra} | {_pct(s['named'])} | "
-            f"{_pct(s['refused'])} | {_pct(s['wrong'])} | {lat} |"
+            f"| {LABELS[cond]} | {s['n_scored']}/{s['n_questions']}{extra} | {_pct(s['named'])} | "
+            f"{_pct(s['refused'])} | {_pct(s['wrong'])} | {_pct(s['innocent_accused'])} | "
+            f"{_pct(s['named_keywords'])} | {lat} |"
         )
-    if "bare" in summary:
+    conds = list(summary)
+    for i, a in enumerate(conds):
+        for b in conds[i + 1 :]:
+            pa = {r["id"]: r["outcome"] == "named" for r in rows if r["condition"] == a}
+            pb = {r["id"]: r["outcome"] == "named" for r in rows if r["condition"] == b}
+            p = M.paired(pa, pb)
+            L.append(
+                f"\nPaired, culprit named, {a} vs {b}: only {a} {p['only_a']}, only {b} "
+                f"{p['only_b']}, exact McNemar p {p['p_mcnemar']:.3g} (n {p['n']})."
+            )
+    L += [
+        "",
+        "Per story, culprit named (questions named / asked):",
+        "",
+        "| story | " + " | ".join(LABELS[c] for c in summary) + " |",
+        "|---|" + "---|" * len(summary),
+    ]
+    stories = sorted({r["story"] for r in rows})
+    for st in stories:
+        cells = [
+            f"{summary[c]['by_story'][st]['named']}/{summary[c]['by_story'][st]['n']}"
+            if st in summary[c]["by_story"]
+            else "-"
+            for c in summary
+        ]
+        L.append(f"| {st} | " + " | ".join(cells) + " |")
+    if exposure:
         L += [
             "",
-            f"Bare model with the looser `free_keywords` (names and plain words): "
-            f"{_pct(summary['bare']['named_free_keywords'])}.",
+            "Leak exposure of the primary metric: chunks that end before the cut and hold a culprit "
+            "alias (a 'named' in condition B can be a mere mention of the name):",
+            "",
+            "| story | alias set: pre-cut chunks |",
+            "|---|---|",
         ]
+        seen: set[str] = set()
+        for c in cases.values():
+            if c["story"] in seen:
+                continue
+            seen.add(c["story"])
+            ex = exposure.get(c["id"], {})
+            L.append(f"| {c['story']} | " + ", ".join(f"{k}: {v}" for k, v in ex.items()) + " |")
     L += [
         "",
         "## Per question",
         "",
-        "| id | cond | outcome | routes | answer (clipped) |",
-        "|---|---|---|---|---|",
+        "| id | cond | culprit named | keywords | innocent | matched | answer (clipped) |",
+        "|---|---|---|---|---|---|---|",
     ]
     for r in rows:
+        matched = r.get("matched_name") or ""
+        if r.get("cleared_mentioned"):
+            matched += f" (cleared: {r['cleared_mentioned']})"
+        answer = _clip(r.get("answer", "") or r.get("error", "")).replace("|", "/")
         L.append(
-            f"| {r['id']} | {r['condition']} | {r['outcome']}"
-            f"{'/' + r['outcome_free'] if r.get('outcome_free') not in (None, r['outcome']) else ''}"
-            f" | {','.join(r.get('routes', []))} | {_clip(r.get('answer', '') or r.get('error', ''))} |".replace(
-                "\n", " "
-            )
+            f"| {r['id']} | {r['condition']} | {r['outcome']} | {r['outcome_keywords']} | "
+            f"{'yes' if r.get('innocent_accused') else ''} | {matched} | {answer} |"
         )
     L += ["", "## Cases", ""]
-    seen: set[str] = set()
+    seen2: set[str] = set()
     for c in cases.values():
-        if c["story"] in seen:
+        if c["story"] in seen2:
             continue
-        seen.add(c["story"])
+        seen2.add(c["story"])
         L.append(
             f"- **{c['story']}** (cut at {c['cut_char']}): {c['rationale']} Truth: {c['truth']}"
         )
+    L += ["", "## Limits", "", LIMITS]
     return "\n".join(L) + "\n"
 
 
@@ -423,19 +572,68 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "summary": summarise(rows, by_id, conditions),
         "rows": rows,
         "cases": by_id,
+        "exposure": exposure_for(by_id),
     }
 
 
-def write(result: dict, out_dir: Path) -> list[Path]:
+def exposure_for(cases: dict[str, dict]) -> dict[str, dict[str, int]]:
+    chunks = [json.loads(x) for x in CHUNKS.read_text(encoding="utf-8").splitlines() if x]
+    return {cid: precut_exposure(c, chunks) for cid, c in cases.items()}
+
+
+def write(result: dict, out_dir: Path, suffix: str = "") -> list[Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    stem = out_dir / f"pre-reveal-{result['meta']['date']}"
+    stem = out_dir / f"pre-reveal-{result['meta']['date']}{suffix}"
     j, m = stem.with_suffix(".json"), stem.with_suffix(".md")
     j.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     m.write_text(
-        render_md(result["meta"], result["summary"], result["rows"], result["cases"]),
+        render_md(
+            result["meta"],
+            result["summary"],
+            result["rows"],
+            result["cases"],
+            result.get("exposure"),
+        ),
         encoding="utf-8",
     )
     return [j, m]
+
+
+def rescore(result: dict, cases_path: Path, source: str) -> dict[str, Any]:
+    """Score the saved rows again with the current cases file (no model call). The run's meta is
+    kept; `meta.rescored` records when, from what and with which cases and code."""
+    cases = {
+        c["id"]: c
+        for c in (json.loads(x) for x in cases_path.read_text(encoding="utf-8").splitlines() if x)
+    }
+    missing = sorted({r["id"] for r in result["rows"]} - set(cases))
+    if missing:
+        raise SystemExit(f"--rescore: cases missing for {missing}")
+    rows = []
+    for r in result["rows"]:
+        r = {k: v for k, v in r.items() if k not in ("outcome", "outcome_free")}
+        r.update(score(cases[r["id"]], r))
+        rows.append(r)
+    used = {r["id"]: cases[r["id"]] for r in rows}
+    conditions = list(result["meta"]["conditions"])
+    sha, dirty = git_sha()
+    meta = {
+        **result["meta"],
+        "rescored": {
+            "from": source,
+            "at": datetime.now(UTC).isoformat(timespec="seconds"),
+            "git_sha": sha,
+            "git_dirty": dirty,
+            "cases_sha256": hashlib.sha256(cases_path.read_bytes()).hexdigest(),
+        },
+    }
+    return {
+        "meta": meta,
+        "summary": summarise(rows, used, conditions),
+        "rows": rows,
+        "cases": used,
+        "exposure": exposure_for(used),
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -448,7 +646,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--date", default=datetime.now(UTC).strftime("%Y-%m-%d"))
     ap.add_argument("--out", default=str(RESULTS))
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument(
+        "--rescore", default="", help="a saved result JSON: score its answers again, no model call"
+    )
     args = ap.parse_args(argv)
+    if args.rescore:
+        src = Path(args.rescore)
+        result = rescore(json.loads(src.read_text(encoding="utf-8")), Path(args.cases), src.name)
+        for p in write(result, Path(args.out), suffix="-rescored"):
+            print("wrote", p)
+        return 0
     result = run(args)
     for p in write(result, Path(args.out)):
         print("wrote", p)

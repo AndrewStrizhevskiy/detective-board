@@ -128,44 +128,106 @@ def test_no_sentence_index_gives_none(inner):
 
 
 CASE = {
+    "id": "c1",
+    "story": "a",
+    "cut_char": 200,
+    "truth": "the horse",
+    "rationale": "r",
     "truth_keywords": ["lessen his guilt"],
     "truth_keywords_alt": [["steel shoe", "Straker"]],
-    "free_keywords": [["horse", "killed"]],
+    "culprit_names": [["the horse"], ["Straker himself"], ["Silver", "kicked"]],
+    "cleared_names": ["Simpson"],
 }
 
 
-def test_scorer_named_refused_wrong_and_unscored():
+def test_primary_metric_is_the_culprit_name_and_keywords_are_secondary():
     row = {"condition": "cut", "status": "answered", "citations": []}
-    assert P.outcome(CASE, {**row, "answer": "It may lessen his guilt, said he."}) == "named"
-    assert P.outcome(CASE, {**row, "answer": "The steel shoe struck Straker."}) == "named"
-    assert P.outcome(CASE, {**row, "answer": "The steel shoe struck him."}) == "wrong"
-    assert (
-        P.outcome(CASE, {**row, "answer": "x", "citations": [{"quote": "lessen his guilt"}]})
-        == "named"
+    s = P.score(CASE, {**row, "answer": "The horse lashed out, said he."})
+    assert (s["outcome"], s["outcome_keywords"], s["matched_name"]) == (
+        "named",
+        "wrong",
+        "the horse",
     )
-    assert P.outcome(CASE, {**row, "status": "refused", "answer": "lessen his guilt"}) == "refused"
-    assert P.outcome(CASE, {**row, "answer": "lessen his guilt", "graph_used": True}) == "unscored"
-    assert (
-        P.outcome(
-            CASE, {**row, "condition": "full", "answer": "lessen his guilt", "graph_used": True}
-        )
-        == "named"
-    )
+    s = P.score(CASE, {**row, "answer": "It may lessen his guilt, said he."})
+    assert (s["outcome"], s["outcome_keywords"]) == ("wrong", "named"), "wording, not the name"
+    s = P.score(CASE, {**row, "answer": "x", "citations": [{"quote": "Silver Blaze kicked out"}]})
+    assert s["outcome"] == "named" and s["matched_name"] == "Silver+kicked", "quotes count"
+    assert P.outcome(CASE, {**row, "answer": "Silver Blaze ran"}) == "wrong", "a set needs all"
+    assert P.outcome(CASE, {**row, "answer": "THE HORSE"}) == "named", "case-insensitive"
+    assert P.outcome(CASE, {**row, "answer": "other horse"}) == "wrong"
+
+
+def test_refused_unscored_error_and_innocent_accused():
+    row = {"condition": "cut", "status": "answered", "citations": []}
+    assert P.outcome(CASE, {**row, "status": "refused", "answer": "the horse"}) == "refused"
+    assert P.outcome(CASE, {**row, "answer": "the horse", "graph_used": True}) == "unscored"
+    full = {**row, "condition": "full", "answer": "the horse", "graph_used": True}
+    assert P.outcome(CASE, full) == "named", "only the cut run is unscored by graph use"
     assert P.outcome(CASE, {**row, "error": "boom"}) == "error"
-    assert P.outcome(CASE, {**row, "answer": "The horse killed him"}) == "wrong"
-    assert P.outcome(CASE, {**row, "answer": "The horse killed him"}, free=True) == "named"
+    s = P.score(CASE, {**row, "answer": "Fitzroy Simpson struck him down."})
+    assert s["innocent_accused"] and s["cleared_mentioned"] == "Simpson"
+    s = P.score(CASE, {**row, "answer": "Not Simpson: the horse did it."})
+    assert not s["innocent_accused"] and s["cleared_mentioned"] == "Simpson"
+    s = P.score(CASE, {**row, "status": "refused", "answer": "Simpson"})
+    assert not s["innocent_accused"]
+
+
+def test_precut_exposure_counts_chunks_before_the_cut_only():
+    chunks = [
+        {"story": "a", "char_end": 100, "text": "the horse ran"},
+        {"story": "a", "char_end": 300, "text": "the horse kicked"},
+        {"story": "b", "char_end": 50, "text": "the horse"},
+    ]
+    assert P.precut_exposure(CASE, chunks) == {
+        "the horse": 1,
+        "Straker himself": 0,
+        "Silver+kicked": 0,
+    }
+
+
+def _row(o, **kw):
+    base = {"id": "1", "story": "s", "condition": "cut", "outcome": o, "total_s": 10.0}
+    return {**base, "outcome_keywords": o, "innocent_accused": False, **kw}
 
 
 def test_summary_counts_with_intervals():
-    cases = {"1": CASE}
     rows = [
-        {"id": "1", "story": "s", "condition": "cut", "outcome": o, "total_s": 10.0}
-        for o in ("refused", "refused", "wrong", "unscored")
+        _row("refused"),
+        _row("refused"),
+        _row("wrong", innocent_accused=True),
+        _row("unscored"),
     ]
-    s = P.summarise(rows, cases, ["cut"])["cut"]
+    s = P.summarise(rows, {"1": CASE}, ["cut"])["cut"]
     assert (s["n_questions"], s["n_scored"], s["unscored"]) == (4, 3, 1)
     assert s["named"]["k"] == 0 and s["named"]["n"] == 3 and s["named"]["ci95"][1] < 0.7
     assert s["refused"]["k"] == 2 and s["latency_s"]["median"] == 10.0
+    assert s["innocent_accused"]["k"] == 1 and s["named_keywords"]["k"] == 0
+
+
+def test_rescore_uses_the_saved_answers_and_the_current_cases(tmp_path):
+    cases = tmp_path / "cases.jsonl"
+    cases.write_text(json.dumps(CASE) + "\n")
+    old = {
+        "meta": {
+            "conditions": ["full", "cut"], "date": "d", "git_sha": "abc1234", "git_dirty": False,
+            "generator": "g", "seed": 42, "temperature": 0.0, "machine": "m", "cases_file": "c",
+            "cases_sha256": "0" * 64, "n_cases": 1, "n_stories": 1, "presence": {},
+        },  # fmt: skip
+        "rows": [
+            {"id": "c1", "story": "a", "condition": "full", "status": "answered",
+             "answer": "The horse.", "citations": [], "outcome": "wrong", "total_s": 1.0},
+            {"id": "c1", "story": "a", "condition": "cut", "status": "answered",
+             "answer": "Simpson did it.", "citations": [], "outcome": "wrong", "total_s": 1.0},
+        ],
+    }  # fmt: skip
+    new = P.rescore(old, cases, "old.json")
+    full, cut = new["rows"]
+    assert full["outcome"] == "named" and cut["innocent_accused"]
+    assert new["meta"]["rescored"]["from"] == "old.json" and new["meta"]["date"] == "d"
+    assert new["summary"]["full"]["named"]["k"] == 1
+    md = P.render_md(new["meta"], new["summary"], new["rows"], new["cases"], new["exposure"])
+    for text in ("Primary: culprit named", "Secondary: keyword metric", "RESCORED", "McNemar"):
+        assert text in md
 
 
 # ------------------------------------------------------------------ validator
@@ -176,6 +238,7 @@ def _case(text, **kw):
     base = {
         "id": "x", "story": "s", "cut_char": cut, "question": "Who did it?", "truth": "t",
         "truth_keywords": ["Jones"], "reveal_quotes": ["Jones did it"], "rationale": "r",
+        "culprit_names": [["Jones"]],
     }  # fmt: skip
     return {**base, **kw}
 
@@ -216,6 +279,20 @@ def test_validator_flags_quote_and_cut_errors():
     seen: set[str] = set()
     V.check_case(_case(TEXT, **kw), TEXT, [], seen, "c")
     assert any("duplicate" in x for x in V.check_case(_case(TEXT, **kw), TEXT, [], seen, "c"))
+
+
+def test_validator_checks_culprit_and_cleared_names():
+    kw = {"truth_keywords": ["zzz"]}
+    assert V.check_case(_case(TEXT, **kw), TEXT, [], set(), "c") == [], "aliases may occur pre-cut"
+    e = V.check_case(_case(TEXT, culprit_names=[], **kw), TEXT, [], set(), "c")
+    assert any("culprit_names" in x for x in e)
+    e = V.check_case(_case(TEXT, culprit_names=[["Jones", ""]], **kw), TEXT, [], set(), "c")
+    assert any("culprit_names" in x for x in e)
+    e = V.check_case(_case(TEXT, cleared_names=["Mr Jones"], **kw), TEXT, [], set(), "c")
+    assert any("matches a culprit alias" in x for x in e)
+    case = _case(TEXT, **kw)
+    del case["culprit_names"]
+    assert any("missing field culprit_names" in x for x in V.check_case(case, TEXT, [], set(), "c"))
 
 
 def test_real_cases_file_is_valid():
