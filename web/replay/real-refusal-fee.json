@@ -3,23 +3,30 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "How large a fee did Colonel Ross pay Holmes for recovering Silver Blaze?",
-  "recorded_at": "2026-10-27T11:51:34+0200",
-  "seconds": 22.6,
-  "commit": "8491402d7c79100bcbc199314979473392d46925",
+  "recorded_at": "2026-10-28T14:55:14+0200",
+  "seconds": 23.0,
+  "commit": "725dc1f4f99e6ae8e89c0d99cae702c00c2aa208",
   "mcp": {
    "configured": true,
    "mode": "stdio",
    "server": "timeline-alibi",
-   "started": false
+   "started": true,
+   "version": "0.2.0",
+   "tools": [
+    "build_timeline",
+    "check_alibi",
+    "find_contradictions",
+    "find_overlaps"
+   ]
   },
   "graph": {
-   "chunks": 231,
-   "claim": 838,
-   "edges": 2040,
-   "event": 655,
-   "item": 28,
-   "person": 306,
-   "place": 226
+   "chunks": 596,
+   "claim": 2157,
+   "edges": 5259,
+   "event": 1698,
+   "item": 49,
+   "person": 743,
+   "place": 631
   },
   "versions": {
    "api": "1",
@@ -39,9 +46,9 @@
  },
  "events": [
   {
-   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
    "seq": 0,
-   "ts": "2026-10-27T09:51:11.452+00:00",
+   "ts": "2026-10-28T12:54:51.267+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -55,9 +62,9 @@
    "confidence": 0.5
   },
   {
-   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
    "seq": 1,
-   "ts": "2026-10-27T09:51:11.452+00:00",
+   "ts": "2026-10-28T12:54:51.268+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
@@ -66,11 +73,11 @@
    "attempt": 1
   },
   {
-   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
    "seq": 2,
-   "ts": "2026-10-27T09:51:11.595+00:00",
+   "ts": "2026-10-28T12:54:51.394+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 142,
+   "duration_ms": 125,
    "type": "retrieval_results",
    "hits": [
     {
@@ -176,9 +183,9 @@
    ]
   },
   {
-   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
    "seq": 3,
-   "ts": "2026-10-27T09:51:11.656+00:00",
+   "ts": "2026-10-28T12:54:51.458+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "enriched_query",
@@ -458,9 +465,9 @@
    "injection_suspects": []
   },
   {
-   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
    "seq": 4,
-   "ts": "2026-10-27T09:51:34.048+00:00",
+   "ts": "2026-10-28T12:55:14.262+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "citation_check",
@@ -474,9 +481,9 @@
    "action": "refuse"
   },
   {
-   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
    "seq": 5,
-   "ts": "2026-10-27T09:51:34.048+00:00",
+   "ts": "2026-10-28T12:55:14.262+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "refusal",
@@ -493,9 +500,9 @@
    ]
   },
   {
-   "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
    "seq": 6,
-   "ts": "2026-10-27T09:51:34.048+00:00",
+   "ts": "2026-10-28T12:55:14.262+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
@@ -505,9 +512,9 @@
    "citations": [],
    "provenance": [],
    "route": {
-    "run_id": "bae798d9-5c35-4f6a-9c08-76080777e2d1",
+    "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
     "seq": 0,
-    "ts": "2026-10-27T09:51:11.452+00:00",
+    "ts": "2026-10-28T12:54:51.267+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",
@@ -521,7 +528,9 @@
     "confidence": 0.5
    },
    "attempts": 1,
-   "refusal_code": "no_evidence"
+   "refusal_code": "no_evidence",
+   "original_question": null,
+   "translated_question": null
   }
  ]
 }

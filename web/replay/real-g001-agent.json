@@ -3,9 +3,9 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "What kind of snake killed Dr. Grimesby Roylott?",
-  "recorded_at": "2026-10-27T11:50:40+0200",
-  "seconds": 39.1,
-  "commit": "8491402d7c79100bcbc199314979473392d46925",
+  "recorded_at": "2026-10-28T14:54:46+0200",
+  "seconds": 28.7,
+  "commit": "725dc1f4f99e6ae8e89c0d99cae702c00c2aa208",
   "mcp": {
    "configured": true,
    "mode": "stdio",
@@ -13,13 +13,13 @@
    "started": false
   },
   "graph": {
-   "chunks": 231,
-   "claim": 838,
-   "edges": 2040,
-   "event": 655,
-   "item": 28,
-   "person": 306,
-   "place": 226
+   "chunks": 596,
+   "claim": 2157,
+   "edges": 5259,
+   "event": 1698,
+   "item": 49,
+   "person": 743,
+   "place": 631
   },
   "versions": {
    "api": "1",
@@ -39,9 +39,9 @@
  },
  "events": [
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 0,
-   "ts": "2026-10-27T09:50:01.166+00:00",
+   "ts": "2026-10-28T12:54:19.127+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -55,9 +55,9 @@
    "confidence": 0.5
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 1,
-   "ts": "2026-10-27T09:50:01.166+00:00",
+   "ts": "2026-10-28T12:54:19.127+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
@@ -66,11 +66,11 @@
    "attempt": 1
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 2,
-   "ts": "2026-10-27T09:50:01.536+00:00",
+   "ts": "2026-10-28T12:54:19.189+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 369,
+   "duration_ms": 61,
    "type": "retrieval_results",
    "hits": [
     {
@@ -176,9 +176,9 @@
    ]
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 3,
-   "ts": "2026-10-27T09:50:01.614+00:00",
+   "ts": "2026-10-28T12:54:19.225+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "enriched_query",
@@ -406,9 +406,9 @@
    "injection_suspects": []
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 4,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -416,9 +416,9 @@
    "text": "From "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 5,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -426,9 +426,9 @@
    "text": "the "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 6,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -436,9 +436,9 @@
    "text": "sources: "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 7,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -446,9 +446,9 @@
    "text": "[6: "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 8,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -456,9 +456,9 @@
    "text": "\"“It "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 9,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -466,9 +466,9 @@
    "text": "is "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 10,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -476,9 +476,9 @@
    "text": "a "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 11,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -486,9 +486,9 @@
    "text": "swamp "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 12,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -496,9 +496,9 @@
    "text": "adder!” "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 13,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -506,9 +506,9 @@
    "text": "cried "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 14,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -516,9 +516,9 @@
    "text": "Holmes; "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 15,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -526,9 +526,9 @@
    "text": "“the "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 16,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -536,9 +536,9 @@
    "text": "deadliest "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 17,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -546,9 +546,9 @@
    "text": "snake "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 18,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -556,9 +556,9 @@
    "text": "in "
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 19,
-   "ts": "2026-10-27T09:50:40.211+00:00",
+   "ts": "2026-10-28T12:54:46.647+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -566,9 +566,9 @@
    "text": "India.\"]"
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 20,
-   "ts": "2026-10-27T09:50:40.213+00:00",
+   "ts": "2026-10-28T12:54:46.650+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "citation_check",
@@ -586,9 +586,9 @@
    "action": "accept"
   },
   {
-   "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
    "seq": 21,
-   "ts": "2026-10-27T09:50:40.214+00:00",
+   "ts": "2026-10-28T12:54:46.650+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
@@ -621,9 +621,9 @@
     }
    ],
    "route": {
-    "run_id": "50e7fdf5-31da-4287-b54c-16ea83b9c61d",
+    "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
     "seq": 0,
-    "ts": "2026-10-27T09:50:01.166+00:00",
+    "ts": "2026-10-28T12:54:19.127+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",
@@ -637,7 +637,9 @@
     "confidence": 0.5
    },
    "attempts": 1,
-   "refusal_code": null
+   "refusal_code": null,
+   "original_question": null,
+   "translated_question": null
   }
  ]
 }
