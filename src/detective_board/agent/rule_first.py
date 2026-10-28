@@ -6,6 +6,7 @@ Three shapes (docs/symbolic-layer.md, "Rule-first answers"):
   empty     "no violation among the extracted facts; this does not show consistency" + coverage
   failed    what was missing (tool error, skipped step, ambiguous or unknown person)
   timeline  chronology questions (build_timeline): a numbered list of events, see below
+  presence  alibi table (presence_table): agent/presence_answer.py
 
 Citations use the [n: "quote"] form of the self-check; every quote is copied from an anchor of the
 rule result or from a retrieved chunk, so the check passes by construction. Words that assert
@@ -201,7 +202,7 @@ def coverage_for(tools: object, graph: object, story: str | None) -> Coverage | 
 class RuleAnswer:
     text: str
     sources: list[Source]
-    kind: str  # findings | empty | failed | timeline
+    kind: str  # findings | empty | failed | timeline | presence
 
 
 @dataclass
@@ -521,7 +522,14 @@ def build_answer(
     coverage: Coverage | None,
     idf: Mapping[str, float] | None = None,
     min_quote_chars: int = 6,
+    names: Mapping[str, str] | None = None,
 ) -> RuleAnswer:
+    if any(o.tool == "presence_table" for o in outcomes):  # alibi / presence table (11.5)
+        from .presence_answer import build_presence_answer
+
+        return build_presence_answer(
+            story=story, outcomes=outcomes, link=link, names=names, min_quote_chars=min_quote_chars
+        )
     if any(o.tool == "build_timeline" for o in outcomes):
         return build_timeline_answer(
             story=story, outcomes=outcomes, link=link, notes=notes, min_quote_chars=min_quote_chars

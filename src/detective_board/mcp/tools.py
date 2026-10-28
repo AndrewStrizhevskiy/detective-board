@@ -14,6 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from detective_board.mcp.errors import ToolError
 from detective_board.symbolic import api
 from detective_board.symbolic.api import (
+    ClaimRec,
     EventRec,
     Explanation,
     FactBase,
@@ -134,6 +135,136 @@ def build_timeline(
         "truncated": len(selected) > limit,
         "provenance": "derived",
         "rule_id": "R2",
+    }
+
+
+PRESENCE_LIMIT = 12
+_DENIAL_INFIX = " was not at "
+
+
+def _claim_key(a: Any) -> tuple[str, int, int]:
+    return (a.chunk_id, a.char_start, a.char_end)
+
+
+def _speaker_of(ev: EventRec, claims: list[ClaimRec]) -> str | None:
+    """Speaker of a reported event: the claim written from the same quote about the same fact
+    (the ingesters give the claim `"X was at P, T"` for the event `"X at P, T"`). None when no
+    claim matches exactly: the speaker is then not stated, never guessed."""
+    keys = {_claim_key(a) for a in ev.anchors}
+    want = ev.description.casefold()
+    for c in claims:
+        if c.prop is None and _DENIAL_INFIX in c.content:
+            continue
+        if keys & {_claim_key(a) for a in c.anchors}:
+            if c.content.replace(" was at ", " at ", 1).casefold() == want:
+                return c.speaker_id
+    return None
+
+
+def presence_table(
+    source: FactSource,
+    *,
+    story: str,
+    person_id: str,
+    names: list[str] | None = None,
+    limit: int = PRESENCE_LIMIT,
+) -> dict[str, Any]:
+    """Every place the graph holds for one person (events with a place, and denials), with who
+    says so and the quote anchor, plus the R1 conflicts of the same person. Read-only; no rule
+    verdict of its own: `conflicts` are the violated findings of `find_contradictions` R1.
+
+    `names` are the surface forms of the person (name, aliases): a denial claim carries no person
+    id, only the text `"<name> was not at <place>, <time>"`, so it is matched on these."""
+    _check_id(story, "story")
+    _check_id(person_id, "person_id")
+    _check_limit(limit, 100)
+    fb = source.load(story)
+    _known_person(fb, person_id)
+    place_name = {p.id: p.name for p in fb.places}
+    claims = list(fb.claims)
+    rows: list[dict[str, Any]] = []
+    no_place = 0
+    for ev in fb.events:
+        if person_id not in ev.participants:
+            continue
+        if not ev.place_ref:
+            no_place += 1
+            continue
+        speaker = None if ev.narrator else _speaker_of(ev, claims)
+        row: dict[str, Any] = {
+            "row_id": ev.id,
+            "kind": "event",
+            "polarity": "affirm",
+            "place_id": ev.place_ref if ev.place_ref in place_name else None,
+            "place": place_name.get(ev.place_ref, ev.place_ref),
+            "when": _interval(ev.time),
+            "time_text": ev.time.time_text if ev.time else None,
+            "narrator": ev.narrator,
+            "speaker_id": speaker,
+            "confidence": ev.eff_confidence,
+            "anchors": _anchors(ev),
+        }
+        if ev.curated:
+            row["curated"] = True
+        rows.append(row)
+    wanted = [n.casefold() + _DENIAL_INFIX for n in (names or []) if n.strip()]
+    for c in claims:
+        low = c.content.casefold()
+        hit = next((w for w in wanted if low.startswith(w)), None)
+        if hit is None:
+            continue
+        where, _, when_text = c.content[len(hit) :].partition(", ")
+        if not where.strip():
+            continue
+        row = {
+            "row_id": c.id,
+            "kind": "claim",
+            "polarity": "deny",
+            "place_id": None,
+            "place": where.strip(),
+            "when": None,
+            "time_text": when_text.strip() or None,
+            "narrator": False,
+            "speaker_id": c.speaker_id,
+            "confidence": c.confidence,
+            "anchors": [a.model_dump(mode="json") for a in c.anchors],
+        }
+        if c.curated:
+            row["curated"] = True
+        rows.append(row)
+    rows.sort(
+        key=lambda r: (r["anchors"][0]["char_start"] if r["anchors"] else 10**12, r["row_id"])
+    )
+    rep = api.scan_presence_conflicts(fb, person_id=person_id, max_findings=10**6)
+    conflicts = [
+        {
+            "rule": f.rule_id,
+            "finding_id": f.finding_id,
+            "reason_code": f.reason_code,
+            "provenance": _provenance(f.conditional),
+            "row_ids": [x.fact_id for x in f.explanation.facts if x.kind == "event"],
+            "explanation": _expl(f.explanation),
+        }
+        for f in rep.findings
+        if f.verdict.value == "violated"
+    ]
+    in_conflict = {i for c in conflicts for i in c["row_ids"]}
+    keep = {r["row_id"] for r in rows if r["row_id"] in in_conflict}
+    for r in rows:  # rows of a conflict are kept first, the rest in narration order
+        if len(keep) >= limit:
+            break
+        keep.add(r["row_id"])
+    shown = [r for r in rows if r["row_id"] in keep]
+    return {
+        "status": "ok" if rows else "insufficient_evidence",
+        "person_id": person_id,
+        "rows": shown,
+        "total_rows": len(rows),
+        "events_without_place": no_place,
+        "truncated": len(shown) < len(rows),
+        "conflicts": conflicts,
+        "provenance": "derived",
+        "rule_id": "R1",
     }
 
 
