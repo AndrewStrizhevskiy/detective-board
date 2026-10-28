@@ -162,3 +162,13 @@ def test_short_mode_is_deterministic(tmp_path):
         return timeless, result["contradiction_rows"], result["meta"]["config_hash"]
 
     assert rows(tmp_path / "a") == rows(tmp_path / "b")
+
+
+def test_agent_overrides_are_typed_and_checked():
+    from detective_board.agent import AgentConfig
+
+    cfg = R.apply_overrides(AgentConfig(), {"extract_sentence_k": "12", "rule_first": "false"})
+    assert cfg.extract_sentence_k == 12 and cfg.rule_first is False
+    assert R.apply_overrides(AgentConfig(), {}) == AgentConfig()
+    with pytest.raises(SystemExit, match="unknown"):
+        R.apply_overrides(AgentConfig(), {"nope": "1"})

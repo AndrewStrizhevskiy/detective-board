@@ -201,7 +201,31 @@ class Stack:
         return row is not None
 
 
-def build_stack(short: bool, vector_min_score: float) -> Stack:
+def apply_overrides(cfg: Any, overrides: dict[str, Any]) -> Any:
+    """AgentConfig of the hybrid+graph agent with KEY=VALUE overrides (experiments on dev). The values
+    are coerced to the type of the current value; an unknown key is an error."""
+    if not overrides:
+        return cfg
+    fields = {f.name for f in dataclasses.fields(cfg)}
+    out: dict[str, Any] = {}
+    for key, raw in overrides.items():
+        if key not in fields:
+            raise SystemExit(f"--set: unknown AgentConfig field {key!r}")
+        cur = getattr(cfg, key)
+        if isinstance(cur, bool):
+            out[key] = str(raw).lower() in ("1", "true", "yes")
+        elif isinstance(cur, int):
+            out[key] = int(raw)
+        elif isinstance(cur, float):
+            out[key] = float(raw)
+        else:
+            out[key] = raw
+    return dataclasses.replace(cfg, **out)
+
+
+def build_stack(
+    short: bool, vector_min_score: float, overrides: dict[str, Any] | None = None
+) -> Stack:
     """Short: the API's --fake services (FakeLLM, 10-chunk fixture, fixture graph, the demo
     flavour). Full: the real data and Ollama, the generator pinned for all configurations. The
     rule tools are the ones the app wires (stdio MCP over the graph, else in-process)."""
@@ -210,7 +234,8 @@ def build_stack(short: bool, vector_min_score: float) -> Stack:
     cfg = ApiConfig(fake=True) if short else ApiConfig(llm_model=GENERATOR)
     with fixture_flavour(SHORT_FIXTURE if short else None):
         svc = build_services(cfg, with_agent=True)
-        ac = _agent_cfg(cfg)
+        base_ac = _agent_cfg(cfg)
+        ac = apply_overrides(base_ac, overrides or {})
         if short:
             llm: Any = fixture.build_llm()
             store, raw_emb = fixture.build_store()  # a store and the embedder that matches it
@@ -233,8 +258,8 @@ def build_stack(short: bool, vector_min_score: float) -> Stack:
         )
         store = svc.store
     emb = SharedEmbedder(raw_emb)
-    vector_cfg = dataclasses.replace(
-        ac, top_k=VECTOR_K, extract_top_k=VECTOR_K, min_score=vector_min_score
+    vector_cfg = dataclasses.replace(  # the vector-only baseline never takes the overrides
+        base_ac, top_k=VECTOR_K, extract_top_k=VECTOR_K, min_score=vector_min_score
     )
     retrievers = {
         "vector": HybridRetriever(store, emb, weights={"bm25": 0.0, "vec": 1.0}),
@@ -780,7 +805,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     configs_run = [
         c for c in (args.configs or ["bare", "vector", "hybrid+graph"]) if c != "vector+rerank"
     ]
-    stack = build_stack(args.short, args.vector_min_score)
+    stack = build_stack(args.short, args.vector_min_score, dict(args.set or []))
     cfg_hash = config_hash(stack.identity, configs_run, args.short)
     out_dir = args.out or (RUNS if args.short or (touches_test and dirty) else RESULTS)
     if touches_test and (prev := previous_test_runs(out_dir, sha, cfg_hash)):
@@ -881,6 +906,13 @@ def main(argv: list[str] | None = None) -> int:
         "--allow-dirty",
         action="store_true",
         help="allow a test-split run with uncommitted changes (dry run only)",
+    )
+    ap.add_argument(
+        "--set",
+        action="append",
+        type=lambda t: tuple(t.split("=", 1)),
+        metavar="KEY=VALUE",
+        help="override an AgentConfig field of the hybrid+graph agent (dev experiments; part of the config hash)",
     )
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args(argv)
