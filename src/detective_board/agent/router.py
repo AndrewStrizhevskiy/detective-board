@@ -31,6 +31,12 @@ _RELATION = re.compile(
     r"|associates?\b|how (is|are|was|were) .{0,60}(related|connected|linked)|ties? between",
     re.I,
 )
+_TIMELINE = re.compile(
+    r"\btimelines?\b|\bchronolog\w*|\border of (?:the )?events\b|\bsequence of (?:the )?events\b"
+    r"|\bin what order\b|\bwhat happened\b.{0,80}\bin order\b|\bday[- ]by[- ]day\b"
+    r"|\bstep[- ]by[- ]step\b",
+    re.I,
+)
 
 _CLASSIFY_PROMPT = (
     "Classify the question about the Sherlock Holmes stories into exactly one label: "
@@ -82,7 +88,16 @@ class Router:
                 "contradiction question -> graph facts of the named person + rules R1-R3 "
                 "via timeline-alibi find_contradictions"
             )
-        if m := _RELATION.search(q):
+        if not tools and (m := _TIMELINE.search(q)):
+            # alibi / contradiction wording wins: "order" there is not a chronology request
+            routes.extend(("mcp", "graph"))
+            tools.append("build_timeline")
+            matched.append(m.group(0))
+            why.append(
+                "chronology question -> graph events of the story (and person) ordered by "
+                "build_timeline, no model call"
+            )
+        elif m := _RELATION.search(q):
             if "graph" not in routes:
                 routes.append("graph")
             matched.append(m.group(0))

@@ -5,6 +5,7 @@ Three shapes (docs/symbolic-layer.md, "Rule-first answers"):
   findings  one short sentence per finding (rule, verdict, label, reason) + verbatim quotes
   empty     "no violation among the extracted facts; this does not show consistency" + coverage
   failed    what was missing (tool error, skipped step, ambiguous or unknown person)
+  timeline  chronology questions (build_timeline): a numbered list of events, see below
 
 Citations use the [n: "quote"] form of the self-check; every quote is copied from an anchor of the
 rule result or from a retrieved chunk, so the check passes by construction. Words that assert
@@ -199,7 +200,7 @@ def coverage_for(tools: object, graph: object, story: str | None) -> Coverage | 
 class RuleAnswer:
     text: str
     sources: list[Source]
-    kind: str  # findings | empty | failed
+    kind: str  # findings | empty | failed | timeline
 
 
 @dataclass
@@ -339,6 +340,114 @@ def _error_reason(o: ToolOutcome) -> str:
     return f"{o.tool} failed ({code})" + (f": {msg}" if msg and msg != "tool call failed" else "")
 
 
+# ---------------------------------------------------------------------------- timeline
+TIMELINE_ORDER_NOTE = (
+    "Dated events are ordered by the time stated in the text; the others follow in order of "
+    "narration, which is not necessarily the order in which they happened."
+)
+DESCRIPTION_CAP = 200
+
+
+def _clock(minute: object) -> str:
+    m = int(minute)  # type: ignore[call-overload]
+    return f"{min(m, 1439) // 60:02d}:{min(m, 1439) % 60:02d}"
+
+
+def _when_text(when: object) -> str | None:
+    """ "day 1, 21:30-22:00" from the tool's interval, None when the event has no time."""
+    if not isinstance(when, Mapping):
+        return None
+    parts: list[str] = []
+    if when.get("story_day") is not None:
+        parts.append(f"day {when['story_day']}")
+    lo, hi = when.get("start_min"), when.get("end_min")
+    if lo is not None:
+        parts.append(_clock(lo) if hi in (None, lo) else f"{_clock(lo)}-{_clock(hi)}")
+    if not parts:
+        return None
+    text = ", ".join(parts)
+    return text + (" (time uncertain)" if when.get("confidence") == "low" else "")
+
+
+def _timeline_line(i: int, ev: Mapping[str, Any], label: Label, c: _Cites) -> str:
+    when = _when_text(ev.get("when")) or "time not stated"
+    desc = _plain(ev.get("description") or "event")
+    if len(desc) > DESCRIPTION_CAP:
+        desc = desc[:DESCRIPTION_CAP].rsplit(" ", 1)[0] + "..."
+    tag = "curated" if ev.get("curated") else label
+    cite = None
+    for a in [x for x in (ev.get("anchors") or []) if isinstance(x, dict)][:ANCHORS_PER_FINDING]:
+        cite = c.add(a, label, rule_id="R2", summary=f"R2 timeline: {desc[:80]}")
+        if cite:
+            break
+    return f"{i}. {when} ({tag}): {desc} {cite or '(no citable quote)'}"
+
+
+def build_timeline_answer(
+    *,
+    story: str | None,
+    outcomes: Sequence[ToolOutcome],
+    link: Link | None,
+    notes: Sequence[str],
+    min_quote_chars: int = 6,
+) -> RuleAnswer:
+    """Chronology template over `build_timeline`: no model call, no event beyond the tool's."""
+    c = _Cites(min_quote_chars)
+    scope = story or "the retrieved story"
+    o = next(x for x in outcomes if x.tool == "build_timeline")
+    widened = any(str(n).startswith("SCOPE WIDENED: ") for n in notes)
+    person = link.mention if link is not None and link.person_id and not widened else None
+    extra: list[str] = []
+    if link is not None and link.status == "ambiguous":
+        extra.append(_sentence(f"Note: {link.note()}, so the timeline covers the whole story"))
+    elif link is not None and link.status in ("not_found", "no_names"):
+        extra.append(_sentence(f"Note: {link.reason}; the timeline covers the whole story"))
+    for n in notes:
+        if str(n).startswith("SCOPE WIDENED: "):
+            extra.append(_sentence(str(n).removeprefix("SCOPE WIDENED: ")))
+    if o.error:
+        text = (
+            f"The timeline of {scope} could not be built: {_plain(_error_reason(o))}. "
+            "No events are reported, so nothing is said about their order."
+        )
+        return RuleAnswer("\n".join([text, *extra]), c.sources, "failed")
+    p = o.payload
+    events = [e for e in (p.get("events") or []) if isinstance(e, dict)]
+    label = _label(p.get("provenance"))
+    of = f"{person} in {scope}" if person else scope
+    if not events:
+        text = (
+            f"The graph holds no events for {of} that the timeline tool could list "
+            f"(status {_plain(p.get('status', 'insufficient_evidence'))}), so no order of events "
+            "is reported. This says what the extraction found, not what the story contains."
+        )
+        return RuleAnswer("\n".join([text, *extra]), c.sources, "empty")
+    shown = len(events)
+    undated_total = int(p.get("undated_count") or 0)
+    total = int(p.get("total_events") or shown)
+    dated_total = max(total - undated_total, 0)
+    dated_shown = sum(1 for e in events if _when_text(e.get("when")))
+    head = (
+        f"Timeline for {of}: the graph holds {total} events ({dated_total} with a stated time, "
+        f"{undated_total} without); {shown} {'is' if shown == 1 else 'are'} shown"
+        + (", the rest were cut off." if p.get("truncated") else ".")
+    )
+    lines = [_timeline_line(i, e, label, c) for i, e in enumerate(events, 1)]
+    tail = [TIMELINE_ORDER_NOTE]
+    if dated_shown == 0:
+        tail.append("None of the events shown has a stated time, so all follow narration order.")
+    curated = sum(1 for e in events if e.get("curated"))
+    if curated:
+        tail.append(
+            f"Curated: {curated} of the events were entered and checked by the team (AI-assisted, "
+            "human re-check pending); they are not output of the automatic extraction."
+        )
+    tail.append(
+        f"Label {label}: the order is computed by rule R2 from the events extracted from the text."
+    )
+    return RuleAnswer("\n".join([head, *lines, *tail, *extra]), c.sources, "timeline")
+
+
 def build_answer(
     *,
     question: str,
@@ -351,6 +460,10 @@ def build_answer(
     idf: Mapping[str, float] | None = None,
     min_quote_chars: int = 6,
 ) -> RuleAnswer:
+    if any(o.tool == "build_timeline" for o in outcomes):
+        return build_timeline_answer(
+            story=story, outcomes=outcomes, link=link, notes=notes, min_quote_chars=min_quote_chars
+        )
     c = _Cites(min_quote_chars)
     items = decisive_items(outcomes)
     errors = [o for o in outcomes if o.error]

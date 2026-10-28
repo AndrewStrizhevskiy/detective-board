@@ -580,3 +580,35 @@ def test_ollama_keep_alive_and_num_predict():
     assert seen[0]["options"]["num_predict"] == 1
     list(OllamaLLM("m", transport=transport).chat([{"role": "user", "content": "x"}]))
     assert "keep_alive" not in seen[-1]
+
+
+def test_router_timeline_patterns():
+    r = Router()
+    for q in (
+        "Give the timeline of the night Aloysius Garcia died",
+        "What happened in Boscombe Valley, in order?",
+        "In what order did the events of The Speckled Band take place?",
+        "Give me the chronology of the Silver Blaze case",
+        "What is the sequence of events in the Blue Carbuncle?",
+        "Walk me through the case day by day",
+        "Tell me what happened step by step",
+    ):
+        d = r.decide(q)
+        assert d.routes == ["mcp", "graph", "vector"] and d.tools == ["build_timeline"], q
+        assert d.method == "rules" and d.matched
+
+
+def test_router_timeline_does_not_steal_other_rule_questions():
+    r = Router()
+    d = r.decide("In what order did Garcia contradict himself?")
+    assert d.tools == ["find_contradictions"]
+    d = r.decide("Where was Holmes at nine, in what order did he go?")
+    assert d.tools == ["check_alibi"]
+    for q in (
+        "Who wrote the note?",
+        "What is the order of the Garter?",
+        "Who ordered the goose?",
+        "What happened to the diamond?",
+        "How do the stories relate, step down?",
+    ):
+        assert Router().decide(q).tools == [], q

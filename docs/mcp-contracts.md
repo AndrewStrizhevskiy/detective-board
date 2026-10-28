@@ -80,6 +80,7 @@ Output:
       "anchors":{"type":"array","minItems":1,"items":{"$ref":"#/$defs/Anchor"}}}}},
   "undated_count":{"type":"integer"},"truncated":{"type":"boolean"}}}
 ```
+Additive fields of this implementation: `total_events` (events matching the filter, before `limit`) and, on human-checked events only, `curated: true`.
 Ordering: dated events by `(story_day, start_min)`; ties by `char_start` of the first anchor. Undated events are omitted unless `include_undated`, then appended in text order (never interleaved).
 
 ### 3.2 `check_alibi`
