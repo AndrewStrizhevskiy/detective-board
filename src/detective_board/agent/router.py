@@ -38,6 +38,18 @@ _TIMELINE = re.compile(
     re.I,
 )
 
+_PRESENCE = re.compile(
+    r"alibi table|presence table|where did .{0,60}\bsay\b"
+    r"|\bwho says\b.{0,60}\bwhere\b|\bwhere\b.{0,80}\bwho says\b",
+    re.I,
+)
+_PRESENCE_WEAK = re.compile(r"according to|testimon(?:y|ies)|\bwho says\b", re.I)
+_WHERE = re.compile(r"\bwhere (?:was|were)\b|whereabouts|\balibis?\b", re.I)
+_CLOCKISH = re.compile(
+    r"o['’]?clock|\b\d{1,2}:\d{2}\b|\b\d{1,2}\s*[ap]\.?m\b|\bnoon\b|\bmidnight\b", re.I
+)
+_ALIBI_WHERE = re.compile(r"alibi|where was\b|whereabouts|could .{0,40} have been (at|in)", re.I)
+
 _CLASSIFY_PROMPT = (
     "Classify the question about the Sherlock Holmes stories into exactly one label: "
     "fact, relation, alibi, contradiction, out_of_scope. Answer with the label only.\n"
@@ -73,7 +85,23 @@ class Router:
         tools: list[str] = []
         matched: list[str] = []
         why: list[str] = []
-        if m := _ALIBI.search(q):
+        presence = _PRESENCE.search(q) or (_PRESENCE_WEAK.search(q) and _WHERE.search(q))
+        if (
+            (m := _ALIBI_WHERE.search(q) or presence)
+            and not _CONTRA.search(q)
+            and not _TIMELINE.search(q)
+            and parse_time_window(q) is None
+            and not _CLOCKISH.search(q)
+        ):
+            # alibi / whereabouts wording without a clock time: check_alibi would be skipped
+            routes.extend(("mcp", "graph"))
+            tools.append("presence_table")
+            matched.append(m.group(0))
+            why.append(
+                "alibi/presence question without a clock time -> every place the graph holds "
+                "for the named person (who says so) + rule R1 conflicts, no model call"
+            )
+        elif m := _ALIBI.search(q):
             routes.extend(("mcp", "graph"))
             tools.append("check_alibi")
             matched.append(m.group(0))
@@ -175,6 +203,10 @@ _STOP_START = {
     "but",
     "if",
     "it",
+    "alibi",
+    "whereabouts",
+    "according",
+    "presence",
 }
 _TITLES = {"mr", "mrs", "dr", "sir", "miss"}
 _WORD = r"(?:Ma?c[A-Z][a-z]+|[A-Z][a-z]+)"  # McCarthy, MacDonald

@@ -29,7 +29,7 @@ from detective_board.symbolic.api import FactSource
 def _result(payload: dict[str, Any], is_error: bool = False) -> CallToolResult:
     text = json.dumps(payload, ensure_ascii=False, sort_keys=True)
     if not is_error:
-        for key in ("events", "overlaps", "findings"):
+        for key in ("events", "overlaps", "findings", "rows"):
             while len(text.encode()) > SIZE_CAP_BYTES and payload.get(key):
                 payload[key] = payload[key][: len(payload[key]) // 2]
                 payload["truncated"] = True
@@ -117,6 +117,20 @@ def build_server(source: FactSource, deadline_s: float | None = None) -> MCPServ
                 place_id=place_id,
                 include_undated=include_undated,
                 limit=limit,
+            )
+        )
+
+    @mcp.tool()
+    def presence_table(
+        story: str,
+        person_id: str,
+        names: list[str] | None = None,
+        limit: int = tools.PRESENCE_LIMIT,
+    ) -> CallToolResult:
+        """Places the graph holds for one person, who says so, and their R1 conflicts."""
+        return _run(
+            lambda: tools.presence_table(
+                source, story=story, person_id=person_id, names=names, limit=limit
             )
         )
 

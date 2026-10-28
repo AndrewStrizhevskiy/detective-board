@@ -37,7 +37,13 @@ def test_stdio_roundtrip():
             return names, ok, bad, nf
 
     names, ok, bad, nf = anyio.run(_bounded, go)
-    assert names == ["build_timeline", "check_alibi", "find_contradictions", "find_overlaps"]
+    assert names == [
+        "build_timeline",
+        "check_alibi",
+        "find_contradictions",
+        "find_overlaps",
+        "presence_table",
+    ]
     assert ok["status"] == "contradicted"
     assert ok["explanation"]["rule_id"] == "R1" and ok["provenance"] in {"derived", "conditional"}
     assert bad["error"]["code"] == "invalid_input" and "Traceback" not in bad["error"]["message"]

@@ -135,6 +135,14 @@ Each overlap item also carries `provenance` and `explanation` (rule R1).
 
 Description: run R1, R2 and R3 on a story (optionally one person) and list violations. Input: `{story, person_id?, rules?: ("R1"|"R2"|"R3")[], limit?}`. Output: `{status: "ok"|"insufficient_evidence", findings: [{rule, provenance, explanation, anchors}], truncated}`. An empty `findings` with `status: "ok"` means the rules found none on the facts available, not that the story is consistent.
 
+### 3.5 `presence_table` (additive, implemented)
+
+Description: every place the graph holds for one person, with who says so and the quote anchor, plus the violated R1 findings of that person. Read-only; the conflicts are the ones `find_contradictions` (R1) returns for the same person, with row ids added.
+
+Input: `{story, person_id, names?: string[], limit?: 1..100 (default 12)}`. `names` are surface forms of the person (name, aliases): a denial claim has no person id, only the text `"<name> was not at <place>, <time>"`, matched on these; without `names` no denial row is produced.
+
+Output: `{status: "ok"|"insufficient_evidence", person_id, rows[], total_rows, events_without_place, truncated, conflicts[], provenance: "derived", rule_id: "R1"}`. A row: `{row_id (event or claim id), kind: "event"|"claim", polarity: "affirm"|"deny", place_id (null when the place is only a surface form), place, when (Interval|null), time_text (the wording of the text|null), narrator (bool), speaker_id (null: narrator, or speaker not stated), confidence: "high"|"low", curated? (true only for human-checked), anchors[]}`. Rows are in narration order; when `total_rows > limit`, rows belonging to a conflict are kept first. A conflict: `{rule, finding_id, reason_code, provenance: "derived"|"conditional", row_ids[], explanation}`. Errors: `not_found` (unknown story or person), `invalid_input`. Existing tools are unchanged.
+
 ### 3.4 Entity lookup helper (needed to get ids)
 
 `resolve_entity` {story, name, type?} -> {candidates:[{id, kind, name, aliases, score}]}. Included because the tools above take ids; the agent resolves names first. **[P]** may instead be done inside the agent via `GraphStore`; decide when the graph engine ADR is resolved.

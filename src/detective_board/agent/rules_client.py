@@ -16,7 +16,7 @@ from detective_board.graph import GraphStore, SqliteFactSource
 from detective_board.mcp import tools
 from detective_board.mcp.errors import ToolError, error_payload
 
-TOOLS = ("build_timeline", "check_alibi", "find_contradictions", "find_overlaps")
+TOOLS = ("build_timeline", "check_alibi", "find_contradictions", "find_overlaps", "presence_table")
 
 
 class InProcessRulesClient:

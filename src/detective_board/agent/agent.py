@@ -43,6 +43,7 @@ from .events import (
 from .linking import Link, link_person
 from .llm import LLM
 from .memory import Turn, retrieval_query, summarize
+from .presence_answer import presence_names, surface_forms
 from .retrieval_step import gate, hit_traces
 from .router import Router, extract_names, parse_time_window
 from .translate import Translator, is_mostly_cyrillic
@@ -261,8 +262,11 @@ class Agent:
         ambiguous = (link is not None and link.status == "ambiguous") or any(
             (o.error or {}).get("code") == "ambiguous" for o in outcomes
         )
-        if cfg.rule_first and decision.tools and (ran or ambiguous):
-            if "build_timeline" in decision.tools:  # chronology: always the template
+        # alibi table: a named person who is not in the graph is answered, not sent to the text
+        unknown = "presence_table" in decision.tools and bool(link and link.status == "not_found")
+        if cfg.rule_first and decision.tools and (ran or ambiguous or unknown):
+            if "build_timeline" in decision.tools or "presence_table" in decision.tools:
+                # chronology / alibi table: always the template
                 yield from self._rule_first_answer(
                     sink, decision, question, story, link, hits, outcomes, headers
                 )
@@ -512,13 +516,13 @@ class Agent:
             kind = "find_entities"
             args: dict[str, Any] = {"name": link.matched, "kind": "person", "story": link.story}
         elif link is not None and link.person_id:
-            if "check_alibi" in decision.tools:
+            if {"check_alibi", "presence_table"} & set(decision.tools):
                 kind, args = "events_by_person", {"person": link.person_id, "story": link.story}
             else:  # the person's events and claims are one hop away (R-16b)
                 kind, args = "neighbours", {"ref": link.person_id, "k": 1, "story": link.story}
         elif not names:
             return None
-        elif "check_alibi" in decision.tools:
+        elif {"check_alibi", "presence_table"} & set(decision.tools):
             kind, args = "events_by_person", {"person": names[0]}
         elif len(names) >= 2 and "build_timeline" not in decision.tools:
             kind, args = "shortest_path", {"a": names[0], "b": names[1]}
@@ -601,6 +605,16 @@ class Agent:
                 )
                 return (yield from self._skip(sink, step, tool, "skipped", why))
             args |= {"person_id": person, "window": win[0]}
+        elif tool == "presence_table":
+            if link is not None and link.status == "ambiguous":
+                return (yield from self._skip(sink, step, tool, "ambiguous", link.note()))
+            if person is None:
+                return (
+                    yield from self._skip(
+                        sink, step, tool, "skipped", "no person found in the graph"
+                    )
+                )
+            args |= {"person_id": person, "names": surface_forms(self.graph, person, link)}
         elif person:
             args["person_id"] = person
         if tool == "build_timeline":
@@ -844,6 +858,7 @@ class Agent:
             coverage=rf.coverage_for(self.tools, self.graph, story),
             idf=self.idf,
             min_quote_chars=cfg.min_quote_chars,
+            names=presence_names(self.graph, outcomes),
         )
         sources = ans.sources
         yield sink.emit(
