@@ -69,8 +69,10 @@ def _label_text(row: Mapping[str, Any]) -> str:
 
 
 def _row_line(i: int, row: Mapping[str, Any], names: Mapping[str, str], c: _Cites) -> str:
-    when = _plain(row.get("time_text") or "") or _when_text(row.get("when"))[0] or "time not stated"
-    place = _plain(row.get("place") or "") or "place not stated"
+    # slots are text fragments: a trailing full stop would double the line's own
+    when = _plain(row.get("time_text") or "").rstrip(" .") or _when_text(row.get("when"))[0]
+    when = when or "time not stated"
+    place = _plain(row.get("place") or "").rstrip(" .") or "place not stated"
     if row.get("polarity") == "deny":
         place = f"not at {place}"
     cite = None

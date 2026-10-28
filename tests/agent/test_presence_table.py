@@ -246,6 +246,12 @@ def test_empty_error_and_unknown_person():
         assert not asserts_consistency(prose(a.text))
 
 
+def test_trailing_full_stop_of_a_slot_is_not_doubled():
+    r = row("e1", "home.", "had only just returned", 5, time_text="the 3rd.")
+    ans = render(payload([r]))
+    assert "When: the 3rd. Where: home. Who says so" in ans.text
+
+
 def test_row_without_citable_quote_and_markup_in_fields():
     r = row("e1", "the [dark] room", "x", 5)  # too short to cite
     ans = render(payload([r]))
