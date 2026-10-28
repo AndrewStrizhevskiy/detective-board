@@ -69,6 +69,63 @@ jobs:
       # Node is preinstalled on ubuntu-latest; `just` is not, so the command is spelled out
       # (keep in sync with `just test-web`).
       - run: node --test tests/web_js/*.test.mjs
+      # every vendored script, stylesheet and font matches the sha256 in web/vendor/README.md
+      - run: python3 scripts/check_vendor_hashes.py
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+          enable-cache: true
+      - run: uv sync --locked
+      # `just run --fake` spelled out (no `just` on the runner): the app starts, binds to loopback
+      # only, serves the page with its CSP, answers one question and refuses an out-of-corpus one
+      - name: just run --fake
+        run: |
+          uv run python -m detective_board.api --fake --port 8765 > api.log 2>&1 &
+          for _ in $(seq 1 60); do curl -sf http://127.0.0.1:8765/api/health > /dev/null && break; sleep 1; done
+          curl -sf http://127.0.0.1:8765/api/health | grep -q '"status":"ok"'
+          curl -sfI http://127.0.0.1:8765/ | grep -qi '^content-security-policy:'
+          grep -q 'Uvicorn running on http://127.0.0.1:8765' api.log
+          ask() { curl -sfN -X POST http://127.0.0.1:8765/api/ask -H 'content-type: application/json' -d "{\"question\": \"$1\"}"; }
+          ask 'What is a swamp adder?' | grep -q '"type":"final","status":"answered"'
+          ask 'What is the weather in Paris today?' | grep -q '"type":"final","status":"refused"'
+      - if: failure()
+        run: cat api.log
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ env.PYTHON_VERSION }}
+          enable-cache: true
+      # known vulnerabilities in the shipped (runtime) dependencies, exactly as locked
+      - run: uv export --locked --no-dev --no-emit-project --format requirements-txt --no-header -o requirements.txt
+      - run: uvx pip-audit@2.10.1 -r requirements.txt --require-hashes --disable-pip --progress-spinner off
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0 # the whole history, not only the last commit
+      # gitleaks 8.30.1, the linux x64 release checked against its published sha256
+      - name: gitleaks
+        env:
+          GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          curl -sSfL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar xzf gitleaks.tar.gz gitleaks
+          ./gitleaks git --no-banner --redact .
 
   eval-short:
     runs-on: ubuntu-latest

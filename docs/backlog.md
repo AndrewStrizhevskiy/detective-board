@@ -79,3 +79,6 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 - R-20 | data-engineer | Curated story-day table (like the place gazetteer) for events whose day is given only in prose ("on the night of his death"); the demo fixture sets two such days by hand, `low` | P2
 - R-22 | agent-engineer / nlp-extraction-engineer | Normaliser and linking follow-ups (review of `feat/agent-graph-route`): dates use a fixed year (a Dec -> Jan calendar runs backwards); a claim time with only a day ("on Monday") is `TIME_UNPARSED`; only the first person named in the question is linked; the normaliser writes overlays through `GraphStore` internals instead of a public `replace_overlays`; "twelve at night" in a question is read as noon | P2
 - R-21 | devops-engineer | `just` recipe that runs `python -m detective_board.extract.normalise data/graph/graph.sqlite` after the graph build | P1
+
+## Requests from `feat/offline-package` (2026-10-27)
+- R-23 | devops-engineer + performance-engineer | Pin the Ollama version used for the demo in `docs/team/models.md` (issue #8 assumes it is there; today only the model IDs are). `pack_offline.sh` records the packed version in MANIFEST but cannot check it against a pin. Also decide whether the offline archive leaves out the CUDA/ROCm runtimes in `lib/ollama` for the CPU-only laptop (several GB) | P2
