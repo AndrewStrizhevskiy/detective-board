@@ -3,6 +3,7 @@
 ## 2026-10-28 afternoon (tags rc1 `ab945e8`, rc2 `e35927b`)
 
 State
+- TEST split, run once on `7b7b197` (preregistered): behaviour correct bare 3/30, vector-only 11/30, agent 13/30 (43 % [27, 61]); agent vs bare p 0.006, agent vs vector 2 vs 0 (p 0.5); contradiction recall on automatic facts 0/12, false positives 0/8. `docs/spike/results/eval-2026-10-28-test-7b7b197-7857839ed9be-175321.md`. Do not run the test split again for tuning.
 - Full-corpus graph from the department-server run (2026-10-27): 596 of 596 chunks, 20 of 20 stories, qwen3:4b, prompt extract-2.1. Numbers and caveats: `docs/spike/results/graph-sanity-20261028.md`. The 231 laptop chunks were not mixed in (different Ollama version and GPU kernels: outputs differ). Binary data (`data/graph`, `data/cache`, `data/index`) is not in git; the server archive hash is in the sanity file.
 - On the automatic graph the rules find 0 contradictions in 19 of 20 stories; the only finding is the curated Wisteria Lodge R1. Dev-split contradiction detection: recall 0/14, false positives 0/9. The presence pass was NOT run (server unreachable from 2026-10-27 about 18:45 server time).
 - Dev-split evaluation (`eval/run_eval.py`, rescored report `docs/spike/results/eval-2026-10-28-dev-ab945e8-78b3bbb3f2a6-145202-rescored.md`; the first report is superseded by a coverage bug): behaviour correct bare 4/34, vector-only 15/34, agent 12/34. The agent is NOT better than vector-only on this proxy (3 vs 0, p 0.25); its gains are chunk recall@4 (21/27 vs 18/27) and refusals. The test split has not been run.
