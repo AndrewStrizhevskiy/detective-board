@@ -42,6 +42,8 @@ class SqliteFactSource:
         day_ov: tuple[Any, str] | None,
         time_ov: tuple[Any, str] | None = None,
     ) -> TimeSpec | None:
+        if props.get("curated") and props.get("time_ref") and time_ov is not None:
+            return TimeSpec.model_validate(time_ov[0])  # relative moment: no day, clock or text
         text = props.get("time_text") or props.get("time_text_inherited")
         if not text:
             return None
@@ -81,6 +83,8 @@ class SqliteFactSource:
     ) -> str | None:
         """Human wording of the day for summaries: the curated day key, or "day N (assumed)" when
         the day came from `assume_day`; None otherwise (the summary then says "day unknown")."""
+        if props.get("curated") and props.get("time_ref"):
+            return None  # the summary is worded from the moment itself (symbolic/time.fmt_human)
         if props.get("curated") and props.get("day_key"):
             return "same day: " + str(props["day_key"]).replace("-", " ")
         if time is None or time.day is None or day_ov is not None or self.assume_day is None:

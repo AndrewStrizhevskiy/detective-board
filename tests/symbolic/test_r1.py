@@ -1,11 +1,15 @@
 import pytest
 from symbolic_helpers import ev, fbase, rel_ev, span
 
+from detective_board.extract.curated_schema import moment_id
 from detective_board.symbolic.api import (
+    EventRec,
+    TimeSpec,
     Verdict,
     check_presence,
     scan_presence_conflicts,
 )
+from detective_board.symbolic.time import abs_bounds, strictly_before
 
 V, C, U = Verdict.VIOLATED, Verdict.CONSISTENT, Verdict.UNKNOWN
 
@@ -372,3 +376,60 @@ def test_alibi_low_confidence_is_conditional():
 def test_rel_ev_helper_is_not_a_presence():
     fb = fbase([rel_ev("e2", "after", "e1")])
     assert scan_presence_conflicts(fb, include_consistent=True).findings == []
+
+
+# ---- curated relative time ("at the moment X", docs/symbolic-layer.md 11.4) ----------------------
+def _moment(ref: str, *, story: str = "s") -> TimeSpec:
+    return TimeSpec(
+        rel="at", ref_event_id=moment_id(story, ref), confidence="low", time_text="when he came in"
+    )
+
+
+def _rel(eid: str, place: str, ref: str, who: str = "W") -> EventRec:
+    return ev(eid, who, place, _moment(ref), conf="low", curated=True)
+
+
+def test_same_moment_different_places_is_a_conditional_violation():
+    rep = scan_presence_conflicts(fbase([_rel("e1", "B", "entered"), _rel("e2", "D", "entered")]))
+    (f,) = rep.findings
+    assert (f.verdict, f.reason_code, f.conditional) == (V, "OVERLAP_DIFFERENT_PLACES", True)
+    assert sorted(f.explanation.weak) == ["e1", "e2"]
+    step = f.explanation.derivation[0]
+    assert step.output == "same moment: entered (relative time, curated)"
+    texts = " ".join(x.summary for x in f.explanation.facts)
+    assert "relative time" in texts and "(curated)" in texts
+
+
+def test_same_moment_same_or_contained_place_is_consistent_without_finding():
+    for p2 in ("B", "H"):
+        rep = scan_presence_conflicts(
+            fbase([_rel("e1", "B", "entered"), _rel("e2", p2, "entered")]), include_consistent=True
+        )
+        assert [(f.verdict, f.reason_code) for f in rep.findings] == [(C, "PLACE_COMPATIBLE")]
+
+
+def test_different_moments_are_undecided_not_disjoint():
+    fb = fbase([_rel("e1", "B", "entered"), _rel("e2", "D", "left")])
+    rep = scan_presence_conflicts(fb, include_consistent=True)
+    (f,) = rep.findings
+    assert (f.verdict, f.reason_code) == (U, "TIME_UNDECIDED")
+    assert scan_presence_conflicts(fb).findings == []  # no possible_overlap either
+    assert rep.stats["violated"] == rep.stats["consistent"] == 0
+
+
+def test_a_moment_is_never_compared_with_a_clock_time_or_ordered():
+    clock = ev("e3", "W", "D", span(1, "21:00", "22:00"))
+    fb = fbase([_rel("e1", "B", "entered"), clock])
+    rep = scan_presence_conflicts(fb, include_consistent=True)
+    assert [(f.verdict, f.reason_code) for f in rep.findings] == [(U, "TIME_UNDECIDED")]
+    assert not strictly_before(_moment("entered"), clock.time)
+    assert not strictly_before(clock.time, _moment("entered"))
+    assert abs_bounds(_moment("entered")) is None
+
+
+def test_moments_of_different_stories_or_persons_do_not_meet():
+    other = ev("e2", "W", "D", _moment("entered", story="t"), conf="low")
+    fb = fbase([_rel("e1", "B", "entered"), other])
+    assert scan_presence_conflicts(fb).findings == []
+    fb2 = fbase([_rel("e1", "B", "entered", "W"), _rel("e2", "D", "entered", "X")])
+    assert scan_presence_conflicts(fb2).stats["pairs_examined"] == 0

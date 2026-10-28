@@ -35,12 +35,12 @@ Text questions are answered in the default extractive mode (ADR-0009): the langu
 
 ## Curated facts in the demo cases
 
-The demo cases (Wisteria Lodge, rule R1, and the Boscombe Valley control) use curated facts:
+The demo cases (Wisteria Lodge and Abbey Grange, rule R1, and the Boscombe Valley control) use curated facts:
 a small set of "person, place, time" statements in `data/curated/presence_demo.jsonl`, each with a
 verbatim quote, written and checked by the team (AI-assisted, to be re-checked by a human; the
 re-check has not happened yet). They are used because the small extraction models do not resolve
 "he" and "there" on these passages. The screen, the Why panel and the spoken answer say "curated"
-wherever such a fact is an input. The file has five facts (two for Wisteria Lodge, three for the Boscombe control). The automatic extraction numbers are reported separately and
+wherever such a fact is an input. The file has seven facts (two for Wisteria Lodge, three for the Boscombe control, two for Abbey Grange). The two Abbey Grange facts have no clock time: both are placed "at the moment Sir Eustace entered the room", a relative time that the team asserts is one moment, so the finding is always labelled conditional and says "relative time, curated". The automatic extraction numbers are reported separately and
 are not improved by, or mixed with, the curated facts. A finding built on curated facts shows what
 the rules do when the facts are right, not what a model finds on its own.
 
