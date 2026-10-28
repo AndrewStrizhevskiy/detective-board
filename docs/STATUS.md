@@ -1,5 +1,17 @@
 # STATUS
 
+## 2026-10-28 afternoon (tags rc1 `ab945e8`, rc2 `e35927b`)
+
+State
+- Full-corpus graph from the department-server run (2026-10-27): 596 of 596 chunks, 20 of 20 stories, qwen3:4b, prompt extract-2.1. Numbers and caveats: `docs/spike/results/graph-sanity-20261028.md`. The 231 laptop chunks were not mixed in (different Ollama version and GPU kernels: outputs differ). Binary data (`data/graph`, `data/cache`, `data/index`) is not in git; the server archive hash is in the sanity file.
+- On the automatic graph the rules find 0 contradictions in 19 of 20 stories; the only finding is the curated Wisteria Lodge R1. Dev-split contradiction detection: recall 0/14, false positives 0/9. The presence pass was NOT run (server unreachable from 2026-10-27 about 18:45 server time).
+- Dev-split evaluation (`eval/run_eval.py`, rescored report `docs/spike/results/eval-2026-10-28-dev-ab945e8-78b3bbb3f2a6-145202-rescored.md`; the first report is superseded by a coverage bug): behaviour correct bare 4/34, vector-only 15/34, agent 12/34. The agent is NOT better than vector-only on this proxy (3 vs 0, p 0.25); its gains are chunk recall@4 (21/27 vs 18/27) and refusals. The test split has not been run.
+- Laptop (single run, not a clean window): 30-43 s per answer, 5.0 GB peak, up to 92 C (`docs/perf/laptop-20261028.md`).
+- Five real recordings re-recorded on the full graph (`web/replay/real-*.json`), replay index regenerated; UI demo modes (#17), eval runner (#18) and offline packaging scripts (#19) merged after independent review and fixes.
+- Server access: the box stopped answering from the network (VPN and direct) while it was up; the data had already been copied back by hand. Hostname and address: `iu5-b7-aih-0.local.bmstu.ru` = 195.19.35.82. Do not use a second VPN (`sing-box`) together with the university OpenVPN without the notes in `docs/team/SERVER_GUIDE_RU.md`.
+
+Open: real offline pack and two clean-machine installs (#8), clean-window laptop measurements with repeats and the 8 GB profile (#14), human review of gold sets (#9), presence pass precision, why the agent picks the answer sentence worse than vector-only (agent/extractive.py: never change prompts without re-measuring), rehearsals (#15).
+
 ## 2026-10-27 morning
 
 Read `docs/HANDOFF.md`, `docs/ROADMAP.md`, `docs/spike/REPORT.md` (Addendum 2026-10-27) and ADR-0009..0012. Server plan: `docs/team/SERVER_RUNBOOK.md`.
