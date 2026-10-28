@@ -361,7 +361,7 @@ Boscombe Valley, case c042: both witnesses agree on what James did; they differ 
 
 - The rules correctly do **not** flag it (a regression test on three curated facts, not a real extracted graph)
 - The control is weaker than its label: a human must decide the gold label
-- Recording: `?replay=replay/real-boscombe-control.json` (28.7 s at original timing)
+- Recording: `?replay=replay/real-boscombe-control.json` (2.9 s at original timing)
 
 ---
 

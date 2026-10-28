@@ -144,7 +144,7 @@ Fallback ladder, same for every step (details in section 4): **(1) narrate over 
 
 ## 2a. Operator cards (match docs/slides/deck.md)
 
-Base URL for replays: `http://127.0.0.1:8000/` (`just run`, port 8000). A replay plays at its original timing unless `&speed=N` (faster) or `&cap=S` (maximum gap in seconds) is added; the badge reads `RECORDING`. Recording durations from the file meta (`seconds`): g001 39.1 s, wisteria R1 1.4 s, Baskerville refusal 0.3 s, fee refusal 22.6 s, Boscombe control 28.7 s. These were recorded at commit 8491402 (the meta), not d9709d0 as written in section 0; the g001 recording took 39.1 s, not the 10.8 s quoted there, so always add `&speed=4` for it. Open the replay tabs in advance in a second browser window.
+Base URL for replays: `http://127.0.0.1:8000/` (`just run`, port 8000). A replay plays at its original timing unless `&speed=N` (faster) or `&cap=S` (maximum gap in seconds) is added; the badge reads `RECORDING`. Recording durations from the file meta (`seconds`, re-recorded on the full 20-story graph on 2026-10-28, commit 725dc1f): g001 28.7 s, wisteria R1 1.1 s, Baskerville refusal 0.2 s, fee refusal 23.0 s, Boscombe control 2.9 s. The g001 and fee recordings take 23-29 s at original timing, so add `&speed=4` for them (older text in section 0 quoting 10.8 s is outdated). Open the replay tabs in advance in a second browser window.
 
 Rule for every failure line: say that it is a stored run, never blame the model, never call a recording live.
 
