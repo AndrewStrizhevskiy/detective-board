@@ -74,6 +74,39 @@ export function stringGeom(a, b, offset = 0) {
   };
 }
 
+// The point at parameter t (0..1) along the same sagging thread as stringGeom draws.
+export function pointOnString(a, b, t, offset = 0) {
+  const dx = b.x - a.x;
+  const sag = 0.06 * Math.abs(dx) + 6;
+  const side = Math.abs(dx) < 60 ? 14 : 0;
+  const c = { x: (a.x + b.x) / 2 + side, y: (a.y + b.y) / 2 + sag };
+  const u = 1 - t;
+  const r = (n) => Math.round(n * 10) / 10;
+  return { x: r(u * u * a.x + 2 * u * t * c.x + t * t * b.x), y: r(u * u * a.y + 2 * u * t * c.y + t * t * b.y + offset) };
+}
+
+// Where a hanging tag goes: the candidate spot along its thread (t) and side (below or above the
+// thread) whose tag rectangle covers the least card area. rects are card boxes {x0, y0, x1, y1};
+// size is the tag's {w, h}; gap is the loop length. Deterministic: ties keep the earlier candidate.
+export function tagSpot(a, b, size, rects, { offset = 0, gap = 15 } = {}) {
+  const ts = [0.5, 0.4, 0.6, 0.3, 0.7, 0.22, 0.78];
+  let best = null;
+  for (const side of ["down", "up"]) {
+    for (const t of ts) {
+      const p = pointOnString(a, b, t, offset);
+      const x0 = p.x - size.w / 2, x1 = p.x + size.w / 2;
+      const y0 = side === "down" ? p.y + gap : p.y - gap - size.h;
+      const y1 = y0 + size.h;
+      let cover = 0;
+      for (const r of rects) cover += Math.max(0, Math.min(x1, r.x1) - Math.max(x0, r.x0)) * Math.max(0, Math.min(y1, r.y1) - Math.max(y0, r.y0));
+      // a small preference for the middle and for hanging below keeps the usual look
+      const score = cover + Math.abs(t - 0.5) * 40 + (side === "up" ? 30 : 0);
+      if (!best || score < best.score) best = { ...p, t, side, cover, score };
+    }
+  }
+  return best;
+}
+
 // Shadow vector for an object at pt under a lamp at lamp (both in board units): it points away
 // from the lamp and grows with the distance, with a constant downward part (the lamp is above).
 export function shadowVector(pt, lamp, depth = 1) {
