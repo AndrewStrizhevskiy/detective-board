@@ -36,3 +36,16 @@ The agent is still behind vector-only on answer sentences (3 questions), within 
 | E5 | `min_support` / `min_score` | affects only refusals through the gate | refusal recall must not drop below 6/7 |
 
 Rules: dev split only, one change at a time, adopt only with a clear gain (>= 3 more answerable questions right and no loss in refusal recall), re-record the five demo runs afterwards, run the test split ONCE on the final configuration. `agent/extractive.py` SELECT_SYSTEM_PROMPT must not change. The demo (tags rc1, rc2) runs the current defaults.
+
+## Experiments run on dev (hybrid+graph only, one run each; 27 answerable questions; baseline 10 ok)
+
+| id | change | ok | strict | false refusals | out-of-corpus refused | gained / lost |
+|---|---|---|---|---|---|---|
+| E1 | extract_sentence_k 20 -> 12 | 11 | 6 | 7 | 6/7 | g010 g038 / g020 |
+| E2 | E1 + extract_per_source 4 | 11 | 6 | 7 | 6/7 | same as E1 (no effect: candidates come from the index) |
+| E3 | E1 + extract_safety_chunks 4, extract_safety_per_chunk 3 | **13** | 7 | 5 | **7/7** | g010 g036 g038 / none |
+| E5 | no sentence index; safety chunks 4 x 4 | 13 | 8 | 6 | 6/7 | g010 g028 g031 g038 / g032 |
+
+"ok" = behaviour correct, or the gold sentence is quoted. E3 adopted as the default (2026-10-28): +3 answerable, no loss, refusal recall 7/7. It is
+within the noise of 34 questions (3 vs 0, exact p about 0.25) and was chosen on the same questions, so it is optimistic; the test split has not been run.
+The sentence index alone is not the problem: E5 without it is as good as E3. Raw run files of E1/E2/E5 stay in `eval/runs` (not in git).

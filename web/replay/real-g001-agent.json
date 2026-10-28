@@ -3,9 +3,9 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "What kind of snake killed Dr. Grimesby Roylott?",
-  "recorded_at": "2026-10-28T14:54:46+0200",
-  "seconds": 28.7,
-  "commit": "725dc1f4f99e6ae8e89c0d99cae702c00c2aa208",
+  "recorded_at": "2026-10-28T18:45:55+0200",
+  "seconds": 25.6,
+  "commit": "21e3255058711b7613fd4d2594ea97a7dcb9f8af",
   "mcp": {
    "configured": true,
    "mode": "stdio",
@@ -39,9 +39,9 @@
  },
  "events": [
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 0,
-   "ts": "2026-10-28T12:54:19.127+00:00",
+   "ts": "2026-10-28T16:45:30.885+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -55,9 +55,9 @@
    "confidence": 0.5
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 1,
-   "ts": "2026-10-28T12:54:19.127+00:00",
+   "ts": "2026-10-28T16:45:30.886+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
@@ -66,11 +66,11 @@
    "attempt": 1
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 2,
-   "ts": "2026-10-28T12:54:19.189+00:00",
+   "ts": "2026-10-28T16:45:30.960+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 61,
+   "duration_ms": 74,
    "type": "retrieval_results",
    "hits": [
     {
@@ -176,9 +176,9 @@
    ]
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 3,
-   "ts": "2026-10-28T12:54:19.225+00:00",
+   "ts": "2026-10-28T16:45:30.998+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "enriched_query",
@@ -326,78 +326,13 @@
      "window_end": 1230,
      "window_char_start": 28653,
      "window_char_end": 29883
-    },
-    {
-     "n": 12,
-     "chunk_id": "crooked-man-0018",
-     "story": "crooked-man",
-     "char_start": 28340,
-     "char_end": 29910,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1570,
-     "window_char_start": 28340,
-     "window_char_end": 29910
-    },
-    {
-     "n": 13,
-     "chunk_id": "speckled-band-0010",
-     "story": "speckled-band",
-     "char_start": 16001,
-     "char_end": 17746,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1745,
-     "window_char_start": 16001,
-     "window_char_end": 17746
-    },
-    {
-     "n": 14,
-     "chunk_id": "norwood-builder-0029",
-     "story": "norwood-builder",
-     "char_start": 48127,
-     "char_end": 50344,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 2217,
-     "window_char_start": 48127,
-     "window_char_end": 50344
-    },
-    {
-     "n": 15,
-     "chunk_id": "abbey-grange-0026",
-     "story": "abbey-grange",
-     "char_start": 42453,
-     "char_end": 44976,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 2523,
-     "window_char_start": 42453,
-     "window_char_end": 44976
-    },
-    {
-     "n": 16,
-     "chunk_id": "thor-bridge-0016",
-     "story": "thor-bridge",
-     "char_start": 28633,
-     "char_end": 30432,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1799,
-     "window_char_start": 28633,
-     "window_char_end": 30432
     }
    ],
    "graph_facts": 0,
    "rule_facts": 0,
    "memory_chars": 0,
-   "prompt_chars": 3171,
-   "prompt_tokens_estimate": 793,
+   "prompt_chars": 2807,
+   "prompt_tokens_estimate": 702,
    "max_prompt_tokens": 1200,
    "strategy": "extractive + sentence index",
    "window_words": 60,
@@ -406,9 +341,9 @@
    "injection_suspects": []
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 4,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -416,9 +351,9 @@
    "text": "From "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 5,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -426,9 +361,9 @@
    "text": "the "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 6,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -436,9 +371,9 @@
    "text": "sources: "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 7,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -446,9 +381,9 @@
    "text": "[6: "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 8,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -456,9 +391,9 @@
    "text": "\"“It "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 9,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -466,9 +401,9 @@
    "text": "is "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 10,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -476,9 +411,9 @@
    "text": "a "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 11,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -486,9 +421,9 @@
    "text": "swamp "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 12,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -496,9 +431,9 @@
    "text": "adder!” "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 13,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -506,9 +441,9 @@
    "text": "cried "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 14,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -516,9 +451,9 @@
    "text": "Holmes; "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 15,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -526,9 +461,9 @@
    "text": "“the "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 16,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -536,9 +471,9 @@
    "text": "deadliest "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 17,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -546,9 +481,9 @@
    "text": "snake "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 18,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -556,9 +491,9 @@
    "text": "in "
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 19,
-   "ts": "2026-10-28T12:54:46.647+00:00",
+   "ts": "2026-10-28T16:45:55.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -566,9 +501,9 @@
    "text": "India.\"]"
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 20,
-   "ts": "2026-10-28T12:54:46.650+00:00",
+   "ts": "2026-10-28T16:45:55.079+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "citation_check",
@@ -586,9 +521,9 @@
    "action": "accept"
   },
   {
-   "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+   "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
    "seq": 21,
-   "ts": "2026-10-28T12:54:46.650+00:00",
+   "ts": "2026-10-28T16:45:55.079+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
@@ -621,9 +556,9 @@
     }
    ],
    "route": {
-    "run_id": "dcb1fdff-ca97-4da0-bce3-ac2bf5e7faf6",
+    "run_id": "bf71608a-9409-48d9-afc6-8c6f676017b0",
     "seq": 0,
-    "ts": "2026-10-28T12:54:19.127+00:00",
+    "ts": "2026-10-28T16:45:30.885+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",

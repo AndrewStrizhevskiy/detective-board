@@ -3,21 +3,14 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "How large a fee did Colonel Ross pay Holmes for recovering Silver Blaze?",
-  "recorded_at": "2026-10-28T14:55:14+0200",
-  "seconds": 23.0,
-  "commit": "725dc1f4f99e6ae8e89c0d99cae702c00c2aa208",
+  "recorded_at": "2026-10-28T18:46:23+0200",
+  "seconds": 1.4,
+  "commit": "21e3255058711b7613fd4d2594ea97a7dcb9f8af",
   "mcp": {
    "configured": true,
    "mode": "stdio",
    "server": "timeline-alibi",
-   "started": true,
-   "version": "0.2.0",
-   "tools": [
-    "build_timeline",
-    "check_alibi",
-    "find_contradictions",
-    "find_overlaps"
-   ]
+   "started": false
   },
   "graph": {
    "chunks": 596,
@@ -46,9 +39,9 @@
  },
  "events": [
   {
-   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+   "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
    "seq": 0,
-   "ts": "2026-10-28T12:54:51.267+00:00",
+   "ts": "2026-10-28T16:46:22.077+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -62,9 +55,9 @@
    "confidence": 0.5
   },
   {
-   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+   "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
    "seq": 1,
-   "ts": "2026-10-28T12:54:51.268+00:00",
+   "ts": "2026-10-28T16:46:22.078+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
@@ -73,11 +66,11 @@
    "attempt": 1
   },
   {
-   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+   "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
    "seq": 2,
-   "ts": "2026-10-28T12:54:51.394+00:00",
+   "ts": "2026-10-28T16:46:22.189+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 125,
+   "duration_ms": 111,
    "type": "retrieval_results",
    "hits": [
     {
@@ -183,9 +176,9 @@
    ]
   },
   {
-   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+   "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
    "seq": 3,
-   "ts": "2026-10-28T12:54:51.458+00:00",
+   "ts": "2026-10-28T16:46:22.242+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "enriched_query",
@@ -349,97 +342,6 @@
     },
     {
      "n": 13,
-     "chunk_id": "wisteria-lodge-0019",
-     "story": "wisteria-lodge",
-     "char_start": 30545,
-     "char_end": 32389,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1844,
-     "window_char_start": 30545,
-     "window_char_end": 32389
-    },
-    {
-     "n": 14,
-     "chunk_id": "naval-treaty-0002",
-     "story": "naval-treaty",
-     "char_start": 2298,
-     "char_end": 3629,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1331,
-     "window_char_start": 2298,
-     "window_char_end": 3629
-    },
-    {
-     "n": 15,
-     "chunk_id": "wisteria-lodge-0008",
-     "story": "wisteria-lodge",
-     "char_start": 12967,
-     "char_end": 14619,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1652,
-     "window_char_start": 12967,
-     "window_char_end": 14619
-    },
-    {
-     "n": 16,
-     "chunk_id": "black-peter-0021",
-     "story": "black-peter",
-     "char_start": 35866,
-     "char_end": 37616,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1750,
-     "window_char_start": 35866,
-     "window_char_end": 37616
-    },
-    {
-     "n": 17,
-     "chunk_id": "priory-school-0022",
-     "story": "priory-school",
-     "char_start": 37032,
-     "char_end": 38924,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1892,
-     "window_char_start": 37032,
-     "window_char_end": 38924
-    },
-    {
-     "n": 18,
-     "chunk_id": "priory-school-0000",
-     "story": "priory-school",
-     "char_start": 0,
-     "char_end": 1859,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1859,
-     "window_char_start": 0,
-     "window_char_end": 1859
-    },
-    {
-     "n": 19,
-     "chunk_id": "norwood-builder-0002",
-     "story": "norwood-builder",
-     "char_start": 3289,
-     "char_end": 5092,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1803,
-     "window_char_start": 3289,
-     "window_char_end": 5092
-    },
-    {
-     "n": 20,
      "chunk_id": "silver-blaze-0024",
      "story": "silver-blaze",
      "char_start": 42993,
@@ -450,13 +352,39 @@
      "window_end": 1839,
      "window_char_start": 42993,
      "window_char_end": 44832
+    },
+    {
+     "n": 14,
+     "chunk_id": "silver-blaze-0027",
+     "story": "silver-blaze",
+     "char_start": 48039,
+     "char_end": 49789,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1750,
+     "window_char_start": 48039,
+     "window_char_end": 49789
+    },
+    {
+     "n": 15,
+     "chunk_id": "silver-blaze-0022",
+     "story": "silver-blaze",
+     "char_start": 39316,
+     "char_end": 41111,
+     "origin": "vector",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 1795,
+     "window_char_start": 39316,
+     "window_char_end": 41111
     }
    ],
    "graph_facts": 0,
    "rule_facts": 0,
    "memory_chars": 0,
-   "prompt_chars": 2230,
-   "prompt_tokens_estimate": 558,
+   "prompt_chars": 2944,
+   "prompt_tokens_estimate": 736,
    "max_prompt_tokens": 1200,
    "strategy": "extractive + sentence index",
    "window_words": 60,
@@ -465,9 +393,9 @@
    "injection_suspects": []
   },
   {
-   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+   "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
    "seq": 4,
-   "ts": "2026-10-28T12:55:14.262+00:00",
+   "ts": "2026-10-28T16:46:23.445+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "citation_check",
@@ -481,9 +409,9 @@
    "action": "refuse"
   },
   {
-   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+   "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
    "seq": 5,
-   "ts": "2026-10-28T12:55:14.262+00:00",
+   "ts": "2026-10-28T16:46:23.445+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "refusal",
@@ -500,9 +428,9 @@
    ]
   },
   {
-   "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+   "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
    "seq": 6,
-   "ts": "2026-10-28T12:55:14.262+00:00",
+   "ts": "2026-10-28T16:46:23.445+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
@@ -512,9 +440,9 @@
    "citations": [],
    "provenance": [],
    "route": {
-    "run_id": "d3135e59-988e-4edf-9b8d-fb2027c184cf",
+    "run_id": "a933d5f0-1752-4031-bc52-00204d9933d9",
     "seq": 0,
-    "ts": "2026-10-28T12:54:51.267+00:00",
+    "ts": "2026-10-28T16:46:22.077+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",

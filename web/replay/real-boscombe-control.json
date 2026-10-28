@@ -3,9 +3,9 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?",
-  "recorded_at": "2026-10-28T14:54:51+0200",
-  "seconds": 2.9,
-  "commit": "725dc1f4f99e6ae8e89c0d99cae702c00c2aa208",
+  "recorded_at": "2026-10-28T18:46:21+0200",
+  "seconds": 25.3,
+  "commit": "21e3255058711b7613fd4d2594ea97a7dcb9f8af",
   "mcp": {
    "configured": true,
    "mode": "stdio",
@@ -46,9 +46,9 @@
  },
  "events": [
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 0,
-   "ts": "2026-10-28T12:54:48.276+00:00",
+   "ts": "2026-10-28T16:45:56.629+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -68,9 +68,9 @@
    "confidence": 0.8
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 1,
-   "ts": "2026-10-28T12:54:48.276+00:00",
+   "ts": "2026-10-28T16:45:56.630+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
@@ -79,11 +79,11 @@
    "attempt": 1
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 2,
-   "ts": "2026-10-28T12:54:48.363+00:00",
+   "ts": "2026-10-28T16:45:56.752+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 86,
+   "duration_ms": 122,
    "type": "retrieval_results",
    "hits": [
     {
@@ -189,9 +189,9 @@
    ]
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 3,
-   "ts": "2026-10-28T12:54:48.363+00:00",
+   "ts": "2026-10-28T16:45:56.753+00:00",
    "step_id": "graph-1",
    "duration_ms": null,
    "type": "graph_query",
@@ -205,9 +205,9 @@
    }
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 4,
-   "ts": "2026-10-28T12:54:48.365+00:00",
+   "ts": "2026-10-28T16:45:56.754+00:00",
    "step_id": "graph-1",
    "duration_ms": 1,
    "type": "graph_results",
@@ -577,9 +577,9 @@
    "truncated": false
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 5,
-   "ts": "2026-10-28T12:54:48.365+00:00",
+   "ts": "2026-10-28T16:45:56.754+00:00",
    "step_id": "tool-find_contradictions",
    "duration_ms": null,
    "type": "tool_call",
@@ -592,11 +592,11 @@
    "timeout_s": 5.0
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 6,
-   "ts": "2026-10-28T12:54:48.430+00:00",
+   "ts": "2026-10-28T16:45:56.823+00:00",
    "step_id": "tool-find_contradictions",
-   "duration_ms": 64,
+   "duration_ms": 68,
    "type": "tool_result",
    "server": "timeline-alibi",
    "tool": "find_contradictions",
@@ -607,9 +607,9 @@
    "error": null
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 7,
-   "ts": "2026-10-28T12:54:48.515+00:00",
+   "ts": "2026-10-28T16:45:56.904+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "enriched_query",
@@ -731,91 +731,13 @@
      "window_end": 1657,
      "window_char_start": 44358,
      "window_char_end": 46015
-    },
-    {
-     "n": 10,
-     "chunk_id": "boscombe-valley-mystery-0013",
-     "story": "boscombe-valley-mystery",
-     "char_start": 23133,
-     "char_end": 25925,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 2792,
-     "window_char_start": 23133,
-     "window_char_end": 25925
-    },
-    {
-     "n": 11,
-     "chunk_id": "boscombe-valley-mystery-0020",
-     "story": "boscombe-valley-mystery",
-     "char_start": 34068,
-     "char_end": 35943,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1875,
-     "window_char_start": 34068,
-     "window_char_end": 35943
-    },
-    {
-     "n": 12,
-     "chunk_id": "boscombe-valley-mystery-0002",
-     "story": "boscombe-valley-mystery",
-     "char_start": 2791,
-     "char_end": 4456,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1665,
-     "window_char_start": 2791,
-     "window_char_end": 4456
-    },
-    {
-     "n": 13,
-     "chunk_id": "crooked-man-0021",
-     "story": "crooked-man",
-     "char_start": 32882,
-     "char_end": 34627,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1745,
-     "window_char_start": 32882,
-     "window_char_end": 34627
-    },
-    {
-     "n": 14,
-     "chunk_id": "boscombe-valley-mystery-0022",
-     "story": "boscombe-valley-mystery",
-     "char_start": 37713,
-     "char_end": 39635,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1922,
-     "window_char_start": 37713,
-     "window_char_end": 39635
-    },
-    {
-     "n": 15,
-     "chunk_id": "priory-school-0025",
-     "story": "priory-school",
-     "char_start": 42527,
-     "char_end": 44195,
-     "origin": "vector",
-     "label": "source_text",
-     "window_start": 0,
-     "window_end": 1668,
-     "window_char_start": 42527,
-     "window_char_end": 44195
     }
    ],
    "graph_facts": 0,
    "rule_facts": 0,
    "memory_chars": 0,
-   "prompt_chars": 2865,
-   "prompt_tokens_estimate": 717,
+   "prompt_chars": 2757,
+   "prompt_tokens_estimate": 690,
    "max_prompt_tokens": 1200,
    "strategy": "rule-first (empty) + extractive + sentence index",
    "window_words": 60,
@@ -824,9 +746,9 @@
    "injection_suspects": []
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 8,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.943+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -834,9 +756,9 @@
    "text": "The "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 9,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.943+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -844,9 +766,9 @@
    "text": "rule "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 10,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -854,9 +776,9 @@
    "text": "engine "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 11,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -864,9 +786,9 @@
    "text": "found "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 12,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -874,9 +796,9 @@
    "text": "no "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 13,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -884,9 +806,9 @@
    "text": "violation "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 14,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -894,9 +816,9 @@
    "text": "among "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 15,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -904,9 +826,9 @@
    "text": "the "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 16,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -914,9 +836,9 @@
    "text": "facts "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 17,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -924,9 +846,9 @@
    "text": "extracted "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 18,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -934,9 +856,9 @@
    "text": "for "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 19,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -944,9 +866,9 @@
    "text": "boscombe-valley-mystery. "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 20,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -954,9 +876,9 @@
    "text": "This "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 21,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -964,9 +886,9 @@
    "text": "does "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 22,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -974,9 +896,9 @@
    "text": "not "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 23,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -984,9 +906,9 @@
    "text": "show "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 24,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -994,9 +916,9 @@
    "text": "that "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 25,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1004,9 +926,9 @@
    "text": "the "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 26,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1014,9 +936,9 @@
    "text": "accounts "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 27,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1024,9 +946,9 @@
    "text": "are "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 28,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1034,9 +956,9 @@
    "text": "consistent: "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 29,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1044,9 +966,9 @@
    "text": "the "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 30,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1054,9 +976,9 @@
    "text": "graph "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 31,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1064,9 +986,9 @@
    "text": "holds "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 32,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1074,9 +996,9 @@
    "text": "88 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 33,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1084,9 +1006,9 @@
    "text": "events "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 34,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1094,9 +1016,9 @@
    "text": "and "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 35,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1104,9 +1026,9 @@
    "text": "115 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 36,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1114,9 +1036,9 @@
    "text": "claims "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 37,
-   "ts": "2026-10-28T12:54:51.111+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1124,9 +1046,9 @@
    "text": "for "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 38,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1134,9 +1056,9 @@
    "text": "this "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 39,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1144,9 +1066,9 @@
    "text": "story; "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 40,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1154,9 +1076,9 @@
    "text": "3 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 41,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1164,9 +1086,9 @@
    "text": "events "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 42,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1174,9 +1096,9 @@
    "text": "have "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 43,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1184,9 +1106,9 @@
    "text": "an "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 44,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1194,9 +1116,9 @@
    "text": "exact "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 45,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1204,9 +1126,9 @@
    "text": "clock "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 46,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1214,9 +1136,9 @@
    "text": "time, "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 47,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1224,9 +1146,9 @@
    "text": "7 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 48,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1234,9 +1156,9 @@
    "text": "have "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 49,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1244,9 +1166,9 @@
    "text": "a "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 50,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1254,9 +1176,9 @@
    "text": "story "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 51,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1264,9 +1186,9 @@
    "text": "day, "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 52,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1274,9 +1196,9 @@
    "text": "and "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 53,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1284,9 +1206,9 @@
    "text": "3 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 54,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1294,9 +1216,9 @@
    "text": "claims "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 55,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1304,9 +1226,9 @@
    "text": "carry "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 56,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1314,9 +1236,9 @@
    "text": "a "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 57,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1324,9 +1246,9 @@
    "text": "presence "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 58,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1334,9 +1256,9 @@
    "text": "proposition; "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 59,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1344,9 +1266,9 @@
    "text": "rule "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 60,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1354,9 +1276,9 @@
    "text": "R1 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 61,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.944+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1364,9 +1286,9 @@
    "text": "examined "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 62,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1374,9 +1296,9 @@
    "text": "16 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 63,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1384,9 +1306,9 @@
    "text": "event "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 64,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1394,9 +1316,9 @@
    "text": "pairs "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 65,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1404,9 +1326,9 @@
    "text": "and "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 66,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1414,9 +1336,9 @@
    "text": "could "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 67,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1424,9 +1346,9 @@
    "text": "not "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 68,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1434,9 +1356,9 @@
    "text": "decide "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 69,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1444,9 +1366,9 @@
    "text": "10 "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 70,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1454,9 +1376,9 @@
    "text": "of "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 71,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1464,9 +1386,9 @@
    "text": "them.\n"
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 72,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1474,9 +1396,9 @@
    "text": "Text "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 73,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1484,9 +1406,9 @@
    "text": "evidence: "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 74,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1494,9 +1416,9 @@
    "text": "[1: "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 75,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1504,9 +1426,9 @@
    "text": "\"The "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 76,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1514,9 +1436,9 @@
    "text": "game-keeper "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 77,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1524,9 +1446,9 @@
    "text": "adds "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 78,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1534,9 +1456,9 @@
    "text": "that "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 79,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1544,9 +1466,9 @@
    "text": "within "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 80,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1554,9 +1476,9 @@
    "text": "a "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 81,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1564,9 +1486,9 @@
    "text": "few "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 82,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1574,9 +1496,9 @@
    "text": "minutes "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 83,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1584,9 +1506,9 @@
    "text": "of "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 84,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1594,9 +1516,9 @@
    "text": "his "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 85,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1604,9 +1526,9 @@
    "text": "seeing "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 86,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1614,9 +1536,9 @@
    "text": "Mr. "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 87,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1624,9 +1546,9 @@
    "text": "McCarthy "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 88,
-   "ts": "2026-10-28T12:54:51.112+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1634,9 +1556,9 @@
    "text": "pass "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 89,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1644,9 +1566,9 @@
    "text": "he "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 90,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1654,9 +1576,9 @@
    "text": "had "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 91,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1664,9 +1586,9 @@
    "text": "seen "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 92,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1674,9 +1596,9 @@
    "text": "his "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 93,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1684,9 +1606,9 @@
    "text": "son, "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 94,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1694,9 +1616,9 @@
    "text": "Mr. "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 95,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1704,9 +1626,9 @@
    "text": "James "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 96,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1714,9 +1636,9 @@
    "text": "McCarthy, "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 97,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1724,9 +1646,9 @@
    "text": "going "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 98,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1734,9 +1656,9 @@
    "text": "the "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 99,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1744,9 +1666,9 @@
    "text": "same "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 100,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1754,9 +1676,9 @@
    "text": "way "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 101,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1764,9 +1686,9 @@
    "text": "with "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 102,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1774,9 +1696,9 @@
    "text": "a "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 103,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1784,9 +1706,9 @@
    "text": "gun "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 104,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1794,9 +1716,9 @@
    "text": "under "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 105,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1804,9 +1726,9 @@
    "text": "his "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 106,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -1814,359 +1736,129 @@
    "text": "arm.\"] "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 107,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "[2: "
+   "text": "[1: "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 108,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "\"“Mr. "
+   "text": "\"“The "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 109,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "James "
+   "text": "two "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 110,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "McCarthy, "
+   "text": "McCarthys "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 111,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "the "
+   "text": "were "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 112,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "only "
+   "text": "seen "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 113,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "son "
+   "text": "after "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 114,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "of "
+   "text": "the "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 115,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "the "
+   "text": "time "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 116,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "deceased, "
+   "text": "when "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 117,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "was "
+   "text": "William "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 118,
-   "ts": "2026-10-28T12:54:51.113+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "then "
+   "text": "Crowder, "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
    "seq": 119,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "called "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 120,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "and "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 121,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "gave "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 122,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "evidence "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 123,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "as "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 124,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "follows: "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 125,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "‘I "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 126,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "had "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 127,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "been "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 128,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "away "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 129,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "from "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 130,
-   "ts": "2026-10-28T12:54:51.113+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "home "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 131,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "for "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 132,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "three "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 133,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "days "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 134,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "at "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 135,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "Bristol, "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 136,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "and "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 137,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "had "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 138,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "only "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 139,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "just "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 140,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "returned "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 141,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "upon "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 142,
-   "ts": "2026-10-28T12:54:51.114+00:00",
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -2174,19 +1866,39 @@
    "text": "the "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 143,
-   "ts": "2026-10-28T12:54:51.114+00:00",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
+   "seq": 120,
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "morning "
+   "text": "game-keeper, "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 144,
-   "ts": "2026-10-28T12:54:51.114+00:00",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
+   "seq": 121,
+   "ts": "2026-10-28T16:46:21.945+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "lost "
+  },
+  {
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
+   "seq": 122,
+   "ts": "2026-10-28T16:46:21.945+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "sight "
+  },
+  {
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
+   "seq": 123,
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
@@ -2194,49 +1906,19 @@
    "text": "of "
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 145,
-   "ts": "2026-10-28T12:54:51.114+00:00",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
+   "seq": 124,
+   "ts": "2026-10-28T16:46:21.945+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "last "
+   "text": "them.\"]"
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 146,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "Monday, "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 147,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "the "
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 148,
-   "ts": "2026-10-28T12:54:51.114+00:00",
-   "step_id": null,
-   "duration_ms": null,
-   "type": "answer_token",
-   "attempt": 1,
-   "text": "3rd.\"]"
-  },
-  {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 149,
-   "ts": "2026-10-28T12:54:51.118+00:00",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
+   "seq": 125,
+   "ts": "2026-10-28T16:46:21.950+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "citation_check",
@@ -2249,7 +1931,7 @@
      "source_exists": true
     },
     {
-     "n": 2,
+     "n": 1,
      "verbatim": true,
      "source_exists": true
     }
@@ -2259,15 +1941,15 @@
    "action": "accept"
   },
   {
-   "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
-   "seq": 150,
-   "ts": "2026-10-28T12:54:51.121+00:00",
+   "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
+   "seq": 126,
+   "ts": "2026-10-28T16:46:21.952+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
    "status": "answered",
    "verified": true,
-   "answer": "The rule engine found no violation among the facts extracted for boscombe-valley-mystery. This does not show that the accounts are consistent: the graph holds 88 events and 115 claims for this story; 3 events have an exact clock time, 7 have a story day, and 3 claims carry a presence proposition; rule R1 examined 16 event pairs and could not decide 10 of them.\nText evidence: [1: \"The game-keeper adds that within a few minutes of his seeing Mr. McCarthy pass he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm.\"] [2: \"“Mr. James McCarthy, the only son of the deceased, was then called and gave evidence as follows: ‘I had been away from home for three days at Bristol, and had only just returned upon the morning of last Monday, the 3rd.\"]",
+   "answer": "The rule engine found no violation among the facts extracted for boscombe-valley-mystery. This does not show that the accounts are consistent: the graph holds 88 events and 115 claims for this story; 3 events have an exact clock time, 7 have a story day, and 3 claims carry a presence proposition; rule R1 examined 16 event pairs and could not decide 10 of them.\nText evidence: [1: \"The game-keeper adds that within a few minutes of his seeing Mr. McCarthy pass he had seen his son, Mr. James McCarthy, going the same way with a gun under his arm.\"] [1: \"“The two McCarthys were seen after the time when William Crowder, the game-keeper, lost sight of them.\"]",
    "citations": [
     {
      "n": 1,
@@ -2282,14 +1964,14 @@
      "label": "source_text"
     },
     {
-     "n": 2,
-     "quote": "“Mr. James McCarthy, the only son of the deceased, was then called and gave evidence as follows: ‘I had been away from home for three days at Bristol, and had only just returned upon the morning of last Monday, the 3rd.",
+     "n": 1,
+     "quote": "“The two McCarthys were seen after the time when William Crowder, the game-keeper, lost sight of them.",
      "anchor": {
       "story": "boscombe-valley-mystery",
-      "chunk_id": "boscombe-valley-mystery-0007",
-      "char_start": 12084,
-      "char_end": 12303,
-      "quote": "“Mr. James McCarthy, the only son of the deceased, was then called and gave evidence as follows: ‘I had been away from home for three days at Bristol, and had only just returned upon the morning of last Monday, the 3rd."
+      "chunk_id": "boscombe-valley-mystery-0003",
+      "char_start": 5144,
+      "char_end": 5246,
+      "quote": "“The two McCarthys were seen after the time when William Crowder, the game-keeper, lost sight of them."
      },
      "label": "source_text"
     }
@@ -2303,21 +1985,12 @@
      "rule_id": null,
      "summary": "retrieved chunk (rrf 0.0325)",
      "explanation": null
-    },
-    {
-     "n": 2,
-     "label": "source_text",
-     "origin": "vector",
-     "confidence": null,
-     "rule_id": null,
-     "summary": "retrieved chunk (rrf 0.0325)",
-     "explanation": null
     }
    ],
    "route": {
-    "run_id": "d321576f-b587-4ffd-8ab4-3933cea4908d",
+    "run_id": "e14d811c-98d7-4372-92aa-82109d0eeea0",
     "seq": 0,
-    "ts": "2026-10-28T12:54:48.276+00:00",
+    "ts": "2026-10-28T16:45:56.629+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",

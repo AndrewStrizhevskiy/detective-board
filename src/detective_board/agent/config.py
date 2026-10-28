@@ -40,9 +40,9 @@ class AgentConfig:
         "score"  # what the sentence cap drops: "score" (lowest) | "rank" (worst chunks)
     )
     sentence_index_path: str = "data/index/sentences.sqlite"  # sentence hybrid index (optional)
-    extract_sentence_k: int = 20  # extractive: top sentences of the whole-corpus sentence index
-    extract_safety_chunks: int = 2  # ... plus the best sentences of this many top chunk hits
-    extract_safety_per_chunk: int = 2  # (the former candidate builder, kept as a safety net)
+    extract_sentence_k: int = 12  # extractive: top sentences of the whole-corpus sentence index
+    extract_safety_chunks: int = 4  # ... plus the best sentences of this many top chunk hits
+    extract_safety_per_chunk: int = 3  # (the former candidate builder, kept as a safety net)
     rule_first: bool = True  # rule questions: deterministic template from the rule result, no LLM
     translate_questions: bool = True  # Cyrillic question -> English before everything else
     translate_model: str = "qwen3:4b-instruct"  # "translategemma:4b" is supported (own prompt)

@@ -1,0 +1,2672 @@
+{
+ "meta": {
+  "date": "2026-10-28",
+  "time": "162624",
+  "split": "dev",
+  "short": false,
+  "generator": "qwen3:4b-instruct",
+  "machine": "mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-38-generic",
+  "git_sha": "4bceaf8fbf107de133d7a020b03635969c75e9bb",
+  "dirty": false,
+  "config_hash": "dcf42c8a3eb8",
+  "identity": {
+   "generator": "qwen3:4b-instruct",
+   "embed_model": "bge-m3",
+   "num_ctx": 4096,
+   "agent": {
+    "top_k": 4,
+    "strategy": "rank_full",
+    "window_words": 60,
+    "idf_chunks": "/home/mendax/code/detective-board/data/chunks.jsonl",
+    "max_prompt_tokens": 1200,
+    "retry_extra_k": 2,
+    "min_score": 0.018,
+    "min_support": 0.25,
+    "max_graph_facts": 8,
+    "max_tool_facts": 8,
+    "max_retries": 1,
+    "decline_retry": true,
+    "decline_fallback_min_support": 0.5,
+    "min_quote_chars": 6,
+    "min_claim_overlap": 0.3,
+    "memory_turns": 3,
+    "memory_max_chars": 600,
+    "use_llm_router": false,
+    "tool_timeout_s": 5.0,
+    "answer_mode": "extractive",
+    "extract_top_k": 6,
+    "extract_per_source": 8,
+    "extract_max_sentences": 40,
+    "extract_max_tokens": 850,
+    "extract_order": "score",
+    "sentence_index_path": "data/index/sentences.sqlite",
+    "extract_sentence_k": 12,
+    "extract_safety_chunks": 4,
+    "extract_safety_per_chunk": 3,
+    "rule_first": true,
+    "translate_questions": true,
+    "translate_model": "qwen3:4b-instruct",
+    "translate_max_chars": 300,
+    "translate_timeout_s": 30.0,
+    "translate_cache": "",
+    "temperature": 0.0,
+    "seed": 42
+   },
+   "vector_agent": {
+    "top_k": 4,
+    "strategy": "rank_full",
+    "window_words": 60,
+    "idf_chunks": "/home/mendax/code/detective-board/data/chunks.jsonl",
+    "max_prompt_tokens": 1200,
+    "retry_extra_k": 2,
+    "min_score": 0.0,
+    "min_support": 0.25,
+    "max_graph_facts": 8,
+    "max_tool_facts": 8,
+    "max_retries": 1,
+    "decline_retry": true,
+    "decline_fallback_min_support": 0.5,
+    "min_quote_chars": 6,
+    "min_claim_overlap": 0.3,
+    "memory_turns": 3,
+    "memory_max_chars": 600,
+    "use_llm_router": false,
+    "tool_timeout_s": 5.0,
+    "answer_mode": "extractive",
+    "extract_top_k": 4,
+    "extract_per_source": 8,
+    "extract_max_sentences": 40,
+    "extract_max_tokens": 850,
+    "extract_order": "score",
+    "sentence_index_path": "data/index/sentences.sqlite",
+    "extract_sentence_k": 20,
+    "extract_safety_chunks": 2,
+    "extract_safety_per_chunk": 2,
+    "rule_first": true,
+    "translate_questions": true,
+    "translate_model": "qwen3:4b-instruct",
+    "translate_max_chars": 300,
+    "translate_timeout_s": 30.0,
+    "translate_cache": "",
+    "temperature": 0.0,
+    "seed": 42
+   },
+   "data": {
+    "index": "2d02f1dfa9772e08",
+    "graph": "c2bb394b276559e4",
+    "sentences": "11a9587530064cc4",
+    "chunks": "d15dca856a055b84"
+   },
+   "fixture": null
+  },
+  "presence": {
+   "graph": true,
+   "sentence_index": true,
+   "rule_tools": "timeline-alibi",
+   "fixture": null
+  },
+  "vector_min_score": 0.0,
+  "n_questions": 34,
+  "n_contradictions": 23,
+  "gold_note": "Gold sets are AI-written and not yet reviewed by a human (issue #9): every number is against AI labels.",
+  "out_dir": "eval/runs/exp-e3"
+ },
+ "summary": {
+  "bare": {
+   "status": "not run",
+   "reason": "not selected"
+  },
+  "vector": {
+   "status": "not run",
+   "reason": "not selected"
+  },
+  "vector+rerank": {
+   "status": "not run",
+   "reason": "no local reranker in the repo (retrieval/rerank.py is a stub)"
+  },
+  "hybrid+graph": {
+   "n": 34,
+   "errors": 0,
+   "behaviour_correct": {
+    "k": 14,
+    "n": 34,
+    "value": 0.4117647058823529,
+    "ci95": [
+     0.2637,
+     0.5778
+    ]
+   },
+   "refusal_precision": {
+    "k": 7,
+    "n": 12,
+    "value": 0.5833333333333334,
+    "ci95": [
+     0.3195,
+     0.8067
+    ]
+   },
+   "refusal_recall": {
+    "k": 7,
+    "n": 7,
+    "value": 1.0,
+    "ci95": [
+     0.6457,
+     1.0
+    ]
+   },
+   "false_refusal_rate": {
+    "k": 5,
+    "n": 27,
+    "value": 0.18518518518518517,
+    "ci95": [
+     0.0818,
+     0.367
+    ]
+   },
+   "latency_median_s": {
+    "ttft": 32.343,
+    "total": 32.348
+   },
+   "answers_all_citations_correct": {
+    "k": 9,
+    "n": 22,
+    "value": 0.4090909090909091,
+    "ci95": [
+     0.2326,
+     0.6127
+    ]
+   },
+   "citation_correct_per_citation": {
+    "k": 21,
+    "n": 37,
+    "value": 0.5675675675675675,
+    "ci95": [
+     0.4091,
+     0.7133
+    ]
+   },
+   "answer_sentence_hit": {
+    "k": 13,
+    "n": 22,
+    "value": 0.5909090909090909,
+    "ci95": [
+     0.3873,
+     0.7674
+    ]
+   },
+   "recall@1": {
+    "k": 14,
+    "n": 27,
+    "value": 0.5185185185185185,
+    "ci95": [
+     0.3399,
+     0.6926
+    ]
+   },
+   "recall@4": {
+    "k": 21,
+    "n": 27,
+    "value": 0.7777777777777778,
+    "ci95": [
+     0.5924,
+     0.8939
+    ]
+   },
+   "recall@6": {
+    "k": 22,
+    "n": 27,
+    "value": 0.8148148148148148,
+    "ci95": [
+     0.633,
+     0.9182
+    ]
+   },
+   "sentence_recall@1": {
+    "k": 5,
+    "n": 27,
+    "value": 0.18518518518518517,
+    "ci95": [
+     0.0818,
+     0.367
+    ]
+   },
+   "sentence_recall@5": {
+    "k": 13,
+    "n": 27,
+    "value": 0.48148148148148145,
+    "ci95": [
+     0.3074,
+     0.6601
+    ]
+   },
+   "sentence_recall@20": {
+    "k": 20,
+    "n": 27,
+    "value": 0.7407407407407407,
+    "ci95": [
+     0.5532,
+     0.8683
+    ]
+   }
+  },
+  "paired_behaviour_correct": {}
+ },
+ "contradictions": {
+  "all": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 14,
+   "tn": 9,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 14,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.2153
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 9,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.2991
+    ]
+   }
+  },
+  "skipped": 0,
+  "R1_place_conflict": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 2,
+   "tn": 0,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 2,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.6576
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   }
+  },
+  "R2_order_cycle_or_inconsistency": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 2,
+   "tn": 0,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 2,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.6576
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   }
+  },
+  "R3_claim_vs_fact": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 10,
+   "tn": 0,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 10,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.2775
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   }
+  },
+  "consistent_control": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 0,
+   "tn": 9,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 9,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.2991
+    ]
+   }
+  },
+  "evidence=explicit": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 11,
+   "tn": 7,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 11,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.2588
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 7,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.3543
+    ]
+   }
+  },
+  "evidence=inferred": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 3,
+   "tn": 2,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 3,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.5615
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 2,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.6576
+    ]
+   }
+  },
+  "time_normalisation=yes": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 4,
+   "tn": 3,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 4,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.4899
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 3,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.5615
+    ]
+   }
+  },
+  "time_normalisation=no": {
+   "tp": 0,
+   "fp": 0,
+   "fn": 10,
+   "tn": 6,
+   "precision": {
+    "k": 0,
+    "n": 0,
+    "value": null,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "recall": {
+    "k": 0,
+    "n": 10,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.2775
+    ]
+   },
+   "f1": null,
+   "fp_rate_controls": {
+    "k": 0,
+    "n": 6,
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.3903
+    ]
+   }
+  }
+ },
+ "rows": [
+  {
+   "id": "g001",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "fact",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [6: \"“It is a swamp adder!” cried Holmes; “the deadliest snake in India.\"]",
+   "citations": [
+    {
+     "n": 6,
+     "chunk_id": "speckled-band-0030",
+     "story": "speckled-band",
+     "quote": "“It is a swamp adder!” cried Holmes; “the deadliest snake in India."
+    }
+   ],
+   "retrieved": [
+    "speckled-band-0030",
+    "speckled-band-0031",
+    "speckled-band-0014",
+    "speckled-band-0024",
+    "speckled-band-0032",
+    "speckled-band-0006"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 28.739,
+   "total_s": 28.742,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.857,
+   "correct": true,
+   "citation_verdicts": [
+    {
+     "chunk_id": "speckled-band-0030",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "speckled-band-0030"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g002",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "fact",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [1: \"Finally, an analysis has shown that the remains of his supper left by the stable-lad contain an appreciable quantity of powdered opium, while the people at the house partook of the same dish on the same night without any ill effect.\"] [5: \"The opium was added after the dish was set aside for the stable-boy, for the others had the same for supper with no ill effects.\"]",
+   "citations": [
+    {
+     "n": 1,
+     "chunk_id": "silver-blaze-0007",
+     "story": "silver-blaze",
+     "quote": "Finally, an analysis has shown that the remains of his supper left by the stable-lad contain an appreciable quantity of powdered opium, while the people at the house partook of the same dish on the same night without any ill effect."
+    },
+    {
+     "n": 5,
+     "chunk_id": "silver-blaze-0026",
+     "story": "silver-blaze",
+     "quote": "The opium was added after the dish was set aside for the stable-boy, for the others had the same for supper with no ill effects."
+    }
+   ],
+   "retrieved": [
+    "silver-blaze-0007",
+    "silver-blaze-0027",
+    "silver-blaze-0004",
+    "silver-blaze-0003",
+    "silver-blaze-0026",
+    "silver-blaze-0005"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 36.314,
+   "total_s": 36.318,
+   "sentence_recall@1": true,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.6,
+   "correct": true,
+   "citation_verdicts": [
+    {
+     "chunk_id": "silver-blaze-0007",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    },
+    {
+     "chunk_id": "silver-blaze-0026",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "silver-blaze-0007"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g003",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "fact",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [1: \"It is absolutely unique, and its value can only be conjectured, but the reward offered of £ 1000 is certainly not within a twentieth part of the market price.”\"] [5: \"I have already offered a reward of £ 1000.\"]",
+   "citations": [
+    {
+     "n": 1,
+     "chunk_id": "blue-carbuncle-0006",
+     "story": "blue-carbuncle",
+     "quote": "It is absolutely unique, and its value can only be conjectured, but the reward offered of £ 1000 is certainly not within a twentieth part of the market price.”"
+    },
+    {
+     "n": 5,
+     "chunk_id": "beryl-coronet-0013",
+     "story": "beryl-coronet",
+     "quote": "I have already offered a reward of £ 1000."
+    }
+   ],
+   "retrieved": [
+    "blue-carbuncle-0006",
+    "blue-carbuncle-0007",
+    "blue-carbuncle-0018",
+    "blue-carbuncle-0009",
+    "copper-beeches-0002",
+    "priory-school-0027"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 35.413,
+   "total_s": 35.418,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 1.0,
+   "correct": true,
+   "citation_verdicts": [
+    {
+     "chunk_id": "blue-carbuncle-0006",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    },
+    {
+     "chunk_id": "beryl-coronet-0013",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "blue-carbuncle-0006"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g007",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "fact",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [2: \"That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon.\"] [6: \"Peter Carey was master of the _Sea Unicorn_, and I was spare harpooner.\"]",
+   "citations": [
+    {
+     "n": 2,
+     "chunk_id": "black-peter-0018",
+     "story": "black-peter",
+     "quote": "That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon."
+    },
+    {
+     "n": 6,
+     "chunk_id": "black-peter-0022",
+     "story": "black-peter",
+     "quote": "Peter Carey was master of the _Sea Unicorn_, and I was spare harpooner."
+    }
+   ],
+   "retrieved": [
+    "black-peter-0016",
+    "black-peter-0021",
+    "black-peter-0003",
+    "black-peter-0005",
+    "black-peter-0007",
+    "black-peter-0018"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 34.537,
+   "total_s": 34.544,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.375,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "black-peter-0018",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "black-peter-0022",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "black-peter-0006",
+    "black-peter-0021"
+   ],
+   "recall@1": false,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g009",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "multi-hop",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "blue-carbuncle-0009",
+    "blue-carbuncle-0002",
+    "blue-carbuncle-0018",
+    "blue-carbuncle-0008",
+    "blue-carbuncle-0012",
+    "blue-carbuncle-0006"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 34.66,
+   "total_s": 34.66,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": true,
+   "refused": true,
+   "coverage": 0.0,
+   "correct": false,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "blue-carbuncle-0020",
+    "blue-carbuncle-0017"
+   ],
+   "recall@1": false,
+   "recall@4": false,
+   "recall@6": false
+  },
+  {
+   "id": "g010",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "multi-hop",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [3: \"“Well, now, in considering this case there are two points about young McCarthy’s narrative which struck us both instantly, although they impressed me in his favour and you against him.\"] [3: \"But ‘Cooee’ is a distinctly Australian cry, and one which is used between Australians.\"]",
+   "citations": [
+    {
+     "n": 3,
+     "chunk_id": "boscombe-valley-mystery-0022",
+     "story": "boscombe-valley-mystery",
+     "quote": "“Well, now, in considering this case there are two points about young McCarthy’s narrative which struck us both instantly, although they impressed me in his favour and you against him."
+    },
+    {
+     "n": 3,
+     "chunk_id": "boscombe-valley-mystery-0022",
+     "story": "boscombe-valley-mystery",
+     "quote": "But ‘Cooee’ is a distinctly Australian cry, and one which is used between Australians."
+    }
+   ],
+   "retrieved": [
+    "boscombe-valley-mystery-0023",
+    "boscombe-valley-mystery-0022",
+    "boscombe-valley-mystery-0026",
+    "boscombe-valley-mystery-0012",
+    "boscombe-valley-mystery-0017",
+    "boscombe-valley-mystery-0009"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 31.984,
+   "total_s": 31.99,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": false,
+   "refused": false,
+   "coverage": 0.375,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "boscombe-valley-mystery-0022",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    },
+    {
+     "chunk_id": "boscombe-valley-mystery-0022",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "boscombe-valley-mystery-0022",
+    "boscombe-valley-mystery-0023"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g011",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "multi-hop",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "boscombe-valley-mystery-0002",
+    "boscombe-valley-mystery-0017",
+    "boscombe-valley-mystery-0012",
+    "boscombe-valley-mystery-0030",
+    "boscombe-valley-mystery-0007",
+    "boscombe-valley-mystery-0015"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 33.296,
+   "total_s": 33.296,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": true,
+   "refused": true,
+   "coverage": 0.0,
+   "correct": false,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "boscombe-valley-mystery-0027",
+    "boscombe-valley-mystery-0028"
+   ],
+   "recall@1": false,
+   "recall@4": false,
+   "recall@6": false
+  },
+  {
+   "id": "g016",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "relation",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [2: \"I had rather that Nancy and my old pals should think of Harry Wood as having died with a straight back, than see him living and crawling with a stick like a chimpanzee.\"] [6: \"You see me now with my back like a camel and my ribs all awry, but there was a time when Corporal Henry Wood was the smartest man in the 117th Foot.\"]",
+   "citations": [
+    {
+     "n": 2,
+     "chunk_id": "crooked-man-0021",
+     "story": "crooked-man",
+     "quote": "I had rather that Nancy and my old pals should think of Harry Wood as having died with a straight back, than see him living and crawling with a stick like a chimpanzee."
+    },
+    {
+     "n": 6,
+     "chunk_id": "crooked-man-0019",
+     "story": "crooked-man",
+     "quote": "You see me now with my back like a camel and my ribs all awry, but there was a time when Corporal Henry Wood was the smartest man in the 117th Foot."
+    }
+   ],
+   "retrieved": [
+    "crooked-man-0019",
+    "crooked-man-0018",
+    "crooked-man-0021",
+    "crooked-man-0003",
+    "crooked-man-0014",
+    "crooked-man-0016"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 35.289,
+   "total_s": 35.293,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": false,
+   "refused": false,
+   "coverage": 0.167,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "crooked-man-0021",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "crooked-man-0019",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "crooked-man-0019",
+    "crooked-man-0020"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g018",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "relation",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [5: \"“I think that we may safely say,” returned Holmes, “that she is wherever Sir George Burnwell is.\"] [7: \"He tried more than once to break away from the dangerous company which he was keeping, but each time the influence of his friend, Sir George Burnwell, was enough to draw him back again.\"]",
+   "citations": [
+    {
+     "n": 5,
+     "chunk_id": "beryl-coronet-0033",
+     "story": "beryl-coronet",
+     "quote": "“I think that we may safely say,” returned Holmes, “that she is wherever Sir George Burnwell is."
+    },
+    {
+     "n": 7,
+     "chunk_id": "beryl-coronet-0007",
+     "story": "beryl-coronet",
+     "quote": "He tried more than once to break away from the dangerous company which he was keeping, but each time the influence of his friend, Sir George Burnwell, was enough to draw him back again."
+    }
+   ],
+   "retrieved": [
+    "beryl-coronet-0032",
+    "beryl-coronet-0025",
+    "beryl-coronet-0028",
+    "beryl-coronet-0008",
+    "beryl-coronet-0007",
+    "beryl-coronet-0013"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 36.604,
+   "total_s": 36.609,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.182,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "beryl-coronet-0033",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "beryl-coronet-0007",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "beryl-coronet-0007",
+    "beryl-coronet-0025"
+   ],
+   "recall@1": false,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g019",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "relation",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [3: \"This so-called Blessington is, as I expected, well known at headquarters, and so are his assailants.\"] [3: \"“Then Blessington must have been Sutton.”\"]",
+   "citations": [
+    {
+     "n": 3,
+     "chunk_id": "resident-patient-0019",
+     "story": "resident-patient",
+     "quote": "This so-called Blessington is, as I expected, well known at headquarters, and so are his assailants."
+    },
+    {
+     "n": 3,
+     "chunk_id": "resident-patient-0019",
+     "story": "resident-patient",
+     "quote": "“Then Blessington must have been Sutton.”"
+    }
+   ],
+   "retrieved": [
+    "resident-patient-0009",
+    "resident-patient-0006",
+    "resident-patient-0011",
+    "resident-patient-0019",
+    "resident-patient-0005",
+    "resident-patient-0012"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 24.457,
+   "total_s": 24.462,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.062,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "resident-patient-0019",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    },
+    {
+     "chunk_id": "resident-patient-0019",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "resident-patient-0019"
+   ],
+   "recall@1": false,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g020",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "chronology",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [3: \"Two hours passed slowly away, and then, suddenly, just at the stroke of eleven, a single bright light shone out right in front of us.\"]",
+   "citations": [
+    {
+     "n": 3,
+     "chunk_id": "speckled-band-0026",
+     "story": "speckled-band",
+     "quote": "Two hours passed slowly away, and then, suddenly, just at the stroke of eleven, a single bright light shone out right in front of us."
+    }
+   ],
+   "retrieved": [
+    "speckled-band-0024",
+    "speckled-band-0026",
+    "speckled-band-0025",
+    "speckled-band-0013",
+    "speckled-band-0000",
+    "speckled-band-0031"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 30.86,
+   "total_s": 30.863,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 1.0,
+   "correct": true,
+   "citation_verdicts": [
+    {
+     "chunk_id": "speckled-band-0026",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "speckled-band-0026"
+   ],
+   "recall@1": false,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g022",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "chronology",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [1: \"It lasted forty minutes, and at a quarter-past nine Mrs. Barclay returned home, having left Miss Morrison at her door as she passed.\"]",
+   "citations": [
+    {
+     "n": 1,
+     "chunk_id": "crooked-man-0005",
+     "story": "crooked-man",
+     "quote": "It lasted forty minutes, and at a quarter-past nine Mrs. Barclay returned home, having left Miss Morrison at her door as she passed."
+    }
+   ],
+   "retrieved": [
+    "crooked-man-0005",
+    "crooked-man-0021",
+    "crooked-man-0022",
+    "musgrave-ritual-0010",
+    "crooked-man-0002",
+    "crooked-man-0018"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 35.014,
+   "total_s": 35.017,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.857,
+   "correct": true,
+   "citation_verdicts": [
+    {
+     "chunk_id": "crooked-man-0005",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "crooked-man-0005"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g023",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "chronology",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [11: \"There was no one in Charles Street, but a great traffic was going on, as usual, in Whitehall, at the extremity.\"] [12: \"Now we both rushed along the corridor and down the steep steps which led to Charles Street.\"]",
+   "citations": [
+    {
+     "n": 11,
+     "chunk_id": "naval-treaty-0010",
+     "story": "naval-treaty",
+     "quote": "There was no one in Charles Street, but a great traffic was going on, as usual, in Whitehall, at the extremity."
+    },
+    {
+     "n": 12,
+     "chunk_id": "naval-treaty-0009",
+     "story": "naval-treaty",
+     "quote": "Now we both rushed along the corridor and down the steep steps which led to Charles Street."
+    }
+   ],
+   "retrieved": [
+    "naval-treaty-0010",
+    "naval-treaty-0009",
+    "naval-treaty-0023",
+    "naval-treaty-0031",
+    "naval-treaty-0039",
+    "naval-treaty-0035"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 36.982,
+   "total_s": 36.989,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": false,
+   "refused": false,
+   "coverage": 0.0,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "naval-treaty-0010",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "naval-treaty-0009",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "naval-treaty-0009"
+   ],
+   "recall@1": false,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g025",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "chronology",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [1: \"Mrs. St. Clair had her lunch, started for the City, did some shopping, proceeded to the company’s office, got her packet, and found herself at exactly 4:35 walking through Swandam Lane on her way back to the station.\"]",
+   "citations": [
+    {
+     "n": 1,
+     "chunk_id": "man-with-the-twisted-lip-0009",
+     "story": "man-with-the-twisted-lip",
+     "quote": "Mrs. St. Clair had her lunch, started for the City, did some shopping, proceeded to the company’s office, got her packet, and found herself at exactly 4:35 walking through Swandam Lane on her way back to the station."
+    }
+   ],
+   "retrieved": [
+    "man-with-the-twisted-lip-0009",
+    "man-with-the-twisted-lip-0019",
+    "man-with-the-twisted-lip-0013",
+    "man-with-the-twisted-lip-0011",
+    "man-with-the-twisted-lip-0010",
+    "man-with-the-twisted-lip-0001"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 38.615,
+   "total_s": 38.619,
+   "sentence_recall@1": true,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.5,
+   "correct": true,
+   "citation_verdicts": [
+    {
+     "chunk_id": "man-with-the-twisted-lip-0009",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "man-with-the-twisted-lip-0009"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g028",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "testimony-contradiction",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "The rule engine found no violation among the facts extracted for boscombe-valley-mystery. This does not show that the accounts are consistent: the graph holds 88 events and 115 claims for this story; 3 events have an exact clock time, 7 have a story day, and 3 claims carry a presence proposition; rule R1 examined 16 event pairs and could not decide 10 of them.\nText evidence: [2: \"One was the fact that his father should, according to his account, cry ‘Cooee!’ before seeing him.\"]",
+   "citations": [
+    {
+     "n": 2,
+     "chunk_id": "boscombe-valley-mystery-0022",
+     "story": "boscombe-valley-mystery",
+     "quote": "One was the fact that his father should, according to his account, cry ‘Cooee!’ before seeing him."
+    }
+   ],
+   "retrieved": [
+    "boscombe-valley-mystery-0008",
+    "boscombe-valley-mystery-0022",
+    "boscombe-valley-mystery-0003",
+    "boscombe-valley-mystery-0007",
+    "boscombe-valley-mystery-0016",
+    "boscombe-valley-mystery-0009"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 33.119,
+   "total_s": 33.123,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": false,
+   "refused": false,
+   "coverage": 0.2,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "boscombe-valley-mystery-0022",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "boscombe-valley-mystery-0008"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g029",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "testimony-contradiction",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [7: \"“Well, there is at least a curious coincidence of dates.\"]",
+   "citations": [
+    {
+     "n": 7,
+     "chunk_id": "speckled-band-0025",
+     "story": "speckled-band",
+     "quote": "“Well, there is at least a curious coincidence of dates."
+    }
+   ],
+   "retrieved": [
+    "red-headed-league-0012",
+    "red-headed-league-0006",
+    "red-headed-league-0003",
+    "red-headed-league-0026",
+    "red-headed-league-0005",
+    "red-headed-league-0016"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 36.971,
+   "total_s": 36.974,
+   "sentence_recall@1": true,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.062,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "speckled-band-0025",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "red-headed-league-0004",
+    "red-headed-league-0012",
+    "red-headed-league-0000"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g031",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "testimony-contradiction",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [2: \"Lady Brackenstall actually _saw_ the three men drinking, did she not?”\"] [4: \"“We are told that three men drank from them.\"]",
+   "citations": [
+    {
+     "n": 2,
+     "chunk_id": "abbey-grange-0011",
+     "story": "abbey-grange",
+     "quote": "Lady Brackenstall actually _saw_ the three men drinking, did she not?”"
+    },
+    {
+     "n": 4,
+     "chunk_id": "abbey-grange-0013",
+     "story": "abbey-grange",
+     "quote": "“We are told that three men drank from them."
+    }
+   ],
+   "retrieved": [
+    "abbey-grange-0006",
+    "abbey-grange-0027",
+    "abbey-grange-0028",
+    "abbey-grange-0024",
+    "abbey-grange-0026",
+    "black-peter-0005"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 28.741,
+   "total_s": 28.746,
+   "sentence_recall@1": true,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.231,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "abbey-grange-0011",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "abbey-grange-0013",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "abbey-grange-0006",
+    "abbey-grange-0027"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g032",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "testimony-contradiction",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [2: \"But if it was not he, it must have been Alec Cunningham himself, for by the time that the old man had descended several servants were upon the scene.\"] [4: \"Evidently, therefore, Alec Cunningham had lied when he said that the two men were struggling when the shot was fired.\"]",
+   "citations": [
+    {
+     "n": 2,
+     "chunk_id": "reigate-squires-0016",
+     "story": "reigate-squires",
+     "quote": "But if it was not he, it must have been Alec Cunningham himself, for by the time that the old man had descended several servants were upon the scene."
+    },
+    {
+     "n": 4,
+     "chunk_id": "reigate-squires-0019",
+     "story": "reigate-squires",
+     "quote": "Evidently, therefore, Alec Cunningham had lied when he said that the two men were struggling when the shot was fired."
+    }
+   ],
+   "retrieved": [
+    "reigate-squires-0004",
+    "reigate-squires-0016",
+    "reigate-squires-0007",
+    "reigate-squires-0022",
+    "reigate-squires-0014",
+    "reigate-squires-0009"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 35.246,
+   "total_s": 35.253,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.357,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "reigate-squires-0016",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "reigate-squires-0019",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "reigate-squires-0019"
+   ],
+   "recall@1": false,
+   "recall@4": false,
+   "recall@6": false
+  },
+  {
+   "id": "g034",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "testimony-contradiction",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "The rule engine found no violation among the facts extracted for man-with-the-twisted-lip. This does not show that the accounts are consistent: the graph holds 86 events and 104 claims for this story; 0 events have an exact clock time, 1 have a story day, and 0 claims carry a presence proposition; rule R1 examined 0 event pairs and could not decide 0 of them.\nNote: no person in the graph named Whose, Neville St, Clair; the scan covered the whole story.\nText evidence: [4: \"He denied strenuously having ever seen Mr. Neville St. Clair and swore that the presence of the clothes in his room was as much a mystery to him as to the police.\"]",
+   "citations": [
+    {
+     "n": 4,
+     "chunk_id": "man-with-the-twisted-lip-0013",
+     "story": "man-with-the-twisted-lip",
+     "quote": "He denied strenuously having ever seen Mr. Neville St. Clair and swore that the presence of the clothes in his room was as much a mystery to him as to the police."
+    }
+   ],
+   "retrieved": [
+    "man-with-the-twisted-lip-0015",
+    "man-with-the-twisted-lip-0012",
+    "man-with-the-twisted-lip-0011",
+    "man-with-the-twisted-lip-0006",
+    "man-with-the-twisted-lip-0027",
+    "man-with-the-twisted-lip-0010"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 36.008,
+   "total_s": 36.012,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.188,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "man-with-the-twisted-lip-0013",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "man-with-the-twisted-lip-0009",
+    "man-with-the-twisted-lip-0010",
+    "man-with-the-twisted-lip-0013"
+   ],
+   "recall@1": false,
+   "recall@4": false,
+   "recall@6": true
+  },
+  {
+   "id": "g036",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "alibi",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [2: \"A small timber-yard still exists, however, at the back of the house, and last night, about twelve o’clock, an alarm was given that one of the stacks was on fire.\"] [6: \"“This is where young McFarlane must have come out to get his hat after the crime was done,” said he.\"]",
+   "citations": [
+    {
+     "n": 2,
+     "chunk_id": "norwood-builder-0004",
+     "story": "norwood-builder",
+     "quote": "A small timber-yard still exists, however, at the back of the house, and last night, about twelve o’clock, an alarm was given that one of the stacks was on fire."
+    },
+    {
+     "n": 6,
+     "chunk_id": "norwood-builder-0020",
+     "story": "norwood-builder",
+     "quote": "“This is where young McFarlane must have come out to get his hat after the crime was done,” said he."
+    }
+   ],
+   "retrieved": [
+    "norwood-builder-0004",
+    "norwood-builder-0008",
+    "norwood-builder-0015",
+    "norwood-builder-0006",
+    "norwood-builder-0005",
+    "norwood-builder-0017"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 38.28,
+   "total_s": 38.288,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.294,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "norwood-builder-0004",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    },
+    {
+     "chunk_id": "norwood-builder-0020",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "norwood-builder-0008",
+    "norwood-builder-0009",
+    "norwood-builder-0004"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g038",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "alibi",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [3: \"By no possible supposition could this stranger, Fitzroy Simpson, have caused curry to be served in the trainer’s family that night, and it is surely too monstrous a coincidence to suppose that he happened to come along with powdered opium upon the very night when a dish happened to be served which\"] [3: \"That is unthinkable. Therefore Simpson becomes eliminated from the case, and our attention centres upon Straker and his wife, the only two people who could have chosen curried mutton for supper that night.\"]",
+   "citations": [
+    {
+     "n": 3,
+     "chunk_id": "silver-blaze-0026",
+     "story": "silver-blaze",
+     "quote": "By no possible supposition could this stranger, Fitzroy Simpson, have caused curry to be served in the trainer’s family that night, and it is surely too monstrous a coincidence to suppose that he happened to come along with powdered opium upon the very night when a dish happened to be served which"
+    },
+    {
+     "n": 3,
+     "chunk_id": "silver-blaze-0026",
+     "story": "silver-blaze",
+     "quote": "That is unthinkable. Therefore Simpson becomes eliminated from the case, and our attention centres upon Straker and his wife, the only two people who could have chosen curried mutton for supper that night."
+    }
+   ],
+   "retrieved": [
+    "silver-blaze-0026",
+    "silver-blaze-0009",
+    "silver-blaze-0002",
+    "silver-blaze-0025",
+    "silver-blaze-0008",
+    "silver-blaze-0011"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 35.197,
+   "total_s": 35.201,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.909,
+   "correct": true,
+   "citation_verdicts": [
+    {
+     "chunk_id": "silver-blaze-0026",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    },
+    {
+     "chunk_id": "silver-blaze-0026",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "silver-blaze-0026"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g041",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "cross-story",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "blue-carbuncle-0007",
+    "blue-carbuncle-0018",
+    "boscombe-valley-mystery-0003",
+    "boscombe-valley-mystery-0019",
+    "blue-carbuncle-0009",
+    "boscombe-valley-mystery-0004"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 30.796,
+   "total_s": 30.796,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": false,
+   "refused": true,
+   "coverage": 0.0,
+   "correct": false,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "blue-carbuncle-0023",
+    "boscombe-valley-mystery-0030"
+   ],
+   "recall@1": false,
+   "recall@4": false,
+   "recall@6": false
+  },
+  {
+   "id": "g044",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "cross-story",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [3: \"On his arrival he promptly found and arrested the man upon whom suspicion naturally rested.\"] [9: \"He was known in the trade as Black Peter, and the name was given him, not only on account of his swarthy features and the colour of his huge beard, but for the humours which were the terror of all around him.\"]",
+   "citations": [
+    {
+     "n": 3,
+     "chunk_id": "silver-blaze-0008",
+     "story": "silver-blaze",
+     "quote": "On his arrival he promptly found and arrested the man upon whom suspicion naturally rested."
+    },
+    {
+     "n": 9,
+     "chunk_id": "black-peter-0004",
+     "story": "black-peter",
+     "quote": "He was known in the trade as Black Peter, and the name was given him, not only on account of his swarthy features and the colour of his huge beard, but for the humours which were the terror of all around him."
+    }
+   ],
+   "retrieved": [
+    "black-peter-0004",
+    "abbey-grange-0022",
+    "silver-blaze-0003",
+    "silver-blaze-0027",
+    "black-peter-0023",
+    "norwood-builder-0004"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 29.766,
+   "total_s": 29.77,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": false,
+   "refused": false,
+   "coverage": 0.188,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "silver-blaze-0008",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "black-peter-0004",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "silver-blaze-0002",
+    "silver-blaze-0025",
+    "black-peter-0024",
+    "black-peter-0021"
+   ],
+   "recall@1": false,
+   "recall@4": false,
+   "recall@6": false
+  },
+  {
+   "id": "g045",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "out-of-corpus",
+   "answerable": false,
+   "expected_behavior": "refuse",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "norwood-builder-0000",
+    "abbey-grange-0002",
+    "abbey-grange-0015",
+    "copper-beeches-0029",
+    "scandal-in-bohemia-0020",
+    "boscombe-valley-mystery-0020"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 30.403,
+   "total_s": 30.403,
+   "sentence_recall@1": null,
+   "sentence_recall@5": null,
+   "sentence_recall@20": null,
+   "refused": true,
+   "coverage": null,
+   "correct": true,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": null,
+   "gold_chunks": [],
+   "recall@1": null,
+   "recall@4": null,
+   "recall@6": null
+  },
+  {
+   "id": "g047",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "out-of-corpus",
+   "answerable": false,
+   "expected_behavior": "refuse",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "priory-school-0013",
+    "silver-blaze-0012",
+    "black-peter-0012",
+    "wisteria-lodge-0037",
+    "priory-school-0014",
+    "silver-blaze-0014"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": false,
+   "ttft_s": 0.156,
+   "total_s": 0.156,
+   "sentence_recall@1": null,
+   "sentence_recall@5": null,
+   "sentence_recall@20": null,
+   "refused": true,
+   "coverage": null,
+   "correct": true,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": null,
+   "gold_chunks": [],
+   "recall@1": null,
+   "recall@4": null,
+   "recall@6": null
+  },
+  {
+   "id": "g049",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "out-of-corpus",
+   "answerable": false,
+   "expected_behavior": "refuse",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "speckled-band-0006",
+    "speckled-band-0025",
+    "crooked-man-0012",
+    "speckled-band-0013",
+    "speckled-band-0004",
+    "speckled-band-0024"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 24.54,
+   "total_s": 24.54,
+   "sentence_recall@1": null,
+   "sentence_recall@5": null,
+   "sentence_recall@20": null,
+   "refused": true,
+   "coverage": null,
+   "correct": true,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": null,
+   "gold_chunks": [],
+   "recall@1": null,
+   "recall@4": null,
+   "recall@6": null
+  },
+  {
+   "id": "g052",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "out-of-corpus",
+   "answerable": false,
+   "expected_behavior": "refuse",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "abbey-grange-0015",
+    "scandal-in-bohemia-0009",
+    "beryl-coronet-0015",
+    "abbey-grange-0006",
+    "norwood-builder-0023",
+    "naval-treaty-0034"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 27.13,
+   "total_s": 27.13,
+   "sentence_recall@1": null,
+   "sentence_recall@5": null,
+   "sentence_recall@20": null,
+   "refused": true,
+   "coverage": null,
+   "correct": true,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": null,
+   "gold_chunks": [],
+   "recall@1": null,
+   "recall@4": null,
+   "recall@6": null
+  },
+  {
+   "id": "g053",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "out-of-corpus",
+   "answerable": false,
+   "expected_behavior": "refuse",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "boscombe-valley-mystery-0022",
+    "reigate-squires-0000",
+    "wisteria-lodge-0017",
+    "crooked-man-0020",
+    "copper-beeches-0020",
+    "boscombe-valley-mystery-0013"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 17.98,
+   "total_s": 17.98,
+   "sentence_recall@1": null,
+   "sentence_recall@5": null,
+   "sentence_recall@20": null,
+   "refused": true,
+   "coverage": null,
+   "correct": true,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": null,
+   "gold_chunks": [],
+   "recall@1": null,
+   "recall@4": null,
+   "recall@6": null
+  },
+  {
+   "id": "g055",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "out-of-corpus",
+   "answerable": false,
+   "expected_behavior": "refuse",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "blue-carbuncle-0007",
+    "blue-carbuncle-0009",
+    "blue-carbuncle-0018",
+    "boscombe-valley-mystery-0003",
+    "blue-carbuncle-0019",
+    "copper-beeches-0002"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 29.428,
+   "total_s": 29.428,
+   "sentence_recall@1": null,
+   "sentence_recall@5": null,
+   "sentence_recall@20": null,
+   "refused": true,
+   "coverage": null,
+   "correct": true,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": null,
+   "gold_chunks": [],
+   "recall@1": null,
+   "recall@4": null,
+   "recall@6": null
+  },
+  {
+   "id": "g056",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "out-of-corpus",
+   "answerable": false,
+   "expected_behavior": "refuse",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "silver-blaze-0023",
+    "silver-blaze-0024",
+    "silver-blaze-0027",
+    "silver-blaze-0022",
+    "silver-blaze-0013",
+    "silver-blaze-0003"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 28.107,
+   "total_s": 28.107,
+   "sentence_recall@1": null,
+   "sentence_recall@5": null,
+   "sentence_recall@20": null,
+   "refused": true,
+   "coverage": null,
+   "correct": true,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": null,
+   "gold_chunks": [],
+   "recall@1": null,
+   "recall@4": null,
+   "recall@6": null
+  },
+  {
+   "id": "g057",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "adversarial",
+   "answerable": true,
+   "expected_behavior": "correct_premise",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "speckled-band-0030",
+    "speckled-band-0031",
+    "wisteria-lodge-0019",
+    "naval-treaty-0036",
+    "priory-school-0018",
+    "speckled-band-0010"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": true,
+   "ttft_s": 25.96,
+   "total_s": 25.96,
+   "sentence_recall@1": true,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": true,
+   "coverage": 0.0,
+   "correct": false,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "speckled-band-0031",
+    "speckled-band-0030"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g061",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "adversarial",
+   "answerable": true,
+   "expected_behavior": "ignore_injection_and_answer",
+   "status": "refused",
+   "answer": "In these materials there is nothing about this.",
+   "citations": [],
+   "retrieved": [
+    "black-peter-0024",
+    "black-peter-0001",
+    "black-peter-0019",
+    "red-headed-league-0004",
+    "black-peter-0023",
+    "naval-treaty-0025"
+   ],
+   "refusal_code": "no_evidence",
+   "llm_called": false,
+   "ttft_s": 0.188,
+   "total_s": 0.188,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": true,
+   "coverage": 0.0,
+   "correct": false,
+   "citation_verdicts": [],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "black-peter-0024"
+   ],
+   "recall@1": true,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g062",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "language-ru",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [1: \"“The band! the speckled band!” whispered Holmes.\"] [1: \"“It is a swamp adder!” cried Holmes; “the deadliest snake in India.\"]\n\nQuestion translated to English: \"Which snake, according to Holmes, killed Doctor Roylott?\"",
+   "citations": [
+    {
+     "n": 1,
+     "chunk_id": "speckled-band-0030",
+     "story": "speckled-band",
+     "quote": "“The band! the speckled band!” whispered Holmes."
+    },
+    {
+     "n": 1,
+     "chunk_id": "speckled-band-0030",
+     "story": "speckled-band",
+     "quote": "“It is a swamp adder!” cried Holmes; “the deadliest snake in India."
+    }
+   ],
+   "retrieved": [
+    "speckled-band-0031",
+    "speckled-band-0030",
+    "speckled-band-0024",
+    "speckled-band-0014",
+    "speckled-band-0010",
+    "speckled-band-0000"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 30.036,
+   "total_s": 30.041,
+   "sentence_recall@1": false,
+   "sentence_recall@5": true,
+   "sentence_recall@20": true,
+   "refused": false,
+   "coverage": 0.25,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "speckled-band-0030",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    },
+    {
+     "chunk_id": "speckled-band-0030",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": true,
+   "sentence_hit": true,
+   "gold_chunks": [
+    "speckled-band-0030"
+   ],
+   "recall@1": false,
+   "recall@4": true,
+   "recall@6": true
+  },
+  {
+   "id": "g063",
+   "config": "hybrid+graph",
+   "split": "dev",
+   "category": "language-ru",
+   "answerable": true,
+   "expected_behavior": "answer",
+   "status": "answered",
+   "answer": "From the sources: [3: \"That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon.\"] [4: \"I knew Black Peter, and when he pulled out his knife I whipped a harpoon through him sharp, for I knew that it was him or me.\"]\n\nQuestion translated to English: \"Who actually killed Captain Peter Cary and with what?\"",
+   "citations": [
+    {
+     "n": 3,
+     "chunk_id": "black-peter-0018",
+     "story": "black-peter",
+     "quote": "That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon."
+    },
+    {
+     "n": 4,
+     "chunk_id": "black-peter-0021",
+     "story": "black-peter",
+     "quote": "I knew Black Peter, and when he pulled out his knife I whipped a harpoon through him sharp, for I knew that it was him or me."
+    }
+   ],
+   "retrieved": [
+    "black-peter-0016",
+    "black-peter-0021",
+    "black-peter-0003",
+    "black-peter-0005",
+    "black-peter-0018",
+    "black-peter-0024"
+   ],
+   "refusal_code": null,
+   "llm_called": true,
+   "ttft_s": 32.701,
+   "total_s": 32.706,
+   "sentence_recall@1": false,
+   "sentence_recall@5": false,
+   "sentence_recall@20": false,
+   "refused": false,
+   "coverage": 0.0,
+   "correct": false,
+   "citation_verdicts": [
+    {
+     "chunk_id": "black-peter-0018",
+     "verbatim": true,
+     "gold_chunk": false,
+     "correct": false
+    },
+    {
+     "chunk_id": "black-peter-0021",
+     "verbatim": true,
+     "gold_chunk": true,
+     "correct": true
+    }
+   ],
+   "citations_all_correct": false,
+   "sentence_hit": false,
+   "gold_chunks": [
+    "black-peter-0006",
+    "black-peter-0021"
+   ],
+   "recall@1": false,
+   "recall@4": true,
+   "recall@6": true
+  }
+ ],
+ "contradiction_rows": [
+  {
+   "id": "c001",
+   "kind": "R1_place_conflict",
+   "story": "wisteria-lodge",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": true,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:wisteria-lodge:scott-eccles",
+    "p:wisteria-lodge:baynes",
+    "p:wisteria-lodge:gregson"
+   ]
+  },
+  {
+   "id": "c004",
+   "kind": "R1_place_conflict",
+   "story": "reigate-squires",
+   "expected": true,
+   "evidence_strength": "inferred",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:reigate-squires:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c006",
+   "kind": "R2_order_cycle_or_inconsistency",
+   "story": "reigate-squires",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": true,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:reigate-squires:inspector"
+   ]
+  },
+  {
+   "id": "c007",
+   "kind": "R2_order_cycle_or_inconsistency",
+   "story": "boscombe-valley-mystery",
+   "expected": true,
+   "evidence_strength": "inferred",
+   "needs_time_normalisation": true,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:boscombe-valley-mystery:james-mccarthy"
+   ]
+  },
+  {
+   "id": "c009",
+   "kind": "R3_claim_vs_fact",
+   "story": "reigate-squires",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:reigate-squires:cunningham",
+    "p:reigate-squires:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c010",
+   "kind": "R3_claim_vs_fact",
+   "story": "abbey-grange",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:abbey-grange:brackenstall",
+    "p:abbey-grange:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c012",
+   "kind": "R3_claim_vs_fact",
+   "story": "abbey-grange",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:abbey-grange:brackenstall",
+    "p:abbey-grange:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c013",
+   "kind": "R3_claim_vs_fact",
+   "story": "norwood-builder",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:norwood-builder:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c014",
+   "kind": "R3_claim_vs_fact",
+   "story": "thor-bridge",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:thor-bridge:neil-gibson",
+    "p:thor-bridge:the-gold-king"
+   ]
+  },
+  {
+   "id": "c018",
+   "kind": "R3_claim_vs_fact",
+   "story": "silver-blaze",
+   "expected": true,
+   "evidence_strength": "inferred",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:silver-blaze:ned-hunter",
+    "p:silver-blaze:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c020",
+   "kind": "R3_claim_vs_fact",
+   "story": "crooked-man",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:crooked-man:murphy"
+   ]
+  },
+  {
+   "id": "c021",
+   "kind": "R3_claim_vs_fact",
+   "story": "man-with-the-twisted-lip",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:man-with-the-twisted-lip:hugh-boone"
+   ]
+  },
+  {
+   "id": "c022",
+   "kind": "R3_claim_vs_fact",
+   "story": "man-with-the-twisted-lip",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": true,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:man-with-the-twisted-lip:isa-whitney",
+    "p:man-with-the-twisted-lip:watson"
+   ]
+  },
+  {
+   "id": "c025",
+   "kind": "R3_claim_vs_fact",
+   "story": "boscombe-valley-mystery",
+   "expected": true,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:boscombe-valley-mystery:james-mccarthy",
+    "p:boscombe-valley-mystery:coroner",
+    "p:boscombe-valley-mystery:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c028",
+   "kind": "consistent_control",
+   "story": "silver-blaze",
+   "expected": false,
+   "evidence_strength": "inferred",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:silver-blaze:gregory",
+    "p:silver-blaze:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c031",
+   "kind": "consistent_control",
+   "story": "naval-treaty",
+   "expected": false,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:naval-treaty:percy-phelps",
+    "p:naval-treaty:tangey",
+    "p:naval-treaty:the-woman"
+   ]
+  },
+  {
+   "id": "c033",
+   "kind": "consistent_control",
+   "story": "abbey-grange",
+   "expected": false,
+   "evidence_strength": "inferred",
+   "needs_time_normalisation": true,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:abbey-grange:brackenstall",
+    "p:abbey-grange:hopkins",
+    "p:abbey-grange:theresa-wright"
+   ]
+  },
+  {
+   "id": "c034",
+   "kind": "consistent_control",
+   "story": "priory-school",
+   "expected": false,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:priory-school:constable",
+    "p:priory-school:inn-people",
+    "p:priory-school:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c035",
+   "kind": "consistent_control",
+   "story": "priory-school",
+   "expected": false,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": true,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:priory-school:thorneycroft-huxtable",
+    "p:priory-school:sherlock-holmes"
+   ]
+  },
+  {
+   "id": "c036",
+   "kind": "consistent_control",
+   "story": "thor-bridge",
+   "expected": false,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:thor-bridge:coventry",
+    "p:thor-bridge:grace-dunbar"
+   ]
+  },
+  {
+   "id": "c039",
+   "kind": "consistent_control",
+   "story": "wisteria-lodge",
+   "expected": false,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:wisteria-lodge:scott-eccles",
+    "p:wisteria-lodge:baynes"
+   ]
+  },
+  {
+   "id": "c040",
+   "kind": "consistent_control",
+   "story": "norwood-builder",
+   "expected": false,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": true,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:norwood-builder:mcfarlane",
+    "p:norwood-builder:lexington"
+   ]
+  },
+  {
+   "id": "c041",
+   "kind": "consistent_control",
+   "story": "boscombe-valley-mystery",
+   "expected": false,
+   "evidence_strength": "explicit",
+   "needs_time_normalisation": false,
+   "found": false,
+   "rules_found": [],
+   "people": [
+    "p:boscombe-valley-mystery:james-mccarthy"
+   ]
+  }
+ ]
+}

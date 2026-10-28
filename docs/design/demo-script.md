@@ -144,7 +144,7 @@ Fallback ladder, same for every step (details in section 4): **(1) narrate over 
 
 ## 2a. Operator cards (match docs/slides/deck.md)
 
-Base URL for replays: `http://127.0.0.1:8000/` (`just run`, port 8000). A replay plays at its original timing unless `&speed=N` (faster) or `&cap=S` (maximum gap in seconds) is added; the badge reads `RECORDING`. Recording durations from the file meta (`seconds`, re-recorded on the full 20-story graph on 2026-10-28, commit 725dc1f): g001 28.7 s, wisteria R1 1.1 s, Baskerville refusal 0.2 s, fee refusal 23.0 s, Boscombe control 2.9 s. The g001 and fee recordings take 23-29 s at original timing, so add `&speed=4` for them (older text in section 0 quoting 10.8 s is outdated). Open the replay tabs in advance in a second browser window.
+Base URL for replays: `http://127.0.0.1:8000/` (`just run`, port 8000). A replay plays at its original timing unless `&speed=N` (faster) or `&cap=S` (maximum gap in seconds) is added; the badge reads `RECORDING`. Recording durations from the file meta (`seconds`, re-recorded on the full 20-story graph on 2026-10-28 with the tuned candidate settings (extract_sentence_k 12, safety chunks 4 x 3)): g001 25.6 s, wisteria R1 1.1 s, Baskerville refusal 0.1 s, fee refusal 1.4 s (prefix cache; a cold run is about 23 s), Boscombe control 25.3 s. The g001 and Boscombe recordings take about 25 s at original timing, so add `&speed=4` for them (older text in section 0 quoting 10.8 s is outdated). Open the replay tabs in advance in a second browser window.
 
 Rule for every failure line: say that it is a stored run, never blame the model, never call a recording live.
 
@@ -162,7 +162,7 @@ Rule for every failure line: say that it is a stored run, never blame the model,
 
 Whole-system failures (any step): (a) browser or UI frozen: switch to the second window, open the replay of the current step, continue the spoken line; (b) Ollama down or killed: the gate refusal and rule-first steps (5, 6) still work without the model; for step 4 use the replay and say "the model server stopped; this is the stored run"; (c) laptop dead: slides alone carry the transcript, the answer line, the two quotes and the refusal text; say so and continue with slide 7 on paper if needed; (d) over time by more than 20 s at slide 6: skip the `rg` check and drop the second sentence of slide 7.
 
-Not in the deck (kept for questions): Boscombe control `?replay=replay/real-boscombe-control.json` (2.9 s; backup slide B5).
+Not in the deck (kept for questions): Boscombe control `?replay=replay/real-boscombe-control.json` (25.3 s; backup slide B5).
 
 ## 3. Removed and why
 

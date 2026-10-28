@@ -3,9 +3,9 @@
   "label": "RECORDING",
   "kind": "real run recorded on the target laptop",
   "question": "What was the creature that haunted the Baskerville family on the Devonshire moor?",
-  "recorded_at": "2026-10-28T14:54:46+0200",
-  "seconds": 0.2,
-  "commit": "725dc1f4f99e6ae8e89c0d99cae702c00c2aa208",
+  "recorded_at": "2026-10-28T18:45:55+0200",
+  "seconds": 0.1,
+  "commit": "21e3255058711b7613fd4d2594ea97a7dcb9f8af",
   "mcp": {
    "configured": true,
    "mode": "stdio",
@@ -39,9 +39,9 @@
  },
  "events": [
   {
-   "run_id": "012f2c0b-894a-433f-a726-806bfd57c4b4",
+   "run_id": "0c4cd094-eb8b-4f97-ad02-61b119fc7e44",
    "seq": 0,
-   "ts": "2026-10-28T12:54:46.798+00:00",
+   "ts": "2026-10-28T16:45:55.192+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "route_decided",
@@ -55,9 +55,9 @@
    "confidence": 0.5
   },
   {
-   "run_id": "012f2c0b-894a-433f-a726-806bfd57c4b4",
+   "run_id": "0c4cd094-eb8b-4f97-ad02-61b119fc7e44",
    "seq": 1,
-   "ts": "2026-10-28T12:54:46.798+00:00",
+   "ts": "2026-10-28T16:45:55.192+00:00",
    "step_id": "retrieval-1",
    "duration_ms": null,
    "type": "retrieval_started",
@@ -66,11 +66,11 @@
    "attempt": 1
   },
   {
-   "run_id": "012f2c0b-894a-433f-a726-806bfd57c4b4",
+   "run_id": "0c4cd094-eb8b-4f97-ad02-61b119fc7e44",
    "seq": 2,
-   "ts": "2026-10-28T12:54:46.946+00:00",
+   "ts": "2026-10-28T16:45:55.338+00:00",
    "step_id": "retrieval-1",
-   "duration_ms": 147,
+   "duration_ms": 146,
    "type": "retrieval_results",
    "hits": [
     {
@@ -176,9 +176,9 @@
    ]
   },
   {
-   "run_id": "012f2c0b-894a-433f-a726-806bfd57c4b4",
+   "run_id": "0c4cd094-eb8b-4f97-ad02-61b119fc7e44",
    "seq": 3,
-   "ts": "2026-10-28T12:54:46.946+00:00",
+   "ts": "2026-10-28T16:45:55.338+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "refusal",
@@ -196,9 +196,9 @@
    ]
   },
   {
-   "run_id": "012f2c0b-894a-433f-a726-806bfd57c4b4",
+   "run_id": "0c4cd094-eb8b-4f97-ad02-61b119fc7e44",
    "seq": 4,
-   "ts": "2026-10-28T12:54:46.946+00:00",
+   "ts": "2026-10-28T16:45:55.338+00:00",
    "step_id": null,
    "duration_ms": null,
    "type": "final",
@@ -208,9 +208,9 @@
    "citations": [],
    "provenance": [],
    "route": {
-    "run_id": "012f2c0b-894a-433f-a726-806bfd57c4b4",
+    "run_id": "0c4cd094-eb8b-4f97-ad02-61b119fc7e44",
     "seq": 0,
-    "ts": "2026-10-28T12:54:46.798+00:00",
+    "ts": "2026-10-28T16:45:55.192+00:00",
     "step_id": null,
     "duration_ms": null,
     "type": "route_decided",

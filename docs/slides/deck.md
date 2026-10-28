@@ -184,7 +184,7 @@ IF IT GOES WRONG: if it does not refuse and calls the model: stop it with Esc, t
 Slide 7, 4:15-5:05 (50 s). Running total 5:05.
 
 SAY (about 125 words):
-"What we measured, with its caveats on the slide. On the first thirty-four questions, three configurations: the bare model, vector search only, and our agent. By a strict mechanical test, the answer must contain half of the key facts of the reference answer: twelve percent for the bare model, forty-four for vector search, thirty-five for our agent. Retrieval clearly beats the bare model. Our agent is not better than plain vector search on this test; the difference is within noise, and its answer sentence is the right one less often. Where it helps: the right chunk is in the top four for seventy-eight percent of questions against sixty-seven, and out-of-corpus questions are refused six times out of seven. The rules found nothing on the automatically extracted graph, zero of fourteen; the findings you saw come from curated facts. Small sets written by an AI, one run; I will not round them up."
+"What we measured, with its caveats on the slide. On the first thirty-four questions, three configurations: the bare model, vector search only, and our agent. By a strict mechanical test, the answer must contain half of the key facts of the reference answer: twelve percent for the bare model, forty-four for vector search, thirty-five for our agent, forty-one after we tuned the candidate list. Retrieval clearly beats the bare model. Our agent is not better than plain vector search on this test; the difference is within noise. The tuning was done on these same questions, so forty-one is an optimistic number. Where it helps: the right chunk is in the top four for seventy-eight percent of questions against sixty-seven, and out-of-corpus questions are refused six times out of seven. The rules found nothing on the automatically extracted graph, zero of fourteen; the findings you saw come from curated facts. Small sets written by an AI, one run; I will not round them up."
 
 NUMBERS: every cell has a file in numbers.md (rows 5-11 and 30-33). The test split was NOT run; do not claim test results.
 
@@ -203,6 +203,7 @@ IF IT GOES WRONG: slide only. If late, say only the dev-split row and the 0/14 r
 | Full graph from the department server, 2026-10-27 | **596 of 596** chunks, 20 of 20 stories, 2157 claims, 1698 events; rules: **0 findings in 19 of 20 stories** (only the curated Garcia R1) | 596 chunks, 1 run | extraction quality not scored beyond the 12 gold chunks; presence pass not run |
 | Real stack on the full graph, laptop, 2026-10-28 | **5 of 6** dev questions answered with a quoted sentence in **30-43 s**; 1 refused (g009, multi-hop) | 6 questions, 1 run | not a clean window; answered is not correct |
 | Dev split, three configurations, 2026-10-28 (eval runner, mechanical proxy, rescored) | behaviour correct: bare **4/34 = 12%** [5, 27], vector-only **15/34 = 44%** [29, 61], hybrid+graph (the agent) **12/34 = 35%** [21, 52]; retrieval beats the bare model (McNemar p 0.001 and 0.02); **vector-only vs the agent: 3 vs 0, p 0.25, not significant, the agent is not better** | 34 questions, 1 run | proxy = key-fact coverage >= 0.5 of the expected answer; AI-written gold; test split not run |
+| Agent after tuning the candidate list (12 sentences from the index + 3 each from the 4 best chunks; chosen on dev from 3 experiments), 2026-10-28 | behaviour correct **14/34 = 41%** [26, 58]; gold sentence quoted **13/22 = 59%**; out-of-corpus refused **7/7**; false refusals **5/27**; all citations correct 9/22 | 34 questions, 1 run, hybrid+graph only | tuned on the same 34 dev questions: optimistic; vector-only 15/34 = 44% on the original run, so the gap to it is now one question; test split not run |
 | Retrieval and refusals, same run | gold chunk in top 4: vector **18/27 = 67%**, hybrid **21/27 = 78%**; out-of-corpus refused: bare 4/7, vector 7/7, hybrid+graph 6/7; false refusals of answerable questions 20/27, 8/27, 7/27; the quoted sentence is the gold one: vector 13/19 = 68%, agent 10/20 = 50% | 27 answerable, 7 out-of-corpus | the agent's gain is in retrieval and honest refusal; its answer sentence is picked worse than the vector baseline's |
 | Contradiction detection, rules only, dev cases | recall **0/14** [0, 22]; false positives on controls **0/9** | 23 cases, 1 run | on the automatic graph the rules find nothing; the findings in the demo come from curated facts |
 
@@ -362,7 +363,7 @@ Boscombe Valley, case c042: both witnesses agree on what James did; they differ 
 
 - The rules correctly do **not** flag it (a regression test on three curated facts, not a real extracted graph)
 - The control is weaker than its label: a human must decide the gold label
-- Recording: `?replay=replay/real-boscombe-control.json` (2.9 s at original timing)
+- Recording: `?replay=replay/real-boscombe-control.json` (25.3 s at original timing)
 
 ---
 
