@@ -65,6 +65,8 @@ test("index.json lists every recording in web/replay once, with its own question
   for (const r of recs) {
     const meta = JSON.parse(readFileSync(new URL(r.file, REPLAY), "utf8")).meta || {};
     assert.equal(r.question, meta.question, r.file);
+    assert.equal(r.seconds, meta.seconds, `${r.file}: index.json is stale, run scripts/replay_index.py`);
+    assert.equal(r.recorded_at, meta.recorded_at, `${r.file}: index.json is stale, run scripts/replay_index.py`);
     assert.ok(["real", "fake", "synthetic"].includes(r.kind), r.file);
   }
   // the stored runs the demo script relies on (docs/design/demo-script.md, pre-show checklist)

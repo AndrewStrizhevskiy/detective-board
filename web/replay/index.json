@@ -5,39 +5,39 @@
    "file": "real-g001-agent.json",
    "question": "What kind of snake killed Dr. Grimesby Roylott?",
    "kind": "real",
-   "recorded_at": "2026-10-27T11:50:40+0200",
-   "seconds": 39.1,
+   "recorded_at": "2026-10-28T14:54:46+0200",
+   "seconds": 28.7,
    "step": "demo steps 0, 1, 4 (g001)"
   },
   {
    "file": "real-wisteria-r1-curated.json",
    "question": "Is there a conflict about where Aloysius Garcia was at about one o'clock on the night he died?",
    "kind": "real",
-   "recorded_at": "2026-10-27T11:50:42+0200",
-   "seconds": 1.4,
+   "recorded_at": "2026-10-28T14:54:48+0200",
+   "seconds": 1.1,
    "step": "demo step 2 (Wisteria R1, curated)"
   },
   {
    "file": "real-refusal-baskerville.json",
    "question": "What was the creature that haunted the Baskerville family on the Devonshire moor?",
    "kind": "real",
-   "recorded_at": "2026-10-27T11:50:40+0200",
-   "seconds": 0.3,
+   "recorded_at": "2026-10-28T14:54:46+0200",
+   "seconds": 0.2,
    "step": "demo step 3 (gate refusal, g047)"
   },
   {
    "file": "real-boscombe-control.json",
    "question": "Does James McCarthy's testimony contradict what the gamekeeper William Crowder saw?",
    "kind": "real",
-   "recorded_at": "2026-10-27T11:51:11+0200",
-   "seconds": 28.7
+   "recorded_at": "2026-10-28T14:54:51+0200",
+   "seconds": 2.9
   },
   {
    "file": "real-refusal-fee.json",
    "question": "How large a fee did Colonel Ross pay Holmes for recovering Silver Blaze?",
    "kind": "real",
-   "recorded_at": "2026-10-27T11:51:34+0200",
-   "seconds": 22.6
+   "recorded_at": "2026-10-28T14:55:14+0200",
+   "seconds": 23.0
   },
   {
    "file": "fake-mccarthy.json",
