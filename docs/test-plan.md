@@ -72,6 +72,10 @@ Scope: ask a canned question against the app backed by `FakeLLM`, assert answer,
 - Full eval (real models, all questions, multiple seeds if sampling) runs locally via `just eval`; results committed under `docs/` or `eval/runs/` (ignored) with date, model tag, commit hash.
 - Report numbers as they are; a red metric is reported, not hidden.
 
+## 7b. "Before the reveal" test (not in CI)
+
+`just pre-reveal` (cases `eval/pre_reveal/cases.jsonl`, 8 stories, 16 new questions outside `eval/golden`; runner `eval/pre_reveal.py`, validator `scripts/eval/validate_pre_reveal.py`). Each case has a cut offset just before the passage that names the culprit or explains the solution. The agent runs on the full corpus (control) and on a corpus whose story prefix ends at the cut (`CutRetriever`: chunks and sentences past the cut and the chunk that straddles it are dropped, ranks recomputed); the bare model is the third condition. Primary metric: culprit named (an accepted name or alias from `culprit_names` in the answer or its cited quotes); also innocent accused (`cleared_names`) and, secondary, the reveal-text keyword sets. Saved answers can be rescored without the models: `eval/pre_reveal.py --rescore RESULT.json`. Result: `docs/spike/results/pre-reveal-<date>[-rescored].{md,json}`. Without Ollama, `pytest tests/eval/test_pre_reveal.py` checks the wrapper, the scorer and the validator. Limits are listed in the result file.
+
 ## 8. Known pitfalls from the spike (measurement validity)
 
 - Ollama 0.35 runs each model in a `llama-server` child process. RSS must be sampled in that child (walk the process tree under the ollama server), not in the parent `ollama` PID. See `scripts/spike/_common.py` (`_ollama_pids`, `_rss_kib`) and `bench_rss.py`.

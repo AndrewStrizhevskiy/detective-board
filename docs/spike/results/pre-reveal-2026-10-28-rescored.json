@@ -1,0 +1,2493 @@
+{
+  "meta": {
+    "date": "2026-10-28",
+    "git_sha": "0e00f58818616949b0170644055dcd6e6c87f52b",
+    "git_dirty": true,
+    "generator": "qwen3:4b-instruct",
+    "seed": 42,
+    "temperature": 0.0,
+    "agent_config": {
+      "top_k": 4,
+      "strategy": "rank_full",
+      "window_words": 60,
+      "idf_chunks": "/home/mendax/code/db-prereveal/data/chunks.jsonl",
+      "max_prompt_tokens": 1200,
+      "retry_extra_k": 2,
+      "min_score": 0.018,
+      "min_support": 0.25,
+      "max_graph_facts": 8,
+      "max_tool_facts": 8,
+      "max_retries": 1,
+      "decline_retry": true,
+      "decline_fallback_min_support": 0.5,
+      "min_quote_chars": 6,
+      "min_claim_overlap": 0.3,
+      "memory_turns": 3,
+      "memory_max_chars": 600,
+      "use_llm_router": false,
+      "tool_timeout_s": 5.0,
+      "answer_mode": "extractive",
+      "extract_top_k": 6,
+      "extract_per_source": 8,
+      "extract_max_sentences": 40,
+      "extract_max_tokens": 850,
+      "extract_order": "score",
+      "sentence_index_path": "data/index/sentences.sqlite",
+      "extract_sentence_k": 12,
+      "extract_safety_chunks": 4,
+      "extract_safety_per_chunk": 3,
+      "rule_first": true,
+      "translate_questions": true,
+      "translate_model": "qwen3:4b-instruct",
+      "translate_max_chars": 300,
+      "translate_timeout_s": 30.0,
+      "translate_cache": "",
+      "temperature": 0.0,
+      "seed": 42
+    },
+    "machine": "mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-38-generic",
+    "presence": {
+      "graph": true,
+      "sentence_index": true,
+      "rule_tools": "timeline-alibi",
+      "fixture": null
+    },
+    "data": {
+      "index": "2d02f1dfa9772e08",
+      "graph": "14865af1983f37df",
+      "sentences": "11a9587530064cc4",
+      "chunks": "d15dca856a055b84"
+    },
+    "cases_file": "eval/pre_reveal/cases.jsonl",
+    "cases_sha256": "8807021cb1070ccbacfedaba53b60f958a44f43f8f85995cbd5cbaa78f8fa913",
+    "n_cases": 16,
+    "n_stories": 8,
+    "conditions": [
+      "full",
+      "cut",
+      "bare"
+    ],
+    "note": "The cases are AI-written (reveal passages located by reading the text, keywords chosen so that no sentence and no chunk before the cut holds them together: scripts/eval/validate_pre_reveal.py). A 'named' needs the keywords in the answer text or its cited quotes, not a human reading.",
+    "started": "2026-10-28T19:45:06+00:00",
+    "rescored": {
+      "from": "pre-reveal-2026-10-28.json",
+      "at": "2026-10-28T19:48:49+00:00",
+      "git_sha": "9593abde8a0f6907b585f1119279a194f93e3169",
+      "git_dirty": false,
+      "cases_sha256": "e1ee1364ac22b8275a6145f38682afe266f98ea37f7cc685bebffc211dc88c53"
+    }
+  },
+  "summary": {
+    "full": {
+      "n_questions": 16,
+      "n_scored": 16,
+      "unscored": 0,
+      "errors": 0,
+      "named": {
+        "k": 2,
+        "n": 16,
+        "value": 0.125,
+        "ci95": [
+          0.035,
+          0.3602
+        ]
+      },
+      "refused": {
+        "k": 5,
+        "n": 16,
+        "value": 0.3125,
+        "ci95": [
+          0.1416,
+          0.556
+        ]
+      },
+      "wrong": {
+        "k": 9,
+        "n": 16,
+        "value": 0.5625,
+        "ci95": [
+          0.3318,
+          0.769
+        ]
+      },
+      "innocent_accused": {
+        "k": 1,
+        "n": 16,
+        "value": 0.0625,
+        "ci95": [
+          0.0111,
+          0.2833
+        ]
+      },
+      "named_keywords": {
+        "k": 1,
+        "n": 16,
+        "value": 0.0625,
+        "ci95": [
+          0.0111,
+          0.2833
+        ]
+      },
+      "latency_s": {
+        "median": 40.4,
+        "mean": 38.8,
+        "max": 63.3
+      },
+      "by_story": {
+        "black-peter": {
+          "named": 0,
+          "n": 2
+        },
+        "boscombe-valley-mystery": {
+          "named": 0,
+          "n": 2
+        },
+        "naval-treaty": {
+          "named": 1,
+          "n": 2
+        },
+        "norwood-builder": {
+          "named": 0,
+          "n": 2
+        },
+        "reigate-squires": {
+          "named": 1,
+          "n": 2
+        },
+        "silver-blaze": {
+          "named": 0,
+          "n": 2
+        },
+        "speckled-band": {
+          "named": 0,
+          "n": 2
+        },
+        "thor-bridge": {
+          "named": 0,
+          "n": 2
+        }
+      }
+    },
+    "cut": {
+      "n_questions": 16,
+      "n_scored": 16,
+      "unscored": 0,
+      "errors": 0,
+      "named": {
+        "k": 0,
+        "n": 16,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.1936
+        ]
+      },
+      "refused": {
+        "k": 5,
+        "n": 16,
+        "value": 0.3125,
+        "ci95": [
+          0.1416,
+          0.556
+        ]
+      },
+      "wrong": {
+        "k": 11,
+        "n": 16,
+        "value": 0.6875,
+        "ci95": [
+          0.444,
+          0.8584
+        ]
+      },
+      "innocent_accused": {
+        "k": 1,
+        "n": 16,
+        "value": 0.0625,
+        "ci95": [
+          0.0111,
+          0.2833
+        ]
+      },
+      "named_keywords": {
+        "k": 0,
+        "n": 16,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.1936
+        ]
+      },
+      "latency_s": {
+        "median": 31.8,
+        "mean": 29.6,
+        "max": 46.1
+      },
+      "by_story": {
+        "black-peter": {
+          "named": 0,
+          "n": 2
+        },
+        "boscombe-valley-mystery": {
+          "named": 0,
+          "n": 2
+        },
+        "naval-treaty": {
+          "named": 0,
+          "n": 2
+        },
+        "norwood-builder": {
+          "named": 0,
+          "n": 2
+        },
+        "reigate-squires": {
+          "named": 0,
+          "n": 2
+        },
+        "silver-blaze": {
+          "named": 0,
+          "n": 2
+        },
+        "speckled-band": {
+          "named": 0,
+          "n": 2
+        },
+        "thor-bridge": {
+          "named": 0,
+          "n": 2
+        }
+      }
+    },
+    "bare": {
+      "n_questions": 16,
+      "n_scored": 16,
+      "unscored": 0,
+      "errors": 0,
+      "named": {
+        "k": 1,
+        "n": 16,
+        "value": 0.0625,
+        "ci95": [
+          0.0111,
+          0.2833
+        ]
+      },
+      "refused": {
+        "k": 13,
+        "n": 16,
+        "value": 0.8125,
+        "ci95": [
+          0.5699,
+          0.9341
+        ]
+      },
+      "wrong": {
+        "k": 2,
+        "n": 16,
+        "value": 0.125,
+        "ci95": [
+          0.035,
+          0.3602
+        ]
+      },
+      "innocent_accused": {
+        "k": 0,
+        "n": 16,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.1936
+        ]
+      },
+      "named_keywords": {
+        "k": 1,
+        "n": 16,
+        "value": 0.0625,
+        "ci95": [
+          0.0111,
+          0.2833
+        ]
+      },
+      "latency_s": {
+        "median": 30.4,
+        "mean": 31.3,
+        "max": 50.7
+      },
+      "by_story": {
+        "black-peter": {
+          "named": 0,
+          "n": 2
+        },
+        "boscombe-valley-mystery": {
+          "named": 0,
+          "n": 2
+        },
+        "naval-treaty": {
+          "named": 0,
+          "n": 2
+        },
+        "norwood-builder": {
+          "named": 0,
+          "n": 2
+        },
+        "reigate-squires": {
+          "named": 0,
+          "n": 2
+        },
+        "silver-blaze": {
+          "named": 0,
+          "n": 2
+        },
+        "speckled-band": {
+          "named": 1,
+          "n": 2
+        },
+        "thor-bridge": {
+          "named": 0,
+          "n": 2
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "pr-boscombe-1",
+      "story": "boscombe-valley-mystery",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "boscombe-valley-mystery-0002",
+        "boscombe-valley-mystery-0003",
+        "boscombe-valley-mystery-0007",
+        "boscombe-valley-mystery-0016",
+        "boscombe-valley-mystery-0017",
+        "boscombe-valley-mystery-0019"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 63.276,
+      "total_s": 63.276,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-boscombe-1",
+      "story": "boscombe-valley-mystery",
+      "condition": "cut",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "boscombe-valley-mystery-0002",
+        "boscombe-valley-mystery-0003",
+        "boscombe-valley-mystery-0007",
+        "boscombe-valley-mystery-0016",
+        "boscombe-valley-mystery-0017",
+        "boscombe-valley-mystery-0019"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 46.077,
+      "total_s": 46.077,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-boscombe-1",
+      "story": "boscombe-valley-mystery",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "Charles McCarthy was not killed at Boscombe Pool. In fact, there is no historical or factual record of a person named Charles McCarthy being killed at Boscombe Pool.\n\nBoscombe Pool is a well-known location in the UK, specifically in the village of Boscombe, near Bournemouth, Dorset. It is a public swimming pool and a popular recreational spot. There have been no verified incidents involving a person named Charles McCarthy being killed there.\n\nIt's possible you may be confusing this with a fictional or dramatized scenario, such as a plot in a novel, film, or television show. For example, the name \"Charles McCarthy\" and the location \"Boscombe Pool\" might be referenced in a work of fiction, such as the British television series *The Sweeney* or other crime dramas, but no actual murder of Charles McCarthy at Boscombe Pool has occurred.\n\nIf you have a specific context—such as a book, movie, or historical event—please provide more details, and I’d be happy to help clarify.",
+      "citations": [],
+      "ttft_s": 0.877,
+      "total_s": 34.401,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-boscombe-2",
+      "story": "boscombe-valley-mystery",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [3: \"Is he the man who hobnobbed in rum and water with Black Peter in the dead of the night?\"] [5: \"Was not that person the actual criminal?\"]",
+      "citations": [
+        {
+          "n": 3,
+          "chunk_id": "black-peter-0019",
+          "quote": "Is he the man who hobnobbed in rum and water with Black Peter in the dead of the night?"
+        },
+        {
+          "n": 5,
+          "chunk_id": "thor-bridge-0019",
+          "quote": "Was not that person the actual criminal?"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "boscombe-valley-mystery-0002",
+        "boscombe-valley-mystery-0003",
+        "boscombe-valley-mystery-0019",
+        "boscombe-valley-mystery-0016",
+        "boscombe-valley-mystery-0017",
+        "boscombe-valley-mystery-0007"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 50.191,
+      "total_s": 50.197,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-boscombe-2",
+      "story": "boscombe-valley-mystery",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [3: \"Is he the man who hobnobbed in rum and water with Black Peter in the dead of the night?\"] [6: \"Was not that person the actual criminal?\"]",
+      "citations": [
+        {
+          "n": 3,
+          "chunk_id": "black-peter-0019",
+          "quote": "Is he the man who hobnobbed in rum and water with Black Peter in the dead of the night?"
+        },
+        {
+          "n": 6,
+          "chunk_id": "thor-bridge-0019",
+          "quote": "Was not that person the actual criminal?"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "boscombe-valley-mystery-0002",
+        "boscombe-valley-mystery-0003",
+        "boscombe-valley-mystery-0019",
+        "boscombe-valley-mystery-0016",
+        "boscombe-valley-mystery-0017",
+        "boscombe-valley-mystery-0007"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 41.144,
+      "total_s": 41.15,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-boscombe-2",
+      "story": "boscombe-valley-mystery",
+      "condition": "bare",
+      "status": "answered",
+      "answer": "In *The Boscombe Valley Mystery*, a famous detective story by Sir Arthur Conan Doyle, the guilty man is **Dr. Grimesby Roylott**.\n\nHowever, it's important to clarify: *The Boscombe Valley Mystery* is actually a **short story** by Sir Arthur Conan Doyle, and it is **not** one of the Sherlock Holmes stories. It is a standalone mystery that features a character named **Dr. Grimesby Roylott**, who is the **real culprit** in the case.\n\nIn this story, the mystery revolves around the disappearance of a young girl, and the investigation leads to the discovery that Dr. Roylott is responsible for her death — not because of a crime he committed directly, but because of a tragic accident involving a dangerous experiment he conducted.\n\nBut wait — there's a common confusion here.\n\nActually, **\"The Boscombe Valley Mystery\" is not a real story by Arthur Conan Doyle**. It is **a misattribution**.\n\nThe correct story is **\"The Adventure of the Boscombe Valley Mystery\"**, which **is** a Sherlock Holmes story by Sir Arthur Conan Doyle.\n\nIn that story, the **guilty man** is **Dr. Grimesby Roylott** — but **he is not guilty of murder** in the traditional sense.\n\nLet’s clarify the actual plot:\n\nIn *The Adventure of the Boscombe Valley Mystery*, the case involves the **disappearance of a young girl**, and the investigation",
+      "citations": [],
+      "ttft_s": 1.101,
+      "total_s": 49.72,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-silver-1",
+      "story": "silver-blaze",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [1: \"“And of course this is all quite a minor point compared to the question of who killed John Straker.”\"] [3: \"You would do me a greater still if you could lay your hands on the murderer of John Straker.”\"]",
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": "silver-blaze-0021",
+          "quote": "“And of course this is all quite a minor point compared to the question of who killed John Straker.”"
+        },
+        {
+          "n": 3,
+          "chunk_id": "silver-blaze-0024",
+          "quote": "You would do me a greater still if you could lay your hands on the murderer of John Straker.”"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "silver-blaze-0021",
+        "silver-blaze-0016",
+        "silver-blaze-0027",
+        "silver-blaze-0007",
+        "silver-blaze-0028",
+        "silver-blaze-0002"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 42.249,
+      "total_s": 42.256,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-silver-1",
+      "story": "silver-blaze",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [1: \"“And of course this is all quite a minor point compared to the question of who killed John Straker.”\"] [4: \"“Who killed Colonel James Barclay, then?”\"]",
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": "silver-blaze-0021",
+          "quote": "“And of course this is all quite a minor point compared to the question of who killed John Straker.”"
+        },
+        {
+          "n": 4,
+          "chunk_id": "crooked-man-0018",
+          "quote": "“Who killed Colonel James Barclay, then?”"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "silver-blaze-0021",
+        "silver-blaze-0016",
+        "silver-blaze-0007",
+        "silver-blaze-0002",
+        "silver-blaze-0009",
+        "silver-blaze-0003"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 29.342,
+      "total_s": 29.347,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-silver-1",
+      "story": "silver-blaze",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "John Straker is a character from the British television series *Agatha Christie's Poirot*. In the episode titled \"The Murder of John Straker,\" which is part of the *Poirot* series, John Straker is indeed a character, and he is murdered by **Dr. John H. Straker** — wait, that seems to be a confusion.\n\nActually, upon clarification: **John Straker** is not a character in *Agatha Christie's Poirot*. There is no character named John Straker in that series.\n\nHowever, there is a well-known character named **John Straker** in the 1970s British television series *The Saint*, a show based on the character Simon Templar (The Saint). In that series, John Straker is a character who is involved in a plot, and in one episode, he is murdered.\n\nIn *The Saint* episode titled \"The Man Who Wasn't There\" (1967), **John Straker** is killed by **a man named Peter** — but this is a fictional plot and not a canonical or widely known storyline.\n\nHowever, the most likely source of confusion is that **John Straker** is actually a character in the 1970s series *The Saint*, and in that episode, he is murdered by **Peter**, a man who is revealed to be the murderer.\n\nBut to be precise: **John Straker is not a character in",
+      "citations": [],
+      "ttft_s": 0.879,
+      "total_s": 49.284,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-silver-2",
+      "story": "silver-blaze",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [4: \"Silas Brown, the trainer, is known to have had large bets upon the event, and he was no friend to poor Straker.\"] [10: \"It was clear, however, that Straker had defended himself vigorously against his assailants, for in his right hand he held a small knife, which was clotted with blood up to the handle, while in his left he clasped a red and black silk cravat, which was recognised by the maid as having been worn on\"]",
+      "citations": [
+        {
+          "n": 4,
+          "chunk_id": "silver-blaze-0012",
+          "quote": "Silas Brown, the trainer, is known to have had large bets upon the event, and he was no friend to poor Straker."
+        },
+        {
+          "n": 10,
+          "chunk_id": "silver-blaze-0007",
+          "quote": "It was clear, however, that Straker had defended himself vigorously against his assailants, for in his right hand he held a small knife, which was clotted with blood up to the handle, while in his left he clasped a red and black silk cravat, which was recognised by the maid as having been worn on"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "silver-blaze-0025",
+        "silver-blaze-0007",
+        "silver-blaze-0021",
+        "silver-blaze-0027",
+        "silver-blaze-0009",
+        "silver-blaze-0012"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 47.119,
+      "total_s": 47.126,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-silver-2",
+      "story": "silver-blaze",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [5: \"Silas Brown, the trainer, is known to have had large bets upon the event, and he was no friend to poor Straker.\"] [8: \"“John Clay, the murderer, thief, smasher, and forger.\"]",
+      "citations": [
+        {
+          "n": 5,
+          "chunk_id": "silver-blaze-0012",
+          "quote": "Silas Brown, the trainer, is known to have had large bets upon the event, and he was no friend to poor Straker."
+        },
+        {
+          "n": 8,
+          "chunk_id": "red-headed-league-0020",
+          "quote": "“John Clay, the murderer, thief, smasher, and forger."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "silver-blaze-0007",
+        "silver-blaze-0021",
+        "silver-blaze-0009",
+        "silver-blaze-0012",
+        "silver-blaze-0006",
+        "silver-blaze-0002"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 39.898,
+      "total_s": 39.903,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-silver-2",
+      "story": "silver-blaze",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "There is no known public figure or widely recognized case involving a person named John Straker who was a trainer and murdered. As of now, there is no credible evidence or record in official databases, news reports, or historical records that identifies a real \"murder of John Straker, the trainer.\"\n\nIt's possible you may be referring to a fictional character, a character from a book, movie, or television show—such as a character from a mystery or crime series. For example, John Straker is a character in the novel *The Girl with the Dragon Tattoo* by Stieg Larsson, but in that story, John Straker is not a trainer and is not murdered.\n\nAlternatively, if you're referring to a specific fictional or obscure story, please provide more context (such as the book, movie, or show), so I can better assist you.\n\nIf this is a question based on a fictional scenario or a puzzle, feel free to clarify, and I’d be happy to help with that too.\n\nIn short: **There is no known real-world case of a trainer named John Straker being murdered.** Therefore, there is no \"real murderer\" in that context.",
+      "citations": [],
+      "ttft_s": 1.107,
+      "total_s": 39.438,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-speckled-1",
+      "story": "speckled-band",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "speckled-band-0006",
+        "speckled-band-0023",
+        "speckled-band-0007",
+        "speckled-band-0020",
+        "speckled-band-0032",
+        "speckled-band-0004"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 40.785,
+      "total_s": 40.785,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-speckled-1",
+      "story": "speckled-band",
+      "condition": "cut",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "speckled-band-0006",
+        "speckled-band-0023",
+        "speckled-band-0007",
+        "speckled-band-0020",
+        "speckled-band-0018",
+        "speckled-band-0004"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 29.647,
+      "total_s": 29.647,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-speckled-1",
+      "story": "speckled-band",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "Julia Stoner did not die in a real-world, documented event. Julia Stoner is a fictional character from the novel *The Girl with the Dragon Tattoo* by Stieg Larsson. In the story, Julia Stoner is a character who is portrayed as a woman who died under mysterious circumstances, and her death is a key part of the plot.\n\nIn the novel, Julia Stoner is a former employee of the company that owns the \"Svensk\" factory, and her death is linked to a series of crimes and secrets tied to the investigation of the protagonist, Mikael Blomkvist. However, the exact details of her death are not fully revealed in the book, and her character is somewhat ambiguous or underdeveloped.\n\nIt's important to note that Julia Stoner is not a real person, and therefore there is no factual record of her death.\n\nIf you were referring to a different Julia Stoner or a real-life individual, please provide more context so I can assist you better.",
+      "citations": [],
+      "ttft_s": 0.931,
+      "total_s": 33.305,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-speckled-2",
+      "story": "speckled-band",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [2: \"Round his brow he had a peculiar yellow band, with brownish speckles, which seemed to be bound tightly round his head.\"] [4: \"It was very long, though—almost as long, Watson, as when you and I waited in that deadly room when we looked into the little problem of the Speckled Band.\"]",
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": "speckled-band-0030",
+          "quote": "Round his brow he had a peculiar yellow band, with brownish speckles, which seemed to be bound tightly round his head."
+        },
+        {
+          "n": 4,
+          "chunk_id": "naval-treaty-0036",
+          "quote": "It was very long, though—almost as long, Watson, as when you and I waited in that deadly room when we looked into the little problem of the Speckled Band."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "speckled-band-0030",
+        "naval-treaty-0036",
+        "speckled-band-0010",
+        "speckled-band-0009",
+        "speckled-band-0013",
+        "red-headed-league-0027"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 32.654,
+      "total_s": 32.658,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-speckled-2",
+      "story": "speckled-band",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [4: \"A double band of white shells were strung round the centre of it.\"]",
+      "citations": [
+        {
+          "n": 4,
+          "chunk_id": "wisteria-lodge-0018",
+          "quote": "A double band of white shells were strung round the centre of it."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "naval-treaty-0036",
+        "speckled-band-0010",
+        "speckled-band-0009",
+        "speckled-band-0013",
+        "red-headed-league-0027",
+        "speckled-band-0011"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 25.411,
+      "total_s": 25.413,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-speckled-2",
+      "story": "speckled-band",
+      "condition": "bare",
+      "status": "answered",
+      "answer": "The **Speckled Band** is a famous fictional story by **Sir Arthur Conan Doyle**, one of the most renowned authors in the world of detective fiction. It is a short story that was first published in 1892 as part of a collection titled *The Adventures of Sherlock Holmes*.\n\n### Summary of \"The Speckled Band\":\n\nThe story centers on **Dr. John Watson**, who recounts a case involving **Mrs. Helen Stoner**, a woman who has been suffering from a mysterious and terrifying condition. She claims that her **stepson**, **Dr. Grimesby Roylott**, has been threatening her and her family, and that he has been using a **\"speckled band\"** — a rare and dangerous animal — to terrorize her.\n\nHowever, the real plot unfolds as a **mystery involving a hidden chamber** in the family estate, where a **secret passage** leads to a **hidden room**. In this room, a **young girl** is being held captive, and the \"speckled band\" is actually a **real animal** — a **band of a rare, spotted snake** — that is used to scare and intimidate the family.\n\nThe story is a classic example of **mystery and suspense**, and it is one of the most famous stories in the Sherlock Holmes canon.\n\n### Key Points:\n\n- The \"speckled band\" is a **real animal** — a **speckled snake** —",
+      "citations": [],
+      "ttft_s": 0.999,
+      "total_s": 50.67,
+      "outcome": "named",
+      "outcome_keywords": "named",
+      "matched_name": "snake",
+      "matched_keywords": "snake",
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-norwood-1",
+      "story": "norwood-builder",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [12: \"Was not that person the actual criminal?\"] [13: \"You can hardly find a flaw in the case which can now be presented against him, and all further investigation has served to strengthen it.\"]",
+      "citations": [
+        {
+          "n": 12,
+          "chunk_id": "thor-bridge-0019",
+          "quote": "Was not that person the actual criminal?"
+        },
+        {
+          "n": 13,
+          "chunk_id": "norwood-builder-0018",
+          "quote": "You can hardly find a flaw in the case which can now be presented against him, and all further investigation has served to strengthen it."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "norwood-builder-0004",
+        "norwood-builder-0003",
+        "norwood-builder-0018",
+        "abbey-grange-0029",
+        "norwood-builder-0005",
+        "norwood-builder-0017"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 39.972,
+      "total_s": 39.978,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-norwood-1",
+      "story": "norwood-builder",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [10: \"“Do you think that this man Horner is innocent?”\"] [12: \"Was not that person the actual criminal?\"]",
+      "citations": [
+        {
+          "n": 10,
+          "chunk_id": "blue-carbuncle-0009",
+          "quote": "“Do you think that this man Horner is innocent?”"
+        },
+        {
+          "n": 12,
+          "chunk_id": "thor-bridge-0019",
+          "quote": "Was not that person the actual criminal?"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "norwood-builder-0004",
+        "norwood-builder-0003",
+        "norwood-builder-0018",
+        "abbey-grange-0029",
+        "norwood-builder-0005",
+        "norwood-builder-0017"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 37.266,
+      "total_s": 37.272,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-norwood-1",
+      "story": "norwood-builder",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "There is no widely known or officially documented case called the \"Norwood Builder case\" in historical or legal records. It's possible that you may be referring to a fictional scenario, a misremembered name, or a case that is not well known or has been misrepresented.\n\nOne possibility is confusion with the **Norwood murders**, which occurred in 1966 in the UK and involved the murder of a man named **John Norwood**. However, this case is not commonly referred to as the \"Norwood Builder case,\" and there is no prominent criminal case involving a \"guilty man\" in that context that is widely recognized.\n\nAdditionally, the name \"Norwood\" may be confused with other cases or figures, such as the **Norwood case** in the context of a construction or property dispute, but no major criminal case with a definitive \"guilty man\" is known by that name.\n\nIf you can provide more context—such as a time period, location, or details about the case—I’d be happy to help further. Otherwise, based on current knowledge, there is no established \"guilty man\" in a case known as the \"Norwood Builder case.\"",
+      "citations": [],
+      "ttft_s": 1.068,
+      "total_s": 36.736,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-norwood-2",
+      "story": "norwood-builder",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [4: \"It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night, and the stick found has been identified as the property of this person, who is a young London solicitor named John Hector McFarlane, junior partner of Graham and McFarlane, of 426, Gresham Buildings,\"] [4: \"“LATER.—It is rumoured as we go to press that Mr. John Hector McFarlane has actually been arrested on the charge of the murder of Mr. Jonas Oldacre.\"]",
+      "citations": [
+        {
+          "n": 4,
+          "chunk_id": "norwood-builder-0004",
+          "quote": "It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night, and the stick found has been identified as the property of this person, who is a young London solicitor named John Hector McFarlane, junior partner of Graham and McFarlane, of 426, Gresham Buildings,"
+        },
+        {
+          "n": 4,
+          "chunk_id": "norwood-builder-0004",
+          "quote": "“LATER.—It is rumoured as we go to press that Mr. John Hector McFarlane has actually been arrested on the charge of the murder of Mr. Jonas Oldacre."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "norwood-builder-0004",
+        "norwood-builder-0005",
+        "norwood-builder-0014",
+        "norwood-builder-0002",
+        "norwood-builder-0006",
+        "norwood-builder-0027"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 33.7,
+      "total_s": 33.71,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": "McFarlane",
+      "innocent_accused": true
+    },
+    {
+      "id": "pr-norwood-2",
+      "story": "norwood-builder",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [3: \"Mr. Jonas Oldacre is a well-known resident of that suburb, where he has carried on his business as a builder for many years.\"] [3: \"It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night, and the stick found has been identified as the property of this person, who is a young London solicitor named John Hector McFarlane, junior partner of Graham and McFarlane, of 426, Gresham Buildings,\"]",
+      "citations": [
+        {
+          "n": 3,
+          "chunk_id": "norwood-builder-0004",
+          "quote": "Mr. Jonas Oldacre is a well-known resident of that suburb, where he has carried on his business as a builder for many years."
+        },
+        {
+          "n": 3,
+          "chunk_id": "norwood-builder-0004",
+          "quote": "It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night, and the stick found has been identified as the property of this person, who is a young London solicitor named John Hector McFarlane, junior partner of Graham and McFarlane, of 426, Gresham Buildings,"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "norwood-builder-0004",
+        "norwood-builder-0005",
+        "norwood-builder-0014",
+        "norwood-builder-0006",
+        "norwood-builder-0002",
+        "norwood-builder-0008"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 31.65,
+      "total_s": 31.66,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": "McFarlane",
+      "innocent_accused": true
+    },
+    {
+      "id": "pr-norwood-2",
+      "story": "norwood-builder",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "As of now, there is no publicly known figure named Jonas Oldacre in reliable historical, biographical, or governmental records. The name does not appear in any verified databases, news sources, or official records related to public figures, historical events, or notable individuals.\n\nAdditionally, there is no credible evidence or information suggesting that someone named Jonas Oldacre is deceased or currently alive. If this name comes from a fictional work, a specific context (such as a book, movie, or game), or a private individual, please provide more details so I can better assist you.\n\nIn short:  \n**Jonas Oldacre is not a known public figure, and there is no verified information about his location or status (alive or dead).**  \nIf you have a specific context (e.g., a book, a movie, a character), feel free to share it, and I’d be happy to help interpret or explore that.",
+      "citations": [],
+      "ttft_s": 1.019,
+      "total_s": 28.162,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-naval-1",
+      "story": "naval-treaty",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "naval-treaty-0023",
+        "naval-treaty-0031",
+        "naval-treaty-0001",
+        "naval-treaty-0002",
+        "naval-treaty-0037",
+        "naval-treaty-0038"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 36.013,
+      "total_s": 36.013,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-naval-1",
+      "story": "naval-treaty",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [3: \"Presuming that your theory is correct, if he can lay his hands upon the man who threatened you last night he will have gone a long way towards finding who took the naval treaty.\"] [3: \"Phelps was still weak after his long illness, and his misfortune made him querulous and nervous.\"]",
+      "citations": [
+        {
+          "n": 3,
+          "chunk_id": "naval-treaty-0031",
+          "quote": "Presuming that your theory is correct, if he can lay his hands upon the man who threatened you last night he will have gone a long way towards finding who took the naval treaty."
+        },
+        {
+          "n": 3,
+          "chunk_id": "naval-treaty-0031",
+          "quote": "Phelps was still weak after his long illness, and his misfortune made him querulous and nervous."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "naval-treaty-0023",
+        "naval-treaty-0031",
+        "naval-treaty-0001",
+        "naval-treaty-0002",
+        "naval-treaty-0024",
+        "naval-treaty-0007"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 31.879,
+      "total_s": 31.886,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-naval-1",
+      "story": "naval-treaty",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "There is no historical or credible record of a \"naval treaty\" being stolen from Percy Phelps, and no known figure named Percy Phelps is associated with such an event in historical or diplomatic records.\n\nPercy Phelps was a real person — a 19th-century American businessman and politician — but he is not known for being involved in a naval treaty or for any incident involving the theft of a treaty.\n\nIt's possible that your question is based on a fictional work, a misunderstanding, or a mix-up with names or events. If you're referring to a specific book, movie, or piece of fiction (such as a mystery novel or a spy story), please provide more context so I can better assist you.\n\nIn short: **No one is known to have stolen a naval treaty from Percy Phelps — such an event does not exist in verified history.**",
+      "citations": [],
+      "ttft_s": 0.813,
+      "total_s": 26.101,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-naval-2",
+      "story": "naval-treaty",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [4: \"Joseph a villain and a thief!”\"] [5: \"“‘Stolen!’ he cried. “‘Yes, thief!’\"]",
+      "citations": [
+        {
+          "n": 4,
+          "chunk_id": "naval-treaty-0037",
+          "quote": "Joseph a villain and a thief!”"
+        },
+        {
+          "n": 5,
+          "chunk_id": "beryl-coronet-0011",
+          "quote": "“‘Stolen!’ he cried.\n\n“‘Yes, thief!’"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "naval-treaty-0024",
+        "naval-treaty-0031",
+        "naval-treaty-0023",
+        "beryl-coronet-0011",
+        "naval-treaty-0037",
+        "naval-treaty-0039"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 42.726,
+      "total_s": 42.73,
+      "outcome": "named",
+      "outcome_keywords": "named",
+      "matched_name": "Joseph",
+      "matched_keywords": "Joseph+thief",
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-naval-2",
+      "story": "naval-treaty",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [2: \"Why should a thief try to break in at a bedroom window, where there could be no hope of any plunder, and why should he come with a long knife in his hand?”\"] [8: \"‘A document of immense value has been stolen from the Foreign Office.\"]",
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": "naval-treaty-0031",
+          "quote": "Why should a thief try to break in at a bedroom window, where there could be no hope of any plunder, and why should he come with a long knife in his hand?”"
+        },
+        {
+          "n": 8,
+          "chunk_id": "naval-treaty-0010",
+          "quote": "‘A document of immense value has been stolen from the Foreign Office."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "naval-treaty-0024",
+        "naval-treaty-0031",
+        "naval-treaty-0023",
+        "beryl-coronet-0011",
+        "reigate-squires-0005",
+        "silver-blaze-0009"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 36.018,
+      "total_s": 36.024,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-naval-2",
+      "story": "naval-treaty",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "There is no known case called the \"Naval Treaty case\" involving a thief, and no widely recognized historical or legal case by that name exists in international law, maritime history, or criminal justice records.\n\nIt's possible that you may be referring to a fictional scenario, a misunderstanding of a name, or a mix-up with another case. For example:\n\n- The term \"naval treaty\" might refer to agreements like the Treaty of Paris (1783), the London Naval Treaty (1930s), or others, which are diplomatic agreements, not criminal cases.\n- There are many historical or fictional stories involving theft or espionage, but none are commonly known as the \"Naval Treaty case.\"\n\nIf you meant a different case—such as a real-world criminal case involving a theft related to a naval facility or treaty—please provide more context so I can better assist you.\n\nIn short: **There is no known \"thief in the Naval Treaty case\" in established historical or legal records.**",
+      "citations": [],
+      "ttft_s": 0.902,
+      "total_s": 30.853,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-black-1",
+      "story": "black-peter",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [2: \"That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon.\"] [3: \"You say I murdered Peter Carey, I say I _killed_ Peter Carey, and there’s all the difference.\"]",
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": "black-peter-0018",
+          "quote": "That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon."
+        },
+        {
+          "n": 3,
+          "chunk_id": "black-peter-0021",
+          "quote": "You say I murdered Peter Carey, I say I _killed_ Peter Carey, and there’s all the difference."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "black-peter-0021",
+        "black-peter-0018",
+        "black-peter-0005",
+        "black-peter-0022",
+        "black-peter-0003",
+        "black-peter-0016"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 41.614,
+      "total_s": 41.62,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-black-1",
+      "story": "black-peter",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [8: \"Did his companions follow him and kill him?\"] [10: \"The fact that the crime was committed at two in the morning, and yet Peter Carey was fully dressed, suggested that he had an appointment with the murderer, which is borne out by the fact that a bottle of rum and two dirty glasses stood upon the table.”\"]",
+      "citations": [
+        {
+          "n": 8,
+          "chunk_id": "wisteria-lodge-0019",
+          "quote": "Did his companions follow him and kill him?"
+        },
+        {
+          "n": 10,
+          "chunk_id": "black-peter-0007",
+          "quote": "The fact that the crime was committed at two in the morning, and yet Peter Carey was fully dressed, suggested that he had an appointment with the murderer, which is borne out by the fact that a bottle of rum and two dirty glasses stood upon the table.”"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "black-peter-0005",
+        "black-peter-0016",
+        "black-peter-0003",
+        "black-peter-0004",
+        "black-peter-0007",
+        "black-peter-0015"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 36.276,
+      "total_s": 36.283,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-black-1",
+      "story": "black-peter",
+      "condition": "bare",
+      "status": "answered",
+      "answer": "Peter Carey did not die. Peter Carey is a living Australian author, known for his novels such as *True History of the Kelly Gang*, *Oscar and Lucinda*, and *The Water Diviner*. As of now, he is alive and active in the literary world.\n\nIf you have any other questions about Peter Carey or his works, feel free to ask!",
+      "citations": [],
+      "ttft_s": 0.765,
+      "total_s": 12.287,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-black-2",
+      "story": "black-peter",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [2: \"I knew Black Peter, and when he pulled out his knife I whipped a harpoon through him sharp, for I knew that it was him or me.\"] [5: \"That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon.\"]",
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": "black-peter-0021",
+          "quote": "I knew Black Peter, and when he pulled out his knife I whipped a harpoon through him sharp, for I knew that it was him or me."
+        },
+        {
+          "n": 5,
+          "chunk_id": "black-peter-0018",
+          "quote": "That very night he went down to Woodman’s Lee, saw Peter Carey at the hut, quarrelled with him, and killed him with the harpoon."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "black-peter-0021",
+        "black-peter-0005",
+        "black-peter-0018",
+        "black-peter-0022",
+        "black-peter-0007",
+        "black-peter-0003"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 46.882,
+      "total_s": 46.887,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-black-2",
+      "story": "black-peter",
+      "condition": "cut",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "black-peter-0005",
+        "black-peter-0007",
+        "black-peter-0003",
+        "black-peter-0004",
+        "black-peter-0016",
+        "black-peter-0015"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 30.07,
+      "total_s": 30.07,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-black-2",
+      "story": "black-peter",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "There is no known figure named Peter Carey who is the victim of a murder, and no widely recognized case or public record identifies a \"true murderer\" of someone named Peter Carey.\n\nPeter Carey is, in fact, a well-known Australian author—Peter Carey (born 1948) is a celebrated novelist, known for works such as *True History of the Kelly Gang*, *Oscar and Lucinda*, and *The Water Diviner*. He is not a victim of a murder in any documented or public case.\n\nTherefore, the idea of \"the true murderer of Peter Carey\" is a misunderstanding or a fictional premise. There is no evidence or record of such a case.\n\nIf you're referring to a fictional story, a book, a movie, or a work of literature where a character named Peter Carey is murdered, please provide more context so I can better assist you.\n\nIn short: **Peter Carey is not a victim of a murder; he is a real-life author. There is no known murderer of Peter Carey.**",
+      "citations": [],
+      "ttft_s": 0.684,
+      "total_s": 29.993,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-thor-1",
+      "story": "thor-bridge",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "thor-bridge-0018",
+        "thor-bridge-0023",
+        "thor-bridge-0016",
+        "thor-bridge-0005",
+        "thor-bridge-0007",
+        "thor-bridge-0006"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 15.99,
+      "total_s": 15.99,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-thor-1",
+      "story": "thor-bridge",
+      "condition": "cut",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "thor-bridge-0018",
+        "thor-bridge-0023",
+        "thor-bridge-0016",
+        "thor-bridge-0005",
+        "thor-bridge-0007",
+        "thor-bridge-0006"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 1.339,
+      "total_s": 1.339,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-thor-1",
+      "story": "thor-bridge",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "Maria Gibson was not a real person, and there is no verified historical or public record of someone by that name being killed. It's possible there is a mix-up with the name or a confusion with another individual.\n\nIf you meant a different name or are referring to a fictional character, a case from a specific country or time period, or a situation involving misinformation, please provide more context so I can assist you better.\n\nAlways ensure that questions about real people, especially those involving violence or death, are approached with sensitivity and accuracy. If you're concerned about a real-world case, I recommend consulting reliable news sources or official records.",
+      "citations": [],
+      "ttft_s": 0.639,
+      "total_s": 18.056,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-thor-2",
+      "story": "thor-bridge",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "thor-bridge-0016",
+        "thor-bridge-0023",
+        "thor-bridge-0018",
+        "thor-bridge-0022",
+        "thor-bridge-0005",
+        "thor-bridge-0004"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 28.112,
+      "total_s": 28.112,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-thor-2",
+      "story": "thor-bridge",
+      "condition": "cut",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "thor-bridge-0016",
+        "thor-bridge-0023",
+        "thor-bridge-0018",
+        "thor-bridge-0022",
+        "thor-bridge-0005",
+        "thor-bridge-0004"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 32.206,
+      "total_s": 32.206,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-thor-2",
+      "story": "thor-bridge",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "Maria Gibson is not a widely recognized public figure, and there is no credible or verified information indicating that someone named Maria Gibson died under specific circumstances that are publicly documented or widely reported.\n\nIf you are referring to a specific individual or a case involving a person named Maria Gibson, please provide more context or clarify the details so I can assist you more accurately and responsibly.\n\nIt's important to note that discussing the death of any individual—especially in a speculative or unverified way—should be done with sensitivity and accuracy, respecting privacy and avoiding the spread of misinformation.\n\nIf you have a different question or need information on a different topic, feel free to ask.",
+      "citations": [],
+      "ttft_s": 0.87,
+      "total_s": 20.323,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-reigate-1",
+      "story": "reigate-squires",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [3: \"Whoever wrote that note was the man who brought William Kirwan out of his bed at that hour.\"] [4: \"“Before going into this, I would draw your attention to the fact that, if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand.\"]",
+      "citations": [
+        {
+          "n": 3,
+          "chunk_id": "reigate-squires-0007",
+          "quote": "Whoever wrote that note was the man who brought William Kirwan out of his bed at that hour."
+        },
+        {
+          "n": 4,
+          "chunk_id": "reigate-squires-0016",
+          "quote": "“Before going into this, I would draw your attention to the fact that, if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "reigate-squires-0005",
+        "reigate-squires-0004",
+        "reigate-squires-0007",
+        "reigate-squires-0014",
+        "reigate-squires-0022",
+        "reigate-squires-0016"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 28.608,
+      "total_s": 28.613,
+      "outcome": "named",
+      "outcome_keywords": "wrong",
+      "matched_name": "Cunningham",
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-reigate-1",
+      "story": "reigate-squires",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [2: \"Whoever wrote that note was the man who brought William Kirwan out of his bed at that hour.\"] [10: \"“Who shot him, then?”\"]",
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": "reigate-squires-0007",
+          "quote": "Whoever wrote that note was the man who brought William Kirwan out of his bed at that hour."
+        },
+        {
+          "n": 10,
+          "chunk_id": "reigate-squires-0002",
+          "quote": "“Who shot him, then?”"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "reigate-squires-0005",
+        "reigate-squires-0007",
+        "reigate-squires-0004",
+        "reigate-squires-0008",
+        "wisteria-lodge-0036",
+        "resident-patient-0016"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 22.584,
+      "total_s": 22.588,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-reigate-1",
+      "story": "reigate-squires",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "William Kirwan was not murdered. William Kirwan was a prominent American academic and administrator, best known for serving as the president of the University of Maryland, College Park, from 1970 to 1980. There is no credible evidence or historical record indicating that he was murdered.\n\nIf you are referring to a different William Kirwan or a fictional scenario, please provide more context so I can assist you better.",
+      "citations": [],
+      "ttft_s": 0.689,
+      "total_s": 12.274,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-reigate-2",
+      "story": "reigate-squires",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [5: \"McFarlane’s guilt definitely established.\"] [9: \"He made a complete voluntary confession.\"]",
+      "citations": [
+        {
+          "n": 5,
+          "chunk_id": "norwood-builder-0018",
+          "quote": "McFarlane’s guilt definitely established."
+        },
+        {
+          "n": 9,
+          "chunk_id": "priory-school-0034",
+          "quote": "He made a complete voluntary confession."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "abbey-grange-0029",
+        "priory-school-0034",
+        "speckled-band-0005",
+        "norwood-builder-0018",
+        "boscombe-valley-mystery-0004",
+        "blue-carbuncle-0007"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 30.528,
+      "total_s": 30.533,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-reigate-2",
+      "story": "reigate-squires",
+      "condition": "cut",
+      "status": "answered",
+      "answer": "From the sources: [5: \"McFarlane’s guilt definitely established.\"] [9: \"He made a complete voluntary confession.\"]",
+      "citations": [
+        {
+          "n": 5,
+          "chunk_id": "norwood-builder-0018",
+          "quote": "McFarlane’s guilt definitely established."
+        },
+        {
+          "n": 9,
+          "chunk_id": "priory-school-0034",
+          "quote": "He made a complete voluntary confession."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "abbey-grange-0029",
+        "priory-school-0034",
+        "speckled-band-0005",
+        "norwood-builder-0018",
+        "boscombe-valley-mystery-0004",
+        "blue-carbuncle-0007"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "graph_used": false,
+      "ttft_s": 2.509,
+      "total_s": 2.514,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-reigate-2",
+      "story": "reigate-squires",
+      "condition": "bare",
+      "status": "refused",
+      "answer": "The Reigate Squires case is a real historical event, but it is important to clarify that there is no widely known or officially documented case involving \"Reigate Squires\" that has a definitive \"guilty man\" identified in a criminal trial or public record.\n\nThe Reigate Squires refers to a group of men in the 19th century who were involved in a series of incidents related to the Reigate Squires (a local group of men in Reigate, Surrey, England), but these were not criminal cases with a clear guilty party. The term is sometimes used in a historical or anecdotal context, and there is no known criminal case with a definitive verdict or identification of a \"guilty man\" in the way that might be expected in a modern criminal investigation.\n\nIf you are referring to a fictional case, a book, a movie, or a play titled \"The Reigate Squires,\" please provide more context so I can give a more accurate answer.\n\nIn short: **There is no known \"guilty man\" in the Reigate Squires case**, as it is not a recognized criminal case with a documented conviction. The reference may be a misunderstanding or a confusion with another case or title.",
+      "citations": [],
+      "ttft_s": 0.841,
+      "total_s": 29.675,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    }
+  ],
+  "cases": {
+    "pr-boscombe-1": {
+      "id": "pr-boscombe-1",
+      "story": "boscombe-valley-mystery",
+      "cut_char": 36458,
+      "question": "Who killed Charles McCarthy at Boscombe Pool?",
+      "truth": "John Turner of the Hall (once 'Black Jack of Ballarat') killed Charles McCarthy; James McCarthy is innocent.",
+      "truth_keywords": [
+        "Turner",
+        "Ballarat"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Turner",
+          "confession"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared": "James McCarthy",
+      "culprit_names": [
+        [
+          "Turner"
+        ],
+        [
+          "John Turner"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared_names": [
+        "James McCarthy",
+        "young McCarthy"
+      ],
+      "reveal_quotes": [
+        "Is a tall man, left-handed, limps with the right leg",
+        "It was an Indian cigar",
+        "The culprit is—",
+        "“Mr. John Turner,” cried the hotel waiter",
+        "Black Jack of Ballarat was the name I went under",
+        "I did it, Mr. Holmes."
+      ],
+      "rationale": "Cut before Holmes shows Lestrade the stone ('The murder was done with it') and describes the murderer (tall, left-handed, lame, grey cloak); everything before is the inquest narrative, the Turner family introduction and the site visit. The Cooee/Ballarat deduction, the confession and the name follow."
+    },
+    "pr-boscombe-2": {
+      "id": "pr-boscombe-2",
+      "story": "boscombe-valley-mystery",
+      "cut_char": 36458,
+      "question": "Who is the guilty man in the Boscombe Valley mystery?",
+      "truth": "John Turner of the Hall (once 'Black Jack of Ballarat') killed Charles McCarthy; James McCarthy is innocent.",
+      "truth_keywords": [
+        "Turner",
+        "Ballarat"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Turner",
+          "confession"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared": "James McCarthy",
+      "culprit_names": [
+        [
+          "Turner"
+        ],
+        [
+          "John Turner"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared_names": [
+        "James McCarthy",
+        "young McCarthy"
+      ],
+      "reveal_quotes": [
+        "Is a tall man, left-handed, limps with the right leg",
+        "It was an Indian cigar",
+        "The culprit is—",
+        "“Mr. John Turner,” cried the hotel waiter",
+        "Black Jack of Ballarat was the name I went under",
+        "I did it, Mr. Holmes."
+      ],
+      "rationale": "Cut before Holmes shows Lestrade the stone ('The murder was done with it') and describes the murderer (tall, left-handed, lame, grey cloak); everything before is the inquest narrative, the Turner family introduction and the site visit. The Cooee/Ballarat deduction, the confession and the name follow."
+    },
+    "pr-silver-1": {
+      "id": "pr-silver-1",
+      "story": "silver-blaze",
+      "cut_char": 40470,
+      "question": "Who killed John Straker?",
+      "truth": "The horse Silver Blaze killed John Straker, in self-defence, when Straker tried to nick its tendon; Fitzroy Simpson is not the culprit.",
+      "truth_keywords": [
+        "lessen his guilt"
+      ],
+      "truth_keywords_alt": [
+        [
+          "lashed out",
+          "Straker"
+        ],
+        [
+          "real murderer",
+          "thoroughbred"
+        ],
+        [
+          "steel shoe",
+          "Straker"
+        ]
+      ],
+      "cleared": "Fitzroy Simpson",
+      "culprit_names": [
+        [
+          "the horse"
+        ],
+        [
+          "Silver Blaze kicked"
+        ],
+        [
+          "Straker himself"
+        ]
+      ],
+      "cleared_names": [
+        "Fitzroy Simpson",
+        "Simpson"
+      ],
+      "reveal_quotes": [
+        "The real murderer is standing immediately behind you.",
+        "Yes, the horse. And it may lessen his guilt if I say that it was done in self-defence",
+        "the steel shoe had struck Straker full on the forehead"
+      ],
+      "rationale": "Cut before the Wessex Cup scene in which Holmes says the real murderer is the horse; Holmes's earlier hints (the dog in the night-time, the lame sheep) are clues, not statements of the solution."
+    },
+    "pr-silver-2": {
+      "id": "pr-silver-2",
+      "story": "silver-blaze",
+      "cut_char": 40470,
+      "question": "Who is the real murderer of John Straker, the trainer?",
+      "truth": "The horse Silver Blaze killed John Straker, in self-defence, when Straker tried to nick its tendon; Fitzroy Simpson is not the culprit.",
+      "truth_keywords": [
+        "lessen his guilt"
+      ],
+      "truth_keywords_alt": [
+        [
+          "lashed out",
+          "Straker"
+        ],
+        [
+          "real murderer",
+          "thoroughbred"
+        ],
+        [
+          "steel shoe",
+          "Straker"
+        ]
+      ],
+      "cleared": "Fitzroy Simpson",
+      "culprit_names": [
+        [
+          "the horse"
+        ],
+        [
+          "Silver Blaze kicked"
+        ],
+        [
+          "Straker himself"
+        ]
+      ],
+      "cleared_names": [
+        "Fitzroy Simpson",
+        "Simpson"
+      ],
+      "reveal_quotes": [
+        "The real murderer is standing immediately behind you.",
+        "Yes, the horse. And it may lessen his guilt if I say that it was done in self-defence",
+        "the steel shoe had struck Straker full on the forehead"
+      ],
+      "rationale": "Cut before the Wessex Cup scene in which Holmes says the real murderer is the horse; Holmes's earlier hints (the dog in the night-time, the lame sheep) are clues, not statements of the solution."
+    },
+    "pr-speckled-1": {
+      "id": "pr-speckled-1",
+      "story": "speckled-band",
+      "cut_char": 39716,
+      "question": "How did Julia Stoner die?",
+      "truth": "A swamp adder, a snake trained by Dr. Grimesby Roylott and sent through the ventilator, killed Julia Stoner; the 'speckled band' is the snake.",
+      "truth_keywords": [
+        "snake"
+      ],
+      "truth_keywords_alt": [
+        [
+          "adder"
+        ],
+        [
+          "serpent"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "snake"
+        ],
+        [
+          "swamp adder"
+        ],
+        [
+          "adder"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "It is a swamp adder!",
+        "the deadliest snake in India",
+        "there reared itself from among his hair the squat diamond-shaped head and puffed neck of a loathsome serpent"
+      ],
+      "rationale": "Cut before Holmes's night-time explanation at the inn (the ventilator, the bell-rope, the clamped bed); the snake is first named at the dénouement, after the cut."
+    },
+    "pr-speckled-2": {
+      "id": "pr-speckled-2",
+      "story": "speckled-band",
+      "cut_char": 39716,
+      "question": "What was the speckled band?",
+      "truth": "A swamp adder, a snake trained by Dr. Grimesby Roylott and sent through the ventilator, killed Julia Stoner; the 'speckled band' is the snake.",
+      "truth_keywords": [
+        "snake"
+      ],
+      "truth_keywords_alt": [
+        [
+          "adder"
+        ],
+        [
+          "serpent"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "snake"
+        ],
+        [
+          "swamp adder"
+        ],
+        [
+          "adder"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "It is a swamp adder!",
+        "the deadliest snake in India",
+        "there reared itself from among his hair the squat diamond-shaped head and puffed neck of a loathsome serpent"
+      ],
+      "rationale": "Cut before Holmes's night-time explanation at the inn (the ventilator, the bell-rope, the clamped bed); the snake is first named at the dénouement, after the cut."
+    },
+    "pr-norwood-1": {
+      "id": "pr-norwood-1",
+      "story": "norwood-builder",
+      "cut_char": 37573,
+      "question": "Who is the guilty man in the Norwood Builder case?",
+      "truth": "Jonas Oldacre is alive and was hiding in a concealed room of his own house; he framed John Hector McFarlane.",
+      "truth_keywords": [
+        "Oldacre",
+        "hiding"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Oldacre",
+          "practical joke"
+        ],
+        [
+          "Oldacre",
+          "hiding-place"
+        ]
+      ],
+      "cleared": "John Hector McFarlane",
+      "culprit_names": [
+        [
+          "Oldacre",
+          "alive"
+        ],
+        [
+          "Oldacre",
+          "hiding"
+        ]
+      ],
+      "cleared_names": [
+        "McFarlane"
+      ],
+      "reveal_quotes": [
+        "I _know_ that that mark was not there",
+        "allow me to present you with your principal missing witness, Mr. Jonas Oldacre",
+        "I made up my mind that the fellow was in hiding in the house."
+      ],
+      "rationale": "Cut before Holmes says the thumb-mark was not there the day before; the hidden room, Oldacre's appearance and the explanation of the plot follow."
+    },
+    "pr-norwood-2": {
+      "id": "pr-norwood-2",
+      "story": "norwood-builder",
+      "cut_char": 37573,
+      "question": "Where is Jonas Oldacre, and is he really dead?",
+      "truth": "Jonas Oldacre is alive and was hiding in a concealed room of his own house; he framed John Hector McFarlane.",
+      "truth_keywords": [
+        "Oldacre",
+        "hiding"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Oldacre",
+          "practical joke"
+        ],
+        [
+          "Oldacre",
+          "hiding-place"
+        ]
+      ],
+      "cleared": "John Hector McFarlane",
+      "culprit_names": [
+        [
+          "Oldacre",
+          "alive"
+        ],
+        [
+          "Oldacre",
+          "hiding"
+        ]
+      ],
+      "cleared_names": [
+        "McFarlane"
+      ],
+      "reveal_quotes": [
+        "I _know_ that that mark was not there",
+        "allow me to present you with your principal missing witness, Mr. Jonas Oldacre",
+        "I made up my mind that the fellow was in hiding in the house."
+      ],
+      "rationale": "Cut before Holmes says the thumb-mark was not there the day before; the hidden room, Oldacre's appearance and the explanation of the plot follow."
+    },
+    "pr-naval-1": {
+      "id": "pr-naval-1",
+      "story": "naval-treaty",
+      "cut_char": 57675,
+      "question": "Who stole the naval treaty from Percy Phelps?",
+      "truth": "Joseph Harrison, the brother of Phelps's fiancee, stole the treaty and hid it under the bedroom floor.",
+      "truth_keywords": [
+        "Joseph",
+        "thief"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Joseph",
+          "villain"
+        ],
+        [
+          "Harrison",
+          "moonlight"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "Joseph"
+        ],
+        [
+          "Joseph Harrison"
+        ],
+        [
+          "Harrison"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "Mr. Joseph Harrison stepped out into the moonlight.",
+        "And Joseph! Joseph a villain and a thief!",
+        "this Joseph Harrison entered the office through the Charles Street door"
+      ],
+      "rationale": "Cut before the breakfast at which the treaty reappears on Phelps's plate and Holmes tells how he caught Joseph Harrison; the scene before it (Holmes's failed day, the table laid) names no one."
+    },
+    "pr-naval-2": {
+      "id": "pr-naval-2",
+      "story": "naval-treaty",
+      "cut_char": 57675,
+      "question": "Who is the thief in the Naval Treaty case?",
+      "truth": "Joseph Harrison, the brother of Phelps's fiancee, stole the treaty and hid it under the bedroom floor.",
+      "truth_keywords": [
+        "Joseph",
+        "thief"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Joseph",
+          "villain"
+        ],
+        [
+          "Harrison",
+          "moonlight"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "Joseph"
+        ],
+        [
+          "Joseph Harrison"
+        ],
+        [
+          "Harrison"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "Mr. Joseph Harrison stepped out into the moonlight.",
+        "And Joseph! Joseph a villain and a thief!",
+        "this Joseph Harrison entered the office through the Charles Street door"
+      ],
+      "rationale": "Cut before the breakfast at which the treaty reappears on Phelps's plate and Holmes tells how he caught Joseph Harrison; the scene before it (Holmes's failed day, the table laid) names no one."
+    },
+    "pr-black-1": {
+      "id": "pr-black-1",
+      "story": "black-peter",
+      "cut_char": 29725,
+      "question": "Who killed Peter Carey?",
+      "truth": "Patrick Cairns, a harpooner of the Sea Unicorn, killed Peter Carey; young Neligan is innocent.",
+      "truth_keywords": [
+        "Cairns"
+      ],
+      "cleared": "John Hopley Neligan",
+      "culprit_names": [
+        [
+          "Cairns"
+        ],
+        [
+          "Patrick Cairns"
+        ]
+      ],
+      "cleared_names": [
+        "Neligan"
+      ],
+      "reveal_quotes": [
+        "Patrick Cairns, the true murderer of Peter Carey",
+        "“Patrick Cairns.”",
+        "I whipped a harpoon through him sharp"
+      ],
+      "rationale": "Cut before Holmes's telegrams to the shipping agent and to Hopkins and the breakfast scene where he demolishes the case against Neligan and the harpooner is arrested."
+    },
+    "pr-black-2": {
+      "id": "pr-black-2",
+      "story": "black-peter",
+      "cut_char": 29725,
+      "question": "Who is the true murderer of Peter Carey?",
+      "truth": "Patrick Cairns, a harpooner of the Sea Unicorn, killed Peter Carey; young Neligan is innocent.",
+      "truth_keywords": [
+        "Cairns"
+      ],
+      "cleared": "John Hopley Neligan",
+      "culprit_names": [
+        [
+          "Cairns"
+        ],
+        [
+          "Patrick Cairns"
+        ]
+      ],
+      "cleared_names": [
+        "Neligan"
+      ],
+      "reveal_quotes": [
+        "Patrick Cairns, the true murderer of Peter Carey",
+        "“Patrick Cairns.”",
+        "I whipped a harpoon through him sharp"
+      ],
+      "rationale": "Cut before Holmes's telegrams to the shipping agent and to Hopkins and the breakfast scene where he demolishes the case against Neligan and the harpooner is arrested."
+    },
+    "pr-thor-1": {
+      "id": "pr-thor-1",
+      "story": "thor-bridge",
+      "cut_char": 43341,
+      "question": "Who killed Maria Gibson?",
+      "truth": "Maria Gibson killed herself and arranged the scene to frame Grace Dunbar, who is innocent.",
+      "truth_keywords": [
+        "her own life"
+      ],
+      "truth_keywords_alt": [
+        [
+          "her own crime"
+        ],
+        [
+          "vindictive woman"
+        ]
+      ],
+      "cleared": "Grace Dunbar",
+      "culprit_names": [
+        [
+          "suicide"
+        ],
+        [
+          "killed herself"
+        ],
+        [
+          "her own hand"
+        ],
+        [
+          "Maria Gibson herself"
+        ]
+      ],
+      "cleared_names": [
+        "Grace Dunbar",
+        "Miss Dunbar",
+        "Dunbar"
+      ],
+      "reveal_quotes": [
+        "this vindictive woman attempted to disguise her own crime",
+        "Her first resolution was to end her own life.",
+        "Every link is now in its place and the chain is complete."
+      ],
+      "rationale": "Cut before Holmes leaves the cell at Winchester with the solution; the chip in the stonework is already known, its explanation, the revolver test and the review of the plot are after the cut."
+    },
+    "pr-thor-2": {
+      "id": "pr-thor-2",
+      "story": "thor-bridge",
+      "cut_char": 43341,
+      "question": "How did Maria Gibson really die?",
+      "truth": "Maria Gibson killed herself and arranged the scene to frame Grace Dunbar, who is innocent.",
+      "truth_keywords": [
+        "her own life"
+      ],
+      "truth_keywords_alt": [
+        [
+          "her own crime"
+        ],
+        [
+          "vindictive woman"
+        ]
+      ],
+      "cleared": "Grace Dunbar",
+      "culprit_names": [
+        [
+          "suicide"
+        ],
+        [
+          "killed herself"
+        ],
+        [
+          "her own hand"
+        ],
+        [
+          "Maria Gibson herself"
+        ]
+      ],
+      "cleared_names": [
+        "Grace Dunbar",
+        "Miss Dunbar",
+        "Dunbar"
+      ],
+      "reveal_quotes": [
+        "this vindictive woman attempted to disguise her own crime",
+        "Her first resolution was to end her own life.",
+        "Every link is now in its place and the chain is complete."
+      ],
+      "rationale": "Cut before Holmes leaves the cell at Winchester with the solution; the chip in the stonework is already known, its explanation, the revolver test and the review of the plot are after the cut."
+    },
+    "pr-reigate-1": {
+      "id": "pr-reigate-1",
+      "story": "reigate-squires",
+      "cut_char": 22620,
+      "question": "Who murdered William Kirwan?",
+      "truth": "Alec Cunningham and his father murdered their coachman William Kirwan.",
+      "truth_keywords": [
+        "murdering their coachman"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Alec Cunningham had lied"
+        ],
+        [
+          "decoyed"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "Cunningham"
+        ],
+        [
+          "Alec Cunningham"
+        ],
+        [
+          "the Cunninghams"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "That of murdering their coachman, William Kirwan!",
+        "Alec Cunningham had lied",
+        "William was decoyed up and shot"
+      ],
+      "rationale": "Cut before the house search in which Holmes upsets the carafe and is attacked; the accusation, the paper in the dressing-gown and the full explanation follow."
+    },
+    "pr-reigate-2": {
+      "id": "pr-reigate-2",
+      "story": "reigate-squires",
+      "cut_char": 22620,
+      "question": "Who is the guilty man in the Reigate Squires case?",
+      "truth": "Alec Cunningham and his father murdered their coachman William Kirwan.",
+      "truth_keywords": [
+        "murdering their coachman"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Alec Cunningham had lied"
+        ],
+        [
+          "decoyed"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "Cunningham"
+        ],
+        [
+          "Alec Cunningham"
+        ],
+        [
+          "the Cunninghams"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "That of murdering their coachman, William Kirwan!",
+        "Alec Cunningham had lied",
+        "William was decoyed up and shot"
+      ],
+      "rationale": "Cut before the house search in which Holmes upsets the carafe and is attacked; the accusation, the paper in the dressing-gown and the full explanation follow."
+    }
+  },
+  "exposure": {
+    "pr-boscombe-1": {
+      "Turner": 11,
+      "John Turner": 1,
+      "Black Jack": 0
+    },
+    "pr-boscombe-2": {
+      "Turner": 11,
+      "John Turner": 1,
+      "Black Jack": 0
+    },
+    "pr-silver-1": {
+      "the horse": 11,
+      "Silver Blaze kicked": 0,
+      "Straker himself": 0
+    },
+    "pr-silver-2": {
+      "the horse": 11,
+      "Silver Blaze kicked": 0,
+      "Straker himself": 0
+    },
+    "pr-speckled-1": {
+      "snake": 0,
+      "swamp adder": 0,
+      "adder": 0
+    },
+    "pr-speckled-2": {
+      "snake": 0,
+      "swamp adder": 0,
+      "adder": 0
+    },
+    "pr-norwood-1": {
+      "Oldacre+alive": 1,
+      "Oldacre+hiding": 0
+    },
+    "pr-norwood-2": {
+      "Oldacre+alive": 1,
+      "Oldacre+hiding": 0
+    },
+    "pr-naval-1": {
+      "Joseph": 8,
+      "Joseph Harrison": 3,
+      "Harrison": 11
+    },
+    "pr-naval-2": {
+      "Joseph": 8,
+      "Joseph Harrison": 3,
+      "Harrison": 11
+    },
+    "pr-black-1": {
+      "Cairns": 0,
+      "Patrick Cairns": 0
+    },
+    "pr-black-2": {
+      "Cairns": 0,
+      "Patrick Cairns": 0
+    },
+    "pr-thor-1": {
+      "suicide": 0,
+      "killed herself": 0,
+      "her own hand": 1,
+      "Maria Gibson herself": 0
+    },
+    "pr-thor-2": {
+      "suicide": 0,
+      "killed herself": 0,
+      "her own hand": 1,
+      "Maria Gibson herself": 0
+    },
+    "pr-reigate-1": {
+      "Cunningham": 9,
+      "Alec Cunningham": 3,
+      "the Cunninghams": 0
+    },
+    "pr-reigate-2": {
+      "Cunningham": 9,
+      "Alec Cunningham": 3,
+      "the Cunninghams": 0
+    }
+  }
+}
