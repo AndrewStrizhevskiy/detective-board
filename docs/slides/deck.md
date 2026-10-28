@@ -202,8 +202,9 @@ IF IT GOES WRONG: slide only. If late, say only the first row and the TBD row.
 | Gold chunk within top 4 | **70 of 86 = 81%** | 86 questions | retrieval only, no LLM |
 | Full graph from the department server, 2026-10-27 | **596 of 596** chunks, 20 of 20 stories, 2157 claims, 1698 events; rules: **0 findings in 19 of 20 stories** (only the curated Garcia R1) | 596 chunks, 1 run | extraction quality not scored beyond the 12 gold chunks; presence pass not run |
 | Real stack on the full graph, laptop, 2026-10-28 | **5 of 6** dev questions answered with a quoted sentence in **30-43 s**; 1 refused (g009, multi-hop) | 6 questions, 1 run | not a clean window; answered is not correct |
-| Final eval table with intervals | **TBD (issue #16/#6)** | TBD | - |
-| Contradiction precision / recall on the real graph | **TBD (issue #16/#6)** | TBD | not measured yet |
+| Dev split, three configurations, 2026-10-28 (eval runner, mechanical proxy) | behaviour correct: bare **4/34 = 12%** [5, 27], vector-only **7/34 = 21%** [10, 37], hybrid+graph (the agent) **6/34 = 18%** [8, 34]; differences between configurations not significant (exact McNemar p 0.25-1.0) | 34 questions, 1 run | proxy = key-fact coverage >= 0.5 of the expected answer; AI-written gold; **the agent is not better than vector-only on this proxy**; test split not run |
+| Retrieval and refusals, same run | gold chunk in top 4: vector **18/27 = 67%**, hybrid **21/27 = 78%**; out-of-corpus refused: bare 4/7, vector 7/7, hybrid+graph 6/7; false refusals of answerable questions 20/27, 8/27, 7/27 | 27 answerable, 7 out-of-corpus | the gain is in finding and refusing honestly, not in the proxy score |
+| Contradiction detection, rules only, dev cases | recall **0/14** [0, 22]; false positives on controls **0/9** | 23 cases, 1 run | on the automatic graph the rules find nothing; the findings in the demo come from curated facts |
 
 ---
 
@@ -265,7 +266,7 @@ IF IT GOES WRONG: slide only. Then Q&A from docs/demo/jury-faq.md; backup slides
 
 - Human review of the gold sets and of the curated facts
 - Graph of all 596 chunks; measured precision of automatic presence facts
-- Contradiction precision / recall on the real graph, with intervals (**TBD, issue #16/#6**)
+- Contradiction precision / recall on the real graph, with intervals (measured on dev: 0/14, see slide 7)
 - Exact times and story days from text: the weak link of R1 and R3
 
 **The model guesses. The rules prove. Every step shows its quotes.**
