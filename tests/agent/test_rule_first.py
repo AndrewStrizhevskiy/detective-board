@@ -457,3 +457,161 @@ def test_self_check_flags_but_template_helper_allows_uncited():
     assert self_check("Statement of the engine.", s, allow_uncited=True).ok
     bad = self_check('Engine. [1: "invented words"]', s, allow_uncited=True)
     assert not bad.ok  # a quote that is present is always verified
+
+
+# ---- (e) chronology: build_timeline template --------------------------------
+TL_Q = "Give the timeline of the night Aloysius Garcia died"
+
+
+def _ev(eid, desc, quote, base, text, when=None, **kw):
+    a = text.index(quote)
+    return {
+        "event_id": eid,
+        "description": desc,
+        "when": when,
+        "place_id": None,
+        "participants": [],
+        "anchors": [
+            {
+                "story": S,
+                "chunk_id": "wl-0001" if base == 1000 else "wl-0002",
+                "char_start": base + a,
+                "char_end": base + a + len(quote),
+                "quote": quote,
+            }
+        ],
+    } | kw
+
+
+def _tl_payload(**kw):
+    when = {"story_day": 1, "start_min": 780, "end_min": 780, "confidence": "high"}
+    p = {
+        "status": "ok",
+        "events": [
+            _ev(
+                "e1", "Garcia looked in at the door", "Garcia looked in at my door", 1000, T1, when
+            ),
+            _ev("e2", "Baynes says he was on the Common", "since one o'clock", 2000, T2),
+            _ev("e3", "Garcia was seen at the Lodge", "Wisteria Lodge", 1000, T1, curated=True),
+        ],
+        "undated_count": 2,
+        "total_events": 3,
+        "truncated": False,
+        "provenance": "derived",
+        "rule_id": "R2",
+    }
+    return p | kw
+
+
+def run_tl(payload, question=TL_Q, **kw):
+    llm = FakeLLM("MODEL TEXT MUST NOT APPEAR")
+    retr = FakeRetriever([hit(1, T1, story=S), hit(2, T2, story=S)])
+    tools = FakeTools(payload)
+    agent = make_agent(llm, retr, tools=tools, config=AgentConfig(**kw))
+    return list(agent.ask(question)), llm, tools
+
+
+def test_timeline_template_lists_dated_then_undated_with_quotes():
+    ev, llm, tools = run_tl(_tl_payload())
+    assert llm.calls == []
+    tool, args = tools.calls[0]
+    assert tool == "build_timeline"
+    assert args["include_undated"] is True and 10 <= args["limit"] <= 15 and args["story"] == S
+    fin = ev[-1]
+    assert fin.status == "answered" and fin.verified
+    lines = fin.answer.splitlines()
+    assert lines[0].startswith(
+        "Timeline for wl: the graph holds 3 events (1 with a stated day and time"
+    )
+    assert "3 are shown." in lines[0]
+    assert lines[1].startswith("1. day key 1, 13:00 (derived): Garcia looked in at the door [1: ")
+    assert lines[2].startswith("2. time not stated (derived): Baynes says")
+    assert lines[3].startswith("3. time not stated (curated): Garcia was seen")
+    assert (
+        "Dated events are ordered by the time stated in the text; the others follow in order"
+        in (fin.answer)
+    )
+    assert "which is not necessarily the order in which they happened." in fin.answer
+    assert "correct order" not in fin.answer
+    assert "Curated: 1 of the events" in fin.answer
+    assert not asserts_consistency(prose(fin.answer))
+    assert [c.quote for c in fin.citations][0] == "Garcia looked in at my door"
+    assert next(e for e in ev if e.type == "enriched_query").strategy.startswith(
+        "rule-first (timeline)"
+    )
+
+
+def test_timeline_truncated_and_conditional_label():
+    ev, _, _ = run_tl(
+        _tl_payload(truncated=True, total_events=40, undated_count=38, provenance="conditional")
+    )
+    a = ev[-1].answer
+    assert (
+        "holds 40 events (2 with a stated day and time, 38 without); 3 are shown, the rest were cut"
+        in a
+    )
+    assert "(conditional)" in a
+
+
+def test_timeline_only_undated_says_so():
+    p = _tl_payload()
+    p["events"] = [e | {"when": None} for e in p["events"]]
+    a = run_tl(p)[0][-1].answer
+    assert "None of the events shown has both a stated day and time" in a
+
+
+def test_timeline_empty_reports_missing_and_invents_nothing():
+    ev, llm, _ = run_tl(
+        {"status": "insufficient_evidence", "events": [], "undated_count": 0, "total_events": 0}
+    )
+    fin = ev[-1]
+    assert llm.calls == [] and fin.status == "answered"
+    assert fin.answer.startswith("The graph holds no events for wl")
+    assert "no order of events is reported" in fin.answer
+    assert not asserts_consistency(prose(fin.answer))
+    assert not re.search(r"^\d+\. ", fin.answer, re.M)
+
+
+def test_timeline_tool_error_goes_to_text_path_not_template():
+    ev, llm, _ = run_tl(
+        {"error": {"code": "timeout", "message": "x"}},
+        "Give the timeline: Garcia looked in at my door at Wisteria Lodge",
+        answer_mode="generate",
+    )
+    assert "Timeline for" not in ev[-1].answer
+    assert llm.calls  # a failed tool says nothing; the normal text path answers
+
+
+def test_timeline_build_answer_error_text():
+    from detective_board.agent.rule_first import ToolOutcome, build_timeline_answer
+
+    out = [ToolOutcome("build_timeline", {"error": {"code": "timeout", "message": "x"}})]
+    ans = build_timeline_answer(story=S, outcomes=out, link=None, notes=[])
+    assert ans.kind == "failed" and "could not be built" in ans.text
+    assert "nothing is said about their order" in ans.text
+
+
+def test_timeline_with_graph_scopes_person_and_story():
+    g = _graph()
+    tools = FakeTools(_tl_payload())
+    ev, llm = run_rf(g, "Give the timeline of the night Garcia died", tools=tools)
+    assert llm.calls == []
+    _, args = tools.calls[0]
+    assert args["story"] == S and args["person_id"].endswith("garcia")
+    assert args["include_undated"] is True
+    assert ev[-1].answer.startswith("Timeline for Garcia in wl: ")
+
+
+def test_timeline_day_wording_dates_keys_and_partial_times():
+    from datetime import date as _d
+
+    from detective_board.agent.rule_first import _when_text
+
+    jun3 = _d(2001, 6, 3).toordinal()
+    w = {"story_day": jun3, "start_min": 900, "end_min": 900, "confidence": "high"}
+    assert _when_text(w) == ("June 3 (date in the text), 15:00", False)
+    w = {"story_day": 20162, "start_min": 60, "end_min": 120, "confidence": "low"}
+    assert _when_text(w) == ("day key 20162, 01:00-02:00 (time uncertain)", True)
+    w = {"story_day": None, "start_min": 360, "end_min": 720, "confidence": "high"}
+    assert _when_text(w)[0] == "06:00-12:00, day not stated"
+    assert _when_text(None) == (None, False)

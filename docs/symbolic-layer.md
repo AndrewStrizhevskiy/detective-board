@@ -512,6 +512,23 @@ Update (2026-10-27, `answer_mode`): the template applies only when a rule tool a
 
 The words that assert agreement ("no conflict", "consistent", "no contradiction") do not occur outside quoted source text, the negated sentence above, or a `consistent` verdict a rule really returned. The same check guards the LLM path (`rule_first=false`, or any route that carried a rule result): `answer.self_check(..., forbid_consistency=True)` rejects such a claim with a retry hint when the rule result is empty or failed. The template runs through the same verbatim self-check (sentences without a quote are statements of the engine; every quote present is verified), which passes by construction.
 
+### 11.1b Chronology answers (`build_timeline`, `agent/rule_first.py`)
+
+Questions such as "Give the timeline of the night Aloysius Garcia died", "What happened in Boscombe Valley, in order?" or "In what order did the events of The Speckled Band take place?" are routed (`router._TIMELINE`: timeline, chronolog*, order/sequence of events, in what order, what happened ... in order, day by day, step by step) to `["mcp","graph","vector"]` with the tool `build_timeline`. Alibi and contradiction wording wins when it also matches: "order" alone is not a chronology request, and a question that matches no timeline pattern is routed as before.
+
+The agent calls `build_timeline` with `include_undated=true`, `limit=15`, the story (retrieval, or the entity link) and, when a person is linked, `person_id`; if that person has no events of their own the existing widening to the whole story applies and is said in the answer. The answer is a template with no model call (events as for the other rule-first answers; `enriched_query.strategy` reads `rule-first (timeline): no model call`):
+
+- a head line: events the graph holds for the story (or the person in it), how many have a stated time, how many are shown;
+- a numbered list, one line per event: a day (a date from the text, else an internal "day key") and `HH:MM` when the text gives them, else `time not stated`; then the label (`derived`/`conditional` as the tool reports, `curated` for human-checked events), the description and a verbatim `[n: "quote"]` from the event's first citable anchor, so the self-check passes by construction;
+- the order note: "Dated events are ordered by the time stated in the text; the others follow in order of narration, which is not necessarily the order in which they happened.";
+- notes (scope widened, ambiguous name, curated events, list cut off).
+
+Dated events come first in `(story_day, start_min)` order exactly as the tool returns them, then the undated ones in text order (never interleaved). If the tool returns no event the answer says what is missing; an error or skipped tool falls through to the text path as for the other rules. The wording never says what the correct order is and never asserts consistency or completeness (honesty guard unchanged).
+
+Tool change (additive): `build_timeline` also returns `total_events` (all events matching the filter, before the limit) and a `curated: true` key on human-checked events.
+
+Honest limits. The automatic graph has a story day for only about 4.5 % of its events, so most timelines are mainly narration order and say so; narration order is not event order (flashbacks, reported speech). A story day is an internal key (an explicit date is an ordinal of a placeholder year and is shown as month and day; weekday indices, relative offsets and same-day groups are shown as `day key N`), and keys of different kinds do not share one scale, so the order of dated events across them is only as good as the keys; the answer says so. Only events with both a day and a clock time are ordered by time; an event with only a clock time stays in narration order and is shown with `day not stated`. Events are the extractor's, not a complete list of the story; the limit of 15 shows the start of a long list only. Whether the 12-15 events shown are the important ones is not claimed.
+
 ### 11.2 Field grounding of extracted items (`extract/repair.py`, branch `feat/field-grounding`)
 
 Measured on qwen3:4b with prompt extract-2.1 over 64 cached Wisteria/Boscombe chunks (177 events,

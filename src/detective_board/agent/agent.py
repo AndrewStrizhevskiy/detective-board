@@ -58,6 +58,7 @@ def _safe_code(code: str) -> str:
 
 
 DECLINE_RETRY_PROBLEM = "model declined, retrying with a firmer instruction"
+TIMELINE_LIMIT = 15  # events asked from build_timeline (dated first, then undated)
 SEARCHED = ["hybrid retrieval (BM25 + vector) over the Holmes corpus"]
 
 
@@ -261,7 +262,11 @@ class Agent:
             (o.error or {}).get("code") == "ambiguous" for o in outcomes
         )
         if cfg.rule_first and decision.tools and (ran or ambiguous):
-            if cfg.answer_mode == "extractive" and ran and not rf.has_rule_verdict(outcomes):
+            if "build_timeline" in decision.tools:  # chronology: always the template
+                yield from self._rule_first_answer(
+                    sink, decision, question, story, link, hits, outcomes, headers
+                )
+            elif cfg.answer_mode == "extractive" and ran and not rf.has_rule_verdict(outcomes):
                 # the rule engine found nothing: the rule line first, then what the text says
                 yield from self._rule_then_text_answer(
                     sink, decision, question, story, link, hits, outcomes, headers, gate_missing, rq
@@ -515,7 +520,7 @@ class Agent:
             return None
         elif "check_alibi" in decision.tools:
             kind, args = "events_by_person", {"person": names[0]}
-        elif len(names) >= 2:
+        elif len(names) >= 2 and "build_timeline" not in decision.tools:
             kind, args = "shortest_path", {"a": names[0], "b": names[1]}
         else:
             kind, args = "neighbours", {"ref": names[0], "k": 1}
@@ -598,6 +603,8 @@ class Agent:
             args |= {"person_id": person, "window": win[0]}
         elif person:
             args["person_id"] = person
+        if tool == "build_timeline":
+            args |= {"include_undated": True, "limit": TIMELINE_LIMIT}
         yield sink.emit(
             ToolCall(
                 step_id=step,

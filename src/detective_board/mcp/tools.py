@@ -115,20 +115,22 @@ def build_timeline(
         ev = fb.event(ref.fact_id)
         if ev is None:  # cannot happen: refs come from fb
             continue
-        events.append(
-            {
-                "event_id": ev.id,
-                "description": ev.description,
-                "when": _interval(ev.time),
-                "place_id": ev.place_ref,
-                "participants": list(ev.participants),
-                "anchors": _anchors(ev),
-            }
-        )
+        item: dict[str, Any] = {
+            "event_id": ev.id,
+            "description": ev.description,
+            "when": _interval(ev.time),
+            "place_id": ev.place_ref,
+            "participants": list(ev.participants),
+            "anchors": _anchors(ev),
+        }
+        if ev.curated:  # human-checked fact; the key is absent for extracted events
+            item["curated"] = True
+        events.append(item)
     return {
         "status": "ok" if events else "insufficient_evidence",
         "events": events,
         "undated_count": undated_count,
+        "total_events": len(everything),
         "truncated": len(selected) > limit,
         "provenance": "derived",
         "rule_id": "R2",
