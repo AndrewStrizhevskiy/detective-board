@@ -44,7 +44,7 @@ See `README.md`, `docs/PRD.md`, `docs/architecture/c4.md`.
 | MCP server `timeline-alibi` + client | `src/detective_board/mcp` | done; stdio server over the real graph (`--graph`, read-only, all stories) is the agent's default tool path when `graph.sqlite` exists (R-19, `docs/mcp-contracts.md` 8.1); in-process only as a labelled fallback; `--facts` serves one story from a FactBase JSON. Not run against real Ollama |
 | Agent (router, relevance gate, cited answers, self-check, trace events) | `src/detective_board/agent` | done on fake LLM and a 12-question live check; graph/MCP route NOT live-tested |
 | API (Starlette + SSE) and UI | `src/detective_board/api`, `web/` | done and browser-checked in `--fake` mode only |
-| Eval | `eval/`, `scripts/spike`, `scripts/eval` | golden sets + spike scorers exist; the 4-configuration A/B runner `eval/run_eval.py` does NOT exist |
+| Eval | `eval/`, `scripts/spike`, `scripts/eval` | golden sets + spike scorers exist; the 4-configuration runner `eval/run_eval.py` exists (issue #6: short CI mode on the fake LLM; real numbers need a run on Ollama) |
 
 ## 3. Decisions and the numbers behind them
 

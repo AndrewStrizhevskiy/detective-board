@@ -67,7 +67,7 @@ Scope: ask a canned question against the app backed by `FakeLLM`, assert answer,
 
 ## 7. Eval in CI (shortened)
 
-- Job `eval-short` in `.github/workflows/ci.yml` is currently disabled (`if: false`) until `scripts/eval/run.py` exists.
+- Job `eval-short` in `.github/workflows/ci.yml` runs `eval/run_eval.py --short` (8 dev questions, FakeLLM, the fixture index, no network; deterministic, covered by `tests/eval/`).
 - Short = fixed subset (~10-15 questions from `eval/spike_questions.jsonl` successors) with `FakeLLM`/recorded replies and a stub or small embedder: it tests the pipeline wiring and metric code, not model quality. Budget: <3 min.
 - Full eval (real models, all questions, multiple seeds if sampling) runs locally via `just eval`; results committed under `docs/` or `eval/runs/` (ignored) with date, model tag, commit hash.
 - Report numbers as they are; a red metric is reported, not hidden.
@@ -106,5 +106,5 @@ A backlog item is done when:
 ## 11. Open requests (to file in docs/backlog.md by their owners)
 
 - `LLMClient` interface + `FakeLLM` (agent-engineer / test-automation-engineer).
-- `scripts/index/build.py`, `scripts/eval/run.py --short --llm mock`, `python -m detective_board` entry (blocked on spike ADR).
+- `scripts/index/build.py`, `eval/run_eval.py --short` (done, issue #6), `python -m detective_board` entry (blocked on spike ADR).
 - `uv lock` refresh after dev-group change (devops-engineer): CI uses `--locked` and fails until done.
