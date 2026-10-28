@@ -744,14 +744,16 @@ def previous_test_runs(out_dir: Path, sha: str, cfg_hash: str) -> list[Path]:
     and in the default one (so --out elsewhere does not bypass the once-only rule)."""
     found: set[Path] = set()
     for d in {out_dir, RESULTS}:
-        found |= set(d.glob(f"eval-*-test-{sha[:7]}-{cfg_hash}-*.json"))
+        for tag in ("test", "all"):  # a run over "all" also evaluated the test questions
+            found |= set(d.glob(f"eval-*-{tag}-{sha[:7]}-{cfg_hash}-*.json"))
     return sorted(found)
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
     split = "dev" if args.short else args.split
     sha, dirty = git_state()
-    if split == "test" and dirty and not args.allow_dirty:
+    touches_test = split in ("test", "all")  # "all" includes the test questions: same protocol
+    if touches_test and dirty and not args.allow_dirty:
         raise SystemExit(
             "the test split is run once per frozen configuration: commit first (or --allow-dirty for a dry run)"
         )
@@ -766,8 +768,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     ]
     stack = build_stack(args.short, args.vector_min_score)
     cfg_hash = config_hash(stack.identity, configs_run, args.short)
-    out_dir = args.out or (RUNS if args.short else RESULTS)
-    if split == "test" and (prev := previous_test_runs(out_dir, sha, cfg_hash)):
+    out_dir = args.out or (RUNS if args.short or (touches_test and dirty) else RESULTS)
+    if touches_test and (prev := previous_test_runs(out_dir, sha, cfg_hash)):
         stack.close()
         raise SystemExit(
             f"the test split was already run for commit {sha[:7]} and config {cfg_hash}: {prev[0].name}"

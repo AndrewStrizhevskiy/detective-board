@@ -21,6 +21,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: The tag must be on main
+        env:
+          TAG_SHA: ${{ github.sha }}
+        run: |
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor "$TAG_SHA" origin/main \
+            || { echo "tag $GITHUB_REF_NAME is not on main: refusing to release"; exit 1; }
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: ${{ env.UV_VERSION }}
@@ -38,6 +48,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
       - name: Source archive and checksums
         env:
           TAG: ${{ github.ref_name }}

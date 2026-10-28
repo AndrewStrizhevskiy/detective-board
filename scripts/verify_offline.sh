@@ -42,7 +42,7 @@ trap cleanup EXIT
 t0=$(date +%s)
 
 # 1. every file is what was packed
-if (cd "$DIR" && sha256sum -c --quiet SHA256SUMS >"$LOG/checksums.txt" 2>&1); then
+if (cd "$DIR" && sha256sum -c --quiet --strict SHA256SUMS >"$LOG/checksums.txt" 2>&1); then
   pass "checksums: $(wc -l < "$DIR/SHA256SUMS") files match SHA256SUMS"
 else
   fail "checksums: see $LOG/checksums.txt"

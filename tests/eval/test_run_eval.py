@@ -112,6 +112,14 @@ def test_test_split_needs_a_clean_tree(monkeypatch):
         R.main(["--split", "test", "--quiet"])
 
 
+def test_split_all_follows_the_test_protocol(monkeypatch, tmp_path):
+    monkeypatch.setattr(R, "git_state", lambda: ("abc", True))
+    with pytest.raises(SystemExit, match="frozen"):
+        R.main(["--split", "all", "--quiet"])
+    (tmp_path / "eval-2026-10-28-all-abcdef0-0123456789ab-120000.json").write_text("{}")
+    assert R.previous_test_runs(tmp_path, "abcdef0123", "0123456789ab")
+
+
 def test_a_test_run_is_recorded_once_and_never_overwritten(tmp_path):
     meta = {
         "date": "2026-10-28",
