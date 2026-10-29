@@ -79,3 +79,20 @@ def test_the_committed_recordings_match_their_eval_runs():
         assert br.recording(run, rec["meta"]["qid"], rec["meta"]["source"], questions) == rec, (
             path.name
         )
+
+
+def test_the_recorded_call_settings_are_those_of_run_bare():
+    """CALL is written into every recording; it must say what eval/run_eval.py run_bare() does."""
+    src = (ROOT / "eval" / "run_eval.py").read_text(encoding="utf-8")
+    body = src[src.index("def run_bare(") : src.index("def run_agent(")]
+    assert "temperature=0.0" in body and "seed=42" in body and "num_predict=BARE_MAX_TOKENS" in body
+    assert "BARE_MAX_TOKENS = 300" in src
+    assert '[{"role": "user", "content": q["question"]}]' in body, "question only, no system prompt"
+    assert "temperature 0, seed 42, 300-token cap" in br.CALL and "no system prompt" in br.CALL
+
+
+def test_an_unknown_question_id_stops_with_a_message(tmp_path):
+    rows = [{"id": "g999", "config": "bare", "answer": "x", "ttft_s": 1, "total_s": 2}]
+    src, out = _run(tmp_path, rows)
+    with pytest.raises(SystemExit, match="not in eval/golden"):
+        br.main(["--eval", str(src), "--ids", "g999", "--out", str(out)])

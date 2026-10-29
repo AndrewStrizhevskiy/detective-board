@@ -55,7 +55,7 @@ def build() -> dict:
     rows.sort(key=lambda r: (order[r["kind"]], rank.get(r["file"], len(steps)), r["file"]))
     bare = []
     for path in sorted((REPLAY / "bare").glob("*.json")):
-        meta = json.loads(path.read_text()).get("meta", {})
+        meta = json.loads(path.read_text(encoding="utf-8")).get("meta", {})
         row = {"file": f"bare/{path.name}", "question": meta.get("question", "")}
         for key in ("qid", "model", "recorded_on", "seconds"):
             if key in meta:

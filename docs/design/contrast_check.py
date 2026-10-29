@@ -88,8 +88,8 @@ PAIRS += [
     ("card pin vs person fill", "db-pin", "db-person-fill", UI),
     ("cited halo vs board", "db-halo", "db-bg-board", UI),
     ("cited halo vs surface", "db-halo", "db-bg-surface", UI),
-    # split view (#13): the "with sources" tag on the board's panel head
-    ("with-sources tag on panel head", "db-ok", "db-bg-surface-2", TEXT),
+    # split view (#13): the "with sources" tag sits on the board's wooden frame (panel head)
+    ("with-sources tag on the wooden frame", "db-frame-text", "db-frame", TEXT),
     # the board: ink on paper cards, threads and paper on cork, stamps on paper
     ("ink on paper card", "db-ink", "db-paper", TEXT),
     ("muted ink on paper card", "db-ink-muted", "db-paper", TEXT),

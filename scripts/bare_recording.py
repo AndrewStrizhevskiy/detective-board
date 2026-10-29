@@ -27,6 +27,8 @@ def recording(result: dict, qid: str, source: str, questions: dict[str, str]) ->
     if len(rows) != 1:
         raise SystemExit(f"{qid}: {len(rows)} bare rows in {source}, need exactly 1")
     row = rows[0]
+    if qid not in questions:
+        raise SystemExit(f"{qid}: not in eval/golden/questions.jsonl")
     if not str(row.get("answer", "")).strip():
         raise SystemExit(f"{qid}: the bare answer is empty")
     return {

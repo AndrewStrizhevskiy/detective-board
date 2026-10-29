@@ -52,6 +52,9 @@ let health = null;
 let renderQueued = false;
 const traceDom = new Map();
 let pinned = true;
+let bareOn = false; // split view, bare model vs agent (#13, key b)
+let bareToken = 0;
+let bareTimer = null;
 
 function dispatch(action) {
   state = reduce(state, action);
@@ -185,6 +188,7 @@ function historyPayload() {
 async function runLive(question) {
   stop(true);
   lastQuestion = question;
+  if (bareOn) openBare(question);
   recorded = [];
   banner(null);
   resetBoard();
@@ -302,7 +306,7 @@ function startStoredRun(file, { cap = STORED_RUN_CAP_MS } = {}) {
   renderRecordings();
   const rec = recordings.find((r) => r.file === file);
   announce(`Stored run, a recording: ${rec ? rec.question : file}`);
-  if (bareOn && rec) openBare(rec.question);
+  if (bareOn && rec) openBare(rec.question, { quiet: true });
   runReplay();
 }
 
@@ -392,7 +396,6 @@ $("ask-form").addEventListener("submit", (e) => {
   if (!q || state.phase === "running") return;
   if (replayPath) return;
   $("question").blur(); // operator keys (b, c, g, t) work during the run
-  if (bareOn) openBare(q);
   runLive(q);
 });
 $("stop-btn").addEventListener("click", () => stop(false));
@@ -999,9 +1002,6 @@ setInterval(announceIfDone, 500);
 // retrieval, no sources), next to the board and answer of the agent. Always a RECORDING from a
 // real eval run (scripts/bare_recording.py); never generated or edited here.
 
-let bareOn = false;
-let bareToken = 0;
-let bareTimer = null;
 const bareSpeed = Number(params.get("speed")) || 1;
 
 function setSplit(on) {
@@ -1010,7 +1010,14 @@ function setSplit(on) {
   if (on) cols.dataset.split = "bare"; else delete cols.dataset.split;
   $("panel-bare").hidden = !on;
   $("board-side-tag").hidden = !on;
-  if (!on) { stopBare(); announce("Split view closed."); return; }
+  const tab = document.querySelector('.tabs [data-tab="trace"]');
+  if (tab) tab.textContent = on ? "Bare model" : "Trace";
+  if (!on) {
+    stopBare();
+    announce("Split view closed.");
+    if (!document.activeElement || document.activeElement === document.body) $("question").focus();
+    return;
+  }
   openBare($("question").value.trim() || state.question || lastQuestion);
 }
 
@@ -1020,11 +1027,11 @@ function stopBare() {
   bareTimer = null;
 }
 
-async function openBare(question) {
+async function openBare(question, { quiet = false } = {}) {
   stopBare();
   const token = bareToken;
   const row = findRecording(bareList, question);
-  if (!row) { renderBareMissing(question); return; }
+  if (!row) { renderBareMissing(question, quiet); return; }
   try {
     const path = safeReplayPath(`replay/${row.file}`);
     if (!path) throw new Error("invalid recording path");
@@ -1032,11 +1039,13 @@ async function openBare(question) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const rec = normaliseBare(await res.json());
     if (token !== bareToken) return;
-    playBare(rec, token);
+    playBare(rec, token, quiet);
   } catch (e) {
     if (token !== bareToken) return;
     renderBareHead(null);
-    $("bare-answer").replaceChildren(h("p", { class: "empty" }, `The bare-model recording could not be loaded (${e.message}).`));
+    const msg = `The bare-model recording could not be loaded (${e.message}).`;
+    $("bare-answer").replaceChildren(h("p", { class: "empty" }, msg));
+    if (!quiet) announce(msg);
   }
 }
 
@@ -1047,10 +1056,12 @@ function renderBareHead(meta) {
   $("bare-call").textContent = l ? l.call : "";
   $("bare-clock").textContent = "";
   $("bare-all").hidden = true;
+  $("bare-foot").hidden = true;
 }
 
-function renderBareMissing(question) {
+function renderBareMissing(question, quiet) {
   renderBareHead(null);
+  if (!quiet) announce(question ? "No bare-model recording for this question." : "No question yet.");
   const pick = (r) => () => { $("question").value = r.question; queueRender(); openBare(r.question); };
   $("bare-answer").replaceChildren(
     h("p", { class: "empty" }, question ? `No bare-model recording for "${question}".` : "No question yet."),
@@ -1060,18 +1071,19 @@ function renderBareMissing(question) {
 
 // The text arrives at the recorded pace (first token, total time); Motion off or "Show all" shows
 // it at once.
-function playBare(rec, token) {
+function playBare(rec, token, quiet) {
   const { meta, answer } = rec;
   renderBareHead(meta);
   const text = h("p", { class: "bare-text" });
   $("bare-answer").replaceChildren(text);
   const t0 = performance.now();
-  const instant = document.documentElement.hasAttribute("data-motion");
-  // the newest text stays in view until the operator scrolls the column themselves
+  const instant = document.documentElement.hasAttribute("data-motion") || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // the newest text stays in view while the column is scrolled to its end (as the trace does);
+  // scrolled up by any means, it stays put until scrolled back down
   let follow = !instant;
   const pnl = $("panel-bare");
   pnl.scrollTop = 0;
-  pnl.onwheel = pnl.ontouchmove = () => { follow = false; };
+  pnl.onscroll = () => { follow = !instant && pnl.scrollHeight - pnl.scrollTop - pnl.clientHeight < 40; };
   const draw = (all) => {
     if (token !== bareToken) return;
     const ms = all ? Infinity : performance.now() - t0;
@@ -1086,8 +1098,8 @@ function playBare(rec, token) {
     if (done) { clearInterval(bareTimer); bareTimer = null; $("bare-foot").hidden = false; }
   };
   $("bare-foot").hidden = true;
-  $("bare-all").onclick = () => draw(true);
-  announce(`Bare model, no sources, a recording: ${meta.question}`);
+  $("bare-all").onclick = () => { draw(true); $("bare-close").focus(); };
+  if (!quiet) announce(`Bare model, no sources, a recording: ${meta.question}`);
   if (instant) { draw(true); return; }
   draw(false);
   bareTimer = setInterval(() => draw(false), 50);
