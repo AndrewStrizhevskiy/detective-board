@@ -29,7 +29,7 @@ from detective_board.symbolic.api import FactSource
 def _result(payload: dict[str, Any], is_error: bool = False) -> CallToolResult:
     text = json.dumps(payload, ensure_ascii=False, sort_keys=True)
     if not is_error:
-        for key in ("events", "overlaps", "findings", "rows"):
+        for key in ("events", "overlaps", "findings", "rows", "persons"):
             while len(text.encode()) > SIZE_CAP_BYTES and payload.get(key):
                 payload[key] = payload[key][: len(payload[key]) // 2]
                 payload["truncated"] = True
@@ -131,6 +131,28 @@ def build_server(source: FactSource, deadline_s: float | None = None) -> MCPServ
         return _run(
             lambda: tools.presence_table(
                 source, story=story, person_id=person_id, names=names, limit=limit
+            )
+        )
+
+    @mcp.tool()
+    def scene_board(
+        story: str,
+        place: str,
+        window: Window,
+        person_ids: list[str] | None = None,
+        victim_ids: list[str] | None = None,
+        limit: int = tools.SCENE_LIMIT,
+    ) -> CallToolResult:
+        """Alibi board for a scene: R1 check_alibi per person; testimony, not proof."""
+        return _run(
+            lambda: tools.scene_board(
+                source,
+                story=story,
+                place=place,
+                window=window,
+                person_ids=person_ids,
+                victim_ids=victim_ids,
+                limit=limit,
             )
         )
 

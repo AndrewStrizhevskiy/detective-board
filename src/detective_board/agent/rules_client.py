@@ -16,7 +16,14 @@ from detective_board.graph import GraphStore, SqliteFactSource
 from detective_board.mcp import tools
 from detective_board.mcp.errors import ToolError, error_payload
 
-TOOLS = ("build_timeline", "check_alibi", "find_contradictions", "find_overlaps", "presence_table")
+TOOLS = (
+    "build_timeline",
+    "check_alibi",
+    "find_contradictions",
+    "find_overlaps",
+    "presence_table",
+    "scene_board",
+)
 
 
 class InProcessRulesClient:
@@ -31,7 +38,7 @@ class InProcessRulesClient:
             return error_payload("not_found", f"unknown tool: {tool!r}")
         args = dict(arguments)
         try:
-            if tool == "check_alibi":
+            if tool in ("check_alibi", "scene_board"):
                 args["window"] = tools.Window.model_validate(args.get("window"))
             return getattr(tools, tool)(self.source, **args)
         except ToolError as exc:
