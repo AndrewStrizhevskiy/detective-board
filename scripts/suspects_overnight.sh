@@ -18,7 +18,7 @@ OUT=data/cache/suspects/overnight
 SUSPECTS=data/cache/suspects
 mkdir -p "$OUT/logs" "$OUT/results"
 echo $$ > "$OUT/driver.pid"
-DEADLINE_HHMM="${DEADLINE_HHMM:-07:00}"
+DEADLINE_HHMM="${DEADLINE_HHMM:-12:00}"
 now=$(date +%s)
 DL=$(date -d "$DEADLINE_HHMM" +%s)
 [ "$now" -ge "$DL" ] && DL=$(date -d "tomorrow $DEADLINE_HHMM" +%s)
@@ -171,8 +171,22 @@ else
 fi
 ensembles
 
+# 8b. extra variants (window extended to noon): masked names, more cuts and shuffles, 10-sample consistency
+step masked_full 15 35 --split dev --variants masked --num-ctx 14336 $F
+step masked_dossier 30 60 --split dev --variants masked --methods dossier
+step sc10 50 90 $COMMON --methods fulltext dossier --sc 10 --seed 11
+for c in 0.5 0.8; do
+  step "curve_full_$c" 20 45 --split all --variants open $F --cut-frac "$c"
+  step "curve_cards_$c" 15 35 $SHORT --methods cards --cut-frac "$c"
+done
+for o in 3 4 5; do
+  step "shuffle_$o" 12 30 $COMMON $F --shuffle-seed "$o"
+done
+step pair8b_s7 30 70 $COMMON --methods pairwise --seed 7
+ensembles
+
 # 9. more heavy runs while time remains: more seeds
-for sd in 101 202 303 404 505 606 707 808; do
+for sd in 101 202 303 404 505 606 707 808 909 1010 1111 1212 1313 1414; do
   step "seed_full_$sd" 12 30 $COMMON $F --seed "$sd"
   step "seed_sc_$sd" 30 60 $COMMON --methods fulltext dossier --sc 5 --seed "$sd"
   ensembles
