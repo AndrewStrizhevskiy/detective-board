@@ -1,0 +1,602 @@
+{
+  "meta": {
+    "date": "2026-10-29",
+    "git_sha": "98067d83d77f8866a780be4465a9f2322b3f6253",
+    "git_dirty": true,
+    "generator": "qwen3:4b-instruct",
+    "seed": 42,
+    "temperature": 0.0,
+    "agent_config": {
+      "top_k": 4,
+      "strategy": "rank_full",
+      "window_words": 60,
+      "idf_chunks": "/home/mendax/code/db-entity/data/chunks.jsonl",
+      "max_prompt_tokens": 1200,
+      "retry_extra_k": 2,
+      "min_score": 0.018,
+      "min_support": 0.25,
+      "max_graph_facts": 8,
+      "max_tool_facts": 8,
+      "max_retries": 1,
+      "decline_retry": true,
+      "decline_fallback_min_support": 0.5,
+      "min_quote_chars": 6,
+      "min_claim_overlap": 0.3,
+      "memory_turns": 3,
+      "memory_max_chars": 600,
+      "use_llm_router": false,
+      "tool_timeout_s": 5.0,
+      "answer_mode": "extractive",
+      "extract_top_k": 6,
+      "extract_per_source": 8,
+      "extract_max_sentences": 40,
+      "extract_max_tokens": 850,
+      "extract_order": "score",
+      "sentence_index_path": "data/index/sentences.sqlite",
+      "extract_sentence_k": 12,
+      "extract_safety_chunks": 4,
+      "extract_safety_per_chunk": 3,
+      "rule_first": true,
+      "scenes_path": "/home/mendax/code/db-entity/data/curated/scenes.jsonl",
+      "translate_questions": true,
+      "translate_model": "qwen3:4b-instruct",
+      "translate_max_chars": 300,
+      "translate_timeout_s": 30.0,
+      "translate_cache": "",
+      "semantic_r3": false,
+      "semantic_r3_max_pairs": 12,
+      "semantic_r3_show": 2,
+      "entity_answer": false,
+      "temperature": 0.0,
+      "seed": 42
+    },
+    "machine": "mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-42-generic",
+    "presence": {
+      "graph": true,
+      "sentence_index": true,
+      "rule_tools": "timeline-alibi",
+      "fixture": null
+    },
+    "data": {
+      "index": "2d02f1dfa9772e08",
+      "graph": "5562ec62045727c4",
+      "sentences": "11a9587530064cc4",
+      "chunks": "d15dca856a055b84"
+    },
+    "cases_file": "eval/pre_reveal/cases.jsonl",
+    "cases_sha256": "e1ee1364ac22b8275a6145f38682afe266f98ea37f7cc685bebffc211dc88c53",
+    "n_cases": 5,
+    "n_stories": 3,
+    "conditions": [
+      "full"
+    ],
+    "note": "The cases are AI-written: the reveal passages were located by reading the text, the cut placed before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical (names or keywords in the answer and its cited quotes), not a human reading.",
+    "started": "2026-10-29T05:20:16+00:00"
+  },
+  "summary": {
+    "full": {
+      "n_questions": 5,
+      "n_scored": 5,
+      "unscored": 0,
+      "errors": 0,
+      "named": {
+        "k": 0,
+        "n": 5,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.4345
+        ]
+      },
+      "refused": {
+        "k": 1,
+        "n": 5,
+        "value": 0.2,
+        "ci95": [
+          0.0362,
+          0.6245
+        ]
+      },
+      "wrong": {
+        "k": 4,
+        "n": 5,
+        "value": 0.8,
+        "ci95": [
+          0.3755,
+          0.9638
+        ]
+      },
+      "innocent_accused": {
+        "k": 0,
+        "n": 5,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.4345
+        ]
+      },
+      "named_keywords": {
+        "k": 0,
+        "n": 5,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.4345
+        ]
+      },
+      "latency_s": {
+        "median": 32.4,
+        "mean": 33.1,
+        "max": 37.3
+      },
+      "by_story": {
+        "boscombe-valley-mystery": {
+          "named": 0,
+          "n": 2
+        },
+        "norwood-builder": {
+          "named": 0,
+          "n": 1
+        },
+        "silver-blaze": {
+          "named": 0,
+          "n": 2
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "pr-boscombe-1",
+      "story": "boscombe-valley-mystery",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "boscombe-valley-mystery-0002",
+        "boscombe-valley-mystery-0003",
+        "boscombe-valley-mystery-0007",
+        "boscombe-valley-mystery-0016",
+        "boscombe-valley-mystery-0017",
+        "boscombe-valley-mystery-0019"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [
+        "no sentence answers the question"
+      ],
+      "graph_used": false,
+      "ttft_s": 30.856,
+      "total_s": 30.856,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-boscombe-2",
+      "story": "boscombe-valley-mystery",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [3: \"Is he the man who hobnobbed in rum and water with Black Peter in the dead of the night?\"] [5: \"Was not that person the actual criminal?\"]",
+      "citations": [
+        {
+          "n": 3,
+          "chunk_id": "black-peter-0019",
+          "quote": "Is he the man who hobnobbed in rum and water with Black Peter in the dead of the night?"
+        },
+        {
+          "n": 5,
+          "chunk_id": "thor-bridge-0019",
+          "quote": "Was not that person the actual criminal?"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "boscombe-valley-mystery-0002",
+        "boscombe-valley-mystery-0003",
+        "boscombe-valley-mystery-0019",
+        "boscombe-valley-mystery-0016",
+        "boscombe-valley-mystery-0017",
+        "boscombe-valley-mystery-0007"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [],
+      "graph_used": false,
+      "ttft_s": 37.327,
+      "total_s": 37.333,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-silver-1",
+      "story": "silver-blaze",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [1: \"“And of course this is all quite a minor point compared to the question of who killed John Straker.”\"] [3: \"You would do me a greater still if you could lay your hands on the murderer of John Straker.”\"]",
+      "citations": [
+        {
+          "n": 1,
+          "chunk_id": "silver-blaze-0021",
+          "quote": "“And of course this is all quite a minor point compared to the question of who killed John Straker.”"
+        },
+        {
+          "n": 3,
+          "chunk_id": "silver-blaze-0024",
+          "quote": "You would do me a greater still if you could lay your hands on the murderer of John Straker.”"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "silver-blaze-0021",
+        "silver-blaze-0016",
+        "silver-blaze-0027",
+        "silver-blaze-0007",
+        "silver-blaze-0028",
+        "silver-blaze-0002"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [],
+      "graph_used": false,
+      "ttft_s": 32.403,
+      "total_s": 32.408,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-silver-2",
+      "story": "silver-blaze",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [4: \"Silas Brown, the trainer, is known to have had large bets upon the event, and he was no friend to poor Straker.\"] [10: \"It was clear, however, that Straker had defended himself vigorously against his assailants, for in his right hand he held a small knife, which was clotted with blood up to the handle, while in his left he clasped a red and black silk cravat, which was recognised by the maid as having been worn on\"]",
+      "citations": [
+        {
+          "n": 4,
+          "chunk_id": "silver-blaze-0012",
+          "quote": "Silas Brown, the trainer, is known to have had large bets upon the event, and he was no friend to poor Straker."
+        },
+        {
+          "n": 10,
+          "chunk_id": "silver-blaze-0007",
+          "quote": "It was clear, however, that Straker had defended himself vigorously against his assailants, for in his right hand he held a small knife, which was clotted with blood up to the handle, while in his left he clasped a red and black silk cravat, which was recognised by the maid as having been worn on"
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "silver-blaze-0025",
+        "silver-blaze-0007",
+        "silver-blaze-0021",
+        "silver-blaze-0027",
+        "silver-blaze-0009",
+        "silver-blaze-0012"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [],
+      "graph_used": false,
+      "ttft_s": 33.083,
+      "total_s": 33.089,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-norwood-1",
+      "story": "norwood-builder",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [12: \"Was not that person the actual criminal?\"] [13: \"You can hardly find a flaw in the case which can now be presented against him, and all further investigation has served to strengthen it.\"]",
+      "citations": [
+        {
+          "n": 12,
+          "chunk_id": "thor-bridge-0019",
+          "quote": "Was not that person the actual criminal?"
+        },
+        {
+          "n": 13,
+          "chunk_id": "norwood-builder-0018",
+          "quote": "You can hardly find a flaw in the case which can now be presented against him, and all further investigation has served to strengthen it."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "norwood-builder-0004",
+        "norwood-builder-0003",
+        "norwood-builder-0018",
+        "abbey-grange-0029",
+        "norwood-builder-0005",
+        "norwood-builder-0017"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [],
+      "graph_used": false,
+      "ttft_s": 31.679,
+      "total_s": 31.684,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    }
+  ],
+  "cases": {
+    "pr-boscombe-1": {
+      "id": "pr-boscombe-1",
+      "story": "boscombe-valley-mystery",
+      "cut_char": 36458,
+      "question": "Who killed Charles McCarthy at Boscombe Pool?",
+      "truth": "John Turner of the Hall (once 'Black Jack of Ballarat') killed Charles McCarthy; James McCarthy is innocent.",
+      "truth_keywords": [
+        "Turner",
+        "Ballarat"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Turner",
+          "confession"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared": "James McCarthy",
+      "culprit_names": [
+        [
+          "Turner"
+        ],
+        [
+          "John Turner"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared_names": [
+        "James McCarthy",
+        "young McCarthy"
+      ],
+      "reveal_quotes": [
+        "Is a tall man, left-handed, limps with the right leg",
+        "It was an Indian cigar",
+        "The culprit is—",
+        "“Mr. John Turner,” cried the hotel waiter",
+        "Black Jack of Ballarat was the name I went under",
+        "I did it, Mr. Holmes."
+      ],
+      "rationale": "Cut before Holmes shows Lestrade the stone ('The murder was done with it') and describes the murderer (tall, left-handed, lame, grey cloak); everything before is the inquest narrative, the Turner family introduction and the site visit. The Cooee/Ballarat deduction, the confession and the name follow."
+    },
+    "pr-boscombe-2": {
+      "id": "pr-boscombe-2",
+      "story": "boscombe-valley-mystery",
+      "cut_char": 36458,
+      "question": "Who is the guilty man in the Boscombe Valley mystery?",
+      "truth": "John Turner of the Hall (once 'Black Jack of Ballarat') killed Charles McCarthy; James McCarthy is innocent.",
+      "truth_keywords": [
+        "Turner",
+        "Ballarat"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Turner",
+          "confession"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared": "James McCarthy",
+      "culprit_names": [
+        [
+          "Turner"
+        ],
+        [
+          "John Turner"
+        ],
+        [
+          "Black Jack"
+        ]
+      ],
+      "cleared_names": [
+        "James McCarthy",
+        "young McCarthy"
+      ],
+      "reveal_quotes": [
+        "Is a tall man, left-handed, limps with the right leg",
+        "It was an Indian cigar",
+        "The culprit is—",
+        "“Mr. John Turner,” cried the hotel waiter",
+        "Black Jack of Ballarat was the name I went under",
+        "I did it, Mr. Holmes."
+      ],
+      "rationale": "Cut before Holmes shows Lestrade the stone ('The murder was done with it') and describes the murderer (tall, left-handed, lame, grey cloak); everything before is the inquest narrative, the Turner family introduction and the site visit. The Cooee/Ballarat deduction, the confession and the name follow."
+    },
+    "pr-silver-1": {
+      "id": "pr-silver-1",
+      "story": "silver-blaze",
+      "cut_char": 40470,
+      "question": "Who killed John Straker?",
+      "truth": "The horse Silver Blaze killed John Straker, in self-defence, when Straker tried to nick its tendon; Fitzroy Simpson is not the culprit.",
+      "truth_keywords": [
+        "lessen his guilt"
+      ],
+      "truth_keywords_alt": [
+        [
+          "lashed out",
+          "Straker"
+        ],
+        [
+          "real murderer",
+          "thoroughbred"
+        ],
+        [
+          "steel shoe",
+          "Straker"
+        ]
+      ],
+      "cleared": "Fitzroy Simpson",
+      "culprit_names": [
+        [
+          "the horse"
+        ],
+        [
+          "Silver Blaze kicked"
+        ],
+        [
+          "Straker himself"
+        ]
+      ],
+      "cleared_names": [
+        "Fitzroy Simpson",
+        "Simpson"
+      ],
+      "reveal_quotes": [
+        "The real murderer is standing immediately behind you.",
+        "Yes, the horse. And it may lessen his guilt if I say that it was done in self-defence",
+        "the steel shoe had struck Straker full on the forehead"
+      ],
+      "rationale": "Cut before the Wessex Cup scene in which Holmes says the real murderer is the horse; Holmes's earlier hints (the dog in the night-time, the lame sheep) are clues, not statements of the solution."
+    },
+    "pr-silver-2": {
+      "id": "pr-silver-2",
+      "story": "silver-blaze",
+      "cut_char": 40470,
+      "question": "Who is the real murderer of John Straker, the trainer?",
+      "truth": "The horse Silver Blaze killed John Straker, in self-defence, when Straker tried to nick its tendon; Fitzroy Simpson is not the culprit.",
+      "truth_keywords": [
+        "lessen his guilt"
+      ],
+      "truth_keywords_alt": [
+        [
+          "lashed out",
+          "Straker"
+        ],
+        [
+          "real murderer",
+          "thoroughbred"
+        ],
+        [
+          "steel shoe",
+          "Straker"
+        ]
+      ],
+      "cleared": "Fitzroy Simpson",
+      "culprit_names": [
+        [
+          "the horse"
+        ],
+        [
+          "Silver Blaze kicked"
+        ],
+        [
+          "Straker himself"
+        ]
+      ],
+      "cleared_names": [
+        "Fitzroy Simpson",
+        "Simpson"
+      ],
+      "reveal_quotes": [
+        "The real murderer is standing immediately behind you.",
+        "Yes, the horse. And it may lessen his guilt if I say that it was done in self-defence",
+        "the steel shoe had struck Straker full on the forehead"
+      ],
+      "rationale": "Cut before the Wessex Cup scene in which Holmes says the real murderer is the horse; Holmes's earlier hints (the dog in the night-time, the lame sheep) are clues, not statements of the solution."
+    },
+    "pr-norwood-1": {
+      "id": "pr-norwood-1",
+      "story": "norwood-builder",
+      "cut_char": 37573,
+      "question": "Who is the guilty man in the Norwood Builder case?",
+      "truth": "Jonas Oldacre is alive and was hiding in a concealed room of his own house; he framed John Hector McFarlane.",
+      "truth_keywords": [
+        "Oldacre",
+        "hiding"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Oldacre",
+          "practical joke"
+        ],
+        [
+          "Oldacre",
+          "hiding-place"
+        ]
+      ],
+      "cleared": "John Hector McFarlane",
+      "culprit_names": [
+        [
+          "Oldacre",
+          "alive"
+        ],
+        [
+          "Oldacre",
+          "hiding"
+        ]
+      ],
+      "cleared_names": [
+        "McFarlane"
+      ],
+      "reveal_quotes": [
+        "I _know_ that that mark was not there",
+        "allow me to present you with your principal missing witness, Mr. Jonas Oldacre",
+        "I made up my mind that the fellow was in hiding in the house."
+      ],
+      "rationale": "Cut before Holmes says the thumb-mark was not there the day before; the hidden room, Oldacre's appearance and the explanation of the plot follow."
+    }
+  },
+  "exposure": {
+    "pr-boscombe-1": {
+      "Turner": 11,
+      "John Turner": 1,
+      "Black Jack": 0
+    },
+    "pr-boscombe-2": {
+      "Turner": 11,
+      "John Turner": 1,
+      "Black Jack": 0
+    },
+    "pr-silver-1": {
+      "the horse": 11,
+      "Silver Blaze kicked": 0,
+      "Straker himself": 0
+    },
+    "pr-silver-2": {
+      "the horse": 11,
+      "Silver Blaze kicked": 0,
+      "Straker himself": 0
+    },
+    "pr-norwood-1": {
+      "Oldacre+alive": 1,
+      "Oldacre+hiding": 0
+    }
+  }
+}

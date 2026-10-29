@@ -1,0 +1,397 @@
+{
+  "meta": {
+    "date": "2026-10-29",
+    "git_sha": "98067d83d77f8866a780be4465a9f2322b3f6253",
+    "git_dirty": true,
+    "generator": "qwen3:4b-instruct",
+    "seed": 42,
+    "temperature": 0.0,
+    "agent_config": {
+      "top_k": 4,
+      "strategy": "rank_full",
+      "window_words": 60,
+      "idf_chunks": "/home/mendax/code/db-entity/data/chunks.jsonl",
+      "max_prompt_tokens": 1200,
+      "retry_extra_k": 2,
+      "min_score": 0.018,
+      "min_support": 0.25,
+      "max_graph_facts": 8,
+      "max_tool_facts": 8,
+      "max_retries": 1,
+      "decline_retry": true,
+      "decline_fallback_min_support": 0.5,
+      "min_quote_chars": 6,
+      "min_claim_overlap": 0.3,
+      "memory_turns": 3,
+      "memory_max_chars": 600,
+      "use_llm_router": false,
+      "tool_timeout_s": 5.0,
+      "answer_mode": "extractive",
+      "extract_top_k": 6,
+      "extract_per_source": 8,
+      "extract_max_sentences": 40,
+      "extract_max_tokens": 850,
+      "extract_order": "score",
+      "sentence_index_path": "data/index/sentences.sqlite",
+      "extract_sentence_k": 12,
+      "extract_safety_chunks": 4,
+      "extract_safety_per_chunk": 3,
+      "rule_first": true,
+      "scenes_path": "/home/mendax/code/db-entity/data/curated/scenes.jsonl",
+      "translate_questions": true,
+      "translate_model": "qwen3:4b-instruct",
+      "translate_max_chars": 300,
+      "translate_timeout_s": 30.0,
+      "translate_cache": "",
+      "semantic_r3": false,
+      "semantic_r3_max_pairs": 12,
+      "semantic_r3_show": 2,
+      "entity_answer": true,
+      "entity_variant": "v3",
+      "temperature": 0.0,
+      "seed": 42
+    },
+    "machine": "mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-42-generic",
+    "presence": {
+      "graph": true,
+      "sentence_index": true,
+      "rule_tools": "timeline-alibi",
+      "fixture": null
+    },
+    "data": {
+      "index": "2d02f1dfa9772e08",
+      "graph": "5562ec62045727c4",
+      "sentences": "11a9587530064cc4",
+      "chunks": "d15dca856a055b84"
+    },
+    "cases_file": "eval/pre_reveal/cases.jsonl",
+    "cases_sha256": "e1ee1364ac22b8275a6145f38682afe266f98ea37f7cc685bebffc211dc88c53",
+    "n_cases": 3,
+    "n_stories": 2,
+    "conditions": [
+      "full"
+    ],
+    "note": "The cases are AI-written: the reveal passages were located by reading the text, the cut placed before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical (names or keywords in the answer and its cited quotes), not a human reading.",
+    "started": "2026-10-29T05:37:54+00:00"
+  },
+  "summary": {
+    "full": {
+      "n_questions": 3,
+      "n_scored": 3,
+      "unscored": 0,
+      "errors": 0,
+      "named": {
+        "k": 0,
+        "n": 3,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      },
+      "refused": {
+        "k": 1,
+        "n": 3,
+        "value": 0.3333333333333333,
+        "ci95": [
+          0.0615,
+          0.7923
+        ]
+      },
+      "wrong": {
+        "k": 2,
+        "n": 3,
+        "value": 0.6666666666666666,
+        "ci95": [
+          0.2077,
+          0.9385
+        ]
+      },
+      "innocent_accused": {
+        "k": 1,
+        "n": 3,
+        "value": 0.3333333333333333,
+        "ci95": [
+          0.0615,
+          0.7923
+        ]
+      },
+      "named_keywords": {
+        "k": 0,
+        "n": 3,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      },
+      "latency_s": {
+        "median": 3.1,
+        "mean": 2.5,
+        "max": 3.1
+      },
+      "by_story": {
+        "norwood-builder": {
+          "named": 0,
+          "n": 1
+        },
+        "speckled-band": {
+          "named": 0,
+          "n": 2
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "pr-speckled-1",
+      "story": "speckled-band",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "speckled-band-0006",
+        "speckled-band-0023",
+        "speckled-band-0007",
+        "speckled-band-0020",
+        "speckled-band-0032",
+        "speckled-band-0004"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [
+        "no sentence answers the question"
+      ],
+      "graph_used": false,
+      "ttft_s": 1.358,
+      "total_s": 1.358,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    },
+    {
+      "id": "pr-speckled-2",
+      "story": "speckled-band",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [2: \"Round his brow he had a peculiar yellow band, with brownish speckles, which seemed to be bound tightly round his head.\"] [4: \"It was very long, though—almost as long, Watson, as when you and I waited in that deadly room when we looked into the little problem of the Speckled Band.\"]",
+      "citations": [
+        {
+          "n": 2,
+          "chunk_id": "speckled-band-0030",
+          "quote": "Round his brow he had a peculiar yellow band, with brownish speckles, which seemed to be bound tightly round his head."
+        },
+        {
+          "n": 4,
+          "chunk_id": "naval-treaty-0036",
+          "quote": "It was very long, though—almost as long, Watson, as when you and I waited in that deadly room when we looked into the little problem of the Speckled Band."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "speckled-band-0030",
+        "naval-treaty-0036",
+        "speckled-band-0010",
+        "speckled-band-0009",
+        "speckled-band-0013",
+        "red-headed-league-0027"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [],
+      "graph_used": false,
+      "ttft_s": 3.086,
+      "total_s": 3.092,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false
+    },
+    {
+      "id": "pr-norwood-2",
+      "story": "norwood-builder",
+      "condition": "full",
+      "status": "answered",
+      "answer": "From the sources: [4: \"It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night, and the stick found has been identified as the property of this person, who is a young London solicitor named John Hector McFarlane, junior partner of Graham and McFarlane, of 426, Gresham Buildings,\"] [4: \"“LATER.—It is rumoured as we go to press that Mr. John Hector McFarlane has actually been arrested on the charge of the murder of Mr. Jonas Oldacre.\"]",
+      "citations": [
+        {
+          "n": 4,
+          "chunk_id": "norwood-builder-0004",
+          "quote": "It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night, and the stick found has been identified as the property of this person, who is a young London solicitor named John Hector McFarlane, junior partner of Graham and McFarlane, of 426, Gresham Buildings,"
+        },
+        {
+          "n": 4,
+          "chunk_id": "norwood-builder-0004",
+          "quote": "“LATER.—It is rumoured as we go to press that Mr. John Hector McFarlane has actually been arrested on the charge of the murder of Mr. Jonas Oldacre."
+        }
+      ],
+      "refusal_code": null,
+      "retrieved": [
+        "norwood-builder-0004",
+        "norwood-builder-0005",
+        "norwood-builder-0014",
+        "norwood-builder-0002",
+        "norwood-builder-0006",
+        "norwood-builder-0027"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "extractive + sentence index",
+      "check_problems": [],
+      "graph_used": false,
+      "ttft_s": 3.128,
+      "total_s": 3.138,
+      "outcome": "wrong",
+      "outcome_keywords": "wrong",
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": "McFarlane",
+      "innocent_accused": true
+    }
+  ],
+  "cases": {
+    "pr-speckled-1": {
+      "id": "pr-speckled-1",
+      "story": "speckled-band",
+      "cut_char": 39716,
+      "question": "How did Julia Stoner die?",
+      "truth": "A swamp adder, a snake trained by Dr. Grimesby Roylott and sent through the ventilator, killed Julia Stoner; the 'speckled band' is the snake.",
+      "truth_keywords": [
+        "snake"
+      ],
+      "truth_keywords_alt": [
+        [
+          "adder"
+        ],
+        [
+          "serpent"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "snake"
+        ],
+        [
+          "swamp adder"
+        ],
+        [
+          "adder"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "It is a swamp adder!",
+        "the deadliest snake in India",
+        "there reared itself from among his hair the squat diamond-shaped head and puffed neck of a loathsome serpent"
+      ],
+      "rationale": "Cut before Holmes's night-time explanation at the inn (the ventilator, the bell-rope, the clamped bed); the snake is first named at the dénouement, after the cut."
+    },
+    "pr-speckled-2": {
+      "id": "pr-speckled-2",
+      "story": "speckled-band",
+      "cut_char": 39716,
+      "question": "What was the speckled band?",
+      "truth": "A swamp adder, a snake trained by Dr. Grimesby Roylott and sent through the ventilator, killed Julia Stoner; the 'speckled band' is the snake.",
+      "truth_keywords": [
+        "snake"
+      ],
+      "truth_keywords_alt": [
+        [
+          "adder"
+        ],
+        [
+          "serpent"
+        ]
+      ],
+      "cleared": null,
+      "culprit_names": [
+        [
+          "snake"
+        ],
+        [
+          "swamp adder"
+        ],
+        [
+          "adder"
+        ]
+      ],
+      "cleared_names": [],
+      "reveal_quotes": [
+        "It is a swamp adder!",
+        "the deadliest snake in India",
+        "there reared itself from among his hair the squat diamond-shaped head and puffed neck of a loathsome serpent"
+      ],
+      "rationale": "Cut before Holmes's night-time explanation at the inn (the ventilator, the bell-rope, the clamped bed); the snake is first named at the dénouement, after the cut."
+    },
+    "pr-norwood-2": {
+      "id": "pr-norwood-2",
+      "story": "norwood-builder",
+      "cut_char": 37573,
+      "question": "Where is Jonas Oldacre, and is he really dead?",
+      "truth": "Jonas Oldacre is alive and was hiding in a concealed room of his own house; he framed John Hector McFarlane.",
+      "truth_keywords": [
+        "Oldacre",
+        "hiding"
+      ],
+      "truth_keywords_alt": [
+        [
+          "Oldacre",
+          "practical joke"
+        ],
+        [
+          "Oldacre",
+          "hiding-place"
+        ]
+      ],
+      "cleared": "John Hector McFarlane",
+      "culprit_names": [
+        [
+          "Oldacre",
+          "alive"
+        ],
+        [
+          "Oldacre",
+          "hiding"
+        ]
+      ],
+      "cleared_names": [
+        "McFarlane"
+      ],
+      "reveal_quotes": [
+        "I _know_ that that mark was not there",
+        "allow me to present you with your principal missing witness, Mr. Jonas Oldacre",
+        "I made up my mind that the fellow was in hiding in the house."
+      ],
+      "rationale": "Cut before Holmes says the thumb-mark was not there the day before; the hidden room, Oldacre's appearance and the explanation of the plot follow."
+    }
+  },
+  "exposure": {
+    "pr-speckled-1": {
+      "snake": 0,
+      "swamp adder": 0,
+      "adder": 0
+    },
+    "pr-speckled-2": {
+      "snake": 0,
+      "swamp adder": 0,
+      "adder": 0
+    },
+    "pr-norwood-2": {
+      "Oldacre+alive": 1,
+      "Oldacre+hiding": 0
+    }
+  }
+}

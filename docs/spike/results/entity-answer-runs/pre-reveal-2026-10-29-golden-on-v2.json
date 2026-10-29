@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "date": "2026-10-29",
+    "git_sha": "98067d83d77f8866a780be4465a9f2322b3f6253",
+    "git_dirty": true,
+    "generator": "qwen3:4b-instruct",
+    "seed": 42,
+    "temperature": 0.0,
+    "agent_config": {
+      "top_k": 4,
+      "strategy": "rank_full",
+      "window_words": 60,
+      "idf_chunks": "/home/mendax/code/db-entity/data/chunks.jsonl",
+      "max_prompt_tokens": 1200,
+      "retry_extra_k": 2,
+      "min_score": 0.018,
+      "min_support": 0.25,
+      "max_graph_facts": 8,
+      "max_tool_facts": 8,
+      "max_retries": 1,
+      "decline_retry": true,
+      "decline_fallback_min_support": 0.5,
+      "min_quote_chars": 6,
+      "min_claim_overlap": 0.3,
+      "memory_turns": 3,
+      "memory_max_chars": 600,
+      "use_llm_router": false,
+      "tool_timeout_s": 5.0,
+      "answer_mode": "extractive",
+      "extract_top_k": 6,
+      "extract_per_source": 8,
+      "extract_max_sentences": 40,
+      "extract_max_tokens": 850,
+      "extract_order": "score",
+      "sentence_index_path": "data/index/sentences.sqlite",
+      "extract_sentence_k": 12,
+      "extract_safety_chunks": 4,
+      "extract_safety_per_chunk": 3,
+      "rule_first": true,
+      "scenes_path": "/home/mendax/code/db-entity/data/curated/scenes.jsonl",
+      "translate_questions": true,
+      "translate_model": "qwen3:4b-instruct",
+      "translate_max_chars": 300,
+      "translate_timeout_s": 30.0,
+      "translate_cache": "",
+      "semantic_r3": false,
+      "semantic_r3_max_pairs": 12,
+      "semantic_r3_show": 2,
+      "entity_answer": true,
+      "entity_variant": "v2",
+      "temperature": 0.0,
+      "seed": 42
+    },
+    "machine": "mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-42-generic",
+    "presence": {
+      "graph": true,
+      "sentence_index": true,
+      "rule_tools": "timeline-alibi",
+      "fixture": null
+    },
+    "data": {
+      "index": "2d02f1dfa9772e08",
+      "graph": "5562ec62045727c4",
+      "sentences": "11a9587530064cc4",
+      "chunks": "d15dca856a055b84"
+    },
+    "cases_file": "eval/entity_answer/golden_dev_who.jsonl",
+    "cases_sha256": "051fa395dc75f03096fc560c59dbfe59aecb0a6bd6d4eda20662154d0757fa88",
+    "n_cases": 1,
+    "n_stories": 1,
+    "conditions": [
+      "full"
+    ],
+    "note": "The cases are AI-written: the reveal passages were located by reading the text, the cut placed before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical (names or keywords in the answer and its cited quotes), not a human reading.",
+    "started": "2026-10-29T05:30:04+00:00"
+  },
+  "summary": {
+    "full": {
+      "n_questions": 1,
+      "n_scored": 1,
+      "unscored": 0,
+      "errors": 0,
+      "named": {
+        "k": 0,
+        "n": 1,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.7935
+        ]
+      },
+      "refused": {
+        "k": 1,
+        "n": 1,
+        "value": 1.0,
+        "ci95": [
+          0.2065,
+          1.0
+        ]
+      },
+      "wrong": {
+        "k": 0,
+        "n": 1,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.7935
+        ]
+      },
+      "innocent_accused": {
+        "k": 0,
+        "n": 1,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.7935
+        ]
+      },
+      "named_keywords": {
+        "k": 0,
+        "n": 1,
+        "value": 0.0,
+        "ci95": [
+          0.0,
+          0.7935
+        ]
+      },
+      "latency_s": {
+        "median": 38.8,
+        "mean": 38.8,
+        "max": 38.8
+      },
+      "by_story": {
+        "black-peter": {
+          "named": 0,
+          "n": 1
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "id": "g007",
+      "story": "black-peter",
+      "condition": "full",
+      "status": "refused",
+      "answer": "In these materials there is nothing about this.",
+      "citations": [],
+      "refusal_code": "no_evidence",
+      "retrieved": [
+        "black-peter-0016",
+        "black-peter-0021",
+        "black-peter-0003",
+        "black-peter-0005",
+        "black-peter-0007",
+        "black-peter-0018"
+      ],
+      "routes": [
+        "vector"
+      ],
+      "strategy": "entity choice (v2) in black-peter: 16 sentences, 10 people",
+      "check_problems": [
+        "entity: the name is not in the chosen sentence or next to it"
+      ],
+      "graph_used": false,
+      "ttft_s": 38.772,
+      "total_s": 38.772,
+      "matched_name": null,
+      "matched_keywords": null,
+      "cleared_mentioned": null,
+      "innocent_accused": false,
+      "outcome": "refused",
+      "outcome_keywords": "refused"
+    }
+  ],
+  "cases": {
+    "g007": {
+      "id": "g007",
+      "golden_id": "g007",
+      "story": "black-peter",
+      "cut_char": 1000000000,
+      "question": "Who killed Captain Peter Carey, and with what weapon?",
+      "truth": "Patrick Cairns, a harpooner who had served under Carey, drove a harpoon through him.",
+      "truth_keywords": [
+        "Cairns"
+      ],
+      "truth_keywords_alt": [
+        [
+          "harpoon"
+        ]
+      ],
+      "cleared": "John Hopley Neligan",
+      "culprit_names": [
+        [
+          "Cairns"
+        ],
+        [
+          "Patrick Cairns"
+        ]
+      ],
+      "cleared_names": [
+        "Neligan"
+      ],
+      "rationale": "golden dev question g007 (split.json dev), NOT cut: used in the full-corpus condition only"
+    }
+  },
+  "exposure": {
+    "g007": {
+      "Cairns": 4,
+      "Patrick Cairns": 4
+    }
+  }
+}
