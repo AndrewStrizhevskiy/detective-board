@@ -266,7 +266,21 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
   world.append(hits, cardsLayer, threads, pinsSvg, tagsLayer);
   const glow = el("div", "lamp-glow");
   const shade = el("div", "lamp-shade");
-  container.append(world, glow, shade);
+  // The cork texture is drawn on a canvas: moving a CSS background repaints the whole board on every
+  // pan and zoom frame, a canvas pattern fill is one cheap draw. The vignette is its own layer, as
+  // the inset shadow of the board used to lie over the cork and under the cards.
+  const cork = el("canvas", "board-cork");
+  cork.setAttribute("aria-hidden", "true");
+  const vignette = el("div", "board-vignette");
+  container.append(cork, vignette, world, glow, shade);
+  const corkCtx = cork.getContext("2d");
+  if (corkCtx) container.classList.add("cork-js");
+  const CORK = [ // bottom layer first: [tile in board units, phase x, phase y, dot colour, solid radius, fade radius]
+    [23, 9, 13, [0, 0, 0, 0.1], 2, 3],
+    [11, 3, 5, [255, 226, 180, 0.12], 1, 1.7],
+    [7, 0, 0, [0, 0, 0, 0.22], 1, 1.6],
+  ];
+  const corkTiles = new Map(); // "unit@scale" -> pattern tile canvas
 
   const positions = {};
   const kinds = {};
@@ -294,10 +308,57 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
     world.classList.toggle("glide", !!glide && motionMs() > 0);
     world.classList.toggle("ease", !!ease && !glide && motionMs() > 0);
     world.style.transform = `translate(${view.x}px, ${view.y}px) scale(${view.z})`;
-    const z = view.z;
-    container.style.backgroundSize = `${7 * z}px ${7 * z}px, ${11 * z}px ${11 * z}px, ${23 * z}px ${23 * z}px`;
-    container.style.backgroundPosition = `${view.x}px ${view.y}px, ${view.x + 3 * z}px ${view.y + 5 * z}px, ${view.x + 9 * z}px ${view.y + 13 * z}px`;
+    if (corkCtx) paintCork();
+    else {
+      const z = view.z;
+      container.style.backgroundSize = `${7 * z}px ${7 * z}px, ${11 * z}px ${11 * z}px, ${23 * z}px ${23 * z}px`;
+      container.style.backgroundPosition = `${view.x}px ${view.y}px, ${view.x + 3 * z}px ${view.y + 5 * z}px, ${view.x + 9 * z}px ${view.y + 13 * z}px`;
+    }
     queueShade();
+  }
+
+  // One pattern tile per layer, as big as the layer's period at this zoom. The dots keep their size in
+  // pixels and only their spacing follows the zoom, exactly like the old CSS gradients.
+  function corkTile(unit, z, dpr, [r, gr, b, a], solidR, fadeR) {
+    const px = unit * z * dpr; // period in device pixels
+    const n = Math.max(2, Math.ceil(px));
+    const key = `${unit}@${n}@${dpr}`;
+    let t = corkTiles.get(key);
+    if (!t) {
+      t = document.createElement("canvas");
+      t.width = t.height = n;
+      const g = t.getContext("2d");
+      const grad = g.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, fadeR * dpr);
+      grad.addColorStop(0, `rgba(${r},${gr},${b},${a})`);
+      grad.addColorStop(Math.min(0.999, solidR / fadeR), `rgba(${r},${gr},${b},${a})`);
+      grad.addColorStop(1, `rgba(${r},${gr},${b},0)`);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, n, n);
+      if (corkTiles.size > 96) corkTiles.clear();
+      corkTiles.set(key, t);
+    }
+    return { tile: t, n, px };
+  }
+  function sizeCork() {
+    if (!corkCtx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(vw * dpr)), h = Math.max(1, Math.round(vh * dpr));
+    if (cork.width !== w || cork.height !== h) { cork.width = w; cork.height = h; corkTiles.clear(); }
+  }
+  function paintCork() {
+    sizeCork();
+    const dpr = window.devicePixelRatio || 1;
+    const z = view.z;
+    corkCtx.clearRect(0, 0, cork.width, cork.height);
+    for (const [unit, phx, phy, rgba, solid, fade] of CORK) {
+      const { tile, n, px } = corkTile(unit, z, dpr, rgba, solid, fade);
+      const pattern = corkCtx.createPattern(tile, "repeat");
+      if (!pattern) continue;
+      const k = px / n; // the tile is whole pixels, the period is not
+      pattern.setTransform(new DOMMatrix().translate((view.x + phx * z) * dpr, (view.y + phy * z) * dpr).scale(k, k));
+      corkCtx.fillStyle = pattern;
+      corkCtx.fillRect(0, 0, cork.width, cork.height);
+    }
   }
 
   // ---- the lamp: it hangs over the selected card, else over the middle of the board
@@ -663,7 +724,11 @@ export function createGraph(container, { onSelect, onDoubleSelect } = {}) {
     });
   }
 
-  function measure() { vw = container.clientWidth || vw; vh = container.clientHeight || vh; }
+  function measure() {
+    const w = vw, h = vh;
+    vw = container.clientWidth || vw; vh = container.clientHeight || vh;
+    if (corkCtx && (w !== vw || h !== vh)) paintCork();
+  }
 
   function zoomAt(cx, cy, factor, ease) {
     const z = Math.max(Z_MIN, Math.min(Z_MAX, view.z * factor));
