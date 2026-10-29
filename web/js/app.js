@@ -1006,6 +1006,7 @@ const bareSpeed = Number(params.get("speed")) || 1;
 
 function setSplit(on) {
   bareOn = on;
+  const hadFocus = $("panel-bare").contains(document.activeElement); // e.g. the Close button
   const cols = document.querySelector(".cols");
   if (on) cols.dataset.split = "bare"; else delete cols.dataset.split;
   $("panel-bare").hidden = !on;
@@ -1015,7 +1016,7 @@ function setSplit(on) {
   if (!on) {
     stopBare();
     announce("Split view closed.");
-    if (!document.activeElement || document.activeElement === document.body) $("question").focus();
+    if (hadFocus || !document.activeElement || document.activeElement === document.body) $("question").focus();
     return;
   }
   openBare($("question").value.trim() || state.question || lastQuestion);
@@ -1032,6 +1033,8 @@ async function openBare(question, { quiet = false } = {}) {
   const token = bareToken;
   const row = findRecording(bareList, question);
   if (!row) { renderBareMissing(question, quiet); return; }
+  renderBareHead(null);
+  $("bare-answer").replaceChildren(); // no previous question's text while this one loads
   try {
     const path = safeReplayPath(`replay/${row.file}`);
     if (!path) throw new Error("invalid recording path");
