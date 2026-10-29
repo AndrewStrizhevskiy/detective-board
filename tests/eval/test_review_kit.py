@@ -53,7 +53,8 @@ def _keys(path):
 
 def test_the_committed_kit_lists_what_the_script_selects(tmp_path):
     """Rows (id, set, assignee) match a fresh build; the filled-in columns and the dated sheets
-    may differ once reviewers work, so they are not compared."""
+    may differ once reviewers work, so they are not compared. The extra contradiction cases are
+    ranked by the notes' confidence= tag, which the README asks reviewers to keep."""
     kit.build(tmp_path, "2026-10-29")
     assert _keys(KIT / "verdicts.csv") == _keys(tmp_path / "verdicts.csv"), "re-run review_kit.py"
     golden, contra, split = _sets()
@@ -269,3 +270,38 @@ def test_a_spreadsheet_resave_is_read_or_refused_clearly(sandbox, capsys):
     out.write_text(out.read_text(encoding="utf-8-sig").replace(",", ";"), encoding="utf-8")
     assert ap.main([str(out)]) == 1
     assert "header must be" in capsys.readouterr().out
+
+
+def test_a_wrong_set_or_an_invented_extraction_row_is_refused(sandbox, capsys):
+    ok = {"reviewer": "LitrumCoder", "date": "2026-10-30", "verdict": "ok"}
+    out = _csv(sandbox, {"g004": {**ok, "set": "goldne"}})
+    assert ap.main([str(out)]) == 1
+    assert "set must be one of" in capsys.readouterr().out
+    rows = [
+        r["item_id"]
+        for r in csv.DictReader((KIT / "verdicts.csv").open())
+        if ":naval-treaty-0007:" in r["item_id"]
+    ]
+    out = _csv(sandbox, {i: ok for i in rows})
+    text = out.read_text(encoding="utf-8").replace(rows[-1] + ",", "x:naval-treaty-0007:claim:99,")
+    out.write_text(text, encoding="utf-8")
+    with pytest.raises(SystemExit, match="claim:99"):
+        ap.main([str(out)])
+    assert "reviewed_by" not in json.loads(
+        (ap.EXTRACTION / "naval-treaty-0007.json").read_text(encoding="utf-8")
+    )
+
+
+def test_once_reviewers_started_the_sheets_are_kept_too(tmp_path):
+    kit.build(tmp_path, "2026-10-29")
+    target = tmp_path / "verdicts.csv"
+    target.write_text(
+        target.read_text(encoding="utf-8").replace(
+            "g004,golden,A,,,,,", "g004,golden,A,LitrumCoder,2026-10-30,ok,,3"
+        ),
+        encoding="utf-8",
+    )
+    sheet = tmp_path / "golden.md"
+    sheet.write_text("reviewers' copy", encoding="utf-8")
+    assert kit.build(tmp_path, "2026-10-30").get("kept") is True
+    assert sheet.read_text(encoding="utf-8") == "reviewers' copy"

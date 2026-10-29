@@ -240,6 +240,11 @@ def build(out: Path, date: str) -> dict:
         "files on that date; after fixes the files, not the sheet, are what counts.",
         "",
     ]
+    target = out / "verdicts.csv"
+    if target.exists() and filled(target):
+        # the review has started: the sheets they read and the CSV they fill stay as they are
+        print(f"kept {out}: verdicts.csv already has verdicts", file=sys.stderr)
+        return {"kept": True, "golden": g_ids, "contradictions": c_ids, "chunks": CHUNKS}
     from_clean = "Passages are from `data/clean/`; the quote is in bold."
     from_chunk = "The text is the chunk's own `text` field in `eval/extraction_gold/`; quotes are listed under it."
     (out / "golden.md").write_text(
@@ -262,21 +267,16 @@ def build(out: Path, date: str) -> dict:
     )
     rows = [(g, "golden") for g in g_ids] + [(c, "contradictions") for c in c_ids]
     rows += [(item_id, "extraction") for ch in chunks for item_id, _ in extraction_rows(ch)]
-    # two reviewers, alternate items (whole chunks stay with one person). A CSV with any verdict
-    # in it is the reviewers' work: it is kept, never rewritten.
-    target = out / "verdicts.csv"
-    if target.exists() and filled(target):
-        print(f"kept {target}: it already has verdicts", file=sys.stderr)
-    else:
-        with target.open("w", newline="", encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=CSV_FIELDS)
-            w.writeheader()
-            for n, (item_id, kind) in enumerate(rows):
-                if kind == "extraction":
-                    who = "A" if CHUNKS.index(item_id.split(":")[1]) % 2 == 0 else "B"
-                else:
-                    who = "A" if n % 2 == 0 else "B"
-                w.writerow({"item_id": item_id, "set": kind, "assignee": who})
+    # two reviewers, alternate items (whole chunks stay with one person)
+    with target.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+        w.writeheader()
+        for n, (item_id, kind) in enumerate(rows):
+            if kind == "extraction":
+                who = "A" if CHUNKS.index(item_id.split(":")[1]) % 2 == 0 else "B"
+            else:
+                who = "A" if n % 2 == 0 else "B"
+            w.writerow({"item_id": item_id, "set": kind, "assignee": who})
     fails = sum(
         t.count("pre-check: FAIL")
         for t in (

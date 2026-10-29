@@ -40,7 +40,8 @@ kit moves nothing between dev and test (but see step 4).
 | `time_min` | minutes spent on the item |
 
 4. A fix goes into the item itself, in `eval/golden/*.jsonl` or `eval/extraction_gold/*.json`:
-   the answer, the quote or the note. **Do not change `id`, `category` (golden) or `kind`
+   the answer, the quote or the note (but keep its `confidence=` tag: the kit's selection of the
+   extra contradiction cases is ranked by it). **Do not change `id`, `category` (golden) or `kind`
    (contradictions), and do not delete an item.** The dev/test split is computed from category
    and kind (`split.json`), so any of these moves other items between dev and test. For example,
    relabelling c042 moves c033 into test and c019 out of it. Write such a change as `unsure` or

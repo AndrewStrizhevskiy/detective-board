@@ -34,6 +34,8 @@ EXTRACTION = ROOT / "eval" / "extraction_gold"
 VERDICTS = ("ok", "fixed", "drop", "unsure")
 APPLIED = ("ok", "fixed")
 CHUNK_SCOPE = ["claims", "relations"]  # what the kit shows of a chunk
+SET_NAMES = ("golden", "contradictions", "extraction")
+_XROW = re.compile(r"^x:[a-z0-9-]+:(claim|relation):[1-9][0-9]*$")
 HEADER = ["item_id", "set", "assignee", "reviewer", "date", "verdict", "fix", "time_min"]
 # the same rules as extract/curated_schema.check_review (#22)
 _LOGIN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}$")
@@ -64,6 +66,10 @@ def read_rows(path: Path) -> tuple[list[dict], list[str]]:
         if r.get("item_id") in seen:
             problems.append(f"{tag}: duplicate item_id")
         seen.add(r.get("item_id"))
+        if r.get("set") not in SET_NAMES:
+            problems.append(f"{tag}: set must be one of {', '.join(SET_NAMES)}")
+        elif r["set"] == "extraction" and not _XROW.match(r.get("item_id") or ""):
+            problems.append(f"{tag}: an extraction row id is x:<chunk>:claim|relation:<n>")
         v = (r.get("verdict") or "").strip()
         if not v:
             if any((r.get(k) or "").strip() for k in ("reviewer", "date", "fix", "time_min")):
@@ -139,6 +145,16 @@ def apply_extraction(rows: list[dict], write: bool) -> tuple[int, list[str]]:
         if not path.exists():
             raise SystemExit(f"FAIL no extraction gold file {path.name}")
         data = json.loads(path.read_text(encoding="utf-8"))
+        # the rows must be exactly the chunk's claims and relations, as review_kit numbers them
+        g = data["gold"]
+        want = {f"x:{chunk_id}:claim:{i}" for i in range(1, len(g.get("claims", [])) + 1)}
+        want |= {f"x:{chunk_id}:relation:{i}" for i in range(1, len(g.get("relations", [])) + 1)}
+        got = {r["item_id"] for r in rs}
+        if got != want:
+            extra, gone = sorted(got - want), sorted(want - got)
+            raise SystemExit(
+                f"FAIL {chunk_id}: rows do not match its claims and relations (unknown: {', '.join(extra) or '-'}; missing: {', '.join(gone) or '-'})"
+            )
         if (data.get("reviewed_by"), data.get("reviewed_on"), data.get("reviewed_scope")) == (
             by,
             on,
