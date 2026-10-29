@@ -213,6 +213,13 @@ class _Cites:
     sources: list[Source] = field(default_factory=list)
     _seen: dict[tuple[str, int, int], int] = field(default_factory=dict)
 
+    @classmethod
+    def resume(cls, sources: Sequence[Source], min_chars: int) -> _Cites:
+        """Continue numbering after the sources of an answer that is already built."""
+        c = cls(min_chars, list(sources))
+        c._seen = {(s.chunk_id, s.char_start, s.char_end): s.n for s in sources}
+        return c
+
     def quote(self, text: str) -> str | None:
         q = " ".join(text.split())
         if len(q) > QUOTE_CAP:

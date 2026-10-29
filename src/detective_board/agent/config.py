@@ -49,6 +49,13 @@ class AgentConfig:
     translate_max_chars: int = 300  # cap on the translated question
     translate_timeout_s: float = 30.0  # wall clock for the translation call
     translate_cache: str = ""  # JSONL file; empty = in-memory cache only
+    # Neuro-symbolic R3 (agent/semantic_r3.py): when a contradiction question gets an empty rule
+    # result, add a separate block of at most `semantic_r3_show` pairs a small model judged as
+    # contradicting (hypotheses, not rule findings). OFF by default: not yet accepted (see docs).
+    # On: AgentConfig(semantic_r3=True) or `--set semantic_r3=true` in eval/run_eval.py.
+    semantic_r3: bool = False
+    semantic_r3_max_pairs: int = 12  # candidate pairs judged per question
+    semantic_r3_show: int = 2  # pairs shown
     temperature: float = 0.0
     seed: int = 42
 
