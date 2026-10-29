@@ -54,6 +54,13 @@
    "seconds": 1.4
   },
   {
+   "file": "real-scene-board.json",
+   "question": "Who could have been at Oxshott Common at one o'clock?",
+   "kind": "real",
+   "recorded_at": "2026-10-29T02:11:36+0200",
+   "seconds": 1.4
+  },
+  {
    "file": "fake-mccarthy.json",
    "question": "Are there contradictions in James McCarthy's account?",
    "kind": "fake"

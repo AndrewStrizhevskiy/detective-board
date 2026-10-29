@@ -1,0 +1,6161 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "real run recorded on the target laptop",
+  "question": "Who could have been at Oxshott Common at one o'clock?",
+  "recorded_at": "2026-10-29T02:11:36+0200",
+  "seconds": 1.4,
+  "commit": "dd73e0bfae38ac9e4c4157b537e85871979631b5",
+  "mcp": {
+   "configured": true,
+   "mode": "stdio",
+   "server": "timeline-alibi",
+   "started": false
+  },
+  "graph": {
+   "chunks": 596,
+   "claim": 2159,
+   "edges": 5267,
+   "event": 1700,
+   "item": 49,
+   "person": 743,
+   "place": 631
+  },
+  "versions": {
+   "api": "1",
+   "python": "3.12.3",
+   "starlette": "1.9.0",
+   "index_schema": "1",
+   "index_manifest": {
+    "schema_version": "1",
+    "embed_model": "bge-m3",
+    "embed_dim": "1024",
+    "embed_doc_prefix": "",
+    "embed_query_prefix": "",
+    "embed_metric": "cosine"
+   }
+  },
+  "note": "Scene board over a scratch copy of the graph (Wisteria Lodge scene, curated); no model call; nobody but the victim has a comparable placed event."
+ },
+ "events": [
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 0,
+   "ts": "2026-10-29T00:11:35.971+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "route_decided",
+   "routes": [
+    "mcp",
+    "vector"
+   ],
+   "tools": [
+    "scene_board"
+   ],
+   "method": "rules",
+   "reason": "scene question about the known scene 'wisteria-oxshott-one-oclock' -> alibi-exclusion board: rule R1 check_alibi per person of the story against the scene's place and time, no model call",
+   "matched": [
+    "Who could have been",
+    "wisteria-oxshott-one-oclock"
+   ],
+   "confidence": 0.8
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 1,
+   "ts": "2026-10-29T00:11:35.971+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": null,
+   "type": "retrieval_started",
+   "query": "Who could have been at Oxshott Common at one o'clock?",
+   "k": 6,
+   "attempt": 1
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 2,
+   "ts": "2026-10-29T00:11:36.044+00:00",
+   "step_id": "retrieval-1",
+   "duration_ms": 72,
+   "type": "retrieval_results",
+   "hits": [
+    {
+     "chunk_id": "wisteria-lodge-0021",
+     "story": "wisteria-lodge",
+     "rank": 1,
+     "rrf": 0.03252247488101534,
+     "ranks": {
+      "bm25": 2,
+      "vec": 1
+     },
+     "scores": {
+      "bm25": -9.237176429885025,
+      "vec": 0.40802001953125
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0015",
+     "story": "wisteria-lodge",
+     "rank": 2,
+     "rrf": 0.032266458495966696,
+     "ranks": {
+      "bm25": 1,
+      "vec": 3
+     },
+     "scores": {
+      "bm25": -15.563320479434928,
+      "vec": 0.45368728041648865
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0009",
+     "story": "wisteria-lodge",
+     "rank": 3,
+     "rrf": 0.0315136476426799,
+     "ranks": {
+      "bm25": 5,
+      "vec": 2
+     },
+     "scores": {
+      "bm25": -7.348800163492261,
+      "vec": 0.42432931065559387
+     }
+    },
+    {
+     "chunk_id": "black-peter-0012",
+     "story": "black-peter",
+     "rank": 4,
+     "rrf": 0.02658450704225352,
+     "ranks": {
+      "bm25": 20,
+      "vec": 11
+     },
+     "scores": {
+      "bm25": -5.039860600899306,
+      "vec": 0.4819801449775696
+     }
+    },
+    {
+     "chunk_id": "copper-beeches-0011",
+     "story": "copper-beeches",
+     "rank": 5,
+     "rrf": 0.02535559678416821,
+     "ranks": {
+      "bm25": 38,
+      "vec": 6
+     },
+     "scores": {
+      "bm25": -4.6205127514687145,
+      "vec": 0.47062066197395325
+     }
+    },
+    {
+     "chunk_id": "wisteria-lodge-0024",
+     "story": "wisteria-lodge",
+     "rank": 6,
+     "rrf": 0.025332691999358666,
+     "ranks": {
+      "bm25": 21,
+      "vec": 17
+     },
+     "scores": {
+      "bm25": -4.9702841397780935,
+      "vec": 0.48640960454940796
+     }
+    }
+   ],
+   "gate": {
+    "passed": true,
+    "best_score": 0.03252247488101534,
+    "threshold": 0.018,
+    "support": 1.0,
+    "min_support": 0.25,
+    "reason": "relevant"
+   },
+   "chunk_ids": [
+    "wisteria-lodge-0021",
+    "wisteria-lodge-0015",
+    "wisteria-lodge-0009",
+    "black-peter-0012",
+    "copper-beeches-0011",
+    "wisteria-lodge-0024"
+   ]
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 3,
+   "ts": "2026-10-29T00:11:36.045+00:00",
+   "step_id": "tool-scene_board",
+   "duration_ms": null,
+   "type": "tool_call",
+   "server": "timeline-alibi",
+   "tool": "scene_board",
+   "arguments": {
+    "story": "wisteria-lodge",
+    "place": "Oxshott Common",
+    "window": {
+     "story_day": 20162,
+     "start_min": 60,
+     "end_min": 60
+    },
+    "victim_ids": [
+     "p:wisteria-lodge:aloysius-garcia",
+     "p:wisteria-lodge:garcia"
+    ],
+    "limit": 10,
+    "person_ids": [
+     "p:wisteria-lodge:aloysius-garcia",
+     "p:wisteria-lodge:baynes",
+     "p:wisteria-lodge:burnet",
+     "p:wisteria-lodge:carruthers",
+     "p:wisteria-lodge:dolores",
+     "p:wisteria-lodge:don-murillo",
+     "p:wisteria-lodge:downing",
+     "p:wisteria-lodge:garcia",
+     "p:wisteria-lodge:governess",
+     "p:wisteria-lodge:gregson",
+     "p:wisteria-lodge:henderson",
+     "p:wisteria-lodge:holmes",
+     "p:wisteria-lodge:hudson",
+     "p:wisteria-lodge:john-scott-eccles",
+     "p:wisteria-lodge:john-warner",
+     "p:wisteria-lodge:jos",
+     "p:wisteria-lodge:juan-murillo",
+     "p:wisteria-lodge:lopez",
+     "p:wisteria-lodge:lucas",
+     "p:wisteria-lodge:marquess-of-montalva",
+     "p:wisteria-lodge:marx",
+     "p:wisteria-lodge:melville",
+     "p:wisteria-lodge:murillo",
+     "p:wisteria-lodge:scott-eccles",
+     "p:wisteria-lodge:sherlock-holmes",
+     "p:wisteria-lodge:signor-rulli",
+     "p:wisteria-lodge:signora-victor-durando",
+     "p:wisteria-lodge:tiger-of-san-pedro",
+     "p:wisteria-lodge:walters",
+     "p:wisteria-lodge:warner",
+     "p:wisteria-lodge:watson"
+    ]
+   },
+   "timeout_s": 5.0
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 4,
+   "ts": "2026-10-29T00:11:36.180+00:00",
+   "step_id": "tool-scene_board",
+   "duration_ms": 134,
+   "type": "tool_result",
+   "server": "timeline-alibi",
+   "tool": "scene_board",
+   "ok": true,
+   "summary": "status=ok items=0",
+   "provenance": "derived",
+   "explanation": null,
+   "error": null
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 5,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "enriched_query",
+   "attempt": 1,
+   "sources": [
+    {
+     "n": 1,
+     "chunk_id": "wisteria-lodge-0010",
+     "story": "wisteria-lodge",
+     "char_start": 17623,
+     "char_end": 17659,
+     "origin": "tool",
+     "label": "source_text",
+     "window_start": 0,
+     "window_end": 36,
+     "window_char_start": 17623,
+     "window_char_end": 17659
+    },
+    {
+     "n": 2,
+     "chunk_id": "wisteria-lodge-0006",
+     "story": "wisteria-lodge",
+     "char_start": 10060,
+     "char_end": 10270,
+     "origin": "tool",
+     "label": "conditional",
+     "window_start": 0,
+     "window_end": 210,
+     "window_char_start": 10060,
+     "window_char_end": 10270
+    },
+    {
+     "n": 3,
+     "chunk_id": "wisteria-lodge-0010",
+     "story": "wisteria-lodge",
+     "char_start": 17623,
+     "char_end": 17741,
+     "origin": "tool",
+     "label": "conditional",
+     "window_start": 0,
+     "window_end": 118,
+     "window_char_start": 17623,
+     "window_char_end": 17741
+    }
+   ],
+   "graph_facts": 0,
+   "rule_facts": 3,
+   "memory_chars": 0,
+   "prompt_chars": 0,
+   "prompt_tokens_estimate": 0,
+   "max_prompt_tokens": 0,
+   "strategy": "rule-first (scene): no model call",
+   "window_words": 0,
+   "dropped_chunks": [],
+   "data_marked": true,
+   "injection_suspects": []
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 6,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Alibi "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 7,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "board "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 8,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 9,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 10,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "scene "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 11,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 12,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Oxshott "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 13,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Common "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 14,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(wisteria-lodge), "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 15,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "01:00 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 16,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(since "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 17,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 18,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock); "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 19,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "victim: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 20,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Aloysius "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 21,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 22,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Scene "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 23,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "source: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 24,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[1: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 25,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"He "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 26,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 27,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "been "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 28,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "there "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 29,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "since "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 30,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 31,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock.\"]. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 32,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "The "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 33,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "scene "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 34,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 35,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "curated "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 36,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 37,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "team, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 38,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "AI-assisted, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 39,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "human "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 40,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "re-check "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 41,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "pending.\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 42,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Of "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 43,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "24 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 44,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "persons "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 45,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 46,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "graph "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 47,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "holds "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 48,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 49,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "this "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 50,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "story, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 51,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "0 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 52,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 53,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 54,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 55,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "testimony, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 56,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "0 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 57,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 58,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 59,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 60,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 61,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "scene "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 62,
+   "ts": "2026-10-29T00:11:36.182+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 63,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "24 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 64,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 65,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 66,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded; "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 67,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "10 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 68,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 69,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "shown, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 70,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "persons "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 71,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 72,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 73,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 74,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 75,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "first.\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 76,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "1. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 77,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Sherlock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 78,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Holmes: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 79,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 80,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 81,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 82,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 83,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 84,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 85,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 86,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 87,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(11 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 88,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 89,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 90,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 91,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 92,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 93,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 94,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 95,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 96,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 97,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 98,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 99,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "2. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 100,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Scott "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 101,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Eccles: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 102,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 103,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 104,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 105,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 106,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 107,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 108,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 109,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 110,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(7 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 111,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 112,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 113,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 114,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 115,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 116,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 117,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 118,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 119,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 120,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 121,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 122,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "3. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 123,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Baynes: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 124,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 125,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 126,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 127,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 128,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 129,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 130,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 131,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 132,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(4 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 133,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 134,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 135,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 136,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 137,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 138,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 139,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 140,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 141,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 142,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 143,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 144,
+   "ts": "2026-10-29T00:11:36.183+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "4. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 145,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Henderson: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 146,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 147,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 148,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 149,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 150,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 151,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 152,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 153,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 154,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(4 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 155,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 156,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 157,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 158,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 159,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 160,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 161,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 162,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 163,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 164,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 165,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 166,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "5. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 167,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Lopez: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 168,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 169,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 170,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 171,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 172,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 173,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 174,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 175,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 176,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(2 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 177,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 178,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 179,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 180,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 181,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 182,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 183,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 184,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 185,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 186,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 187,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 188,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "6. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 189,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Marx: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 190,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 191,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 192,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 193,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 194,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 195,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 196,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 197,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 198,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(2 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 199,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 200,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 201,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 202,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 203,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 204,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 205,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 206,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 207,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 208,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 209,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 210,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "7. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 211,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Watson: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 212,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 213,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 214,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 215,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 216,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 217,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 218,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 219,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 220,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(2 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 221,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 222,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 223,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 224,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 225,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 226,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 227,
+   "ts": "2026-10-29T00:11:36.184+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 228,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 229,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 230,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 231,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 232,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "8. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 233,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Miss "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 234,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Burnet: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 235,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 236,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 237,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 238,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 239,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 240,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 241,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 242,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 243,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(1 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 244,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 245,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 246,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 247,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 248,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 249,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 250,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 251,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 252,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 253,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 254,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 255,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "9. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 256,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Don "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 257,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Murillo: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 258,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 259,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 260,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 261,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 262,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 263,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 264,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 265,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 266,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(1 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 267,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 268,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 269,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 270,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 271,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 272,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 273,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 274,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 275,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 276,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 277,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 278,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "10. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 279,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Gregson: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 280,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 281,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 282,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "no "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 283,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 284,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 285,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 286,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 287,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 288,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(1 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 289,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 290,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 291,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 292,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 293,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 294,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 295,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 296,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 297,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 298,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "to "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 299,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compare).\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 300,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "No "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 301,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "person "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 302,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 303,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 304,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "or "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 305,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 306,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 307,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "none "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 308,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 309,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "them "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 310,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "does "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 311,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 312,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "graph "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 313,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "hold "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 314,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 315,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 316,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "event "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 317,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 318,
+   "ts": "2026-10-29T00:11:36.185+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 319,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stated "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 320,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 321,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 322,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "clock "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 323,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 324,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "inside "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 325,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "this "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 326,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "window, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 327,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "so "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 328,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "every "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 329,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "'not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 330,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded' "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 331,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "above "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 332,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "only "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 333,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "means "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 334,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 335,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 336,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "graph "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 337,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 338,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "silent.\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 339,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Victim: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 340,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Aloysius "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 341,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 342,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 343,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "assessed). "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 344,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "The "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 345,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "accounts "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 346,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "differ "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 347,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "about "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 348,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "where "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 349,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "they "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 350,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "were "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 351,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 352,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 353,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 354,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Wisteria "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 355,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Lodge, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 356,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "nearly "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 357,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 358,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 359,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Who "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 360,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "says "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 361,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "so: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 362,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Scott "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 363,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Eccles. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 364,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Source: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 365,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "curated "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 366,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[2: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 367,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"Some "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 368,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 369,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "later "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 370,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Garcia "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 371,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "looked "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 372,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 373,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 374,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "my "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 375,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "door—the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 376,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "room "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 377,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 378,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "dark "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 379,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 380,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 381,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time—and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 382,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "asked "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 383,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "me "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 384,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "if "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 385,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 386,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 387,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rung. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 388,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 389,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "said "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 390,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 391,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "I "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 392,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 393,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 394,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "He "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 395,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "apologised "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 396,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "for "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 397,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "having "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 398,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "disturbed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 399,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "me "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 400,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "so "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 401,
+   "ts": "2026-10-29T00:11:36.186+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "late, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 402,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "saying "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 403,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 404,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "it "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 405,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 406,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "nearly "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 407,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 408,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock.\"] "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 409,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "| "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 410,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Oxshott "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 411,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Common, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 412,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "since "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 413,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 414,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 415,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Who "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 416,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "says "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 417,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "so: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 418,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Baynes. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 419,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Source: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 420,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "curated "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 421,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "[3: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 422,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "\"He "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 423,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 424,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "been "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 425,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "there "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 426,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "since "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 427,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "one "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 428,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "o’clock. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 429,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "There "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 430,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "was "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 431,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rain "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 432,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "about "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 433,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 434,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 435,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 436,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "his "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 437,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "death "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 438,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "had "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 439,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "certainly "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 440,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "been "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 441,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "before "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 442,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 443,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rain.\"]\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 444,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Excluded "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 445,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "means: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 446,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "some "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 447,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "account "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 448,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "in "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 449,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 450,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "text "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 451,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "places "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 452,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "this "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 453,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "person "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 454,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "elsewhere "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 455,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "at "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 456,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "that "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 457,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "time; "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 458,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "it "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 459,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 460,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "testimony, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 461,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 462,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "proof. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 463,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 464,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "excluded "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 465,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "does "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 466,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 467,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "mean "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 468,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "suspected. "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 469,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "No "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 470,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "verdict "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 471,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "about "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 472,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "guilt "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 473,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "is "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 474,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "made.\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 475,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Placed "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 476,
+   "ts": "2026-10-29T00:11:36.187+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "events "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 477,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "without "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 478,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 479,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "stated "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 480,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 481,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "cannot "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 482,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "be "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 483,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "compared "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 484,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "with "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 485,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 486,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "window "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 487,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 488,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 489,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 490,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "used; "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 491,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 492,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "rules "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 493,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "never "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 494,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "assume "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 495,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "a "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 496,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "day.\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 497,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "Curated: "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 498,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "2 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 499,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 500,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 501,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "facts "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 502,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "above "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 503,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "were "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 504,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "entered "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 505,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "and "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 506,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "checked "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 507,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "by "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 508,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 509,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "team "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 510,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "(AI-assisted, "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 511,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "human "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 512,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "re-check "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 513,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "pending); "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 514,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "they "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 515,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 516,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 517,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "output "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 518,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "of "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 519,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "the "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 520,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "automatic "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 521,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "extraction.\n"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 522,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "14 "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 523,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "further "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 524,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "persons "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 525,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "are "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 526,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "not "
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 527,
+   "ts": "2026-10-29T00:11:36.188+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "answer_token",
+   "attempt": 1,
+   "text": "listed."
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 528,
+   "ts": "2026-10-29T00:11:36.189+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "citation_check",
+   "attempt": 1,
+   "ok": true,
+   "citations": [
+    {
+     "n": 1,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 2,
+     "verbatim": true,
+     "source_exists": true
+    },
+    {
+     "n": 3,
+     "verbatim": true,
+     "source_exists": true
+    }
+   ],
+   "unsupported_claims": [],
+   "problems": [],
+   "action": "accept"
+  },
+  {
+   "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+   "seq": 529,
+   "ts": "2026-10-29T00:11:36.190+00:00",
+   "step_id": null,
+   "duration_ms": null,
+   "type": "final",
+   "status": "answered",
+   "verified": true,
+   "answer": "Alibi board for the scene at Oxshott Common (wisteria-lodge), 01:00 (since one o’clock); victim: Aloysius Garcia. Scene source: [1: \"He had been there since one o’clock.\"]. The scene is curated by team, AI-assisted, human re-check pending.\nOf 24 persons the graph holds for this story, 0 are excluded by testimony, 0 are placed at the scene and 24 are not excluded; 10 are shown, persons with a placed event first.\n1. Sherlock Holmes: not excluded: no placed event at that time (11 placed events, none with a day and clock time to compare).\n2. Scott Eccles: not excluded: no placed event at that time (7 placed events, none with a day and clock time to compare).\n3. Baynes: not excluded: no placed event at that time (4 placed events, none with a day and clock time to compare).\n4. Henderson: not excluded: no placed event at that time (4 placed events, none with a day and clock time to compare).\n5. Lopez: not excluded: no placed event at that time (2 placed events, none with a day and clock time to compare).\n6. Marx: not excluded: no placed event at that time (2 placed events, none with a day and clock time to compare).\n7. Watson: not excluded: no placed event at that time (2 placed events, none with a day and clock time to compare).\n8. Miss Burnet: not excluded: no placed event at that time (1 placed event, none with a day and clock time to compare).\n9. Don Murillo: not excluded: no placed event at that time (1 placed event, none with a day and clock time to compare).\n10. Gregson: not excluded: no placed event at that time (1 placed event, none with a day and clock time to compare).\nNo person is excluded or placed: for none of them does the graph hold a placed event with a stated day and clock time inside this window, so every 'not excluded' above only means that the graph is silent.\nVictim: Aloysius Garcia (not assessed). The accounts differ about where they were at that time: Wisteria Lodge, nearly one o’clock. Who says so: Scott Eccles. Source: curated [2: \"Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.\"] | Oxshott Common, since one o’clock. Who says so: Baynes. Source: curated [3: \"He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.\"]\nExcluded means: some account in the text places this person elsewhere at that time; it is testimony, not proof. Not excluded does not mean suspected. No verdict about guilt is made.\nPlaced events without a stated day cannot be compared with the window and are not used; the rules never assume a day.\nCurated: 2 of the facts above were entered and checked by the team (AI-assisted, human re-check pending); they are not output of the automatic extraction.\n14 further persons are not listed.",
+   "citations": [
+    {
+     "n": 1,
+     "quote": "He had been there since one o’clock.",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0010",
+      "char_start": 17623,
+      "char_end": 17659,
+      "quote": "He had been there since one o’clock."
+     },
+     "label": "source_text"
+    },
+    {
+     "n": 2,
+     "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0006",
+      "char_start": 10060,
+      "char_end": 10270,
+      "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock."
+     },
+     "label": "conditional"
+    },
+    {
+     "n": 3,
+     "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+     "anchor": {
+      "story": "wisteria-lodge",
+      "chunk_id": "wisteria-lodge-0010",
+      "char_start": 17623,
+      "char_end": 17741,
+      "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain."
+     },
+     "label": "conditional"
+    }
+   ],
+   "provenance": [
+    {
+     "n": 1,
+     "label": "source_text",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": null,
+     "summary": "scene quote (curated)",
+     "explanation": null
+    },
+    {
+     "n": 2,
+     "label": "conditional",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R1",
+     "summary": "R1 scene board: Wisteria Lodge",
+     "explanation": {
+      "rule_id": "R1",
+      "rule_version": "1",
+      "verdict": "violated",
+      "conditional": true,
+      "reason_code": "ALIBI_CONTRADICTED",
+      "facts": [
+       {
+        "fact_id": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Wisteria Lodge, nearly one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Oxshott Common, since one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "edges": [
+       {
+        "edge_id": "OCCURRED_AT:e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom:pl:wisteria-lodge:wisteria-lodge",
+        "rel": "OCCURRED_AT",
+        "src": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "dst": "pl:wisteria-lodge:wisteria-lodge",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "OCCURRED_AT:e:wisteria-lodge-0010:cur-c001-baynes-garcia-common:pl:wisteria-lodge:oxshott-common",
+        "rel": "OCCURRED_AT",
+        "src": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "dst": "pl:wisteria-lodge:oxshott-common",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:wisteria-lodge:aloysius-garcia:e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:wisteria-lodge:aloysius-garcia",
+        "dst": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:wisteria-lodge:aloysius-garcia:e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:wisteria-lodge:aloysius-garcia",
+        "dst": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "derivation": [
+       {
+        "step": 1,
+        "op": "window",
+        "inputs": [
+         "d20162 01:00"
+        ],
+        "output": "place pl:wisteria-lodge:oxshott-common"
+       },
+       {
+        "step": 2,
+        "op": "interval_compare",
+        "inputs": [
+         "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom"
+        ],
+        "output": "overlap at d20162 01:00"
+       },
+       {
+        "step": 3,
+        "op": "place_rel",
+        "inputs": [
+         "pl:wisteria-lodge:oxshott-common",
+         "pl:wisteria-lodge:wisteria-lodge"
+        ],
+        "output": "DISTINCT"
+       },
+       {
+        "step": 4,
+        "op": "interval_compare",
+        "inputs": [
+         "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common"
+        ],
+        "output": "overlap at d20162 01:00"
+       },
+       {
+        "step": 5,
+        "op": "place_rel",
+        "inputs": [
+         "pl:wisteria-lodge:oxshott-common",
+         "pl:wisteria-lodge:oxshott-common"
+        ],
+        "output": "SAME"
+       }
+      ],
+      "anchors": [
+       {
+        "story": "wisteria-lodge",
+        "chunk_id": "wisteria-lodge-0006",
+        "char_start": 10060,
+        "char_end": 10270,
+        "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+        "rel_start": 495,
+        "rel_end": 705,
+        "ambiguous": false
+       },
+       {
+        "story": "wisteria-lodge",
+        "chunk_id": "wisteria-lodge-0010",
+        "char_start": 17623,
+        "char_end": 17741,
+        "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+        "rel_start": 1182,
+        "rel_end": 1300,
+        "ambiguous": false
+       }
+      ],
+      "depends_on_extracted": [
+       {
+        "fact_id": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Wisteria Lodge, nearly one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Oxshott Common, since one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "weak": [
+       "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+       "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common"
+      ],
+      "missing": [],
+      "notes": [
+       "travel time between places is not modelled"
+      ],
+      "subject": {
+       "person_id": "p:wisteria-lodge:aloysius-garcia",
+       "place_id": "pl:wisteria-lodge:oxshott-common",
+       "window": "d20162 01:00"
+      },
+      "suspects": []
+     }
+    },
+    {
+     "n": 3,
+     "label": "conditional",
+     "origin": "tool",
+     "confidence": null,
+     "rule_id": "R1",
+     "summary": "R1 scene board: Oxshott Common",
+     "explanation": {
+      "rule_id": "R1",
+      "rule_version": "1",
+      "verdict": "violated",
+      "conditional": true,
+      "reason_code": "ALIBI_CONTRADICTED",
+      "facts": [
+       {
+        "fact_id": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Wisteria Lodge, nearly one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Oxshott Common, since one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "edges": [
+       {
+        "edge_id": "OCCURRED_AT:e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom:pl:wisteria-lodge:wisteria-lodge",
+        "rel": "OCCURRED_AT",
+        "src": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "dst": "pl:wisteria-lodge:wisteria-lodge",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "OCCURRED_AT:e:wisteria-lodge-0010:cur-c001-baynes-garcia-common:pl:wisteria-lodge:oxshott-common",
+        "rel": "OCCURRED_AT",
+        "src": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "dst": "pl:wisteria-lodge:oxshott-common",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:wisteria-lodge:aloysius-garcia:e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:wisteria-lodge:aloysius-garcia",
+        "dst": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ]
+       },
+       {
+        "edge_id": "PARTICIPATED_IN:p:wisteria-lodge:aloysius-garcia:e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "rel": "PARTICIPATED_IN",
+        "src": "p:wisteria-lodge:aloysius-garcia",
+        "dst": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ]
+       }
+      ],
+      "derivation": [
+       {
+        "step": 1,
+        "op": "window",
+        "inputs": [
+         "d20162 01:00"
+        ],
+        "output": "place pl:wisteria-lodge:oxshott-common"
+       },
+       {
+        "step": 2,
+        "op": "interval_compare",
+        "inputs": [
+         "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom"
+        ],
+        "output": "overlap at d20162 01:00"
+       },
+       {
+        "step": 3,
+        "op": "place_rel",
+        "inputs": [
+         "pl:wisteria-lodge:oxshott-common",
+         "pl:wisteria-lodge:wisteria-lodge"
+        ],
+        "output": "DISTINCT"
+       },
+       {
+        "step": 4,
+        "op": "interval_compare",
+        "inputs": [
+         "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common"
+        ],
+        "output": "overlap at d20162 01:00"
+       },
+       {
+        "step": 5,
+        "op": "place_rel",
+        "inputs": [
+         "pl:wisteria-lodge:oxshott-common",
+         "pl:wisteria-lodge:oxshott-common"
+        ],
+        "output": "SAME"
+       }
+      ],
+      "anchors": [
+       {
+        "story": "wisteria-lodge",
+        "chunk_id": "wisteria-lodge-0006",
+        "char_start": 10060,
+        "char_end": 10270,
+        "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+        "rel_start": 495,
+        "rel_end": 705,
+        "ambiguous": false
+       },
+       {
+        "story": "wisteria-lodge",
+        "chunk_id": "wisteria-lodge-0010",
+        "char_start": 17623,
+        "char_end": 17741,
+        "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+        "rel_start": 1182,
+        "rel_end": 1300,
+        "ambiguous": false
+       }
+      ],
+      "depends_on_extracted": [
+       {
+        "fact_id": "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Wisteria Lodge, nearly one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0006",
+          "char_start": 10060,
+          "char_end": 10270,
+          "quote": "Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.",
+          "rel_start": 495,
+          "rel_end": 705,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       },
+       {
+        "fact_id": "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common",
+        "kind": "event",
+        "provenance": "extracted",
+        "confidence": "low",
+        "summary": "Aloysius Garcia at Oxshott Common, since one o’clock [same day: night of the murder, 01:00] (curated)",
+        "anchors": [
+         {
+          "story": "wisteria-lodge",
+          "chunk_id": "wisteria-lodge-0010",
+          "char_start": 17623,
+          "char_end": 17741,
+          "quote": "He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.",
+          "rel_start": 1182,
+          "rel_end": 1300,
+          "ambiguous": false
+         }
+        ],
+        "curated": true
+       }
+      ],
+      "weak": [
+       "e:wisteria-lodge-0006:cur-c001-eccles-garcia-bedroom",
+       "e:wisteria-lodge-0010:cur-c001-baynes-garcia-common"
+      ],
+      "missing": [],
+      "notes": [
+       "travel time between places is not modelled"
+      ],
+      "subject": {
+       "person_id": "p:wisteria-lodge:aloysius-garcia",
+       "place_id": "pl:wisteria-lodge:oxshott-common",
+       "window": "d20162 01:00"
+      },
+      "suspects": []
+     }
+    }
+   ],
+   "route": {
+    "run_id": "24758776-aa8e-44de-9c52-bec0e31cc54d",
+    "seq": 0,
+    "ts": "2026-10-29T00:11:35.971+00:00",
+    "step_id": null,
+    "duration_ms": null,
+    "type": "route_decided",
+    "routes": [
+     "mcp",
+     "vector"
+    ],
+    "tools": [
+     "scene_board"
+    ],
+    "method": "rules",
+    "reason": "scene question about the known scene 'wisteria-oxshott-one-oclock' -> alibi-exclusion board: rule R1 check_alibi per person of the story against the scene's place and time, no model call",
+    "matched": [
+     "Who could have been",
+     "wisteria-oxshott-one-oclock"
+    ],
+    "confidence": 0.8
+   },
+   "attempts": 1,
+   "refusal_code": null,
+   "original_question": null,
+   "translated_question": null
+  }
+ ]
+}
