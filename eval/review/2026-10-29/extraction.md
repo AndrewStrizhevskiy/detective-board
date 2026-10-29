@@ -1,8 +1,9 @@
 # Extraction gold: review sheet
 
 Review kit of 2026-10-29 for issue #9, built by `scripts/eval/review_kit.py` (seed `gold-review-v1`).
-Passages are from `data/clean/`; the quote is in bold. **The pre-check is a script, not a review.**
-Write your verdict in `verdicts.csv` (see README.md).
+The text is the chunk's own `text` field in `eval/extraction_gold/`; quotes are listed under it. **The pre-check is a script, not a review.**
+Write your verdict in `verdicts.csv` (see README.md). This sheet is a snapshot of the
+files on that date; after fixes the files, not the sheet, are what counts.
 
 ## boscombe-valley-mystery-0007 (`boscombe-valley-mystery`)
 
@@ -41,9 +42,13 @@ predicate and object are right. Note missing claims or relations in `fix` of the
 Chunk text:
 
 > “On that evening the horses had been exercised and watered as usual, and the stables were locked up at nine o’clock. Two of the lads walked up to the trainer’s house, where they had supper in the kitchen, while the third, Ned Hunter, remained on guard. At a few minutes after nine the maid, Edith Baxter, carried down to the stables his supper, which consisted of a dish of curried mutton. She took no liquid, as there was a water-tap in the stables, and it was the rule that the lad on duty should drink nothing else. The maid carried a lantern with her, as it was very dark and the path ran across the open moor.
+>
 > “Edith Baxter was within thirty yards of the stables, when a man appeared out of the darkness and called to her to stop. As he stepped into the circle of yellow light thrown by the lantern she saw that he was a person of gentlemanly bearing, dressed in a grey suit of tweeds, with a cloth cap. He wore gaiters, and carried a heavy stick with a knob to it. She was most impressed, however, by the extreme pallor of his face and by the nervousness of his manner. His age, she thought, would be rather over thirty than under it.
+>
 > “‘Can you tell me where I am?’ he asked. ‘I had almost made up my mind to sleep on the moor, when I saw the light of your lantern.’
+>
 > “‘You are close to the King’s Pyland training-stables,’ said she.
+>
 > “‘Oh, indeed! What a stroke of luck!’ he cried. ‘I understand that a stable-boy sleeps there alone every night. Perhaps that is his supper which you are carrying to him. Now I am sure that you would not be too proud to earn the price of a new dress, would you?’ He took a piece of white paper folded up out of his waistcoat pocket. ‘See that the boy has this to-night, and you shall have the prettiest frock that money can buy.’
 
 - `x:silver-blaze-0004:claim:1` speaker **the stranger** says, about **the stranger**: He had almost decided to sleep on the moor when he saw the lantern  
@@ -71,21 +76,37 @@ predicate and object are right. Note missing claims or relations in `fix` of the
 Chunk text:
 
 > “Still at it, then?” said he to Holmes. “I thought you Londoners were never at fault. You don’t seem to be so very quick, after all.”
+>
 > “Ah, you must give us a little time,” said Holmes good-humoredly.
+>
 > “You’ll want it,” said young Alec Cunningham. “Why, I don’t see that we have any clue at all.”
+>
 > “There’s only one,” answered the Inspector. “We thought that if we could only find—Good heavens, Mr. Holmes! What is the matter?”
+>
 > My poor friend’s face had suddenly assumed the most dreadful expression. His eyes rolled upwards, his features writhed in agony, and with a suppressed groan he dropped on his face upon the ground. Horrified at the suddenness and severity of the attack, we carried him into the kitchen, where he lay back in a large chair, and breathed heavily for some minutes. Finally, with a shamefaced apology for his weakness, he rose once more.
+>
 > “Watson would tell you that I have only just recovered from a severe illness,” he explained. “I am liable to these sudden nervous attacks.”
+>
 > “Shall I send you home in my trap?” asked old Cunningham.
+>
 > “Well, since I am here, there is one point on which I should like to feel sure. We can very easily verify it.”
+>
 > “What was it?”
+>
 > “Well, it seems to me that it is just possible that the arrival of this poor fellow William was not before, but after, the entrance of the burglar into the house. You appear to take it for granted that, although the door was forced, the robber never got in.”
+>
 > “I fancy that is quite obvious,” said Mr. Cunningham, gravely. “Why, my son Alec had not yet gone to bed, and he would certainly have heard any one moving about.”
+>
 > “Where was he sitting?”
+>
 > “I was smoking in my dressing-room.”
+>
 > “Which window is that?”
+>
 > “The last on the left next my father’s.”
+>
 > “Both of your lamps were lit, of course?”
+>
 > “Undoubtedly.”
 
 - `x:reigate-squires-0009:claim:1` speaker **Holmes** says, about **William**: William may have arrived after the burglar entered the house  
@@ -117,7 +138,9 @@ predicate and object are right. Note missing claims or relations in `fix` of the
 Chunk text:
 
 > “I did exactly what he indicated, and waited until the other clerks had departed. One of them in my room, Charles Gorot, had some arrears of work to make up, so I left him there and went out to dine. When I returned he was gone. I was anxious to hurry my work, for I knew that Joseph—the Mr. Harrison whom you saw just now—was in town, and that he would travel down to Woking by the eleven o’clock train, and I wanted if possible to catch it.
+>
 > “When I came to examine the treaty I saw at once that it was of such importance that my uncle had been guilty of no exaggeration in what he had said. Without going into details, I may say that it defined the position of Great Britain towards the Triple Alliance, and fore-shadowed the policy which this country would pursue in the event of the French fleet gaining a complete ascendancy over that of Italy in the Mediterranean. The questions treated in it were purely naval. At the end were the signatures of the high dignitaries who had signed it. I glanced my eyes over it, and then settled down to my task of copying.
+>
 > “It was a long document, written in the French language, and containing twenty-six separate articles. I copied as quickly as I could, but at nine o’clock I had only done nine articles, and it seemed hopeless for me to attempt to catch my train. I was feeling drowsy and stupid, partly from my dinner and also from the effects of a long day’s work. A cup of coffee would clear my brain. A commissionnaire remains all night in a little lodge at the foot of the stairs, and is in the habit of making coffee at his spirit-lamp for any of the officials who may be working over time. I rang the bell, therefore, to summon him.
 
 - `x:naval-treaty-0007:claim:1` speaker **the narrator** says, about **the naval treaty**: The treaty defined Britain’s position towards the Triple Alliance  

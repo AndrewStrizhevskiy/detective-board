@@ -187,7 +187,9 @@ def extraction_sheet(chunks: list[dict]) -> list[str]:
     out = []
     for ch in chunks:
         out += [f"## {ch['chunk_id']} (`{ch['story']}`)", "", "Chunk text:", ""]
-        out += ["> " + para.replace("\n", " ") for para in ch["text"].split("\n\n")] + [""]
+        # one blockquote paragraph per text paragraph, so lines of dialogue (speakers) stay apart
+        paras = [p.replace("\n", " ") for p in ch["text"].split("\n\n")]
+        out += ["\n>\n".join(f"> {p}" for p in paras), ""]
         for item_id, it in extraction_rows(ch):
             n = len(find(ch["text"], it["quote"]))
             check = "verbatim in the chunk" if n else "FAIL: quote not in the chunk"
@@ -207,6 +209,11 @@ def extraction_sheet(chunks: list[dict]) -> list[str]:
     return out
 
 
+def filled(path: Path) -> bool:
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        return any((r.get("verdict") or "").strip() for r in csv.DictReader(f))
+
+
 def build(out: Path, date: str) -> dict:
     golden, contra = load_jsonl(GOLDEN), load_jsonl(CONTRA)
     split = json.loads(SPLIT.read_text(encoding="utf-8"))
@@ -224,40 +231,52 @@ def build(out: Path, date: str) -> dict:
         json.loads((EXTRACTION / f"{cid}.json").read_text(encoding="utf-8")) for cid in CHUNKS
     ]
     out.mkdir(parents=True, exist_ok=True)
-    head = lambda title: [  # noqa: E731
+    head = lambda title, source: [  # noqa: E731
         f"# {title}",
         "",
         f"Review kit of {date} for issue #9, built by `scripts/eval/review_kit.py` (seed `{SEED}`).",
-        "Passages are from `data/clean/`; the quote is in bold. **The pre-check is a script, not a review.**",
-        "Write your verdict in `verdicts.csv` (see README.md).",
+        f"{source} **The pre-check is a script, not a review.**",
+        "Write your verdict in `verdicts.csv` (see README.md). This sheet is a snapshot of the",
+        "files on that date; after fixes the files, not the sheet, are what counts.",
         "",
     ]
+    from_clean = "Passages are from `data/clean/`; the quote is in bold."
+    from_chunk = "The text is the chunk's own `text` field in `eval/extraction_gold/`; quotes are listed under it."
     (out / "golden.md").write_text(
-        "\n".join(head("Golden questions: review sheet") + golden_sheet(g_items, corpus, split_of)),
+        "\n".join(
+            head("Golden questions: review sheet", from_clean)
+            + golden_sheet(g_items, corpus, split_of)
+        ),
         encoding="utf-8",
     )
     (out / "contradictions.md").write_text(
         "\n".join(
-            head("Contradiction cases: review sheet") + contra_sheet(c_items, corpus, split_of)
+            head("Contradiction cases: review sheet", from_clean)
+            + contra_sheet(c_items, corpus, split_of)
         ),
         encoding="utf-8",
     )
     (out / "extraction.md").write_text(
-        "\n".join(head("Extraction gold: review sheet") + extraction_sheet(chunks)),
+        "\n".join(head("Extraction gold: review sheet", from_chunk) + extraction_sheet(chunks)),
         encoding="utf-8",
     )
     rows = [(g, "golden") for g in g_ids] + [(c, "contradictions") for c in c_ids]
     rows += [(item_id, "extraction") for ch in chunks for item_id, _ in extraction_rows(ch)]
-    # two reviewers, alternate items (whole chunks stay with one person)
-    with (out / "verdicts.csv").open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=CSV_FIELDS)
-        w.writeheader()
-        for n, (item_id, kind) in enumerate(rows):
-            if kind == "extraction":
-                who = "A" if CHUNKS.index(item_id.split(":")[1]) % 2 == 0 else "B"
-            else:
-                who = "A" if n % 2 == 0 else "B"
-            w.writerow({"item_id": item_id, "set": kind, "assignee": who})
+    # two reviewers, alternate items (whole chunks stay with one person). A CSV with any verdict
+    # in it is the reviewers' work: it is kept, never rewritten.
+    target = out / "verdicts.csv"
+    if target.exists() and filled(target):
+        print(f"kept {target}: it already has verdicts", file=sys.stderr)
+    else:
+        with target.open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+            w.writeheader()
+            for n, (item_id, kind) in enumerate(rows):
+                if kind == "extraction":
+                    who = "A" if CHUNKS.index(item_id.split(":")[1]) % 2 == 0 else "B"
+                else:
+                    who = "A" if n % 2 == 0 else "B"
+                w.writerow({"item_id": item_id, "set": kind, "assignee": who})
     fails = sum(
         t.count("pre-check: FAIL")
         for t in (

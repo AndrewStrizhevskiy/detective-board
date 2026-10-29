@@ -6,15 +6,19 @@ Checks the CSV filled from the review kit (scripts/eval/review_kit.py): a GitHub
 `reviewer`, an ISO `date`, a verdict of ok | fixed | drop | unsure, and a `fix` text for every
 verdict but ok. Every golden question or contradiction case marked ok or fixed gets
 `reviewed_by` / `reviewed_on` in its JSONL line. An extraction chunk gets them in its file once
-every claim and relation row of it is ok or fixed. Other lines and files stay byte for byte the
-same. `drop` and `unsure` are listed, never applied: removing an item touches split.json and is
-the eval-engineer's call. --status prints the counts for docs/DISCLOSURE.md and writes nothing.
+every claim and relation row of it is ok or fixed, with `reviewed_scope: ["claims", "relations"]`:
+its entities and events were not in the kit and stay unreviewed. Other lines and files stay byte
+for byte the same. `drop` and `unsure` are listed, never applied: removing an item or changing
+its category or kind can move items between dev and test (split.json) and is the eval-engineer's
+call. Marks are only added, never removed: take one back by hand. An id the files do not have
+stops the run. --status prints the counts for docs/DISCLOSURE.md and writes nothing.
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
 import json
 import re
 import sys
@@ -29,15 +33,30 @@ SETS = {
 EXTRACTION = ROOT / "eval" / "extraction_gold"
 VERDICTS = ("ok", "fixed", "drop", "unsure")
 APPLIED = ("ok", "fixed")
+CHUNK_SCOPE = ["claims", "relations"]  # what the kit shows of a chunk
+HEADER = ["item_id", "set", "assignee", "reviewer", "date", "verdict", "fix", "time_min"]
 # the same rules as extract/curated_schema.check_review (#22)
 _LOGIN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}$")
-_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def _is_date(s: str) -> bool:
+    try:
+        return len(s) == 10 and dt.date.fromisoformat(s).isoformat() == s
+    except ValueError:
+        return False
 
 
 def read_rows(path: Path) -> tuple[list[dict], list[str]]:
     """Rows of the CSV and the problems found in the filled ones (empty verdict = not reviewed)."""
-    with path.open(newline="", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+    # utf-8-sig: a spreadsheet may save the file with a byte-order mark
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+        header = reader.fieldnames or []
+    if header != HEADER:
+        return rows, [
+            f"header must be {','.join(HEADER)} (comma-separated); got {','.join(header)}"
+        ]
     problems = []
     seen = set()
     for n, r in enumerate(rows, 2):
@@ -47,13 +66,15 @@ def read_rows(path: Path) -> tuple[list[dict], list[str]]:
         seen.add(r.get("item_id"))
         v = (r.get("verdict") or "").strip()
         if not v:
+            if any((r.get(k) or "").strip() for k in ("reviewer", "date", "fix", "time_min")):
+                problems.append(f"{tag}: filled in but no verdict")
             continue
         if v not in VERDICTS:
             problems.append(f"{tag}: verdict must be one of {', '.join(VERDICTS)}")
         if not _LOGIN.match((r.get("reviewer") or "").strip()):
             problems.append(f"{tag}: reviewer must be a GitHub login")
-        if not _DATE.match((r.get("date") or "").strip()):
-            problems.append(f"{tag}: date must be YYYY-MM-DD")
+        if not _is_date((r.get("date") or "").strip()):
+            problems.append(f"{tag}: date must be a real date, YYYY-MM-DD")
         if v != "ok" and not (r.get("fix") or "").strip():
             problems.append(f"{tag}: verdict {v} needs a fix text")
         if (r.get("time_min") or "").strip() and not re.fullmatch(
@@ -72,8 +93,13 @@ def review_of(rows: list[dict]) -> dict[str, tuple[str, str]]:
 
 
 def apply_jsonl(path: Path, reviews: dict[str, tuple[str, str]], write: bool) -> int:
-    """Set reviewed_by / reviewed_on on the reviewed lines; returns how many lines changed."""
+    """Set reviewed_by / reviewed_on on the reviewed lines; returns how many lines changed.
+    Raises SystemExit when a reviewed id is not in the file (renamed or removed)."""
     lines = path.read_text(encoding="utf-8").splitlines()
+    have = {json.loads(line).get("id") for line in lines if line.strip()}
+    missing = sorted(set(reviews) - have)
+    if missing:
+        raise SystemExit(f"FAIL {path.name} has no item {', '.join(missing)}; nothing written")
     changed = 0
     for i, line in enumerate(lines):
         if not line.strip():
@@ -103,13 +129,23 @@ def apply_extraction(rows: list[dict], write: bool) -> tuple[int, list[str]]:
         if not all((r.get("verdict") or "").strip() in APPLIED for r in rs):
             pending.append(chunk_id)
             continue
-        by = " and ".join(sorted({r["reviewer"].strip() for r in rs}))
-        on = max(r["date"].strip() for r in rs)
+        who = sorted({r["reviewer"].strip() for r in rs})
+        if len(who) != 1:
+            raise SystemExit(
+                f"FAIL {chunk_id}: one chunk, one reviewer (the kit assigns it whole); got {', '.join(who)}"
+            )
+        by, on = who[0], max(r["date"].strip() for r in rs)
         path = EXTRACTION / f"{chunk_id}.json"
+        if not path.exists():
+            raise SystemExit(f"FAIL no extraction gold file {path.name}")
         data = json.loads(path.read_text(encoding="utf-8"))
-        if data.get("reviewed_by") == by and data.get("reviewed_on") == on:
+        if (data.get("reviewed_by"), data.get("reviewed_on"), data.get("reviewed_scope")) == (
+            by,
+            on,
+            CHUNK_SCOPE,
+        ):
             continue
-        data["reviewed_by"], data["reviewed_on"] = by, on
+        data["reviewed_by"], data["reviewed_on"], data["reviewed_scope"] = by, on, CHUNK_SCOPE
         changed += 1
         if write:
             # the files' own format: indent 1, no newline at the end
@@ -151,6 +187,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     write = not args.dry_run
     reviews = review_of(rows)
+    for kind, path in SETS.items():  # every id check before anything is written
+        ids = {r["item_id"] for r in rows if r.get("set") == kind}
+        apply_jsonl(path, {k: v for k, v in reviews.items() if k in ids}, False)
+    apply_extraction(rows, False)
     for kind, path in SETS.items():
         ids = {r["item_id"] for r in rows if r.get("set") == kind}
         n = apply_jsonl(path, {k: v for k, v in reviews.items() if k in ids}, write)

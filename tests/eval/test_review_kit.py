@@ -46,12 +46,45 @@ def test_the_selection_has_the_issue_sizes_and_every_named_id():
     assert kit.select(golden, contra, split) == (g, c), "deterministic"
 
 
-def test_the_committed_kit_is_what_the_script_builds(tmp_path):
+def _keys(path):
+    with path.open(newline="", encoding="utf-8-sig") as f:
+        return [(r["item_id"], r["set"], r["assignee"]) for r in csv.DictReader(f)]
+
+
+def test_the_committed_kit_lists_what_the_script_selects(tmp_path):
+    """Rows (id, set, assignee) match a fresh build; the filled-in columns and the dated sheets
+    may differ once reviewers work, so they are not compared."""
     kit.build(tmp_path, "2026-10-29")
-    for name in ("golden.md", "contradictions.md", "extraction.md", "verdicts.csv"):
-        assert (tmp_path / name).read_text(encoding="utf-8") == (KIT / name).read_text(
-            encoding="utf-8"
-        ), f"re-run review_kit.py: {name}"
+    assert _keys(KIT / "verdicts.csv") == _keys(tmp_path / "verdicts.csv"), "re-run review_kit.py"
+    golden, contra, split = _sets()
+    g, c = kit.select(golden, contra, split)
+    sheets = {
+        n: (KIT / n).read_text(encoding="utf-8")
+        for n in ("golden.md", "contradictions.md", "extraction.md")
+    }
+    for i in g:
+        assert f"## {i} ·" in sheets["golden.md"], i
+    for i in c:
+        assert f"## {i} ·" in sheets["contradictions.md"], i
+    for ch in kit.CHUNKS:
+        assert f"## {ch} (" in sheets["extraction.md"], ch
+
+
+def test_a_rebuild_never_overwrites_filled_verdicts(tmp_path):
+    kit.build(tmp_path, "2026-10-29")
+    target = tmp_path / "verdicts.csv"
+    text = target.read_text(encoding="utf-8").replace(
+        "g004,golden,A,,,,,", "g004,golden,A,LitrumCoder,2026-10-30,ok,,3"
+    )
+    target.write_text(text, encoding="utf-8")
+    kit.build(tmp_path, "2026-10-29")
+    assert target.read_text(encoding="utf-8") == text
+
+
+def test_the_extraction_sheet_says_where_its_text_is_from_and_keeps_paragraphs():
+    sheet = (KIT / "extraction.md").read_text(encoding="utf-8")
+    assert "chunk's own `text` field" in sheet and "Passages are from `data/clean/`" not in sheet
+    assert "\n>\n> " in sheet, "paragraphs (lines of dialogue) stay apart"
 
 
 def test_every_quote_is_shown_in_its_passage_and_none_fails():
@@ -165,3 +198,74 @@ def test_status_counts_for_the_disclosure_table(sandbox, capsys):
     )
     assert "contradictions: 0 of 16 rows" in text and "extraction: 0 of 32 rows" in text
     assert ap.SETS["golden"].read_text(encoding="utf-8") == before, "--status writes nothing"
+
+
+def test_a_chunk_is_marked_with_its_scope_in_its_own_format_and_only_when_complete(sandbox):
+    ok = {"reviewer": "LitrumCoder", "date": "2026-10-30", "verdict": "ok"}
+    rows = [
+        r["item_id"]
+        for r in csv.DictReader((KIT / "verdicts.csv").open())
+        if ":naval-treaty-0007:" in r["item_id"]
+    ]
+    out = _csv(sandbox, {i: ok for i in rows[:-1]})
+    assert ap.main([str(out)]) == 0
+    path = ap.EXTRACTION / "naval-treaty-0007.json"
+    assert "reviewed_by" not in json.loads(path.read_text(encoding="utf-8")), "one row still open"
+    out = _csv(sandbox, {i: ok for i in rows})
+    assert ap.main([str(out)]) == 0
+    text = path.read_text(encoding="utf-8")
+    data = json.loads(text)
+    assert (data["reviewed_by"], data["reviewed_on"], data["reviewed_scope"]) == (
+        "LitrumCoder",
+        "2026-10-30",
+        ["claims", "relations"],
+    )
+    assert text == json.dumps(data, ensure_ascii=False, indent=1), "indent 1, no newline at the end"
+    other = {**ok, "reviewer": "someone-else"}
+    out = _csv(sandbox, {**{i: ok for i in rows[:-1]}, rows[-1]: other})
+    with pytest.raises(SystemExit, match="one reviewer"):
+        ap.main([str(out)])
+
+
+def test_an_id_the_files_do_not_have_stops_before_anything_is_written(sandbox, tmp_path):
+    before = {p: p.read_text(encoding="utf-8") for p in ap.SETS.values()}
+    out = _csv(
+        sandbox, {"g004": {"reviewer": "LitrumCoder", "date": "2026-10-30", "verdict": "ok"}}
+    )
+    text = out.read_text(encoding="utf-8").replace("g005,golden", "g999,golden")
+    out.write_text(
+        text.replace("g005,golden", "g999,golden").replace(
+            ",B,,,,,", ",B,LitrumCoder,2026-10-30,ok,,", 1
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(SystemExit, match="no item g999"):
+        ap.main([str(out)])
+    assert {p: p.read_text(encoding="utf-8") for p in ap.SETS.values()} == before
+
+
+@pytest.mark.parametrize(
+    "fill, why",
+    [
+        ({"reviewer": "LitrumCoder", "date": "2026-13-45", "verdict": "ok"}, "real date"),
+        (
+            {"reviewer": "LitrumCoder", "date": "2026-10-30", "fix": "forgot the verdict"},
+            "no verdict",
+        ),
+    ],
+)
+def test_impossible_dates_and_half_filled_rows_are_refused(sandbox, capsys, fill, why):
+    out = _csv(sandbox, {"g004": fill})
+    assert ap.main([str(out)]) == 1
+    assert why in capsys.readouterr().out
+
+
+def test_a_spreadsheet_resave_is_read_or_refused_clearly(sandbox, capsys):
+    out = _csv(
+        sandbox, {"g004": {"reviewer": "LitrumCoder", "date": "2026-10-30", "verdict": "ok"}}
+    )
+    out.write_bytes(b"\xef\xbb\xbf" + out.read_bytes())  # BOM: still read
+    assert ap.main([str(out), "--status"]) == 0
+    out.write_text(out.read_text(encoding="utf-8-sig").replace(",", ";"), encoding="utf-8")
+    assert ap.main([str(out)]) == 1
+    assert "header must be" in capsys.readouterr().out

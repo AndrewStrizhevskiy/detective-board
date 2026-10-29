@@ -2,7 +2,8 @@
 
 Review kit of 2026-10-29 for issue #9, built by `scripts/eval/review_kit.py` (seed `gold-review-v1`).
 Passages are from `data/clean/`; the quote is in bold. **The pre-check is a script, not a review.**
-Write your verdict in `verdicts.csv` (see README.md).
+Write your verdict in `verdicts.csv` (see README.md). This sheet is a snapshot of the
+files on that date; after fixes the files, not the sheet, are what counts.
 
 ## c002 · R1_place_conflict · test split · `abbey-grange`
 
