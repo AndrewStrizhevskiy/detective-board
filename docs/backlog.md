@@ -82,3 +82,6 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 
 ## Requests from `feat/offline-package` (2026-10-27)
 - R-23 | devops-engineer + performance-engineer | Pin the Ollama version used for the demo in `docs/team/models.md` (issue #8 assumes it is there; today only the model IDs are). `pack_offline.sh` records the packed version in MANIFEST but cannot check it against a pin. Also decide whether the offline archive leaves out the CUDA/ROCm runtimes in `lib/ollama` for the CPU-only laptop (several GB) | P2
+
+## Requests from `feat/gold-review-kit` (2026-10-29, ux-designer)
+- R-25 | eval-engineer | Review kit for issue #9 in `eval/review/2026-10-29/` (sheets with each quote in its passage, `verdicts.csv` for two reviewers, the g027 vs c042 question) and `scripts/eval/review_kit.py` / `apply_review.py` (writes `reviewed_by` / `reviewed_on`, `--status` for the table), built outside the eval zone: take it over. After the review: point `eval/golden/README.md` and `eval/extraction_gold/README.md` at it, and fill the review table of `docs/DISCLOSURE.md` from `apply_review.py --status`; remove `drop` items (split.json) | P1
