@@ -63,6 +63,18 @@
 </nav>
 
 <main class="cols" data-tab="trace">
+  <section id="panel-bare" class="panel bare-panel db-paper" aria-labelledby="h-bare" hidden>
+    <h2 id="h-bare">Bare model <span class="bare-stamp">NO SOURCES</span> <span class="rec-badge">RECORDING</span></h2>
+    <div class="bare-body">
+      <p id="bare-q" class="bare-q"></p>
+      <p id="bare-meta" class="muted"></p>
+      <p id="bare-call" class="muted"></p>
+      <p id="bare-clock" class="mono bare-clock" aria-hidden="true"></p>
+      <div id="bare-answer" class="bare-answer"></div>
+      <p id="bare-foot" class="muted" hidden>The model got only the question: no retrieval, no sources, no quote to check. Text as recorded, byte for byte; the evaluation run stops every bare answer at 300 tokens.</p>
+      <p class="bare-actions"><button id="bare-all" type="button" hidden>Show all</button> <button id="bare-close" type="button">Close (b)</button></p>
+    </div>
+  </section>
   <section id="panel-trace" class="panel notebook db-paper" aria-labelledby="h-trace">
     <h2 id="h-trace">Case notes <span class="muted">trace</span> <span id="trace-count" class="muted"></span></h2>
     <div id="working" class="working" hidden></div>
@@ -73,7 +85,7 @@
 
   <section id="panel-board" class="panel board" aria-labelledby="h-board">
     <div class="panel-head">
-      <h2 id="h-board">Evidence board <span id="graph-count" class="muted"></span></h2>
+      <h2 id="h-board">Evidence board <span id="board-side-tag" class="side-tag" hidden>Detective Board, with sources</span> <span id="graph-count" class="muted"></span></h2>
       <div class="search">
         <label for="entity-q" class="sr">Search entities</label>
         <input id="entity-q" type="search" placeholder="Find an entity" role="combobox" aria-expanded="false" aria-controls="entity-list" aria-autocomplete="list" autocomplete="off">
@@ -136,7 +148,7 @@
   <span id="strip-graph">board: 0 cards / 0 strings</span>
   <span id="strip-rate">~tok/s: -</span>
   <span id="strip-api">API: -</span>
-  <span class="muted">Keys: / question &middot; c stored run / live &middot; g list view &middot; t latest step &middot; Esc stop or clear</span>
+  <span class="muted">Keys: / question &middot; b bare model &middot; c stored run / live &middot; g list view &middot; t latest step &middot; Esc stop or clear</span>
 </footer>
 <div id="sr-announce" class="sr" role="status" aria-live="polite"></div>
 <script type="module" src="js/app.js"></script>

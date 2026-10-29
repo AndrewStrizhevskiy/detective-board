@@ -177,6 +177,7 @@ label.inline { display: inline-flex; gap: 6px; align-items: center; }
   .cols[data-tab="trace"] > #panel-board, .cols[data-tab="trace"] > #panel-answer,
   .cols[data-tab="board"] > #panel-trace, .cols[data-tab="board"] > #panel-answer,
   .cols[data-tab="answer"] > #panel-trace, .cols[data-tab="answer"] > #panel-board { display: none; }
+  .cols[data-tab="board"] > #panel-bare, .cols[data-tab="answer"] > #panel-bare { display: none; }
 }
 @media (min-width: 1100px) { .tabs { display: none; } }
 @media (prefers-reduced-motion: reduce) { .dots::after { animation: none; width: 1.2em; } .trace li.new { animation: none; } }
@@ -544,3 +545,23 @@ kbd { font: 12px/1 var(--db-font-mono); padding: 1px 5px; border: 1px solid var(
 .rec-meta { font-size: var(--db-text-xs); color: var(--db-text-muted); }
 .stored-hint { font-size: var(--db-text-sm); color: var(--db-text-muted); }
 .refusal .gate { font-family: var(--db-font-mono); font-size: var(--db-text-sm); }
+
+/* bare model vs agent (#13, key b): the bare answer takes the trace column. A loose typed sheet
+   with no pin, no quotes and a NO SOURCES stamp, so it never reads as evidence. */
+.cols[data-split="bare"] { grid-template-columns: minmax(300px, 3.3fr) minmax(0, 4.9fr) minmax(330px, 3.9fr); }
+.cols[data-split="bare"] > #panel-trace { display: none; }
+.bare-panel { border: 2px dashed var(--db-border); }
+.bare-panel > h2 { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bare-stamp { font: 700 13px/1 var(--db-font-type); letter-spacing: .14em; color: var(--db-stamp); border: 2px solid var(--db-stamp); border-radius: 3px; padding: 4px 7px; transform: rotate(-2deg); }
+.bare-panel .rec-badge { grid-row: auto; }
+.bare-body { padding: var(--db-space-2) var(--db-space-3) var(--db-space-3); }
+.bare-body > p { margin: 0 0 var(--db-space-2); }
+.bare-q { font-weight: 700; font-size: var(--db-text-md); }
+.bare-clock { font-weight: 700; color: var(--db-text); min-height: 1.4em; }
+.bare-text { margin: 0; font: var(--db-text-md)/1.55 var(--db-font-type); white-space: pre-wrap; overflow-wrap: anywhere; }
+.bare-text.waiting::after { content: "waiting for the first token"; color: var(--db-text-muted); font-family: var(--db-font-ui); font-style: italic; }
+.bare-answer { margin: var(--db-space-3) 0; padding: var(--db-space-3); background: var(--db-bg-surface-2); border-radius: var(--db-radius); }
+.bare-pick { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.bare-pick button { background: none; border: none; color: var(--db-link); text-decoration: underline; text-align: left; padding: 2px 0; min-height: 0; }
+.side-tag { font: 600 var(--db-text-xs)/1 var(--db-font-ui); letter-spacing: .06em; text-transform: uppercase; border: 1.5px solid var(--db-ok); color: var(--db-ok); border-radius: 3px; padding: 3px 6px; vertical-align: middle; }
+@media (max-width: 1499px) { .cols[data-split="bare"] { grid-template-columns: minmax(270px, 3.2fr) minmax(0, 4.6fr) minmax(300px, 3.9fr); } }
