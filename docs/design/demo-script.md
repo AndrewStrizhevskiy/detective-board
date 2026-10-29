@@ -165,6 +165,7 @@ Whole-system failures (any step): (a) browser or UI frozen: switch to the second
 **Two more recordings (2026-10-28, after the relative-time and chronology work):**
 - `?replay=replay/real-abbey-grange-r1-curated.json` (1.0 s): a SECOND red conflict, Lady Brackenstall bound to the chair at the head of the table versus standing at the window, both at the moment Sir Eustace entered. It is a conditional R1 finding on two curated facts whose time is relative (not a clock time); say so, and say that Holmes later shows she was bound only after the death.
 - `?replay=replay/real-garcia-timeline.json` (0.2 s): a chronology answer for Garcia from the graph (no model). Say that only events with a date stated in the text are ordered; the rest follow the narration, which need not be the order in which things happened.
+- `?replay=replay/real-scene-board.json` (1.4 s, 561 events): the alibi-exclusion board for the Garcia scene (Oxshott Common, one o'clock): of 24 persons of the story one is "excluded by testimony" (Scott Eccles: his own account puts him in his room at the Lodge at nearly one o'clock; conditional, curated), the others are "not excluded", which here means only that the graph is silent. Say it that way. Never say "suspect" or "innocent"; the board makes no verdict about guilt.
 
 Not in the deck (kept for questions): Boscombe control `?replay=replay/real-boscombe-control.json` (25.3 s; backup slide B5).
 

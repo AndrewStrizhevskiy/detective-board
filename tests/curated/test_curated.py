@@ -217,9 +217,9 @@ def test_cli_loads_a_graph_file_and_reports(tmp_path, capsys):
     args = ["--graph-db", str(db), "--file", str(FACTS)]
     args += ["--chunks", str(ROOT / "data/chunks.jsonl"), "--clean-dir", str(ROOT / "data/clean")]
     assert curated.main(args) == 0
-    assert "7 loaded, 0 unchanged" in capsys.readouterr().out
+    assert "8 loaded, 0 unchanged" in capsys.readouterr().out
     assert curated.main(args) == 0
-    assert "0 loaded, 7 unchanged" in capsys.readouterr().out
+    assert "0 loaded, 8 unchanged" in capsys.readouterr().out
 
 
 # ---- the rules on curated facts --------------------------------------------------------------
