@@ -85,5 +85,31 @@
    "question": "SYNTHETIC: does Helen Stoner's alibi hold?",
    "kind": "synthetic"
   }
+ ],
+ "bare": [
+  {
+   "file": "bare/g001.json",
+   "question": "What kind of snake killed Dr. Grimesby Roylott?",
+   "qid": "g001",
+   "model": "qwen3:4b-instruct",
+   "recorded_on": "2026-10-28",
+   "seconds": 38.965
+  },
+  {
+   "file": "bare/g003.json",
+   "question": "What reward was offered for the return of the Countess of Morcar's blue carbuncle?",
+   "qid": "g003",
+   "model": "qwen3:4b-instruct",
+   "recorded_on": "2026-10-28",
+   "seconds": 31.546
+  },
+  {
+   "file": "bare/g062.json",
+   "question": "Какая змея, по словам Холмса, убила доктора Ройлотта?",
+   "qid": "g062",
+   "model": "qwen3:4b-instruct",
+   "recorded_on": "2026-10-28",
+   "seconds": 41.247
+  }
  ]
 }
