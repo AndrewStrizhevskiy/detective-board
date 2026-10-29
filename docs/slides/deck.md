@@ -217,7 +217,7 @@ Slide 8, 5:05-5:30 (25 s). Running total 5:30.
 SAY (about 60 words):
 "The constraints. It runs offline, on the CPU of this laptop, with models of eight billion parameters or less: a four-billion answer model, a four-billion extraction model, and an embedding model. Decoding is fixed: temperature zero, seed forty-two. Reading speed on this CPU is about twenty-one tokens a second, which is why the model never writes the answer."
 
-NUMBERS: ~21 tokens/s prefill = docs/perf/ttft-levers-2026-10-26.md (1 run per variant); peak RSS 3195 MiB = llm-20261022-171202.md (n=3 runs). Measured 2026-10-28 (docs/perf/laptop-20261028.md): 30.3-43.2 s per answered question, peak RSS of all llama-server processes 5017 MB, package temperature up to 92 C; one run, not a clean window, not final.
+NUMBERS: ~21 tokens/s prefill = docs/perf/ttft-levers-2026-10-26.md (1 run per variant); peak RSS 3195 MiB = llm-20261022-171202.md (n=3 runs). Measured 2026-10-29 (docs/perf/laptop-20261029.md): median 28 s per answered question (18.6-44.1 s, 18 different questions, three series), peak RSS of all llama-server processes 6.3 GB, package temperature 98-100 C; not a clean window, no 8 GB profile.
 
 IF IT GOES WRONG: slide only.
 -->
@@ -227,7 +227,7 @@ IF IT GOES WRONG: slide only.
 - **Offline**: network off during the demo; no cloud model
 - **CPU-only**: no GPU on the demo laptop; prefill about **21 tokens/s**
 - **Models <= 8B**: qwen3:4b-instruct (answers), qwen3:4b (extraction), bge-m3 (embeddings); peak RSS of the answer model **3195 MiB**
-- **Reproducible**: temperature 0, seed 42; `just run` serves the demo; laptop run 2026-10-28: **30-43 s** per answer, **5.0 GB** peak, **92 C** (single run, not final); one-command rebuild: **TBD**
+- **Reproducible**: temperature 0, seed 42; `just run` serves the demo; laptop, three series of 6 questions, 2026-10-29: median **28 s** per answer (19-44 s), **6.3 GB** peak, **98-100 C** (not a clean window); one-command rebuild: **TBD**
 
 ---
 
