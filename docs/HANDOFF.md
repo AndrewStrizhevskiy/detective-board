@@ -16,7 +16,7 @@ and in the rule-first answer, and the finding stays `conditional`. The automatic
 numbers are untouched and reported separately. R3 positives were NOT added: no case of the contradiction
 set is an explicit person-place-time conflict with an established narrator fact. Details, the limits of
 the c042 control and how to add a case: `docs/symbolic-layer.md` 11.4; stage wording: `docs/DISCLOSURE.md`
-and `docs/design/demo-script.md` step 2. The facts still need a human re-check.
+and `docs/design/demo-script.md` step 2. The facts were re-checked by a human on 2026-10-29 (#22).
 
 ## 0b. Sentence index (2026-10-27, branch `feat/sentence-index`, not pushed)
 

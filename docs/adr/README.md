@@ -14,7 +14,7 @@ Format: `0000-template.md` (context, options, decision, consequences). One decis
 | [0008](0008-answer-model.md) | Answer model: provisional qwen3:4b | Proposed, finalised after the answer-model check | entirely, until `answers-20261023-082109*` is read |
 | [0009](0009-extractive-answers.md) | Extractive answers (model chooses sentences) | Accepted (pilot, n=12) | prompt wording frozen; no human judging |
 | [0010](0010-rule-first-answers.md) | Rule-first deterministic answers and the honesty guard | Accepted | hit rate on real graph unmeasured |
-| [0011](0011-presence-pass-and-curated-facts.md) | Targeted presence pass and curated demo facts | Accepted (curated facts); Proposed (automatic presence pass) | automatic precision unmeasured; human re-check of curated file pending |
+| [0011](0011-presence-pass-and-curated-facts.md) | Targeted presence pass and curated demo facts | Accepted (curated facts); Proposed (automatic presence pass) | automatic precision unmeasured; human re-check of curated file done 2026-10-29 |
 | [0012](0012-extraction-prompt-v2-1-plus-repair.md) | Generic extraction prompt stays v2.1 plus deterministic repair | Accepted | 12-chunk and 64-chunk samples only |
 
 Not yet written: reranker (not needed for hit@5, see `docs/spike/REPORT.md` section 5).

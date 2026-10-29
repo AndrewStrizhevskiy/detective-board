@@ -153,7 +153,7 @@ IF IT GOES WRONG: fallback URL http://127.0.0.1:8000/?replay=replay/real-wisteri
 - Baynes: "*He had been there **since one** o'clock.*" (Garcia dead on Oxshott Common) - `curated`
 - **R1 violated, `= DERIVED`, drawn `conditional`** - tool call in ms, no model
 
-**Curated facts: checked by the team, AI-assisted, human re-check pending. The automatic extraction is measured separately.**
+**Curated facts: checked by the team, AI-assisted, human re-check done by LitrumCoder on 2026-10-29. The automatic extraction is measured separately.**
 
 ---
 
@@ -237,7 +237,7 @@ IF IT GOES WRONG: slide only.
 Slide 9, 5:30-6:10 (40 s). Running total 6:10. MANDATORY DISCLOSURE. Read it, do not paraphrase away any of the four points.
 
 SAY (about 100 words):
-"Five things you must know. One: the knowledge graph was precomputed on other hardware, with the same models; the organizers allowed this. This laptop only answers questions. Two: the facts behind the red conflicts are curated, entered by the team with their quotes and labelled curated everywhere; the human re-check is still pending. Three: the gold sets were written by an AI and are not reviewed by a human; that review has not been done, and to be filled. Four: the rules find nothing on the automatically extracted facts, zero of twelve test cases; the red conflicts rest on curated facts. Five: everything shown is measured, and 'verified' does not mean true."
+"Five things you must know. One: the knowledge graph was precomputed on other hardware, with the same models; the organizers allowed this. This laptop only answers questions. Two: the facts behind the red conflicts are curated, entered by the team with their quotes and labelled curated everywhere; a human re-checked them on October 29. Three: the gold sets were written by an AI and are not reviewed by a human; that review has not been done, and to be filled. Four: the rules find nothing on the automatically extracted facts, zero of twelve test cases; the red conflicts rest on curated facts. Five: everything shown is measured, and 'verified' does not mean true."
 
 NUMBERS: server hardware and the hours of extraction are not on the slide; if asked: i7-12700K, 96 GB, RTX 4070 12 GB (STATUS.md). Hardware: laptop numbers on the demo laptop; extraction numbers on the department server.
 
@@ -249,7 +249,7 @@ IF IT GOES WRONG: slide only. If late, keep points 1 and 3.
 # Disclosure and honest limits
 
 1. **Precomputed on other hardware.** The graph extraction was run once on a department GPU server with the same open models, prompt and decoding settings; allowed by the organizers. No model was trained. This laptop answers questions offline.
-2. **Curated facts.** Eight facts (Garcia and Scott Eccles at Wisteria Lodge, Lady Brackenstall at Abbey Grange, Boscombe control) were entered by the team with a verbatim quote, AI-assisted, and are labelled `curated` on screen and in the answer. Human re-check: pending.
+2. **Curated facts.** Eight facts (Garcia and Scott Eccles at Wisteria Lodge, Lady Brackenstall at Abbey Grange, Boscombe control) were entered by the team with a verbatim quote, AI-assisted, and are labelled `curated` on screen and in the answer. Human re-check: done by LitrumCoder on 2026-10-29.
 3. **Gold sets written by an AI**, not reviewed by a human; the metric is mechanical. Review: **not done**. The test split was run once, expected ranges written beforehand.
 4. **The rules find nothing on the automatic facts** (0 of 12 test cases): the red conflicts in the demo rest on curated facts. The weak link is extracting who-was-where-when.
 5. Measured numbers only. **Verified = verbatim and lexically supported, not true.**
@@ -260,7 +260,7 @@ IF IT GOES WRONG: slide only. If late, keep points 1 and 3.
 Slide 10, 6:10-6:30 (20 s). Running total 6:30.
 
 SAY (about 50 words):
-"What is next: a human review of the gold sets and of the curated facts; better extraction of who was where and when, by fine-tuning the small extractor and measuring it on human-checked facts; and evidence cards, so a case can be argued before the reveal. The principle stays: the model guesses, the rules prove, and every step shows its quotes. Thank you; questions."
+"What is next: a human review of the gold sets; better extraction of who was where and when, by fine-tuning the small extractor and measuring it on human-checked facts; and evidence cards, so a case can be argued before the reveal. The principle stays: the model guesses, the rules prove, and every step shows its quotes. Thank you; questions."
 
 NUMBERS: none.
 
@@ -269,7 +269,7 @@ IF IT GOES WRONG: slide only. Then Q&A from docs/demo/jury-faq.md; backup slides
 
 # What is next
 
-- Human review of the gold sets and of the curated facts
+- Human review of the gold sets
 - Better extraction of who-was-where-when (fine-tune the small extractor on a server, measured on human-checked facts): the weak link of R1 and R3
 - Evidence cards per chunk and a competing-hypotheses matrix, so that a case can be argued before the reveal (today: 0 of 16)
 - Repeat the measurements on a second machine and with an 8 GB profile

@@ -27,7 +27,7 @@ def review_phrase(reviewed_by: str, reviewed_on: str) -> str:
 
 # What answers, boards and slides say about the curated files. One value for both files; a test
 # (tests/curated/test_review.py) checks it against their reviewed_by / reviewed_on fields.
-CURATED_REVIEW = REVIEW_PENDING
+CURATED_REVIEW = review_phrase("LitrumCoder", "2026-10-29")
 
 
 def review_status(reviews: list[tuple[str | None, str | None]]) -> str:

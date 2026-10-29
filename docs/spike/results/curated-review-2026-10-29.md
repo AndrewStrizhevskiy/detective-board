@@ -1,10 +1,10 @@
-# Curated facts and scene: second AI check (2026-10-29), issue #22
+# Curated facts and scene: AI pass and human re-check (2026-10-29), issue #22
 
-**This is not the human re-check that issue #22 asks for.** It is a second, independent pass by an AI
-assistant (Claude, working for LitrumCoder) over the same files. The facts keep `reviewed_by`
-empty, and screens, answers and slides keep saying "human re-check pending"
-(`curated_schema.CURATED_REVIEW`). A human still has to go through the sheet and set
-`reviewed_by` / `reviewed_on`.
+Two steps on 2026-10-29. First, an AI assistant (Claude, working for LitrumCoder) made the pass
+below and corrected five notes. Then **LitrumCoder (human)** read every record, its story context
+and the table below, and found no mismatch. Both files now carry `reviewed_by: LitrumCoder` and
+`reviewed_on: 2026-10-29`. Screens, answers and slides say "human re-check done by LitrumCoder on 2026-10-29"
+(`curated_schema.CURATED_REVIEW`, kept equal to the files by `tests/curated/test_review.py`).
 
 Files: `data/curated/presence_demo.jsonl` (8 facts), `data/curated/scenes.jsonl` (1 scene).
 Method: each quote was located in `data/clean/<story>.txt` by a script, and all 9 are verbatim.

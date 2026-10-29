@@ -30,4 +30,4 @@ State
 
 Server (i7-12700K, 96 GB, RTX 4070 12 GB, ours until 2026-11-01): slots Tue 27 from 14:30 and Wed 28 12:00-18:00; organizers approved precomputing elsewhere; freeze Wed 18:00. The laptop cache (231 chunks, 8 stories) seeds the run. Order: bootstrap, determinism, generic extraction of 596 chunks with v2.1 (compare qwen3:8b on gold12 first), `just graph`, presence-2.1 on demo stories, contradictions eval.
 
-Open: precision of automatic presence facts; exact-time/day counts on the full graph; human re-check of curated facts and gold sets; rehearsals with the final code.
+Open: precision of automatic presence facts; exact-time/day counts on the full graph; human review of the gold sets (#9; the curated facts were re-checked on 2026-10-29, #22); rehearsals with the final code.
