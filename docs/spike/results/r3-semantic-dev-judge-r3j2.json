@@ -1,0 +1,1450 @@
+{
+ "meta": {
+  "mode": "judge",
+  "judge_version": "R3J-2",
+  "model": "qwen3:4b-instruct",
+  "max_pairs": 12,
+  "use_persons": true,
+  "date": "2026-10-29 00:08",
+  "git_sha": "44fd4c3",
+  "machine": "mendax-ThinkPad-X1-Carbon-7th",
+  "split": "dev",
+  "case_ids": [
+   "c001",
+   "c004",
+   "c006",
+   "c007",
+   "c009",
+   "c010",
+   "c012",
+   "c013",
+   "c014",
+   "c018",
+   "c020",
+   "c021",
+   "c022",
+   "c025",
+   "c028",
+   "c031",
+   "c033",
+   "c034",
+   "c035",
+   "c036",
+   "c039",
+   "c040",
+   "c041"
+  ]
+ },
+ "summary": {
+  "positives": 14,
+  "controls": 9,
+  "baseline_recall_automatic_facts": {
+   "k": 0,
+   "n": 14,
+   "value": 0.0,
+   "ci95": [
+    0.0,
+    0.2153
+   ]
+  },
+  "candidate_recall_strict": {
+   "k": 1,
+   "n": 14,
+   "value": 0.07142857142857142,
+   "ci95": [
+    0.0127,
+    0.3147
+   ]
+  },
+  "candidate_recall_loose": {
+   "k": 7,
+   "n": 14,
+   "value": 0.5,
+   "ci95": [
+    0.268,
+    0.732
+   ]
+  },
+  "pairs_per_case_mean": 10.22,
+  "seconds_total": 978.5,
+  "recall_strict": {
+   "k": 1,
+   "n": 14,
+   "value": 0.07142857142857142,
+   "ci95": [
+    0.0127,
+    0.3147
+   ]
+  },
+  "recall_loose": {
+   "k": 5,
+   "n": 14,
+   "value": 0.35714285714285715,
+   "ci95": [
+    0.1634,
+    0.6124
+   ]
+  },
+  "false_positives_any": {
+   "k": 8,
+   "n": 9,
+   "value": 0.8888888888888888,
+   "ci95": [
+    0.565,
+    0.9801
+   ]
+  },
+  "invalid_answers": 0,
+  "judged_total": 235
+ },
+ "rows": [
+  {
+   "id": "c001",
+   "story": "wisteria-lodge",
+   "kind": "R1_place_conflict",
+   "expected": true,
+   "persons": [
+    "p:wisteria-lodge:scott-eccles",
+    "p:wisteria-lodge:baynes",
+    "p:wisteria-lodge:gregson"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": true,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 0,
+   "any_contradicts": false,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.04,
+   "seconds": 101.31,
+   "contradicting_pairs": []
+  },
+  {
+   "id": "c004",
+   "story": "reigate-squires",
+   "kind": "R1_place_conflict",
+   "expected": true,
+   "persons": [
+    "p:reigate-squires:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": true,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 7,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": true,
+   "seconds_pairs": 0.04,
+   "seconds": 48.43,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Sherlock Holmes",
+      "if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand"
+     ],
+     "b": [
+      "Holmes",
+      "I was certain that Alec had torn it out of the dead man’s hand"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "the key of the whole matter must be looked for in the scrap of paper in the dead man’s hand"
+     ],
+     "b": [
+      "Holmes",
+      "I was certain that Alec had torn it out of the dead man’s hand"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand"
+     ],
+     "b": [
+      "narrator",
+      "Wait here an instant,” said young Alec Cunningham. “The fellow is off his head, in my opinion. Come with me, father, and see where he has got to!”"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "it must have been Alec Cunningham himself"
+     ],
+     "b": [
+      "narrator",
+      "Wait here an instant,” said young Alec Cunningham. “The fellow is off his head, in my opinion. Come with me, father, and see where he has got to!”"
+     ],
+     "match": 1
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand"
+     ],
+     "b": [
+      "narrator",
+      "The old gentleman corrected the mistake, however, and handed the paper back to Holmes."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "the Inspector",
+      "William Kirwan—though he had the reputation of being an honest man, may have been in league with the thief"
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "That of murdering their coachman, William Kirwan!"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "the butler",
+      "William the coachman. Shot through the heart, sir, and never spoke again."
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "That of murdering their coachman, William Kirwan!"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c006",
+   "story": "reigate-squires",
+   "kind": "R2_order_cycle_or_inconsistency",
+   "expected": true,
+   "persons": [
+    "p:reigate-squires:inspector"
+   ],
+   "pairs": 2,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 2,
+   "invalid": 0,
+   "contradicts": 2,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.03,
+   "seconds": 7.09,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Holmes",
+      "I will be with you again in half an hour."
+     ],
+     "b": [
+      "narrator",
+      "An hour and half had elapsed before the Inspector returned alone."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "I think, Colonel, that you and Watson might return now, and I will be with you again in an hour at the furthest."
+     ],
+     "b": [
+      "narrator",
+      "An hour and half had elapsed before the Inspector returned alone."
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c007",
+   "story": "boscombe-valley-mystery",
+   "kind": "R2_order_cycle_or_inconsistency",
+   "expected": true,
+   "persons": [
+    "p:boscombe-valley-mystery:james-mccarthy"
+   ],
+   "pairs": 12,
+   "cand_strict": true,
+   "cand_loose": true,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 6,
+   "any_contradicts": true,
+   "strict": true,
+   "loose": true,
+   "seconds_pairs": 0.05,
+   "seconds": 52.8,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Sherlock Holmes",
+      "On June 3rd, that is, on Monday last, McCarthy left his house at Hatherley about three in the afternoon"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 2
+    },
+    {
+     "a": [
+      "McCarthy",
+      "He had been out with his serving-man in the morning at Ross"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 1
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "He had been out with his serving-man in the morning at Ross"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 1
+    },
+    {
+     "a": [
+      "James McCarthy",
+      "My father was absent from home at the time of my arrival"
+     ],
+     "b": [
+      "the narrator",
+      "Supposing that this unhappy young man’s story were absolutely true, then what hellish thing, what absolutely unforeseen and extraordinary calamity could have occurred between the time when he parted from his father, and the moment when, drawn back by his screams, he rushed into the glade?"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "James McCarthy",
+      "I found my father expiring upon the ground"
+     ],
+     "b": [
+      "Witness",
+      "I was so disturbed and excited as I rushed out into the open, that I could think of nothing except of my father. Yet I have a vague impression that as I ran forward something lay upon the ground to the left of me."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "James McCarthy",
+      "I found my father expiring upon the ground"
+     ],
+     "b": [
+      "Holmes",
+      "He ran when he saw his father on the ground"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c009",
+   "story": "reigate-squires",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:reigate-squires:cunningham",
+    "p:reigate-squires:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 6,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.03,
+   "seconds": 50.06,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Sherlock Holmes",
+      "if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand"
+     ],
+     "b": [
+      "Holmes",
+      "I was certain that Alec had torn it out of the dead man’s hand"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "the key of the whole matter must be looked for in the scrap of paper in the dead man’s hand"
+     ],
+     "b": [
+      "Holmes",
+      "I was certain that Alec had torn it out of the dead man’s hand"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand"
+     ],
+     "b": [
+      "narrator",
+      "Wait here an instant,” said young Alec Cunningham. “The fellow is off his head, in my opinion. Come with me, father, and see where he has got to!”"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "it must have been Alec Cunningham himself"
+     ],
+     "b": [
+      "narrator",
+      "Wait here an instant,” said young Alec Cunningham. “The fellow is off his head, in my opinion. Come with me, father, and see where he has got to!”"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "if Alec Cunningham’s narrative was correct, and if the assailant, after shooting William Kirwan, had _instantly_ fled, then it obviously could not be he who tore the paper from the dead man’s hand"
+     ],
+     "b": [
+      "narrator",
+      "The old gentleman corrected the mistake, however, and handed the paper back to Holmes."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "the Inspector",
+      "William Kirwan—though he had the reputation of being an honest man, may have been in league with the thief"
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "That of murdering their coachman, William Kirwan!"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c010",
+   "story": "abbey-grange",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:abbey-grange:brackenstall",
+    "p:abbey-grange:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 6,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.05,
+   "seconds": 47.09,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "maid",
+      "I saw the men before ever they came into the house"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall actually _saw_ the three men drinking"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Holmes",
+      "The first officer, Mr. Jack Crocker, had been made a captain"
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "You are acquitted, Captain Crocker"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room."
+     ],
+     "b": [
+      "Captain Crocker",
+      "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Holmes",
+      "the lady’s story was complete, the maid’s corroboration was sufficient, the detail was fairly exact"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall and her maid have deliberately lied to us"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "Lady Brackenstall thinks that they were themselves so disturbed by the death of Sir Eustace that they did not ransack the house, as they would otherwise have done"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall actually _saw_ the three men drinking"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "Lady Brackenstall thinks that they were themselves so disturbed by the death of Sir Eustace that they did not ransack the house, as they would otherwise have done"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall and her maid have deliberately lied to us"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c012",
+   "story": "abbey-grange",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:abbey-grange:brackenstall",
+    "p:abbey-grange:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": true,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 6,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": true,
+   "seconds_pairs": 0.05,
+   "seconds": 47.21,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "maid",
+      "I saw the men before ever they came into the house"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall actually _saw_ the three men drinking"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Holmes",
+      "The first officer, Mr. Jack Crocker, had been made a captain"
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "You are acquitted, Captain Crocker"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room."
+     ],
+     "b": [
+      "Captain Crocker",
+      "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room"
+     ],
+     "match": 1
+    },
+    {
+     "a": [
+      "Holmes",
+      "the lady’s story was complete, the maid’s corroboration was sufficient, the detail was fairly exact"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall and her maid have deliberately lied to us"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "Lady Brackenstall thinks that they were themselves so disturbed by the death of Sir Eustace that they did not ransack the house, as they would otherwise have done"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall actually _saw_ the three men drinking"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "Lady Brackenstall thinks that they were themselves so disturbed by the death of Sir Eustace that they did not ransack the house, as they would otherwise have done"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall and her maid have deliberately lied to us"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c013",
+   "story": "norwood-builder",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:norwood-builder:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 2,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.05,
+   "seconds": 48.45,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Sherlock Holmes",
+      "You can hardly find a flaw in the case which can now be presented against him, and all further investigation has served to strengthen it."
+     ],
+     "b": [
+      "Lestrade",
+      "I don’t know whether you think that McFarlane came out of jail in the dead of the night in order to strengthen the evidence against himself"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "May I ask, in the first place, Mr. McFarlane, how it is that you are still at liberty, since there appears to be enough evidence to justify your arrest?"
+     ],
+     "b": [
+      "narrator",
+      "Important fresh evidence to hand. McFarlane’s guilt definitely established. Advise you to abandon case.—LESTRADE."
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c014",
+   "story": "thor-bridge",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:thor-bridge:neil-gibson",
+    "p:thor-bridge:the-gold-king"
+   ],
+   "pairs": 5,
+   "cand_strict": false,
+   "cand_loose": true,
+   "judged": 5,
+   "invalid": 0,
+   "contradicts": 0,
+   "any_contradicts": false,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.04,
+   "seconds": 18.57,
+   "contradicting_pairs": []
+  },
+  {
+   "id": "c018",
+   "story": "silver-blaze",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:silver-blaze:ned-hunter",
+    "p:silver-blaze:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": true,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 3,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": true,
+   "seconds_pairs": 0.04,
+   "seconds": 44.03,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "The speaker",
+      "I found that beyond the arrest of young Fitzroy Simpson nothing had been done"
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "By no possible supposition could this stranger, Fitzroy Simpson, have caused curry to be served in the trainer’s family that night"
+     ],
+     "match": 1
+    },
+    {
+     "a": [
+      "Gregory",
+      "The net is drawn pretty close round Fitzroy Simpson,” he remarked, “and I believe myself that he is our man."
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "By no possible supposition could this stranger, Fitzroy Simpson, have caused curry to be served in the trainer’s family that night"
+     ],
+     "match": 1
+    },
+    {
+     "a": [
+      "Holmes",
+      "Holmes smiled. “I shall not keep you more than a few minutes, Watson,” said he."
+     ],
+     "b": [
+      "narrator",
+      "It was twenty minutes, and the reds had all faded into greys before Holmes and the trainer reappeared."
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c020",
+   "story": "crooked-man",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:crooked-man:murphy"
+   ],
+   "pairs": 3,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 3,
+   "invalid": 0,
+   "contradicts": 0,
+   "any_contradicts": false,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.03,
+   "seconds": 11.43,
+   "contradicting_pairs": []
+  },
+  {
+   "id": "c021",
+   "story": "man-with-the-twisted-lip",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:man-with-the-twisted-lip:hugh-boone"
+   ],
+   "pairs": 8,
+   "cand_strict": false,
+   "cand_loose": true,
+   "judged": 8,
+   "invalid": 0,
+   "contradicts": 2,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": true,
+   "seconds_pairs": 0.05,
+   "seconds": 29.01,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "The Lascar",
+      "he had no knowledge as to the doings of Hugh Boone, his lodger"
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "Hugh Boone had to do with his disappearance"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Boone",
+      "He denied strenuously having ever seen Mr. Neville St. Clair"
+     ],
+     "b": [
+      "the suspect",
+      "Suppose that this man Boone had thrust Neville St. Clair through the window"
+     ],
+     "match": 1
+    }
+   ]
+  },
+  {
+   "id": "c022",
+   "story": "man-with-the-twisted-lip",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:man-with-the-twisted-lip:isa-whitney",
+    "p:man-with-the-twisted-lip:watson"
+   ],
+   "pairs": 1,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 1,
+   "invalid": 0,
+   "contradicts": 1,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.06,
+   "seconds": 5.01,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "the deceased",
+      "She had the surest information that of late he had, when the fit was on him, made use of an opium den in the farthest east of the City"
+     ],
+     "b": [
+      "narrator",
+      "Isa Whitney, brother of the late Elias Whitney, D.D., Principal of the Theological College of St. George’s, was much addicted to opium"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c025",
+   "story": "boscombe-valley-mystery",
+   "kind": "R3_claim_vs_fact",
+   "expected": true,
+   "persons": [
+    "p:boscombe-valley-mystery:james-mccarthy",
+    "p:boscombe-valley-mystery:coroner",
+    "p:boscombe-valley-mystery:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 4,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.04,
+   "seconds": 50.91,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Lestrade",
+      "I find it hard enough to tackle facts, Holmes, without flying away after theories and fancies"
+     ],
+     "b": [
+      "Holmes",
+      "you do find it very hard to tackle the facts"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "On June 3rd, that is, on Monday last, McCarthy left his house at Hatherley about three in the afternoon"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "McCarthy",
+      "He had been out with his serving-man in the morning at Ross"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "He had been out with his serving-man in the morning at Ross"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c028",
+   "story": "silver-blaze",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:silver-blaze:gregory",
+    "p:silver-blaze:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 4,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.04,
+   "seconds": 44.48,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "The speaker",
+      "I found that beyond the arrest of young Fitzroy Simpson nothing had been done"
+     ],
+     "b": [
+      "Gregory",
+      "The net is drawn pretty close round Fitzroy Simpson,” he remarked, “and I believe myself that he is our man."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "The speaker",
+      "I found that beyond the arrest of young Fitzroy Simpson nothing had been done"
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "By no possible supposition could this stranger, Fitzroy Simpson, have caused curry to be served in the trainer’s family that night"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Gregory",
+      "The net is drawn pretty close round Fitzroy Simpson,” he remarked, “and I believe myself that he is our man."
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "By no possible supposition could this stranger, Fitzroy Simpson, have caused curry to be served in the trainer’s family that night"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Holmes",
+      "Holmes smiled. “I shall not keep you more than a few minutes, Watson,” said he."
+     ],
+     "b": [
+      "narrator",
+      "It was twenty minutes, and the reds had all faded into greys before Holmes and the trainer reappeared."
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c031",
+   "story": "naval-treaty",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:naval-treaty:percy-phelps",
+    "p:naval-treaty:tangey",
+    "p:naval-treaty:the-woman"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 1,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.07,
+   "seconds": 46.93,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "the speaker",
+      "I recognised in an instant that the thief must have come up the stairs from the side door"
+     ],
+     "b": [
+      "Holmes",
+      "If not, there is no harm done. But if Mr. Phelps is correct in stating that there is no hiding-place either in the room or the corridors, then the person must have come from outside."
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c033",
+   "story": "abbey-grange",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:abbey-grange:brackenstall",
+    "p:abbey-grange:hopkins",
+    "p:abbey-grange:theresa-wright"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 5,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.04,
+   "seconds": 47.12,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "maid",
+      "I saw the men before ever they came into the house"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall actually _saw_ the three men drinking"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my unfortunate husband entered the room."
+     ],
+     "b": [
+      "Captain Crocker",
+      "I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Holmes",
+      "the lady’s story was complete, the maid’s corroboration was sufficient, the detail was fairly exact"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall and her maid have deliberately lied to us"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "Lady Brackenstall thinks that they were themselves so disturbed by the death of Sir Eustace that they did not ransack the house, as they would otherwise have done"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall actually _saw_ the three men drinking"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lady Brackenstall",
+      "Lady Brackenstall thinks that they were themselves so disturbed by the death of Sir Eustace that they did not ransack the house, as they would otherwise have done"
+     ],
+     "b": [
+      "the speaker",
+      "Lady Brackenstall and her maid have deliberately lied to us"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c034",
+   "story": "priory-school",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:priory-school:constable",
+    "p:priory-school:inn-people",
+    "p:priory-school:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": true,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 3,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.06,
+   "seconds": 45.94,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Sherlock Holmes",
+      "Either the boy was carried off by force or he went of his own free will."
+     ],
+     "b": [
+      "Holmes",
+      "the boy certainly left of his own free-will"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "I realize that your words applied to Mr. James Wilder, and that he is not the murderer."
+     ],
+     "b": [
+      "narrator",
+      "a pale, agitated face—a face with horror in every lineament, the mouth open, the eyes staring wildly in front. It was like some strange caricature of the dapper James Wilder"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Thorneycroft Huxtable",
+      "The matter can be easily remedied,” said the brow-beaten doctor; “Mr. Sherlock Holmes can return to London by the morning train."
+     ],
+     "b": [
+      "narrator",
+      "Sherlock Holmes left the house alone"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c035",
+   "story": "priory-school",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:priory-school:thorneycroft-huxtable",
+    "p:priory-school:sherlock-holmes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 3,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.06,
+   "seconds": 46.37,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Sherlock Holmes",
+      "Either the boy was carried off by force or he went of his own free will."
+     ],
+     "b": [
+      "Holmes",
+      "the boy certainly left of his own free-will"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "I realize that your words applied to Mr. James Wilder, and that he is not the murderer."
+     ],
+     "b": [
+      "narrator",
+      "a pale, agitated face—a face with horror in every lineament, the mouth open, the eyes staring wildly in front. It was like some strange caricature of the dapper James Wilder"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Thorneycroft Huxtable",
+      "The matter can be easily remedied,” said the brow-beaten doctor; “Mr. Sherlock Holmes can return to London by the morning train."
+     ],
+     "b": [
+      "narrator",
+      "Sherlock Holmes left the house alone"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c036",
+   "story": "thor-bridge",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:thor-bridge:coventry",
+    "p:thor-bridge:grace-dunbar"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 2,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.05,
+   "seconds": 40.26,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Holmes",
+      "I can assure you, however, that the relations between Miss Dunbar and me don't really touch this case."
+     ],
+     "b": [
+      "Sherlock Holmes",
+      "It had struck me even at my first perfunctory reading as very strange, and now that I am in closer touch with the case it is my only firm ground for hope."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "J. Neil Gibson",
+      "I know beyond all doubt that Miss Dunbar is innocent"
+     ],
+     "b": [
+      "the wife",
+      "She might have planned to murder Miss Dunbar"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c039",
+   "story": "wisteria-lodge",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:wisteria-lodge:scott-eccles",
+    "p:wisteria-lodge:baynes"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 0,
+   "any_contradicts": false,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.06,
+   "seconds": 49.32,
+   "contradicting_pairs": []
+  },
+  {
+   "id": "c040",
+   "story": "norwood-builder",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:norwood-builder:mcfarlane",
+    "p:norwood-builder:lexington"
+   ],
+   "pairs": 12,
+   "cand_strict": false,
+   "cand_loose": false,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 6,
+   "any_contradicts": true,
+   "strict": false,
+   "loose": false,
+   "seconds_pairs": 0.05,
+   "seconds": 42.28,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "The passage",
+      "It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night"
+     ],
+     "b": [
+      "McFarlane",
+      "Mr. Jonas Oldacre led me into his bedroom"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "The passage",
+      "It is known that Mr. Jonas Oldacre had received a late visitor in his bedroom upon that night"
+     ],
+     "b": [
+      "McFarlane",
+      "I knew nothing of Mr. Jonas Oldacre."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "McFarlane",
+      "I knew nothing of Mr. Jonas Oldacre."
+     ],
+     "b": [
+      "the mother",
+      "Neither my son nor I want anything from Jonas Oldacre, dead or alive"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "McFarlane",
+      "Mr. Jonas Oldacre led me into his bedroom"
+     ],
+     "b": [
+      "Holmes",
+      "the will was drawn up by Jonas Oldacre in his journey yesterday"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "McFarlane",
+      "Mr. Jonas Oldacre led me into his bedroom"
+     ],
+     "b": [
+      "the mother",
+      "Neither my son nor I want anything from Jonas Oldacre, dead or alive"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "Lestrade",
+      "it was John McFarlane who did this crime"
+     ],
+     "b": [
+      "Holmes",
+      "young McFarlane must have come out to get his hat after the crime was done"
+     ],
+     "match": 0
+    }
+   ]
+  },
+  {
+   "id": "c041",
+   "story": "boscombe-valley-mystery",
+   "kind": "consistent_control",
+   "expected": false,
+   "persons": [
+    "p:boscombe-valley-mystery:james-mccarthy"
+   ],
+   "pairs": 12,
+   "cand_strict": true,
+   "cand_loose": true,
+   "judged": 12,
+   "invalid": 0,
+   "contradicts": 6,
+   "any_contradicts": true,
+   "strict": true,
+   "loose": true,
+   "seconds_pairs": 0.05,
+   "seconds": 54.37,
+   "contradicting_pairs": [
+    {
+     "a": [
+      "Sherlock Holmes",
+      "On June 3rd, that is, on Monday last, McCarthy left his house at Hatherley about three in the afternoon"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 1
+    },
+    {
+     "a": [
+      "McCarthy",
+      "He had been out with his serving-man in the morning at Ross"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 2
+    },
+    {
+     "a": [
+      "Sherlock Holmes",
+      "He had been out with his serving-man in the morning at Ross"
+     ],
+     "b": [
+      "James McCarthy",
+      "had only just returned upon the morning of last Monday, the 3rd. My father was absent from home at the time of my arrival, and I was informed by the maid that he had driven over to Ross with John Cobb, the groom."
+     ],
+     "match": 2
+    },
+    {
+     "a": [
+      "James McCarthy",
+      "My father was absent from home at the time of my arrival"
+     ],
+     "b": [
+      "the narrator",
+      "Supposing that this unhappy young man’s story were absolutely true, then what hellish thing, what absolutely unforeseen and extraordinary calamity could have occurred between the time when he parted from his father, and the moment when, drawn back by his screams, he rushed into the glade?"
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "James McCarthy",
+      "I found my father expiring upon the ground"
+     ],
+     "b": [
+      "Witness",
+      "I was so disturbed and excited as I rushed out into the open, that I could think of nothing except of my father. Yet I have a vague impression that as I ran forward something lay upon the ground to the left of me."
+     ],
+     "match": 0
+    },
+    {
+     "a": [
+      "James McCarthy",
+      "I found my father expiring upon the ground"
+     ],
+     "b": [
+      "Holmes",
+      "He ran when he saw his father on the ground"
+     ],
+     "match": 0
+    }
+   ]
+  }
+ ]
+}

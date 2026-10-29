@@ -818,3 +818,27 @@ in `data/curated/presence_demo.jsonl` with a verbatim quote that contains as man
 say in `note` why; (3) give the facts of one day the same `day_key`; (4) run the loader on a copy of the
 graph and ask the question; `uv run pytest tests/curated` checks quotes and slots for every line.
 A case that cannot be expressed without inventing a statement is skipped and documented here.
+
+### 11.5 Model-judged candidate pairs (`agent/semantic_r3.py`, branch `feat/r3-semantic`, switch OFF)
+
+Why. R3 needs a structured proposition; 0.7 % of automatic claims have one, so the rule finds nothing
+on the automatic graph (dev recall 0/14). This layer is NOT a rule. The graph finds candidate pairs
+(no model), a small model judges each pair from the two verbatim quotes only.
+
+- Candidates: claims with a speaker and an anchored quote, plus narrator-voice events, of one story.
+  Two statements by different speakers are paired when they share at least 2 content words
+  (`agent/window.content_words`); score = sum of ln(1+N/df) over shared words + 1.5 per shared entity
+  name; with a linked person at least one side must be by that person or mention the name. Capped at
+  `semantic_r3_max_pairs` (12), deterministic order, no LLM.
+- Judge: `JUDGE_SYSTEM_PROMPT` (version `JUDGE_VERSION`, one constant), a static prefix identical for
+  every pair, then the two quotes with their speakers. Ollama `format` enum {contradicts, consistent,
+  unrelated}, temperature 0, seed 42. An unusable answer (invalid, empty, error) counts as no finding.
+- Answer: only when the question is a contradiction question and the rules returned the `empty` shape,
+  and only with `AgentConfig(semantic_r3=True)` (eval runner: `--set semantic_r3=true`). A separate block
+  "Model-judged candidates (hypotheses, not rule findings)" follows the rule line: at most
+  `semantic_r3_show` (2) pairs judged `contradicts`, label `hypothesis` / `conditional`, both quotes
+  cited, "judged by a small model, not proven". With no such pair the block says that this does not show
+  that the accounts are consistent. Switch off: nothing changes. The SSE schema is unchanged.
+- Eval: `eval/r3_semantic.py` (dev ids only; test ids are refused), results
+  `docs/spike/results/r3-semantic-dev-*.md`. Real runs: `flock /tmp/db-llm.lock uv run python
+  eval/r3_semantic.py --mode judge`.

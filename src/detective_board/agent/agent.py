@@ -45,6 +45,7 @@ from .llm import LLM
 from .memory import Turn, retrieval_query, summarize
 from .retrieval_step import gate, hit_traces
 from .router import Router, extract_names, parse_time_window
+from .semantic_r3 import find_candidates, render_block
 from .translate import Translator, is_mostly_cyrillic
 from .window import idf_from_jsonl
 
@@ -685,6 +686,7 @@ class Agent:
             idf=self.idf,
             min_quote_chars=cfg.min_quote_chars,
         )
+        rule = self._with_semantic(rule, decision, story, link)
         vec = ctx.sources_from_hits(
             hits,
             question,
@@ -819,6 +821,28 @@ class Agent:
             )
         )
 
+    def _with_semantic(
+        self, ans: rf.RuleAnswer, decision: RouteDecided, story: str | None, link: Link | None
+    ) -> rf.RuleAnswer:
+        """Switch `semantic_r3`: a contradiction question with an empty rule result gets a second,
+        separate block of model-judged hypotheses. Off, or any other shape: `ans` unchanged."""
+        conn = getattr(self.graph, "conn", None)
+        if (
+            not self.cfg.semantic_r3
+            or ans.kind != "empty"
+            or "find_contradictions" not in decision.tools
+            or story is None
+            or conn is None
+        ):
+            return ans
+        persons = [link.person_id] if link is not None and link.person_id else []
+        out = find_candidates(
+            self.llm, conn, story, persons=persons, max_pairs=self.cfg.semantic_r3_max_pairs
+        )
+        return render_block(
+            out, ans, show=self.cfg.semantic_r3_show, min_quote_chars=self.cfg.min_quote_chars
+        )
+
     def _rule_first_answer(
         self,
         sink: EventSink,
@@ -845,6 +869,7 @@ class Agent:
             idf=self.idf,
             min_quote_chars=cfg.min_quote_chars,
         )
+        ans = self._with_semantic(ans, decision, story, link)
         sources = ans.sources
         yield sink.emit(
             EnrichedQuery(
