@@ -45,6 +45,7 @@ select = ["E", "F", "W", "I", "UP", "B"]
 "scripts/corpus/*" = ["E501"]
 "scripts/eval/*" = ["E501"]
 "eval/*" = ["E501"]
+"src/detective_board/suspects/*" = ["E501"]
 "tests/*" = ["E501"]
 
 [tool.ruff.format]
