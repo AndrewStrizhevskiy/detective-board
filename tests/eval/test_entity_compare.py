@@ -44,3 +44,18 @@ def test_compare_pairs_and_unchanged():
     assert res["paired"]["refused"]["only_b"] == 1
     assert C.unchanged(off, on) == ["b"]
     assert "switch on" in C.render(res, off, on, "t")
+
+
+def test_strict_named_rejects_a_line_that_names_the_cleared_person():
+    case = {**CASE, "cleared_names": ["Neligan"]}
+    r = row(
+        "a",
+        "named",
+        'x [1: "Patrick Cairns, the true murderer"]\nThe text names John Neligan here.',
+    )
+    f = C.flags(r, case)
+    assert f["named"] and not f["named_strict"] and f["innocent_line"] and f["wrong_person"]
+    ok = row("b", "named", "q\nThe text names Patrick Cairns here.")
+    g = C.flags(ok, case)
+    assert g["named_strict"] and not g["innocent_line"]
+    assert C.flags(row("c", "named", 'From the sources: [1: "Cairns"]'), case)["named_strict"]

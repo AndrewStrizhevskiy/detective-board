@@ -9,6 +9,9 @@ Rows are matched on (id, condition). Metrics per arm (n = rows, Wilson 95 % inte
   refused            status refused
   answered, not named
   innocent accused   the scorer's proxy: a cleared person's name, no culprit alias
+  culprit named, strict  lexical 'named' AND the entity line (if any) does not name somebody else:
+                     the quote may hold the culprit while the line names the innocent
+  entity line names a cleared person   'The text names <Name> here.' with a Name from cleared_names
   wrong person named the entity answer's own line 'The text names <Name> here.' with a <Name> that
                      matches no culprit alias (any person, not only the cleared ones)
 and the paired counts (only off / only on) with the exact McNemar p. No model call.
@@ -62,13 +65,25 @@ def wrong_person(row: dict, case: dict) -> bool:
     return True
 
 
+def line_names_cleared(row: dict, case: dict) -> bool:
+    """The entity line names a cleared person (cleared_names of the case): an accusation of the
+    innocent even when the culprit's name stands in the quote next to it."""
+    who = named_person(row)
+    return who is not None and any(
+        re.search(r"(?<![A-Za-z])" + re.escape(n), who, re.I) for n in case.get("cleared_names", [])
+    )
+
+
 def flags(row: dict, case: dict) -> dict[str, bool]:
+    wp = wrong_person(row, case)
     return {
         "named": row["outcome"] == "named",
+        "named_strict": row["outcome"] == "named" and not wp,
+        "innocent_line": line_names_cleared(row, case),
         "refused": row["outcome"] == "refused",
         "wrong": row["outcome"] == "wrong",
         "innocent": bool(row.get("innocent_accused")),
-        "wrong_person": wrong_person(row, case),
+        "wrong_person": wp,
         "not_a_person": "points here to a cause that is not a person" in (row.get("answer") or ""),
     }
 
@@ -91,12 +106,21 @@ def compare(off: dict, on: dict, cases: dict[str, dict], ids: set[str] | None = 
             "n": n,
             **{
                 m: M.share(sum(f[k][m] for k in keys), n)
-                for m in ("named", "refused", "wrong", "innocent", "wrong_person", "not_a_person")
+                for m in (
+                    "named",
+                    "named_strict",
+                    "refused",
+                    "wrong",
+                    "innocent",
+                    "innocent_line",
+                    "wrong_person",
+                    "not_a_person",
+                )
             },
         }
     paired = {
         m: M.paired({str(k): fo[k][m] for k in keys}, {str(k): fn[k][m] for k in keys})
-        for m in ("named", "innocent", "refused", "wrong_person")
+        for m in ("named", "named_strict", "innocent", "innocent_line", "refused", "wrong_person")
     }
     return {"keys": keys, "arms": arms, "paired": paired, "off": fo, "on": fn}
 
@@ -105,20 +129,24 @@ def render(res: dict, off: dict, on: dict, title: str) -> str:
     a, n = res["arms"], res["arms"]["off"]["n"]
     L = [f"### {title}", "", f"n = {n} questions (Wilson 95 % intervals)", ""]
     L += [
-        "| arm | culprit named | refused | answered, not named | innocent accused (proxy) "
-        "| wrong person named | NOT_A_PERSON answers |",
-        "|---|---|---|---|---|---|---|",
+        "| arm | culprit named (lexical) | **culprit named, strict** | refused | answered, not named "
+        "| innocent accused (proxy) | entity line names a cleared person | wrong person named "
+        "| NOT_A_PERSON answers |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for label in ("off", "on"):
         x = a[label]
         L.append(
-            f"| switch {label} | {pct(x['named'])} | {pct(x['refused'])} | {pct(x['wrong'])} | "
-            f"{pct(x['innocent'])} | {pct(x['wrong_person'])} | {pct(x['not_a_person'])} |"
+            f"| switch {label} | {pct(x['named'])} | {pct(x['named_strict'])} | {pct(x['refused'])} "
+            f"| {pct(x['wrong'])} | {pct(x['innocent'])} | {pct(x['innocent_line'])} "
+            f"| {pct(x['wrong_person'])} | {pct(x['not_a_person'])} |"
         )
     L.append("")
     for m, label in (
-        ("named", "culprit named"),
-        ("innocent", "innocent accused"),
+        ("named", "culprit named (lexical)"),
+        ("named_strict", "culprit named, strict"),
+        ("innocent", "innocent accused (proxy)"),
+        ("innocent_line", "entity line names a cleared person"),
         ("refused", "refused"),
         ("wrong_person", "wrong person named"),
     ):
