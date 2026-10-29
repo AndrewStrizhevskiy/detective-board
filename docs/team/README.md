@@ -3,8 +3,7 @@
 - `../../CONTRIBUTING.md`: setup, branches, commits, PR rules, zones, what not to commit, tests.
 - `ASSIGNMENTS.md`: four work packages (A extraction on strong hardware, B UI polish and e2e, C eval and human review, D run/package/present) and the orchestrator's focus. Deadline 2026-10-27 18:00, freeze 2026-10-28.
 - `models.md`: exact Ollama tags and digests; cache key parts that must match.
-- `SERVER_ACCESS_RU.md`: как подключиться к серверу по SSH (университетский VPN, ключи, проверка `scripts/server_access_check.sh`, правила общей машины, разбор поломок).
-- `SERVER_TAILSCALE_RU.md`: план доступа к серверу из любой сети через Tailscale (исходящий туннель с сервера; установлено и проверено 2026-10-29).
+- Доступ к серверу (SSH, Tailscale, диагностика, правила общей машины) вынесен в отдельный репозиторий: https://github.com/AndrewStrizhevskiy/gpu-server-access
 - `SERVER_RUNBOOK.md`: step-by-step session plan for the GPU server (environment, determinism check, gold-12 quality check, full run, merge, graph build, what to bring back).
 
 ## Sharded extraction (Package A tools)

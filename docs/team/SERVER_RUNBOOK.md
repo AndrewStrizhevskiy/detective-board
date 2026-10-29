@@ -1,6 +1,6 @@
 # Runbook: extraction on a GPU server (one session, 4-6 hours)
 
-> Русская пошаговая версия: [SERVER_GUIDE_RU.md](SERVER_GUIDE_RU.md). Удалённый доступ (SSH через университетский VPN): [SERVER_ACCESS_RU.md](SERVER_ACCESS_RU.md).
+> Русская пошаговая версия: [SERVER_GUIDE_RU.md](SERVER_GUIDE_RU.md). Как подключиться к серверу (SSH, Tailscale, правила общей машины): репозиторий https://github.com/AndrewStrizhevskiy/gpu-server-access
 
 ## TL;DR (two commands)
 
