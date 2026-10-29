@@ -107,14 +107,50 @@ else
   $RUN collect --split all --methods none --out "$BASE" --cache-dir "$SUSPECTS/none" > "$OUT/logs/baselines.log" 2>&1
 fi
 
-COMMON="--split dev --variants open"
+# dev stories need at most ~11k tokens. The server runs 4 parallel slots, so a 14k context makes the 8B
+# model spill to the CPU; short-context steps (cards, dossier) run fully on the GPU and come first.
+COMMON="--split dev --variants open --num-ctx 14336"
+SHORT="--split dev --variants open"
 F="--methods fulltext"
 
-# 1. thinking mode on the 8B judge
-step think8b 20 50 $COMMON $F --think --suffix _think
+# 1. case-file method (short contexts, fast)
+step dossier8b 30 70 $SHORT --methods dossier
 ensembles
 
-# 2. the 14B judge (pull once if missing, never when the disk is short)
+# 2. evidence cards: run-to-run noise (another seed) and accuracy vs share of text read
+step seed_cards_7 15 35 $SHORT --methods cards --seed 7
+for c in 0.6 0.75 0.9; do
+  step "curve_cards_$c" 15 35 $SHORT --methods cards --cut-frac "$c"
+done
+ensembles
+
+# 3. self-consistency (7 samples at temperature 0.3) for full-context and the dossier judge
+step sc7 40 80 $COMMON --methods fulltext dossier --sc 7
+ensembles
+
+# 4. pairwise tournament, 8B (police-accused prior is free: it is part of the baselines)
+step pair8b 30 70 $COMMON --methods pairwise
+ensembles
+
+# 5. accuracy versus the share of text read, full-context, all 16 cases (default 20k context)
+for c in 0.6 0.75 0.9; do
+  step "curve_full_$c" 20 45 --split all --variants open $F --cut-frac "$c"
+done
+
+# 6. candidate order, two shuffles; other seeds (run-to-run noise)
+for o in 1 2; do
+  step "shuffle_$o" 12 30 $COMMON $F --shuffle-seed "$o"
+done
+for sd in 7 99; do
+  step "seed_full_$sd" 12 30 $COMMON $F --seed "$sd"
+done
+ensembles
+
+# 7. thinking mode on the 8B judge (slow: the context spills to the CPU)
+step think8b 60 120 $COMMON $F --think --suffix _think
+ensembles
+
+# 8. the 14B judge (pull once if missing, never when the disk is short)
 if ! ollama list | grep -q "qwen3:14b"; then
   free_gb=$(df -BG --output=avail ~ | tail -1 | tr -dc 0-9)
   if [ "${free_gb:-0}" -gt 40 ] && [ "$(remaining_min)" -gt 60 ]; then
@@ -125,54 +161,20 @@ if ! ollama list | grep -q "qwen3:14b"; then
   fi
 fi
 if ollama list | grep -q "qwen3:14b"; then
-  step full14b 30 70 $COMMON $F --model qwen3:14b --suffix _14b
+  step full14b 40 90 $COMMON $F --model qwen3:14b --suffix _14b
+  step dossier14b 50 100 $SHORT --methods dossier --model qwen3:14b --suffix _14b
+  step pair14b 80 140 $COMMON --methods pairwise --model qwen3:14b --suffix _14b
+  step full14b_think 70 120 $COMMON $F --model qwen3:14b --think --suffix _14b_think
+  step sc7_14b 60 100 $COMMON $F --model qwen3:14b --suffix _14b --sc 7
 else
   note "14B steps skipped: model not available"
 fi
 ensembles
 
-# 3. case-file method, 8B
-step dossier8b 30 70 $COMMON --methods dossier
-ensembles
-
-# 4. police-accused prior is free (baselines); pairwise tournament with 8B
-step pair8b 25 60 $COMMON --methods pairwise
-ensembles
-
-# 5. self-consistency: 7 samples at temperature 0.3 for full-context and the dossier judge
-step sc7 30 60 $COMMON --methods fulltext dossier --sc 7
-ensembles
-
-# 6. accuracy versus the share of text read (60, 75, 90 percent of the pre-cut text), all 16 cases
-for c in 0.6 0.75 0.9; do
-  step "curve_full_$c" 15 35 --split all --variants open $F --cut-frac "$c"
-done
-for c in 0.6 0.75 0.9; do
-  step "curve_cards_$c" 15 35 $COMMON --methods cards --cut-frac "$c"
-done
-
-# 7. candidate order, two shuffles
-for o in 1 2; do
-  step "shuffle_$o" 10 25 $COMMON $F --shuffle-seed "$o"
-done
-
-# 8. other seeds: run-to-run noise
-for sd in 7 99; do
-  step "seed_full_$sd" 10 25 $COMMON $F --seed "$sd"
-done
-step seed_cards_7 15 35 $COMMON --methods cards --seed 7
-
-# 9. more heavy runs while time remains: 14B pairwise, 14B thinking, more seeds
-if ollama list | grep -q "qwen3:14b"; then
-  step pair14b 60 100 $COMMON --methods pairwise --model qwen3:14b --suffix _14b
-  step full14b_think 45 90 $COMMON $F --model qwen3:14b --think --suffix _14b_think
-  step dossier14b 40 80 $COMMON --methods dossier --model qwen3:14b --suffix _14b
-  step sc7_14b 40 80 $COMMON $F --model qwen3:14b --suffix _14b --sc 7
-fi
-ensembles
+# 9. more heavy runs while time remains: more seeds
 for sd in 101 202 303 404 505 606 707 808; do
-  step "seed_full_$sd" 10 25 $COMMON $F --seed "$sd"
-  step "seed_sc_$sd" 25 50 $COMMON --methods fulltext dossier --sc 5 --seed "$sd"
+  step "seed_full_$sd" 12 30 $COMMON $F --seed "$sd"
+  step "seed_sc_$sd" 30 60 $COMMON --methods fulltext dossier --sc 5 --seed "$sd"
   ensembles
 done
 log "queue exhausted or deadline reached"
