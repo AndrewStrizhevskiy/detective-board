@@ -40,7 +40,7 @@ a small set of "person, place, time" statements in `data/curated/presence_demo.j
 verbatim quote, written and checked by the team (AI-assisted, to be re-checked by a human; the
 re-check has not happened yet). They are used because the small extraction models do not resolve
 "he" and "there" on these passages. The screen, the Why panel and the spoken answer say "curated"
-wherever such a fact is an input. The file has seven facts (two for Wisteria Lodge, three for the Boscombe control, two for Abbey Grange). The two Abbey Grange facts have no clock time: both are placed "at the moment Sir Eustace entered the room", a relative time that the team asserts is one moment, so the finding is always labelled conditional and says "relative time, curated". The automatic extraction numbers are reported separately and
+wherever such a fact is an input. The file has eight facts (three for Wisteria Lodge: Garcia twice and Scott Eccles in his own room, three for the Boscombe control, two for Abbey Grange). The two Abbey Grange facts have no clock time: both are placed "at the moment Sir Eustace entered the room", a relative time that the team asserts is one moment, so the finding is always labelled conditional and says "relative time, curated". The automatic extraction numbers are reported separately and
 are not improved by, or mixed with, the curated facts. A finding built on curated facts shows what
 the rules do when the facts are right, not what a model finds on its own.
 

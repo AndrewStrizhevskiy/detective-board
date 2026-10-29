@@ -183,9 +183,9 @@ Slide 7, 4:15-5:05 (50 s). Running total 5:05.
 SAY (about 125 words):
 "What we measured, with its caveats on the slide. Thirty test questions, run once, the expected ranges written down before the run. By a strict mechanical test, the answer must contain half of the key facts of the reference answer: ten percent for the bare model, thirty-seven for vector search only, forty-three for our agent. Retrieval clearly beats the bare model, and that is significant. Our agent is slightly ahead of plain vector search, but two questions out of thirty is within noise. Where it clearly helps: it quotes the right sentence in sixty-one percent of the answered questions against thirty-nine, and out-of-corpus questions are all refused. The rules found nothing on the automatically extracted graph, zero of twelve; the findings you saw come from facts entered by the team. Small sets written by an AI, one run; I will not round them up. And what did not work, we show: a model judge for contradictions flagged eight of nine controls, so it is off."
 
-NUMBERS: every cell has a file in numbers.md (rows 5-11 and 30-33). The test split was NOT run; do not claim test results.
+NUMBERS: every cell has a file in numbers.md (rows 5-11 and 30-33). The test split was run ONCE (preregistered, `docs/spike/results/test-preregistration-20261028.md`); never rerun it to improve a number.
 
-IF IT GOES WRONG: slide only. If late, say only the dev-split row and the 0/14 row.
+IF IT GOES WRONG: slide only. If late, say only the test row and the 0 of 12 row.
 -->
 
 <!-- _class: small -->
@@ -227,7 +227,7 @@ IF IT GOES WRONG: slide only.
 Slide 9, 5:30-6:10 (40 s). Running total 6:10. MANDATORY DISCLOSURE. Read it, do not paraphrase away any of the four points.
 
 SAY (about 100 words):
-"Four things you must know. One: the knowledge graph was precomputed on other hardware, with the same models; the organizers allowed this. This laptop only answers questions. Two: the facts behind the red conflicts are curated, entered by the team with their quotes and labelled curated everywhere; the human re-check is still pending. Three: the gold sets were written by an AI and are not reviewed by a human; that review has not been done, and to be filled. Four: rule R3 has no positive example in our corpus, so it is implemented but not demonstrated. Everything shown is measured, and 'verified' does not mean true."
+"Five things you must know. One: the knowledge graph was precomputed on other hardware, with the same models; the organizers allowed this. This laptop only answers questions. Two: the facts behind the red conflicts are curated, entered by the team with their quotes and labelled curated everywhere; the human re-check is still pending. Three: the gold sets were written by an AI and are not reviewed by a human; that review has not been done, and to be filled. Four: the rules find nothing on the automatically extracted facts, zero of twelve test cases; the red conflicts rest on curated facts. Five: everything shown is measured, and 'verified' does not mean true."
 
 NUMBERS: server hardware and the hours of extraction are not on the slide; if asked: i7-12700K, 96 GB, RTX 4070 12 GB (STATUS.md). Hardware: laptop numbers on the demo laptop; extraction numbers on the department server.
 
@@ -254,7 +254,7 @@ SAY (about 50 words):
 
 NUMBERS: none.
 
-IF IT GOES WRONG: slide only. Then Q&A from docs/demo/jury-faq.md; backup slides B1-B6 follow.
+IF IT GOES WRONG: slide only. Then Q&A from docs/demo/jury-faq.md; backup slides B1-B7 follow.
 -->
 
 # What is next
@@ -304,7 +304,7 @@ First real run, one story (wisteria-lodge), after the deterministic repair:
 
 Presence pass on the 3 chunks of case c001 (1 run each): qwen3:4b-instruct **7** facts, **1** kept (and the kept one is wrong); qwen3:8b **15** facts, **11** kept, key fact right, several wrong persons or places. Precision unmeasured.
 
-Therefore the demo case uses five curated facts. They show what the rules do when facts are right, not what a model finds alone.
+Therefore the demo cases use curated facts (eight in total today). They show what the rules do when facts are right, not what a model finds alone.
 
 ---
 
