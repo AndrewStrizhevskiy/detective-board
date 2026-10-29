@@ -1,0 +1,188 @@
+/* @theme detective
+ * Marp theme in the style of the Detective Board UI: wooden frame, case-file paper, crimson thread,
+ * brass pin, typewriter labels. Colours and fonts come from docs/design/tokens.css and the vendored
+ * fonts in web/vendor/fonts (never fetched from the network). Render: docs/slides/README.md.
+ */
+
+@font-face { font-family: "IM Fell English"; font-style: normal; font-weight: 400; src: url("../../web/vendor/fonts/im-fell-english-latin.woff2") format("woff2"); }
+@font-face { font-family: "IM Fell English"; font-style: italic; font-weight: 400; src: url("../../web/vendor/fonts/im-fell-english-italic-latin.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-style: normal; font-weight: 400 800; src: url("../../web/vendor/fonts/eb-garamond-latin.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-style: italic; font-weight: 400 800; src: url("../../web/vendor/fonts/eb-garamond-italic-latin.woff2") format("woff2"); }
+@font-face { font-family: "Special Elite"; font-style: normal; font-weight: 400; src: url("../../web/vendor/fonts/special-elite-latin.woff2") format("woff2"); }
+
+section {
+  --paper: #f3ead6;
+  --paper-2: #ece2cc;
+  --ink: #23170e;
+  --ink-muted: #5a4835;
+  --frame: #6a4628;
+  --cork: #c9a679;
+  --thread: #b01e18;
+  --quote-bg: #ffe9a8;
+  --edge: #644c2c;
+  --brass: #b8923a;
+  --stamp: #b3261e;
+  --verified: #3d3a8c;
+
+  font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+  font-size: 30px;
+  line-height: 1.38;
+  color: var(--ink);
+  padding: 58px 74px 64px 74px;
+  /* the case-file sheet inside a wooden frame, a cork edge between them */
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0) 55%),
+    var(--paper);
+  border: 18px solid var(--frame);
+  box-shadow: inset 0 0 0 6px var(--cork), inset 0 0 40px rgba(60, 40, 10, 0.25);
+  box-sizing: border-box;
+}
+
+/* brass pin and the red thread under the heading */
+section::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin-left: -11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f6e3a6, var(--brass) 55%, #6e5316 100%);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.35);
+}
+
+h1, h2, h3 {
+  font-family: "IM Fell English", Georgia, serif;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 0 0 0.45em 0;
+}
+h1 { font-size: 50px; line-height: 1.12; position: relative; padding-bottom: 14px; }
+h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--thread), #e0524a 40%, var(--thread));
+  border-radius: 2px;
+  box-shadow: 0 2px 2px rgba(42, 5, 8, 0.45);
+}
+h2 { font-size: 38px; }
+
+p, li { margin: 0.28em 0; }
+ul, ol { padding-left: 1.2em; }
+li::marker { color: var(--thread); }
+
+strong { font-weight: 700; background: linear-gradient(transparent 62%, var(--quote-bg) 62%); padding: 0 2px; }
+em { color: var(--ink-muted); }
+a { color: #24508f; }
+
+code {
+  font-family: "Special Elite", "Courier New", monospace;
+  font-size: 0.82em;
+  background: var(--paper-2);
+  border: 1px solid #cdbf9f;
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+pre {
+  font-family: "Special Elite", "Courier New", monospace;
+  font-size: 0.62em;
+  line-height: 1.3;
+  background: var(--paper-2);
+  border: 1px solid var(--edge);
+  border-left: 8px solid var(--thread);
+  border-radius: 6px;
+  padding: 14px 18px;
+}
+pre code { background: none; border: 0; padding: 0; font-size: 1em; }
+
+/* a quotation from the story: highlighter yellow, typed in the quote face */
+blockquote {
+  font-family: "EB Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.9em;
+  margin: 0.6em 0;
+  padding: 10px 22px;
+  background: var(--quote-bg);
+  border-left: 8px solid var(--thread);
+  border-radius: 0 6px 6px 0;
+  color: var(--ink);
+  box-shadow: 2px 3px 0 rgba(100, 76, 44, 0.25);
+}
+blockquote p { margin: 0.2em 0; }
+
+table {
+  border-collapse: collapse;
+  font-size: 0.68em;
+  line-height: 1.25;
+  background: rgba(246, 240, 226, 0.85);
+  border: 2px solid var(--edge);
+  width: 100%;
+}
+th {
+  font-family: "Special Elite", "Courier New", monospace;
+  font-weight: 400;
+  font-size: 0.82em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: left;
+  background: var(--frame);
+  color: #f3e2b8;
+  padding: 6px 10px;
+}
+td { padding: 6px 10px; border-top: 1px solid #cdbf9f; vertical-align: top; }
+tr:nth-child(even) td { background: rgba(236, 226, 204, 0.7); }
+
+/* page number as a typed label, bottom right */
+section::after {
+  font-family: "Special Elite", "Courier New", monospace;
+  font-size: 18px;
+  color: var(--ink-muted);
+  right: 36px;
+  bottom: 26px;
+}
+footer { font-family: "Special Elite", "Courier New", monospace; font-size: 16px; color: var(--ink-muted); }
+
+/* sizes used by the deck: <!-- _class: small --> and tiny */
+section.small { font-size: 23px; }
+section.small h1 { font-size: 40px; }
+section.tiny { font-size: 18px; }
+section.tiny h1 { font-size: 34px; }
+
+/* rubber stamps (use <span class="stamp">RECORDING</span> inline) */
+.stamp {
+  display: inline-block;
+  font-family: "Special Elite", "Courier New", monospace;
+  font-size: 0.55em;
+  letter-spacing: 0.12em;
+  color: var(--stamp);
+  border: 3px solid var(--stamp);
+  border-radius: 6px;
+  padding: 2px 12px;
+  transform: rotate(-3deg);
+  opacity: 0.88;
+}
+.stamp.verified { color: var(--verified); border-color: var(--verified); }
+.rec { color: #8a5a00; font-weight: bold; }
+
+/* architecture diagram (slide 3): paper cards with a brass pin, red thread arrows */
+.flow { display: flex; flex-direction: column; gap: 16px; margin-top: 4px; }
+.flow .row { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.flow .box {
+  position: relative; flex: 1 1 0; max-width: 300px; min-height: 78px;
+  background: var(--paper-2); border: 2px solid var(--edge); border-radius: 6px;
+  padding: 16px 12px 8px 12px; text-align: center; box-shadow: 3px 4px 0 rgba(100, 76, 44, 0.3);
+}
+.flow .box::before {
+  content: ""; position: absolute; top: -9px; left: 50%; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--pin, #b8923a) 55%, #2a1a05 100%); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+}
+.flow b { display: block; font-family: "IM Fell English", Georgia, serif; font-weight: 400; font-size: 0.92em; }
+.flow small { display: block; font-size: 0.56em; line-height: 1.2; color: var(--ink-muted); margin-top: 4px; }
+.flow .arr { flex: 0 0 auto; font-family: "Special Elite", "Courier New", monospace; font-size: 0.5em; color: var(--thread); text-align: center; min-width: 54px; }
+.flow .src { --pin: #6f6a62; } .flow .llm { --pin: #7a3e9d; } .flow .graph { --pin: #b8923a; }
+.flow .idx { --pin: #3b7a63; } .flow .agent { --pin: #2e5aa0; } .flow .rules { --pin: #b3261e; } .flow .ui { --pin: #e4ddcc; max-width: 520px; }

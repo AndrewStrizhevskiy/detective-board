@@ -1,18 +1,10 @@
 ---
 marp: true
-theme: default
+theme: detective
 paginate: true
 size: 16:9
 title: Detective Board - where the agent guesses, and where it proves
 description: 6:30 talk, 10 main slides plus backup. Source of every number is listed in numbers.md.
-style: |
-  section { font-size: 28px; }
-  section h1 { font-size: 40px; }
-  section.small { font-size: 22px; }
-  section.tiny { font-size: 18px; }
-  blockquote { font-size: 24px; }
-  table { font-size: 22px; }
-  .rec { color: #8a5a00; font-weight: bold; }
 ---
 
 <!--
@@ -81,18 +73,23 @@ IF IT GOES WRONG: this is a slide. If the board is needed early, it is behind th
 
 # Architecture on one picture
 
-```
- 20 stories --> LLM extraction (offline) --> GRAPH (facts + quotes)
-      |                                          |
-      v                                          v
- hybrid index                          RULES R1-R3 (no LLM)
- (BM25 + embeddings)                             ^
-      |                                          |
-      +--------> AGENT (router, self-check) <--MCP stdio--> timeline-alibi
-                          |
-                          v
-        BOARD UI: graph, trace, answer, Why panel
-```
+<div class="flow">
+  <div class="row">
+    <div class="box src"><b>20 stories</b><small>596 chunks, public domain</small></div>
+    <div class="arr">offline, once</div>
+    <div class="box llm"><b>Small model extracts</b><small>persons, places, events, claims, each with a verbatim quote</small></div>
+    <div class="arr">&#9654;</div>
+    <div class="box graph"><b>Graph</b><small>facts + quotes + provenance labels</small></div>
+  </div>
+  <div class="row">
+    <div class="box idx"><b>Hybrid index</b><small>BM25 + embeddings, sentence index</small></div>
+    <div class="arr">&#9654;</div>
+    <div class="box agent"><b>Agent</b><small>router, picks a sentence, self-check, honest refusal</small></div>
+    <div class="arr">MCP &#9664;&#9654;</div>
+    <div class="box rules"><b>Rules R1-R3</b><small>no model: alibi, order, claim vs fact, with an Explanation</small></div>
+  </div>
+  <div class="row"><div class="box ui"><b>Board</b><small>graph, trace, answer, Why panel: every answer shows its quotes</small></div></div>
+</div>
 
 Full diagrams: `docs/architecture/c4.md` (mermaid, renders on GitHub).
 

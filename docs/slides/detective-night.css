@@ -1,0 +1,53 @@
+/* @theme detective-night
+ * The dark theme of the Detective Board ("night at Baker Street", lamp-lit board): values from the dark
+ * block of docs/design/tokens.css. It reuses the layout of the light theme (detective.css) and changes
+ * only colours. Render with both files in the theme set (docs/slides/README.ru.md).
+ */
+@import "detective";
+
+section {
+  --paper: #1f1812;
+  --paper-2: #2a2118;
+  --ink: #efe4cf;
+  --ink-muted: #c2b195;
+  --frame: #2e1c0f;
+  --cork: #3e2a1b;
+  --edge: #9a8a70;
+  --thread: #d8392f;
+  --quote-bg: #5b4a12;
+  --brass: #d9b45a;
+  --stamp: #ff8a80;
+  --verified: #b5a9ff;
+
+  color: var(--ink);
+  /* the lamp: a warm glow at the upper left over the dark wall */
+  background:
+    radial-gradient(ellipse at 18% 8%, rgba(255, 214, 150, 0.20), rgba(255, 190, 110, 0.06) 38%, rgba(0, 0, 0, 0) 62%),
+    #15100b;
+  box-shadow: inset 0 0 0 6px var(--cork), inset 0 0 70px rgba(0, 0, 0, 0.6);
+}
+
+h1, h2, h3 { color: #f4ebd0; }
+h1::after { background: linear-gradient(90deg, #b01e18, #ff6a5e 40%, #b01e18); box-shadow: 0 2px 6px rgba(255, 120, 100, 0.25); }
+em { color: var(--ink-muted); }
+a { color: #9cc0f0; }
+li::marker { color: #ff8a80; }
+strong { background: linear-gradient(transparent 62%, rgba(255, 194, 51, 0.30) 62%); color: #f7eed8; }
+
+code { background: var(--paper-2); border-color: #3d3226; color: #efe4cf; }
+pre { background: #1a140e; border-color: var(--edge); border-left-color: #d8392f; color: #efe4cf; }
+
+blockquote { color: #f4ebd0; background: var(--quote-bg); border-left-color: #ff8a80; box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.4); }
+
+table { background: rgba(31, 24, 18, 0.88); border-color: var(--edge); color: var(--ink); }
+th { background: #3b2a1a; color: #f3e2b8; }
+td { border-top-color: #3d3226; }
+tr:nth-child(even) td { background: rgba(42, 33, 24, 0.85); }
+
+section::after, footer { color: var(--ink-muted); }
+
+/* the diagram cards and the stamps on the dark wall */
+.flow .box { background: var(--paper-2); border-color: var(--edge); box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.45); }
+.flow small { color: var(--ink-muted); }
+.flow .arr { color: #ff8a80; }
+.rec { color: #e0b15a; }
