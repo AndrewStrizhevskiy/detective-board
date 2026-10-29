@@ -12,6 +12,8 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+from detective_board.extract.curated_schema import CURATED_REVIEW
+
 from .events import parse_explanation
 from .linking import Link
 from .rule_first import (
@@ -178,7 +180,7 @@ def build_presence_answer(
     if curated:
         tail.append(
             f"Curated: {curated} of the rows were entered and checked by the team (AI-assisted, "
-            "human re-check pending); they are not output of the automatic extraction."
+            f"{CURATED_REVIEW}); they are not output of the automatic extraction."
         )
     extra: list[str] = []
     if link is not None and link.status == "ambiguous":

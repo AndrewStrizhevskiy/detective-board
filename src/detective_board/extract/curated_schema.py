@@ -16,6 +16,40 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 CURATED_SCHEMA_VERSION = "curated-1"
 CURATED_MARK = "(curated)"
+REVIEW_PENDING = "human re-check pending"
+_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+_LOGIN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9-]{0,38}$")
+
+
+def review_phrase(reviewed_by: str, reviewed_on: str) -> str:
+    return f"human re-check done by {reviewed_by} on {reviewed_on}"
+
+
+# What answers, boards and slides say about the curated files. One value for both files; a test
+# (tests/curated/test_review.py) checks it against their reviewed_by / reviewed_on fields.
+CURATED_REVIEW = REVIEW_PENDING
+
+
+def review_status(reviews: list[tuple[str | None, str | None]]) -> str:
+    """The phrase CURATED_REVIEW must hold for these (reviewed_by, reviewed_on) pairs: 'pending'
+    unless every record was checked."""
+    if not reviews or any(by is None for by, _ in reviews):
+        return REVIEW_PENDING
+    by = " and ".join(sorted({b for b, _ in reviews if b}))
+    on = " and ".join(sorted({d for _, d in reviews if d}))
+    return review_phrase(by, on)
+
+
+def check_review(reviewed_by: str | None, reviewed_on: str | None) -> None:
+    """Both or neither; a GitHub login and an ISO date (YYYY-MM-DD)."""
+    if (reviewed_by is None) != (reviewed_on is None):
+        raise ValueError("reviewed_by and reviewed_on go together")
+    if reviewed_by is not None and not _LOGIN.match(reviewed_by):
+        raise ValueError("reviewed_by must be a GitHub login")
+    if reviewed_on is not None and not _DATE.match(reviewed_on):
+        raise ValueError("reviewed_on must be YYYY-MM-DD")
+
+
 # Story days of curated day keys: above the weekday scale (0..6) and the heuristic presence days
 # (TEXT_DAY_BASE 10000 + n), far below real date ordinals (about 740000): never equal to either.
 CURATED_DAY_BASE = 20_000
@@ -87,6 +121,8 @@ class CuratedFact(BaseModel):
     confidence: Literal["high", "low"] | None = Field(
         default=None, description="'low' forces LOW; otherwise the normaliser decides"
     )
+    reviewed_by: str | None = Field(default=None, description="GitHub login of the human checker")
+    reviewed_on: str | None = Field(default=None, description="Date of the human check")
 
     @field_validator("id")
     @classmethod
@@ -118,6 +154,7 @@ class CuratedFact(BaseModel):
 
     @model_validator(mode="after")
     def _consistent(self) -> CuratedFact:
+        check_review(self.reviewed_by, self.reviewed_on)
         if self.source == "speech" and not self.speaker:
             raise ValueError("a speech fact needs a speaker")
         if self.source == "narrator" and self.speaker:

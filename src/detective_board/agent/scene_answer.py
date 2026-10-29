@@ -17,6 +17,7 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from detective_board.extract.curated_schema import CURATED_REVIEW
 from detective_board.extract.scenes import SCENE_MARK, Scene, SceneIndex, load_index
 
 from .events import parse_explanation
@@ -322,7 +323,7 @@ def build_scene_answer(
     if cur:
         tail.append(
             f"Curated: {cur} of the facts above were entered and checked by the team "
-            "(AI-assisted, human re-check pending); they are not output of the automatic "
+            f"(AI-assisted, {CURATED_REVIEW}); they are not output of the automatic "
             "extraction."
         )
     if p.get("truncated"):
