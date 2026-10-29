@@ -184,7 +184,7 @@ IF IT GOES WRONG: if it does not refuse and calls the model: stop it with Esc, t
 Slide 7, 4:15-5:05 (50 s). Running total 5:05.
 
 SAY (about 125 words):
-"What we measured, with its caveats on the slide. Thirty test questions, run once, the expected ranges written down before the run. By a strict mechanical test, the answer must contain half of the key facts of the reference answer: ten percent for the bare model, thirty-seven for vector search only, forty-three for our agent. Retrieval clearly beats the bare model, and that is significant. Our agent is slightly ahead of plain vector search, but two questions out of thirty is within noise. Where it clearly helps: it quotes the right sentence in sixty-one percent of the answered questions against thirty-nine, and out-of-corpus questions are all refused. The rules found nothing on the automatically extracted graph, zero of twelve; the findings you saw come from facts entered by the team. Small sets written by an AI, one run; I will not round them up."
+"What we measured, with its caveats on the slide. Thirty test questions, run once, the expected ranges written down before the run. By a strict mechanical test, the answer must contain half of the key facts of the reference answer: ten percent for the bare model, thirty-seven for vector search only, forty-three for our agent. Retrieval clearly beats the bare model, and that is significant. Our agent is slightly ahead of plain vector search, but two questions out of thirty is within noise. Where it clearly helps: it quotes the right sentence in sixty-one percent of the answered questions against thirty-nine, and out-of-corpus questions are all refused. The rules found nothing on the automatically extracted graph, zero of twelve; the findings you saw come from facts entered by the team. Small sets written by an AI, one run; I will not round them up. And what did not work, we show: a model judge for contradictions flagged eight of nine controls, so it is off."
 
 NUMBERS: every cell has a file in numbers.md (rows 5-11 and 30-33). The test split was NOT run; do not claim test results.
 
@@ -193,21 +193,16 @@ IF IT GOES WRONG: slide only. If late, say only the dev-split row and the 0/14 r
 
 <!-- _class: small -->
 
-# Measured quality (pilot, caveats included)
+# Measured quality (test split first, caveats included)
 
 | What | Result | n | Caveat |
 |---|---|---|---|
-| Real API, extractive mode, 2026-10-27 | quoted sentence for **6 of 10** answerable; **2 of 2** out-of-corpus refused; **8.1-20.2 s** per model call | 12 questions, 1 run | "answered" is not "correct"; no human judging |
-| Retrieval-only check, 2026-10-23 | **5 of 10** answered and verified; behaviour correct **8 of 12**; bare model vs agent on refusal-type questions **1 of 3** vs **2 of 3** | 12 questions, 1 run | AI-written gold; graph and rules off |
-| Gold chunk within top 4 | **70 of 86 = 81%** | 86 questions | retrieval only, no LLM |
-| Full graph from the department server, 2026-10-27 | **596 of 596** chunks, 20 of 20 stories, 2157 claims, 1698 events; rules: **0 findings in 19 of 20 stories** (only the curated Garcia R1) | 596 chunks, 1 run | extraction quality not scored beyond the 12 gold chunks; presence pass not run |
-| Real stack on the full graph, laptop, 2026-10-28 | **5 of 6** dev questions answered with a quoted sentence in **30-43 s**; 1 refused (g009, multi-hop) | 6 questions, 1 run | not a clean window; answered is not correct |
 | **Test split, run once and preregistered, 2026-10-28** (final configuration, not tuned on these questions) | behaviour correct: bare **3/30 = 10%** [3, 26], vector-only **11/30 = 37%** [22, 54], hybrid+graph (the agent) **13/30 = 43%** [27, 61]; agent vs bare p = 0.006 (11 vs 1); agent vs vector 2 vs 0, p = 0.5, not significant; gold sentence quoted: agent 11/18 = 61%, vector 7/18 = 39%; out-of-corpus refused 6/6 | 30 questions, 1 run | mechanical proxy; AI-written gold; expected ranges written before the run (`test-preregistration-20261028.md`) and met |
-| Dev split, three configurations, 2026-10-28 (eval runner, mechanical proxy, rescored) | behaviour correct: bare **4/34 = 12%** [5, 27], vector-only **15/34 = 44%** [29, 61], hybrid+graph (the agent) **12/34 = 35%** [21, 52]; retrieval beats the bare model (McNemar p 0.001 and 0.02); **vector-only vs the agent: 3 vs 0, p 0.25, not significant, the agent is not better** | 34 questions, 1 run | proxy = key-fact coverage >= 0.5 of the expected answer; AI-written gold; test split not run |
-| Agent after tuning the candidate list (12 sentences from the index + 3 each from the 4 best chunks; chosen on dev from 3 experiments), 2026-10-28 | behaviour correct **14/34 = 41%** [26, 58]; gold sentence quoted **13/22 = 59%**; out-of-corpus refused **7/7**; false refusals **5/27**; all citations correct 9/22 | 34 questions, 1 run, hybrid+graph only | tuned on the same 34 dev questions: optimistic; vector-only 15/34 = 44% on the original run, so the gap to it is now one question; test split not run |
 | How to read the three configurations | the "vector-only" configuration is OUR pipeline (same quoted-sentence answers, refusals and self-check) with candidates from the best chunks only; "hybrid+graph" adds the sentence index and the rule tools. It is not an outside system, and the graph does not take part in plain fact answers; the rules and the graph matter for conflict, alibi and chronology questions | - | explains why the two are close; the real contrast is with the bare model |
 | Retrieval and refusals, same run | gold chunk in top 4: vector **18/27 = 67%**, hybrid **21/27 = 78%**; out-of-corpus refused: bare 4/7, vector 7/7, hybrid+graph 6/7; false refusals of answerable questions 20/27, 8/27, 7/27; the quoted sentence is the gold one: vector 13/19 = 68%, agent 10/20 = 50% | 27 answerable, 7 out-of-corpus | the agent's gain is in retrieval and honest refusal; its answer sentence is picked worse than the vector baseline's |
 | Contradiction detection, rules only, automatic facts | dev recall **0/14**, false positives **0/9**; **test recall 0/12 [0, 24], false positives 0/8** | 23 dev + 20 test cases, 1 run each | on the automatic graph the rules find nothing; the findings in the demo come from curated facts |
+
+Tried and did not work (shown on purpose): a model judge for contradictions (1 of 14 found, 8 of 9 controls wrongly flagged), choosing the culprit from a list (an innocent named in 2 of 8), the whole-case question before the reveal (0 of 16). FAQ, section A.
 
 ---
 
@@ -235,7 +230,7 @@ IF IT GOES WRONG: slide only.
 Slide 9, 5:30-6:10 (40 s). Running total 6:10. MANDATORY DISCLOSURE. Read it, do not paraphrase away any of the four points.
 
 SAY (about 100 words):
-"Four things you must know. One: the knowledge graph was precomputed on other hardware, with the same models; the organizers allowed this. This laptop only answers questions. Two: the Garcia facts are curated, checked by the team and labelled curated everywhere; the human re-check is still pending. Three: the gold sets were written by an AI and are not yet reviewed by a human; the review date is to be filled. Four: rule R3 has no positive example in our corpus, so it is implemented but not demonstrated. Everything shown is measured, and 'verified' does not mean true."
+"Four things you must know. One: the knowledge graph was precomputed on other hardware, with the same models; the organizers allowed this. This laptop only answers questions. Two: the facts behind the red conflicts are curated, entered by the team with their quotes and labelled curated everywhere; the human re-check is still pending. Three: the gold sets were written by an AI and are not reviewed by a human; that review has not been done, and to be filled. Four: rule R3 has no positive example in our corpus, so it is implemented but not demonstrated. Everything shown is measured, and 'verified' does not mean true."
 
 NUMBERS: server hardware and the hours of extraction are not on the slide; if asked: i7-12700K, 96 GB, RTX 4070 12 GB (STATUS.md). Hardware per result: TBD (docs/DISCLOSURE.md).
 
@@ -246,11 +241,11 @@ IF IT GOES WRONG: slide only. If late, keep points 1 and 3.
 
 # Disclosure and honest limits
 
-1. **Precomputed on other hardware.** The graph extraction was run elsewhere with the same models, prompt and decoding settings; allowed by the organizers. This laptop answers questions offline.
-2. **Curated facts.** The Garcia (Wisteria Lodge) facts were curated by the team, AI-assisted, and are labelled `curated` on screen and in the answer. Human re-check: pending.
-3. **Gold sets written by an AI**, not yet reviewed by a human. Review date: **TBD (gold-review report)**.
-4. **R3 positives are absent in the corpus** (no witness claim with person, place and time against a fact). Only 4 genuine R1 and 3 R2 cases.
-5. Measured numbers only. **Verified = verbatim and lexically supported, not true.** A wrong extracted fact still passes into the rules.
+1. **Precomputed on other hardware.** The graph extraction was run once on a department GPU server with the same open models, prompt and decoding settings; allowed by the organizers. No model was trained. This laptop answers questions offline.
+2. **Curated facts.** Eight facts (Garcia and Scott Eccles at Wisteria Lodge, Lady Brackenstall at Abbey Grange, Boscombe control) were entered by the team with a verbatim quote, AI-assisted, and are labelled `curated` on screen and in the answer. Human re-check: pending.
+3. **Gold sets written by an AI**, not reviewed by a human; the metric is mechanical. Review: **not done**. The test split was run once, expected ranges written beforehand.
+4. **The rules find nothing on the automatic facts** (0 of 12 test cases): the red conflicts in the demo rest on curated facts. The weak link is extracting who-was-where-when.
+5. Measured numbers only. **Verified = verbatim and lexically supported, not true.**
 
 ---
 
@@ -258,7 +253,7 @@ IF IT GOES WRONG: slide only. If late, keep points 1 and 3.
 Slide 10, 6:10-6:30 (20 s). Running total 6:30.
 
 SAY (about 50 words):
-"What is next: a human review of the gold sets and of the curated facts; the graph of all twenty stories and the measured precision of the automatic facts; contradiction precision and recall on a real graph, with intervals. The principle stays: the model guesses, the rules prove, and every step shows its quotes. Thank you; questions."
+"What is next: a human review of the gold sets and of the curated facts; better extraction of who was where and when, by fine-tuning the small extractor and measuring it on human-checked facts; and evidence cards, so a case can be argued before the reveal. The principle stays: the model guesses, the rules prove, and every step shows its quotes. Thank you; questions."
 
 NUMBERS: none.
 
@@ -268,11 +263,30 @@ IF IT GOES WRONG: slide only. Then Q&A from docs/demo/jury-faq.md; backup slides
 # What is next
 
 - Human review of the gold sets and of the curated facts
-- Graph of all 596 chunks; measured precision of automatic presence facts
-- Contradiction precision / recall on the real graph, with intervals (measured on dev: 0/14, see slide 7)
-- Exact times and story days from text: the weak link of R1 and R3
+- Better extraction of who-was-where-when (fine-tune the small extractor on a server, measured on human-checked facts): the weak link of R1 and R3
+- Evidence cards per chunk and a competing-hypotheses matrix, so that a case can be argued before the reveal (today: 0 of 16)
+- Repeat the measurements on a second machine and with an 8 GB profile
 
 **The model guesses. The rules prove. Every step shows its quotes.**
+
+---
+
+<!-- _class: small -->
+<!--
+Backup B7. Earlier and development numbers (Q&A only). Every row has its file in numbers.md.
+-->
+
+# B7. Earlier and development numbers
+
+| What | Result | n | Caveat |
+|---|---|---|---|
+| Real API, extractive mode, 2026-10-27 | quoted sentence for **6 of 10** answerable; **2 of 2** out-of-corpus refused; **8.1-20.2 s** per model call | 12 questions, 1 run | "answered" is not "correct"; no human judging |
+| Retrieval-only check, 2026-10-23 | **5 of 10** answered and verified; behaviour correct **8 of 12**; bare model vs agent on refusal-type questions **1 of 3** vs **2 of 3** | 12 questions, 1 run | AI-written gold; graph and rules off |
+| Gold chunk within top 4 | **70 of 86 = 81%** | 86 questions | retrieval only, no LLM |
+| Full graph from the department server, 2026-10-27 | **596 of 596** chunks, 20 of 20 stories, 2157 claims, 1698 events; rules: **0 findings in 19 of 20 stories** (only the curated Garcia R1) | 596 chunks, 1 run | extraction quality not scored beyond the 12 gold chunks; presence pass not run |
+| Real stack on the full graph, laptop, 2026-10-28 | **5 of 6** dev questions answered with a quoted sentence in **30-43 s**; 1 refused (g009, multi-hop) | 6 questions, 1 run | not a clean window; answered is not correct |
+| Dev split, three configurations, 2026-10-28 (eval runner, mechanical proxy, rescored) | behaviour correct: bare **4/34 = 12%** [5, 27], vector-only **15/34 = 44%** [29, 61], hybrid+graph (the agent) **12/34 = 35%** [21, 52]; retrieval beats the bare model (McNemar p 0.001 and 0.02); **vector-only vs the agent: 3 vs 0, p 0.25, not significant, the agent is not better** | 34 questions, 1 run | proxy = key-fact coverage >= 0.5 of the expected answer; AI-written gold; test split not run |
+| Agent after tuning the candidate list (12 sentences from the index + 3 each from the 4 best chunks; chosen on dev from 3 experiments), 2026-10-28 | behaviour correct **14/34 = 41%** [26, 58]; gold sentence quoted **13/22 = 59%**; out-of-corpus refused **7/7**; false refusals **5/27**; all citations correct 9/22 | 34 questions, 1 run, hybrid+graph only | tuned on the same 34 dev questions: optimistic; vector-only 15/34 = 44% on the original run, so the gap to it is now one question; test split not run |
 
 ---
 
