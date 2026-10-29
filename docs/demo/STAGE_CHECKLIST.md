@@ -31,6 +31,10 @@ Build for the show: the tag the team agreed on (`git describe --tags`; offline a
 | The connection-lost banner appears | click "Play the stored run" | the same sentence |
 | A wrong or odd answer | do not re-ask; narrate: show the quote and the trace; "this is exactly why every answer carries its quote" | "The check is that the quote is in the book; here it is." |
 | Ollama is not running | in the terminal `ollama serve` (or the archive's Ollama), then warm up; meanwhile use the recordings | "Starting the local model; meanwhile the stored runs." |
+| The API stopped or was restarted (page shows connection lost, `/api/health` does not answer) | in the API terminal `Ctrl+C`, then `just run` (about 5 s); click "Play the stored run" for the question that was running; reload the page when the terminal shows the URL | "The server restarted; the stored run of this question meanwhile, then we continue live." |
+| The browser crashed or the tab closed | reopen the browser, `http://127.0.0.1:8000/` from history, full screen (`F11`); the replay tabs: reopen from the second window's history | "One moment, reopening the page." |
+| The projector is 1366x768 and the board is cut | browser zoom `Ctrl+-` to 80 % (try it once in a rehearsal at 1366x768); the terminal font stays 20 pt | nothing; do it during the slide change |
+| Wi-Fi came on, or the network changed | nothing is needed (the show is offline, no request leaves the laptop); switch Wi-Fi off again after the step | "The system runs offline; the network does not matter." |
 | A jury question about numbers | open `docs/slides/numbers.md` backup slide | read the number AND its caveat |
 
 ## After the show

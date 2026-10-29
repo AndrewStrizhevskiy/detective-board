@@ -3,7 +3,7 @@
 - Status: Accepted for the curated demo facts; the automatic presence pass is Proposed (precision unmeasured, to be measured on the department server).
 - Date: 2026-10-27
 - Deciders: tech-lead, demo-director
-- Provisional parts: precision and recall of automatic presence facts (unmeasured); the human re-check of the curated file (not done).
+- Provisional parts: precision and recall of automatic presence facts (unmeasured); the human re-check of the curated file (done 2026-10-29 by LitrumCoder).
 
 ## Context
 
@@ -31,6 +31,6 @@ Option 3 for the demo, and keep option 2 as the automatic route to be measured o
 ## Consequences
 
 - The demo finding (R1 on Garcia) shows what the rules do when the facts are right, not what a model finds alone. This must be said on stage (`docs/design/demo-script.md`, `docs/DISCLOSURE.md`).
-- The curated file has not been re-checked by a human. The c001 Baynes fact has person and place resolved by the team from the preceding line, and "since one o'clock" is stored as the instant 01:00.
+- The curated file was re-checked by a human on 2026-10-29 (LitrumCoder, `docs/spike/results/curated-review-2026-10-29.md`). The c001 Baynes fact has person and place resolved by the team from the preceding line, and "since one o'clock" is stored as the instant 01:00.
 - No R3 positive exists with curated data: the Boscombe facts serve as a control that R1 must not flag; intent is not encoded.
 - Automatic presence precision stays unmeasured until the server run; no number may be quoted for it.

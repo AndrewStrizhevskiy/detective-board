@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
 
+from detective_board.extract.curated_schema import CURATED_REVIEW
 from detective_board.symbolic.api import Explanation, scan_presence_conflicts
 from detective_board.symbolic.facts import FactBase, PresenceProp
 
@@ -294,7 +295,7 @@ def _finding_sentence(it: RuleItem, c: _Cites) -> str:
     if it.curated:
         line += (
             f"\nCurated: {it.curated} of the facts it rests on were entered and checked by the "
-            "team (AI-assisted, human re-check pending); they are not output of the automatic "
+            f"team (AI-assisted, {CURATED_REVIEW}); they are not output of the automatic "
             "extraction."
         )
     return "- " + line.replace("\n", "\n  ")
@@ -510,7 +511,7 @@ def build_timeline_answer(
     if curated:
         tail.append(
             f"Curated: {curated} of the events were entered and checked by the team (AI-assisted, "
-            "human re-check pending); they are not output of the automatic extraction."
+            f"{CURATED_REVIEW}); they are not output of the automatic extraction."
         )
     tail.append(
         f"Label {label}: the order is computed by rule R2 from the events extracted from the text."

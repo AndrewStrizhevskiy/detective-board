@@ -28,14 +28,14 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from detective_board.extract.curated import locate_quote, normalise_quote
-from detective_board.extract.curated_schema import curated_day
+from detective_board.extract.curated_schema import CURATED_REVIEW, check_review, curated_day
 from detective_board.extract.normalise import normalise_time
 from detective_board.graph.normalize import fold_text
 
 SCENES_SCHEMA_VERSION = "scenes-1"
 DEFAULT_FILE = "data/curated/scenes.jsonl"
 SCENE_CURATED_BY = "team (AI-assisted, human re-check pending)"
-SCENE_MARK = "curated by team, AI-assisted, human re-check pending"
+SCENE_MARK = f"curated by team, AI-assisted, {CURATED_REVIEW}"
 _ID = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 _KEY = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 _SLUG = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
@@ -68,6 +68,8 @@ class Scene(BaseModel):
     curated_by: str
     note: str
     inferred: list[Slot] = Field(default_factory=list)
+    reviewed_by: str | None = None
+    reviewed_on: str | None = None
 
     @field_validator("id")
     @classmethod
@@ -106,6 +108,7 @@ class Scene(BaseModel):
 
     @model_validator(mode="after")
     def _ordered(self) -> Scene:
+        check_review(self.reviewed_by, self.reviewed_on)
         if self.start_min > self.end_min:
             raise ValueError("start_min must not exceed end_min")
         return self

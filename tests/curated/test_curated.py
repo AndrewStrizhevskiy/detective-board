@@ -12,7 +12,12 @@ import pytest
 from detective_board.agent.rule_first import ToolOutcome, build_answer, coverage_for
 from detective_board.agent.rules_client import InProcessRulesClient
 from detective_board.extract import curated, normalise
-from detective_board.extract.curated_schema import CURATED_MARK, CuratedFact, curated_day
+from detective_board.extract.curated_schema import (
+    CURATED_MARK,
+    CURATED_REVIEW,
+    CuratedFact,
+    curated_day,
+)
 from detective_board.extract.schema import Entity, Extraction
 from detective_board.graph import ChunkRef, GraphStore, SqliteFactSource
 from detective_board.mcp import tools as mcp_tools
@@ -308,7 +313,7 @@ def test_rule_first_answer_for_the_garcia_question_says_curated(graph):
     assert ans.kind == "findings"
     text = ans.text
     assert text.count("(curated)") >= 2 and "Curated: 2 of the facts" in text
-    assert "label conditional" in text and "human re-check pending" in text
+    assert "label conditional" in text and CURATED_REVIEW in text
     assert 'nearly one o’clock."' in text and "He had been there since one o’clock." in text
     assert "no conflict" not in text.lower()
 
@@ -525,6 +530,6 @@ def test_rule_first_answer_says_the_time_is_relative_and_curated(graph):
     text = ans.text
     assert ans.kind == "findings"
     assert "relative time" in text and text.count("(curated)") >= 2
-    assert "label conditional" in text and "human re-check pending" in text
+    assert "label conditional" in text and CURATED_REVIEW in text
     assert "oaken chair" in text and "just inside the window" in text
     assert "no conflict" not in text.lower()

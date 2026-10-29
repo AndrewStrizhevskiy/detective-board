@@ -45,6 +45,6 @@ Rule: a number is on a slide only if it is in this table with a source file and 
 |---|---|---|
 | `TBD` one-command rebuild; clean-window laptop table with 3 repeats and the 8 GB profile | slide 8 | clean-window laptop run |
 | Gold-review date and reviewer | slide 9 | gold-review report |
-| Human re-check of curated facts | slide 9 | team |
+| Human re-check of curated facts | slide 9 | LitrumCoder, 2026-10-29, `docs/spike/results/curated-review-2026-10-29.md` |
 | MCP tool time in ms for step 2 | demo-script rehearsal log | rehearsal 1-3 |
 | Per-result hardware, written organizer approval | `docs/DISCLOSURE.md` | team lead |
