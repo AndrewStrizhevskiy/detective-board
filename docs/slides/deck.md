@@ -222,7 +222,7 @@ IF IT GOES WRONG: slide only.
 - **Offline**: network off during the demo; no cloud model
 - **CPU-only**: no GPU on the demo laptop; prefill about **21 tokens/s**
 - **Models <= 8B**: qwen3:4b-instruct (answers), qwen3:4b (extraction), bge-m3 (embeddings); peak RSS of the answer model **3195 MiB**
-- **Reproducible**: temperature 0, seed 42; `just run` serves the demo; laptop, three series of 6 questions, 2026-10-29: median **28 s** per answer (19-44 s), **6.3 GB** peak, **98-100 C** (not a clean window); one-command rebuild: **TBD**
+- **Reproducible**: temperature 0, seed 42; `just run` serves the demo; laptop, three series of 6 questions, 2026-10-29: median **28 s** per answer (19-44 s), **6.3 GB** peak, **98-100 C** (not a clean window); one-command offline install: `verify_offline.sh` passed on one laptop (not yet on a second)
 
 ---
 
@@ -232,7 +232,7 @@ Slide 9, 5:30-6:10 (40 s). Running total 6:10. MANDATORY DISCLOSURE. Read it, do
 SAY (about 100 words):
 "Four things you must know. One: the knowledge graph was precomputed on other hardware, with the same models; the organizers allowed this. This laptop only answers questions. Two: the facts behind the red conflicts are curated, entered by the team with their quotes and labelled curated everywhere; the human re-check is still pending. Three: the gold sets were written by an AI and are not reviewed by a human; that review has not been done, and to be filled. Four: rule R3 has no positive example in our corpus, so it is implemented but not demonstrated. Everything shown is measured, and 'verified' does not mean true."
 
-NUMBERS: server hardware and the hours of extraction are not on the slide; if asked: i7-12700K, 96 GB, RTX 4070 12 GB (STATUS.md). Hardware per result: TBD (docs/DISCLOSURE.md).
+NUMBERS: server hardware and the hours of extraction are not on the slide; if asked: i7-12700K, 96 GB, RTX 4070 12 GB (STATUS.md). Hardware: laptop numbers on the demo laptop; extraction numbers on the department server.
 
 IF IT GOES WRONG: slide only. If late, keep points 1 and 3.
 -->
