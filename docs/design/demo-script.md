@@ -15,7 +15,7 @@ Read with: `docs/ROADMAP.md` (schedule, risks), `docs/HANDOFF.md` (state of the 
 |---|---|
 | CPU-only i7-8665U; prefill about 21 tokens/s, only the system-prefix cache helps (`docs/perf/ttft-levers-2026-10-26.md`). The generative answer took 42.0 s to the first token and 59.5 s per question in the 2026-10-23 check (`answers-20261023-v3.md`) and 45.7-140.8 s in the real-API run of 2026-10-27 (`api12-20261027-generative.md`). | **LLM composition is no longer in the demo path.** Text answers use the extractive mode (the model only chooses numbered sentences; ADR-0009): 8.1-20.2 s per question in the 12-question run (`api12-20261027-extractive.md`), g001 9.3 s there and 10.8 s in the recording `web/replay/real-g001-agent.json`. The time-to-first-token worry of DRAFT 2 is gone for the main steps; the fallback ladder stays. |
 | The retrieval gate refuses before any LLM call (0.01 s for g047). Graph queries and MCP tool calls call no LLM (`docs/mcp-contracts.md`). | These parts are fast and may be live. |
-| The real stack ran on 2026-10-27 on the laptop (real index, graph of 8 stories and 231 chunks, curated demo facts, real Ollama); five real recordings exist (`web/replay/real-*.json`, commit d9709d0). On real data the rules find nothing automatically (no exact times or days); the Wisteria R1 finding rests on curated facts (ADR-0011). | Step 2 shows a curated-fact finding and says so. Its fallbacks are named, not hoped for. |
+| The real stack ran on 2026-10-27 on the laptop (real index, graph of 20 stories and 596 chunks from the department-server run (2026-10-27), curated demo facts, real Ollama); five real recordings exist (`web/replay/real-*.json`, commit d9709d0). On real data the rules find nothing automatically (no exact times or days); the Wisteria R1 finding rests on curated facts (ADR-0011). | Step 2 shows a curated-fact finding and says so. Its fallbacks are named, not hoped for. |
 | Cold model load 8-15 s (REPORT section 3). | Warm the model before going on stage. |
 
 **Honesty rules (customer decisions of 2026-10-22, kept).** The Wisteria finding is built on curated facts and is called that, on the slide, in speech and in the answer (`Curated:` line). A pre-recorded step is called a **recording** in slides, speech and on the badge (`RECORDING`); only what really runs on the laptop during the talk is called live. A stored run of the real system (key `c`) is also announced as a stored run. A bare-LLM error is never staged; the one used here was produced by a real run (section 2, step 0). All timings below are targets until measured on Tuesday.
@@ -24,7 +24,7 @@ Read with: `docs/ROADMAP.md` (schedule, risks), `docs/HANDOFF.md` (state of the 
 
 | # | Time | Content | Mode |
 |---|---|---|---|
-| 0 | 0:00-0:30 | Bare-LLM failure on g001, then the g001 agent question | bare = **RECORDING**; agent = **LIVE** (starts at 0:02, answer in about 10 s) |
+| 0 | 0:00-0:30 | Bare-LLM failure on g001, then the g001 agent question | bare = **RECORDING**; agent = **LIVE** (starts at 0:02, answer in about 30 s on this laptop: 25-43 s measured, `docs/perf/laptop-20261028.md`; narrate over the trace or press `c`) |
 | 1 | 0:30-1:30 | Architecture slide; board shows the finished g001 answer | slide; board **LIVE** |
 | 2 | 1:30-3:30 | Wisteria Lodge R1 (c001), conditional finding on **curated** facts, MCP trace | **LIVE, instant** (rules + MCP only, no LLM) |
 | 3 | 3:30-4:15 | Gate refusal (g047) | **LIVE**, no LLM call |
@@ -50,7 +50,7 @@ Fallback ladder, same for every step (details in section 4): **(1) narrate over 
 
 ### Step 0: Hook (0:00-0:30)
 
-- **Exact question (agent, LIVE, typed at 0:02, answered in about 10 s):** `What kind of snake killed Dr. Grimesby Roylott?` (golden g001; gold: "A swamp adder"; gold quote "It is a swamp adder!" cried Holmes; "the deadliest snake in India.", `speckled-band`).
+- **Exact question (agent, LIVE, typed at 0:02, answered in about 30 s: 25-43 s measured):** `What kind of snake killed Dr. Grimesby Roylott?` (golden g001; gold: "A swamp adder"; gold quote "It is a swamp adder!" cried Holmes; "the deadliest snake in India.", `speckled-band`).
 - **Shown:** first, the **RECORDING** of the bare model (qwen3:4b-instruct, no retrieval, no system prompt, same question, temperature 0, seed 42, 2026-10-23 run; `answers-20261023-v3-BARE-qwen3_4b-instruct.jsonl`, id g001, first token 1.4 s, 300 tokens cut by the limit, 48.7 s). The screen shows the first lines, verbatim:
 
   > Dr. Grimesby Roylott was not killed by a snake in the story of *The Hound of the Baskervilles* or any of Arthur Conan Doyle's Sherlock Holmes stories.
@@ -178,7 +178,7 @@ Not in the deck (kept for questions): Boscombe control `?replay=replay/real-bosc
 
 ## 4. Fallback ladder (applies to every step)
 
-1. Narrate over the trace. The waiting counter proves it is working. Allowed: 6 s of silence from the screen, 20 s for the model's sentence selection in g001.
+1. Narrate over the trace. The waiting counter proves it is working. Allowed: 6 s of silence from the screen, 45 s for the model's sentence selection in g001 (measured 25-43 s).
 2. Press `c`: stored run, badge `RECORDING`, say "this one is a stored run". Press `c` again to return to live. If the key does not respond, open the `?replay=` tab of the step (section 2a). Rehearse the connection-lost path with `?stall=5` in the address (5 s instead of 90 s).
 3. Play the full recording at the matching timestamp (step start times as in section 0).
 4. Screenshot slides.
