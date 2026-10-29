@@ -819,7 +819,6 @@ say in `note` why; (3) give the facts of one day the same `day_key`; (4) run the
 graph and ask the question; `uv run pytest tests/curated` checks quotes and slots for every line.
 A case that cannot be expressed without inventing a statement is skipped and documented here.
 
-<<<<<<< HEAD
 ### 11.5 Alibi / presence table (`presence_table`, `agent/presence_answer.py`, branch `feat/alibi-table`)
 
 Questions such as "Where was Aloysius Garcia that night according to the testimonies?", "Who says where Lady Brackenstall was?", "Alibi table for James McCarthy" or "Where did Eccles say Garcia was?" ask for every place the text puts one person, not for one time window. `check_alibi` needs a window, so before this section such a question had its rule step skipped and went the text way. The router (`_ALIBI_WHERE`, `_PRESENCE`, `_PRESENCE_WEAK`) now sends it to the tool `presence_table` when ALL of these hold: alibi wording (`alibi`, `where was`, `whereabouts`, `could ... have been at`) or a presence phrase (`alibi table`, `presence table`, `where did ... say`, `who says ... where`; or `according to` / `testimony` / `who says` together with `where was`, `whereabouts` or `alibi`); no clock time (`at one`, `9 p.m.`, `o'clock`, `12:30`, `noon`, `midnight` all keep `check_alibi`, also when the wording is "alibi for nine o'clock"); no contradiction wording and no timeline wording (those win, as before). "At what time ..." questions stay on `check_alibi` (they ask for a time, not a place). The golden sets (64 + 43 questions) change route only for c002 and c004 ("Where was Lady Brackenstall when ..."), whose `check_alibi` step was skipped anyway.
@@ -834,8 +833,8 @@ The tool (`mcp/tools.py`, `docs/mcp-contracts.md` 3.5) returns, for one person: 
 How the speaker is found. A reported event (`narrator` false) and the claim written from the same quote have the same anchor and the wording `X at P, T` / `X was at P, T`; the claim's speaker is taken only on that exact match. A denial carries no person id, only the text `X was not at P, T` (ingest, `GraphStore`), so the agent passes the person's name, aliases and the wording of the question as `names` and the tool matches the claim's prefix on them. A person who is not in the graph gets `no person in the graph named ...` and no row; an ambiguous name lists the candidates; a failed or skipped tool goes the text way as for the other rules.
 
 Honest limits. The table lists what the graph holds: the automatic pipeline has few presence facts (curated rows cover the demo cases), so it is often short, and it never says where a person was not unless a denial was extracted. A row's place and time are the extractor's slots, not a reading of the whole story; "the narrator" includes statements that the extraction did not mark as speech. R1 compares only rows with a time on a comparable day, so two rows can both be shown without being compared.
-=======
-### 11.5 Model-judged candidate pairs (`agent/semantic_r3.py`, branch `feat/r3-semantic`, switch OFF)
+
+### 11.7 Model-judged candidate pairs (`agent/semantic_r3.py`, branch `feat/r3-semantic`, switch OFF)
 
 Why. R3 needs a structured proposition; 0.7 % of automatic claims have one, so the rule finds nothing
 on the automatic graph (dev recall 0/14). This layer is NOT a rule. The graph finds candidate pairs
@@ -858,4 +857,3 @@ on the automatic graph (dev recall 0/14). This layer is NOT a rule. The graph fi
 - Eval: `eval/r3_semantic.py` (dev ids only; test ids are refused), results
   `docs/spike/results/r3-semantic-dev-*.md`. Real runs: `flock /tmp/db-llm.lock uv run python
   eval/r3_semantic.py --mode judge`.
->>>>>>> feat/r3-semantic
