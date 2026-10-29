@@ -1,5 +1,7 @@
 # Slides: Detective Board (6:30 talk)
 
+> The talk is given from the RUSSIAN deck, `deck.ru.md` (dark theme, `README.ru.md`, `deck.ru.pdf`). This English `deck.md` is the archive and the source of the numbers.
+
 Files
 - `deck.md`: Marp-compatible Markdown. 10 main slides (6:30 in total, timing and speaker notes in the HTML comment at the top of each slide) plus backup slides B1-B6 that are not part of the 6:30.
 - `numbers.md`: every number on a slide, its source file and n; the open `TBD` markers.

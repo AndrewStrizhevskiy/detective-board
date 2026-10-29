@@ -110,6 +110,8 @@ NUMBERS: 9.3 s for g001, extractive mode, 1 run of 12 questions = api12-20261027
 IF IT GOES WRONG: see docs/design/demo-script.md, step 0 and step 4. Fallback URL: http://127.0.0.1:8000/?replay=replay/real-g001-agent.json&speed=4 (RECORDING badge; say "this is a stored run"). Failure line: "The model is still choosing its sentence; to keep to time, here is the stored run of the same question, labelled as such."
 -->
 
+<!-- _class: small -->
+
 # Demo 1: a question, a verbatim quote
 
 **Q:** What kind of snake killed Dr. Grimesby Roylott?
@@ -140,6 +142,8 @@ NUMBERS: none spoken except milliseconds read from the screen (not pre-measured:
 
 IF IT GOES WRONG: fallback URL http://127.0.0.1:8000/?replay=replay/real-wisteria-r1-curated.json (1.1 s). Failure line: "The tool call is slow; here is the stored run of the same question, labelled as a recording." Never say the model found this.
 -->
+
+<!-- _class: small -->
 
 # Demo 2: Wisteria Lodge, rule R1
 
@@ -190,16 +194,22 @@ IF IT GOES WRONG: slide only. If late, say only the test row and the 0 of 12 row
 
 <!-- _class: small -->
 
-# Measured quality (test split first, caveats included)
+# Measured: the test split, run once
 
-| What | Result | n | Caveat |
-|---|---|---|---|
-| **Test split, run once and preregistered, 2026-10-28** (final configuration, not tuned on these questions) | behaviour correct: bare **3/30 = 10%** [3, 26], vector-only **11/30 = 37%** [22, 54], hybrid+graph (the agent) **13/30 = 43%** [27, 61]; agent vs bare p = 0.006 (11 vs 1); agent vs vector 2 vs 0, p = 0.5, not significant; gold sentence quoted: agent 11/18 = 61%, vector 7/18 = 39%; out-of-corpus refused 6/6 | 30 questions, 1 run | mechanical proxy; AI-written gold; expected ranges written before the run (`test-preregistration-20261028.md`) and met |
-| How to read the three configurations | the "vector-only" configuration is OUR pipeline (same quoted-sentence answers, refusals and self-check) with candidates from the best chunks only; "hybrid+graph" adds the sentence index and the rule tools. It is not an outside system, and the graph does not take part in plain fact answers; the rules and the graph matter for conflict, alibi and chronology questions | - | explains why the two are close; the real contrast is with the bare model |
-| Retrieval and refusals, test split, same run | gold chunk in the top 4: **16/24 = 67%** for both vector-only and hybrid; out-of-corpus refused **6/6** (bare model 2/6); false refusals of answerable questions **6/24 = 25%** (bare model 18/24); quoted sentence is the gold one: agent **11/18 = 61%**, vector-only 7/18 = 39% | 24 answerable, 6 out-of-corpus | the agent's edge over vector-only is in the choice of the sentence, small and not significant; retrieval itself is equal |
-| Contradiction detection, rules only, automatic facts | dev recall **0/14**, false positives **0/9**; **test recall 0/12 [0, 24], false positives 0/8** | 23 dev + 20 test cases, 1 run each | on the automatic graph the rules find nothing; the findings in the demo come from curated facts |
+<div class="stats">
+<div class="stat"><div class="lbl">Bare model</div><div class="num">10%</div><div class="bar"><i style="width:20%"></i></div><div class="sub">3 of 30 · [3, 26]</div></div>
+<div class="stat"><div class="lbl">Vector-only<br><small>(our own pipeline)</small></div><div class="num">37%</div><div class="bar"><i style="width:74%"></i></div><div class="sub">11 of 30 · [22, 54]</div></div>
+<div class="stat agent"><div class="lbl">Agent (hybrid+graph)</div><div class="num">43%</div><div class="bar"><i style="width:86%"></i></div><div class="sub">13 of 30 · [27, 61]</div></div>
+</div>
 
-Tried and did not work (shown on purpose): a model judge for contradictions (1 of 14 found, 8 of 9 controls wrongly flagged), choosing the culprit from a list (an innocent named in 2 of 8), the whole-case question before the reveal (0 of 16). FAQ, section A.
+Agent vs bare model: 11 questions to 1, **p = 0.006**. Agent vs vector-only: 2 to 0, p = 0.5, **not significant**.
+
+| | Result |
+|---|---|
+| Retrieval and refusals | gold chunk in the top 4: 16 of 24 for both; out-of-corpus refused **6 of 6** (bare model 2 of 6); gold sentence quoted: agent 11 of 18, vector-only 7 of 18 |
+| Rules on automatic facts | found **0 of 12** cases, false alarms 0 of 8 |
+
+Mechanical criterion, AI-written gold, one run; expected ranges written before the run. *Tried and did not work, shown on purpose:* a model judge for contradictions (8 of 9 controls wrongly flagged), choosing the culprit from a list (an innocent named in 2 of 8), the whole-case question before the reveal (0 of 16).
 
 ---
 
@@ -284,6 +294,10 @@ Backup B7. Earlier and development numbers (Q&A only). Every row has its file in
 | Real stack on the full graph, laptop, 2026-10-28 | **5 of 6** dev questions answered with a quoted sentence in **30-43 s**; 1 refused (g009, multi-hop) | 6 questions, 1 run | not a clean window; answered is not correct |
 | Dev split, three configurations, 2026-10-28 (eval runner, mechanical proxy, rescored) | behaviour correct: bare **4/34 = 12%** [5, 27], vector-only **15/34 = 44%** [29, 61], hybrid+graph (the agent) **12/34 = 35%** [21, 52]; retrieval beats the bare model (McNemar p 0.001 and 0.02); **vector-only vs the agent: 3 vs 0, p 0.25, not significant, the agent is not better** | 34 questions, 1 run | proxy = key-fact coverage >= 0.5 of the expected answer; AI-written gold; test split not run |
 | Agent after tuning the candidate list (12 sentences from the index + 3 each from the 4 best chunks; chosen on dev from 3 experiments), 2026-10-28 | behaviour correct **14/34 = 41%** [26, 58]; gold sentence quoted **13/22 = 59%**; out-of-corpus refused **7/7**; false refusals **5/27**; all citations correct 9/22 | 34 questions, 1 run, hybrid+graph only | tuned on the same 34 dev questions: optimistic; vector-only 15/34 = 44% on the original run, so the gap to it is now one question; test split not run |
+| **Test split, run once and preregistered, 2026-10-28** (final configuration, not tuned on these questions) | behaviour correct: bare **3/30 = 10%** [3, 26], vector-only **11/30 = 37%** [22, 54], hybrid+graph (the agent) **13/30 = 43%** [27, 61]; agent vs bare p = 0.006 (11 vs 1); agent vs vector 2 vs 0, p = 0.5, not significant; gold sentence quoted: agent 11/18 = 61%, vector 7/18 = 39%; out-of-corpus refused 6/6 | 30 questions, 1 run | mechanical proxy; AI-written gold; expected ranges written before the run (`test-preregistration-20261028.md`) and met |
+| How to read the three configurations | the "vector-only" configuration is OUR pipeline (same quoted-sentence answers, refusals and self-check) with candidates from the best chunks only; "hybrid+graph" adds the sentence index and the rule tools. It is not an outside system, and the graph does not take part in plain fact answers; the rules and the graph matter for conflict, alibi and chronology questions | - | explains why the two are close; the real contrast is with the bare model |
+| Retrieval and refusals, test split, same run | gold chunk in the top 4: **16/24 = 67%** for both vector-only and hybrid; out-of-corpus refused **6/6** (bare model 2/6); false refusals of answerable questions **6/24 = 25%** (bare model 18/24); quoted sentence is the gold one: agent **11/18 = 61%**, vector-only 7/18 = 39% | 24 answerable, 6 out-of-corpus | the agent's edge over vector-only is in the choice of the sentence, small and not significant; retrieval itself is equal |
+| Contradiction detection, rules only, automatic facts | dev recall **0/14**, false positives **0/9**; **test recall 0/12 [0, 24], false positives 0/8** | 23 dev + 20 test cases, 1 run each | on the automatic graph the rules find nothing; the findings in the demo come from curated facts |
 
 ---
 

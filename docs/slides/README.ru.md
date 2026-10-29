@@ -13,8 +13,8 @@
 Marp CLI (нужен Node; один раз установить при наличии сети, дальше работает офлайн). Флаг `--html` обязателен: схема на слайде 3 написана на HTML; `--theme-set` подключает тему, `--allow-local-files` нужен для локальных шрифтов темы:
 
 ```bash
-npx @marp-team/marp-cli docs/slides/deck.ru.md --theme-set docs/slides/detective-night.css --html --allow-local-files --pdf -o docs/slides/deck.ru.pdf
-npx @marp-team/marp-cli docs/slides/deck.ru.md --theme-set docs/slides/detective-night.css --html --allow-local-files --pdf-notes --pdf -o docs/slides/deck.ru-with-notes.pdf   # заметки как аннотации PDF
+npx @marp-team/marp-cli docs/slides/deck.ru.md --theme-set docs/slides/detective.css docs/slides/detective-night.css --html --allow-local-files --pdf -o docs/slides/deck.ru.pdf
+npx @marp-team/marp-cli docs/slides/deck.ru.md --theme-set docs/slides/detective.css docs/slides/detective-night.css --html --allow-local-files --pdf-notes --pdf -o docs/slides/deck.ru-with-notes.pdf   # заметки как аннотации PDF
 ```
 
 Или расширение Marp для VS Code (Export Slide Deck). Подойдёт и любой другой инструмент: файл - обычный Markdown с `---` между слайдами, поэтому `pandoc -t beamer docs/slides/deck.ru.md -o deck.ru.pdf` даёт упрощённую версию (HTML-комментарии отбрасываются, HTML-схема слайда 3 и тема не применяются; для кириллицы нужен движок с Unicode, например `--pdf-engine=xelatex`).
@@ -44,3 +44,11 @@ npx @marp-team/marp-cli docs/slides/deck.ru.md --theme-set docs/slides/detective
 2. Замените каждый `TBD`, когда придут issue #16 / #6; обновите `numbers.md` в том же коммите.
 3. Не правьте слайд раскрытия (9), не сверив его с `docs/DISCLOSURE.md`.
 4. При любой правке `deck.md` синхронно правьте `deck.ru.md` (порядок слайдов, числа и оговорки должны совпадать).
+
+
+## Готовые файлы и как они сделаны
+
+- `deck.ru.pdf` - 17 страниц, тёмная тема проекта, шрифты проекта встроены (из `web/vendor/fonts`, из сети ничего не берётся). Это то, что открывать на показе; запасной вариант - `deck.ru.html` (листается стрелками, нужен браузер, шрифты берутся по относительным путям из `web/vendor/fonts`, поэтому открывать файл на месте, не копировать отдельно).
+- Тема: `detective.css` (светлая, «дело сыщика»: деревянная рамка, бумага, красная нить, латунная кнопка) и `detective-night.css` (тёмная, значения из тёмного блока `docs/design/tokens.css`, «ночь на Бейкер-стрит»). Тёмная подключает светлую через `@import`, поэтому в `--theme-set` нужны оба файла.
+- Для PDF Marp нужен Chrome или Chromium: на этой машине браузера нет, использовался Chromium из Playwright (`npx playwright install chromium`, затем `CHROME_PATH=<путь к chrome>`).
+- Исходник слайдов и заметок докладчика: `deck.ru.md`; английский архив: `deck.md` (светлая тема). Правка слайда: изменить `deck.ru.md`, заново выполнить команду выше, проверить страницы.

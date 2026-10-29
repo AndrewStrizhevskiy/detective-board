@@ -186,3 +186,16 @@ section.tiny h1 { font-size: 34px; }
 .flow .arr { flex: 0 0 auto; font-family: "Special Elite", "Courier New", monospace; font-size: 0.5em; color: var(--thread); text-align: center; min-width: 54px; }
 .flow .src { --pin: #6f6a62; } .flow .llm { --pin: #7a3e9d; } .flow .graph { --pin: #b8923a; }
 .flow .idx { --pin: #3b7a63; } .flow .agent { --pin: #2e5aa0; } .flow .rules { --pin: #b3261e; } .flow .ui { --pin: #e4ddcc; max-width: 520px; }
+
+/* slide 7: three big numbers with bars */
+.stats { display: flex; gap: 18px; margin: 6px 0 12px 0; }
+.stat { flex: 1 1 0; text-align: center; background: var(--paper-2); border: 2px solid var(--edge); border-radius: 6px; padding: 12px 10px 10px; box-shadow: 3px 4px 0 rgba(100, 76, 44, 0.3); }
+.stat.agent { border-color: var(--thread); box-shadow: 3px 4px 0 rgba(176, 30, 24, 0.4); }
+.stat .lbl { font-family: "Special Elite", "Courier New", monospace; font-size: 0.64em; letter-spacing: 0.03em; color: var(--ink-muted); min-height: 2.4em; }
+.stat .lbl small { font-size: 0.9em; }
+.stat .num { font-family: "IM Fell English", Georgia, serif; font-size: 2.3em; line-height: 1.05; }
+.stat.agent .num { color: var(--thread); }
+.stat .bar { height: 10px; background: rgba(100, 76, 44, 0.25); border-radius: 5px; margin: 6px 6px 6px; overflow: hidden; }
+.stat .bar i { display: block; height: 100%; background: var(--edge); border-radius: 5px; }
+.stat.agent .bar i { background: var(--thread); }
+.stat .sub { font-family: "Special Elite", "Courier New", monospace; font-size: 0.62em; color: var(--ink-muted); }
