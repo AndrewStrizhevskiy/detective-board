@@ -347,13 +347,19 @@ button.primary { background: #9e2219; color: #fff6e6; border-color: #6e140e; fon
 .panel.board .panel-head h2 { font: 400 20px/1.2 var(--db-font-display); color: var(--db-frame-text); }
 .panel.board .panel-head h2 .muted { color: var(--db-frame-text); font: 12px var(--db-font-type); }
 .canvas-wrap { position: relative; flex: 1; min-height: 0; overflow: hidden; background: var(--db-frame); background-image: linear-gradient(90deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, .14) 40%, rgba(255, 255, 255, .05) 70%, rgba(0, 0, 0, .12)); border-radius: 0 0 6px 6px; box-shadow: 0 18px 40px rgba(0, 0, 0, .4); }
-#cy { position: absolute; inset: 0 10px 10px; overflow: hidden; border-radius: 3px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; background-color: var(--db-cork); background-image: radial-gradient(rgba(0, 0, 0, .22) 1px, transparent 1.6px), radial-gradient(rgba(255, 226, 180, .12) 1px, transparent 1.7px), radial-gradient(rgba(0, 0, 0, .10) 2px, transparent 3px); box-shadow: inset 0 0 50px rgba(0, 0, 0, .5); }
+#cy { position: absolute; inset: 0 10px 10px; overflow: hidden; border-radius: 3px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; background-color: var(--db-cork); }
+/* the cork dots and the vignette: drawn on a canvas and its own layer (graph.js); without canvas support the old CSS gradients stay */
+#cy:not(.cork-js) { background-image: radial-gradient(rgba(0, 0, 0, .22) 1px, transparent 1.6px), radial-gradient(rgba(255, 226, 180, .12) 1px, transparent 1.7px), radial-gradient(rgba(0, 0, 0, .10) 2px, transparent 3px); box-shadow: inset 0 0 50px rgba(0, 0, 0, .5); }
+.board-cork, .board-vignette { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; border-radius: 3px; }
+.board-vignette { box-shadow: inset 0 0 50px rgba(0, 0, 0, .5); }
 #cy.panning, #cy.dragging-card { cursor: grabbing; }
 #cy:focus-visible { outline-offset: -4px; }
 .board-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .board-world.glide { transition: transform calc(var(--db-dur-node) * 1.5) var(--db-ease); }
 .board-world.ease { transition: transform calc(var(--db-dur-node) * .25) ease-out; }
 #cy.panning .board-world, #cy.zooming .board-world { will-change: transform; }
+/* while the camera scales, the blurred pin and thread shadows are drawn sharp: re-blurring hundreds of shapes at every new scale is what starves the frame rate on a big board; the blur returns when the board settles */
+#cy.zooming .board-pins [filter], #cy.zooming .board-threads [filter] { filter: none; }
 .board-cards, .board-tags { position: absolute; left: 0; top: 0; }
 .board-cards { z-index: 1; }
 .board-threads { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; z-index: 2; }
