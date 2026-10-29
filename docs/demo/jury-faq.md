@@ -1,6 +1,6 @@
 # Jury FAQ (37 questions)
 
-Status: DRAFT 3, 2026-10-27. Re-tagged against the first real runs of the stack (real index, graph of 8 stories, curated demo facts, real Ollama on the laptop). **Re-check every tag at the freeze (2026-10-28 18:00).**
+Status: DRAFT 4, 2026-10-29 (section A is new and current; section B is the 2026-10-27 draft). Re-tagged against the first real runs of the stack (real index, graph of 8 stories, curated demo facts, real Ollama on the laptop). **Re-check every tag at the freeze (2026-10-28 18:00).**
 
 Tags answer one question: does the thing exist AND was it verified end to end on the real data and the real stack?
 - **[BUILT]** yes: it exists and was run end to end, and the file with the result is named.
@@ -10,6 +10,45 @@ Tags answer one question: does the thing exist AND was it verified end to end on
 State on 2026-10-27: all modules exist and are tested (606 Python tests, 51 UI logic tests, CI green as of the night of 2026-10-26). Real runs now exist: the 12 control questions through the real API on the laptop in two modes (`docs/spike/results/api12-20261027-generative.md`, `api12-20261027-extractive.md`), five real recordings of the demo steps (`web/replay/real-*.json`), and the first real extraction of one story with its rule coverage (`docs/spike/REPORT.md` Addendum A2). **Still not existing: the graph of all 20 stories (the department-server run is pending) and any measurement of automatic presence-fact precision or of contradiction precision/recall on a real graph.** Everything that depends on those stays [DESIGNED] or [TBD]. All numbers are pilot numbers: n is small and the gold sets were written by an AI.
 
 ---
+
+## A. The hard questions, answered with the numbers of 2026-10-29 (read this first; the list below B is older and may be superseded)
+
+Every number has a file; "n" is always small and the labels were written by an AI (no human review yet). Say the caveat together with the number.
+
+**A1. "This is just vector search with a nice interface. What is different?"**
+Honest answer in three parts. (1) Against a bare model the difference is large and measured: on 30 test questions run once (expected ranges written beforehand), behaviour correct 3/30 = 10 % for the bare model, 13/30 = 43 % [27, 61] for the agent, 11 vs 1 questions, p = 0.006 (`docs/spike/results/eval-2026-10-28-test-7b7b197-7857839ed9be-175321.md`). (2) Against our own vector-only configuration (the same quoting pipeline with candidates from the best chunks only) the agent is ahead by 2 questions out of 30, which is noise (p = 0.5); the agent quotes the right sentence in 11/18 answers against 7/18. (3) What retrieval cannot do: the rules (R1 on two quoted facts, with an Explanation), the chronology, the alibi table, the board, every fact with its provenance label and a verbatim quote. Their limit is next.
+
+**A2. "Your rules found nothing. Is the symbolic part real?"**
+Real, but fed by hand today. On the automatic graph the rules find 0 of 12 test contradiction cases (0 of 14 on dev) and raise 0 of 8 false alarms on the controls: of 1,700 extracted events only 18 have a person, a place, a day and a clock time, and 3 are exact (all three entered by the team). The two red conflicts in the demo (Garcia at Wisteria Lodge; Lady Brackenstall at the chair and at the window) rest on facts the team entered with a verbatim quote and labelled `curated`, and the finding is `conditional`. The rules are tested (hundreds of unit tests, same answer every time); the bottleneck is extraction, and the plan is fine-tuning the extractor on a server (`docs/team/TRAINING_PLAN_RU.md`), measured against human-checked facts.
+
+**A3. "In the stories the culprit is named at the end. Why does a reasoning system matter?"**
+It does not matter for the question "who did it" with the whole text; we measured that this is not what our system solves. Before the reveal (text cut before the explanation, 16 questions, 8 stories) the agent names the culprit in 0 of 16; the control with the full text names him in only 2 of 16, because one quoted sentence rarely holds the name next to the act (`docs/spike/results/pre-reveal-2026-10-28-rescored.md`). The value we claim is verifiability on material where the conclusion is NOT in the text: every statement with its quote, the conflicts between accounts, honest refusals.
+
+**A4. "What did you try that did not work?"** (we show it, it is the point)
+(a) An open-ended model judge for contradictions (semantic R3): it said "contradicts" on 8 of 9 controls and found 1 of 14 real cases strictly, so it is switched off and not shown (`docs/spike/results/r3-semantic-dev-judge-r3j2.md`). (b) Choosing the culprit from a closed list of persons: it named an innocent person in 2 of 8 held-out questions, so it stays in an experimental branch (`docs/spike/results/entity-answer-2026-10-29.md`). (c) The sentence index alone did not beat the chunk-only candidates; tuning the candidate list gave +3 answerable questions on dev (optimistic, tuned there). (d) The first evaluation report had a scoring bug (citations stripped from extractive answers); it was found, fixed and the old report marked superseded.
+
+**A5. "Is it honest that precomputation was done elsewhere? Did you train a model?"**
+We trained nothing. The extraction of all 596 chunks was run once on the department GPU server with the same open models (qwen3:4b) and the same prompt, 3.2 s per chunk against 180-250 s on the laptop; the organizers allowed precomputing on other hardware. The laptop answers every question offline from the resulting graph and index. The curated facts are human-entered, labelled, and a human re-check is still pending.
+
+**A6. "How do you know the labels are right?"**
+We do not, fully. The gold sets (64 questions, 43 contradiction cases, 12 extraction chunks) were drafted by an AI; every table says so. A human review is planned and not done. The metric is mechanical (key-fact coverage >= 0.5 of the expected answer): it undercounts correct answers that are phrased differently. We preregistered the test run (`docs/spike/results/test-preregistration-20261028.md`) and ran the test split once; development numbers are optimistic because the settings were tuned on the dev split.
+
+**A7. "It is slow."**
+28 s median per answer on this CPU (18.6-44.1 s, 18 different questions, three series), cold start 44 s, and the CPU sits at 98-100 C, so a long run may throttle (`docs/perf/laptop-20261029.md`). Prefill is about 21 tokens/s and the model only chooses a sentence, it never writes the answer; refusals and rule answers take under 2 s because no model is called.
+
+**A8. "Would a bigger model fix it?"**
+For fluency yes; for the problem we measured, partly. qwen3:8b was not better than 4b on the extraction check (entities F1 0.53 against 0.59, claims 0.20 against 0.20, 11.3 s against 6.8 s per chunk on the GPU; `docs/spike/results/gold12-20261027-182926.md`), and the constraint of the task is models of at most 8B on a CPU laptop. The weak point is evidence extraction, which a better prompt or a fine-tuned small model may improve; we have not measured a larger model on the answers.
+
+**A9. "Can I run it myself, and is it reproducible?"**
+Yes: an offline archive (6.2 GB, sha256 in `docs/perf/clean-install-20261029.md`) installs with the network off and `verify_offline.sh` passed on the author's laptop in an offline network namespace (checksums of 11,291 files, 976 tests, the scripted questions). Not yet verified on a second, different laptop. Decoding is fixed (temperature 0, seed 42); extraction outputs differ slightly across Ollama versions and hardware (the server and laptop outputs for the same chunk were not byte-identical), so the graph comes from the server run only.
+
+**A10. "What is the single most important limit?"**
+The extraction of who-was-where-when from running text is weak, so the symbolic layer is starved. Everything we showed with rules uses facts entered by hand. The architecture is sound and measured where it works; the next step is extraction quality, measured against human-checked facts.
+
+---
+
+## B. Older entries (37), written before the full-corpus graph and the test run; numbers in them may be superseded by section A
+
 
 **1. What is it, in one sentence?**
 A local, CPU-only investigator agent over 20 Sherlock Holmes stories: a small model reads, deterministic rules derive checkable findings, and every answer is a verbatim quote or a refusal. [Text path BUILT and run on the real stack (12 questions, one run); rule path BUILT, run on the real stack only on curated demo facts; `docs/PRD.md`, `docs/HANDOFF.md`, ADR-0009..0011]
