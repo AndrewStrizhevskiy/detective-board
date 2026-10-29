@@ -290,12 +290,18 @@ def run_agent(agent: Agent, question: str) -> dict[str, Any]:
     retrieved: list[str] = []
     routes: list[str] = []
     graph_used = False
+    strategy = ""
+    problems: list[str] = []
     final = None
     for ev in agent.ask(question):
         if ev.type == "retrieval_results" and not retrieved:
             retrieved = [h.chunk_id for h in sorted(ev.hits, key=lambda h: h.rank)]
         elif ev.type == "route_decided":
             routes = list(ev.routes)
+        elif ev.type == "enriched_query":
+            strategy = ev.strategy
+        elif ev.type == "citation_check" and ev.problems:
+            problems = list(ev.problems)
         elif ev.type in GRAPH_EVENTS:
             graph_used = True
         elif ev.type == "answer_token" and first is None:
@@ -314,6 +320,8 @@ def run_agent(agent: Agent, question: str) -> dict[str, Any]:
         "refusal_code": final.refusal_code,
         "retrieved": retrieved,
         "routes": routes,
+        "strategy": strategy,
+        "check_problems": problems,
         "graph_used": graph_used,
         "ttft_s": round((first or end) - t0, 3),
         "total_s": round(end - t0, 3),
@@ -524,11 +532,18 @@ def git_sha() -> tuple[str, bool]:
 def run(args: argparse.Namespace) -> dict[str, Any]:
     cases_all = [json.loads(x) for x in Path(args.cases).read_text().splitlines() if x.strip()]
     cases = cases_all[: args.limit] if args.limit else cases_all
+    if args.stories:
+        keep = {x for x in args.stories.split(",") if x}
+        cases = [c for c in cases if c["story"] in keep]
+    if args.ids:
+        want = {x for x in args.ids.split(",") if x}
+        cases = [c for c in cases if c["id"] in want]
     conditions = [c for c in args.conditions.split(",") if c]
     for c in conditions:
         if c not in CONDITIONS:
             raise SystemExit(f"unknown condition {c!r}; choose from {CONDITIONS}")
-    stack = RE.build_stack(short=False, vector_min_score=RE.VECTOR_MIN_SCORE)
+    overrides = dict(args.set or [])
+    stack = RE.build_stack(short=False, vector_min_score=RE.VECTOR_MIN_SCORE, overrides=overrides)
     rows: list[dict] = []
     try:
         for case in cases:
@@ -646,6 +661,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--date", default=datetime.now(UTC).strftime("%Y-%m-%d"))
     ap.add_argument("--out", default=str(RESULTS))
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--stories", default="", help="comma list: run only the cases of these stories")
+    ap.add_argument(
+        "--set",
+        action="append",
+        type=lambda t: tuple(t.split("=", 1)),
+        metavar="KEY=VALUE",
+        help="override an AgentConfig field of the product agent (e.g. entity_answer=true)",
+    )
+    ap.add_argument("--ids", default="", help="comma list: run only these case ids")
+    ap.add_argument("--suffix", default="", help="appended to the output file stem")
     ap.add_argument(
         "--rescore", default="", help="a saved result JSON: score its answers again, no model call"
     )
@@ -657,7 +682,7 @@ def main(argv: list[str] | None = None) -> int:
             print("wrote", p)
         return 0
     result = run(args)
-    for p in write(result, Path(args.out)):
+    for p in write(result, Path(args.out), suffix=args.suffix):
         print("wrote", p)
     return 0
 

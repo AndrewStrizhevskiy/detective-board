@@ -14,10 +14,11 @@ from typing import Any
 from detective_board.symbolic.api import Explanation
 
 from . import context as ctx
+from . import entity as ent
 from . import extractive as ex
 from . import rule_first as rf
 from .answer import CheckResult, citations_for, self_check, strip_reasoning
-from .backends import GraphBackend, Retriever, ToolClient
+from .backends import GraphBackend, Retriever, SentenceResult, ToolClient
 from .config import AgentConfig
 from .events import (
     AnswerToken,
@@ -323,6 +324,12 @@ class Agent:
 
         if cfg.answer_mode == "extractive":
             vec = [s for s in sources if s.origin == "vector"]
+            if cfg.entity_answer and ent.is_who_question(question):
+                done = yield from self._entity_answer(
+                    sink, decision, question, vec, gate_missing, rq
+                )
+                if done:
+                    return
             yield from self._extractive_answer(
                 sink, decision, question, vec, None, gate_missing, rq
             )
@@ -846,6 +853,167 @@ class Agent:
                 attempts=1,
             )
         )
+
+    def _entity_answer(
+        self,
+        sink: EventSink,
+        decision: RouteDecided,
+        question: str,
+        vec: list[ctx.Source],
+        missing: list[str],
+        rq: str | None = None,
+    ):
+        """Switch `entity_answer`, 'who did it' questions only (agent/entity.py). Returns False,
+        having emitted nothing, when the mode cannot run (no graph, no story, no persons, no
+        sentences): the normal extractive answer then runs. Once it has run, its answer is a
+        verified entity quote or a plain refusal."""
+        cfg = self.cfg
+        conn = getattr(self.graph, "conn", None)
+        if conn is None or not vec:
+            return False
+        stories = [
+            r[0] for r in conn.execute("SELECT DISTINCT story FROM g_node WHERE kind='person'")
+        ]
+        ranked = list(dict.fromkeys(s.story for s in vec))
+        link = link_person(self.graph, extract_names(question), ranked)
+        story = ent.pick_story(
+            question,
+            stories,
+            link.story if link.status == "ok" else None,
+            [s.story for s in vec],
+        )
+        if story is None:
+            return False
+        people = ent.load_people(conn, story)
+        vec_s = [s for s in vec if s.story == story]
+        found = None
+        search = getattr(self.retriever, "sentence_search", None)
+        if search is not None:
+            try:
+                found = search(rq or question, ent.SENTENCE_POOL)
+            except Exception as e:  # a broken sentence index must not kill the answer
+                log.warning("entity: sentence search failed: %s", e)
+        if found is not None:
+            keep = [h for h in found.hits if h.story == story]
+            found = SentenceResult(keep, {h.chunk_id: found.chunks[h.chunk_id] for h in keep})
+            prompt, srcs = ex.build_hybrid_prompt(
+                question,
+                vec_s,
+                found,
+                self.idf,
+                top_sentences=ent.MAX_SENTENCES,
+                safety_chunks=cfg.extract_safety_chunks,
+                safety_per_chunk=cfg.extract_safety_per_chunk,
+                total=ent.MAX_SENTENCES,
+                max_tokens=cfg.extract_max_tokens,
+            )
+        else:
+            prompt = ex.build_prompt(
+                question,
+                vec_s,
+                self.idf,
+                per_source=cfg.extract_per_source,
+                total=ent.MAX_SENTENCES,
+                max_tokens=cfg.extract_max_tokens,
+                order=cfg.extract_order,
+            )
+            srcs = vec_s
+        cands = list(prompt.candidates)
+        chunks = {s.chunk_id: s.text for s in [*vec_s, *srcs]}
+        variant = ent.VARIANTS[cfg.entity_variant]
+        persons = ent.rank_people(people, chunks.values())
+        if variant.drop_named:
+            persons = ent.drop_named(persons, question)
+        if not cands or not persons:
+            return False
+        options: list[ent.Option] = []
+        while True:
+            if variant.pairs:
+                options = ent.build_options(persons, cands, srcs)
+                msgs = ent.pair_messages(question, options, variant)
+            else:
+                notes = {c.id: ent.people_near(persons, ent.window(srcs, c)) for c in cands}
+                msgs = ent.messages(question, persons, cands, variant, notes)
+            if ent.prompt_tokens(msgs) <= ent.MAX_PROMPT_TOKENS or len(cands) <= 1:
+                break
+            cands = cands[:-1]
+        shown = len({o.sentence.id for o in options}) if variant.pairs else len(cands)
+        yield sink.emit(
+            EnrichedQuery(
+                attempt=1,
+                prompt_chars=sum(len(m["content"]) for m in msgs),
+                prompt_tokens_estimate=ent.prompt_tokens(msgs),
+                max_prompt_tokens=ent.MAX_PROMPT_TOKENS,
+                strategy=(
+                    f"entity choice ({variant.name}) in {story}: "
+                    f"{shown} sentences, {len(persons)} people"
+                ),
+                window_words=cfg.window_words,
+                sources=_source_traces(srcs),
+                graph_facts=0,
+                rule_facts=0,
+                injection_suspects=[s.n for s in srcs if s.suspect],
+            )
+        )
+        if variant.pairs and not options:
+            choice = ent.Choice("none")  # no sentence has a person next to it: nothing to choose
+        else:
+            fmt = ent.pair_schema(options) if variant.pairs else ent.schema(persons, cands, variant)
+            raw = strip_reasoning(
+                "".join(self.llm.chat(msgs, temperature=cfg.temperature, seed=cfg.seed, format=fmt))
+            )
+            choice = (
+                ent.parse_pick(raw, options)
+                if variant.pairs
+                else ent.parse_choice(raw, persons, cands)
+            )
+        ver = ent.verify(choice, srcs, question, variant)
+        text = ""
+        if ver.ok:
+            text = ent.render(choice, ver)
+            line = text.rsplit("\n", 1)[-1]
+            if not ent.template_is_clean(
+                line
+            ):  # a name such as "the Murderer" would be an accusation
+                ver = ent.Verified(False, "the plain line would carry an accusatory word")
+        if not ver.ok:
+            why = {
+                "none": "the model found no sentence that says who did it",
+                "invalid": "the model's choice was not a valid id pair",
+            }.get(choice.kind, ver.reason)
+            yield sink.emit(
+                CitationCheck(attempt=1, ok=False, problems=[f"entity: {why}"], action="refuse")
+            )
+            yield from self._refuse(
+                sink, decision, "no_evidence", ctx.REFUSAL_TEXT, missing, SEARCHED
+            )
+            return True
+        for tok in re.findall(r"\S+\s*|\s+", text):
+            yield sink.emit(AnswerToken(attempt=1, text=tok))
+        chk = self_check(text, srcs, cfg.min_quote_chars, 0.0, allow_uncited=True)
+        if not chk.ok:  # cannot happen: every quote is copied from a shown chunk
+            log.error("entity answer failed its own check: %s", chk.problems)
+            yield sink.emit(
+                CitationCheck(attempt=1, ok=False, problems=chk.problems, action="refuse")
+            )
+            yield from self._refuse(
+                sink, decision, "selfcheck_failed", ctx.REFUSAL_TEXT, chk.problems[:5], SEARCHED
+            )
+            return True
+        yield sink.emit(CitationCheck(attempt=1, ok=True, citations=chk.traces, action="accept"))
+        cites, labels = citations_for(text, srcs)
+        yield sink.emit(
+            Final(
+                status="answered",
+                verified=True,
+                answer=text,
+                citations=cites,
+                provenance=labels,
+                route=decision,
+                attempts=1,
+            )
+        )
+        return True
 
     def _with_semantic(
         self, ans: rf.RuleAnswer, decision: RouteDecided, story: str | None, link: Link | None

@@ -7,6 +7,7 @@ from dataclasses import dataclass
 STRATEGIES = ("rank_full", "uniform")
 ANSWER_MODES = ("extractive", "generate")
 EXTRACT_ORDERS = ("score", "rank")
+ENTITY_VARIANTS = ("v1", "v2", "v3")
 
 
 @dataclass(frozen=True)
@@ -57,6 +58,12 @@ class AgentConfig:
     semantic_r3: bool = False
     semantic_r3_max_pairs: int = 12  # candidate pairs judged per question
     semantic_r3_show: int = 2  # pairs shown
+    # Entity-choice answers for 'who did it' questions (agent/entity.py): after retrieval, the model
+    # chooses a person of the story (or NOT_A_PERSON / NONE) and a sentence; the choice is accepted
+    # only when the name stands in that sentence or next to it. EXPERIMENTAL, OFF by default.
+    entity_answer: bool = False
+    # prompt / gate variant of the entity mode (agent/entity.py VARIANTS); "v3" is the frozen one
+    entity_variant: str = "v3"
     temperature: float = 0.0
     seed: int = 42
 
@@ -65,5 +72,7 @@ class AgentConfig:
             raise ValueError(f"strategy must be one of {STRATEGIES}, got {self.strategy!r}")
         if self.answer_mode not in ANSWER_MODES:
             raise ValueError(f"answer_mode must be one of {ANSWER_MODES}, got {self.answer_mode!r}")
+        if self.entity_variant not in ENTITY_VARIANTS:
+            raise ValueError(f"entity_variant must be one of {ENTITY_VARIANTS}")
         if self.extract_order not in EXTRACT_ORDERS:
             raise ValueError(f"extract_order must be one of {EXTRACT_ORDERS}")
