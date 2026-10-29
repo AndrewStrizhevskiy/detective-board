@@ -1,0 +1,71 @@
++ uv run python scripts/server_gold12.py chunks --out data/cache/gold12.jsonl
+12 gold chunks -> data/cache/gold12.jsonl
+== qwen3_4b__extract_v2_1 18:29
++ uv run python -m detective_board.extract.run --model qwen3:4b --prompt prompts/extract/extract_v2_1.txt --chunks data/cache/gold12.jsonl --cache data/cache/gold12/qwen3_4b__extract_v2_1.sqlite --out data/cache/gold12/qwen3_4b__extract_v2_1.jsonl --host http://localhost:11434
+[1/12] blue-carbuncle-0004 ok 8s
+[2/12] boscombe-valley-mystery-0006 ok 4s
+[3/12] boscombe-valley-mystery-0007 ok 8s
+[4/12] crooked-man-0014 ok 6s
+[5/12] naval-treaty-0007 ok 7s
+[6/12] norwood-builder-0014 ok 7s
+[7/12] red-headed-league-0003 ok 7s
+[8/12] reigate-squires-0004 ok 6s
+[9/12] reigate-squires-0009 ok 6s
+[10/12] silver-blaze-0004 ok 7s
+[11/12] silver-blaze-0018 ok 7s
+[12/12] speckled-band-0020 ok 7s
+== report
+  chunks: 12
+  from_cache: 0
+  errors: 0
+  valid_json_rate: 1.0
+  repaired: 0
+  failed: 0
+  truncated: 0
+  items_kept: 173
+  items_dropped: 3
+  dropped_by_reason: {'quote_not_grounded': 3}
+  grounding: {'exact': 160, 'fuzzy': 13, 'none': 3}
+  grounded_rate: 0.983
+  sec_per_chunk_live: 6.8
+  model: qwen3:4b
+  prompt_version: extract-2.1
+  total_s: 84.1
+== qwen3_8b__extract_v2_1 18:30
++ uv run python -m detective_board.extract.run --model qwen3:8b --prompt prompts/extract/extract_v2_1.txt --chunks data/cache/gold12.jsonl --cache data/cache/gold12/qwen3_8b__extract_v2_1.sqlite --out data/cache/gold12/qwen3_8b__extract_v2_1.jsonl --host http://localhost:11434
+[1/12] blue-carbuncle-0004 ok 17s
+[2/12] boscombe-valley-mystery-0006 ok 9s
+[3/12] boscombe-valley-mystery-0007 ok 12s
+[4/12] crooked-man-0014 ok 9s
+[5/12] naval-treaty-0007 ok 10s
+[6/12] norwood-builder-0014 ok 13s
+[7/12] red-headed-league-0003 ok 11s
+[8/12] reigate-squires-0004 ok 9s
+[9/12] reigate-squires-0009 ok 11s
+[10/12] silver-blaze-0004 ok 11s
+[11/12] silver-blaze-0018 ok 12s
+[12/12] speckled-band-0020 ok 12s
+== report
+  chunks: 12
+  from_cache: 0
+  errors: 0
+  valid_json_rate: 1.0
+  repaired: 0
+  failed: 0
+  truncated: 0
+  items_kept: 167
+  items_dropped: 4
+  dropped_by_reason: {'duplicate': 1, 'quote_not_grounded': 3}
+  grounding: {'exact': 137, 'fuzzy': 30, 'none': 3}
+  grounded_rate: 0.982
+  sec_per_chunk_live: 11.3
+  model: qwen3:8b
+  prompt_version: extract-2.1
+  total_s: 138.5
+== scoring
++ uv run python scripts/server_gold12.py report --stamp 20261027-182926 data/cache/gold12/qwen3_4b__extract_v2_1.jsonl data/cache/gold12/qwen3_8b__extract_v2_1.jsonl
+run                     json ok  usable  grounded  s/chunk  ent P  R      F1     cla P  R      F1     rel P  R      F1     ovl clm F1  ovl rel F1  person  place  time  deny  in_speech  transit
+qwen3_4b__extract_v2_1  100%     100%    100%      6.8      0.855  0.448  0.588  0.233  0.179  0.202  0.195  0.186  0.190  0.30        0.38        30%     19%    30%   12%   68%        29%    
+qwen3_8b__extract_v2_1  100%     100%    100%      11.3     0.754  0.410  0.531  0.257  0.161  0.198  0.220  0.209  0.214  0.42        0.39        20%     6%     26%   29%   59%        18%    
+
+wrote /home/user/detective-board/docs/spike/results/gold12-20261027-182926.md
