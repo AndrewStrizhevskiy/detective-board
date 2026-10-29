@@ -164,3 +164,17 @@ def test_wilson_and_window() -> None:
     assert 0.1 < lo < 0.375 < hi < 0.7
     t = "One. Two two. Three."
     assert window_around(t, 5, 9, around=1) == "One. Two two. Three."
+
+
+def test_self_consistency_aggregate() -> None:
+    from detective_board.suspects.fulltext import Ranking, aggregate
+
+    runs = [
+        Ranking(["A", "B"], "high", 1, 1),
+        Ranking(["A", "C"], "low", 0, 1),
+        Ranking(["B", "A"], "high", 1, 1),
+    ]
+    r = aggregate(runs)
+    assert r.order[0] == "A" and r.agreement == 0.667 and r.confidence == "medium"
+    split = aggregate([Ranking(["A"], "high", 0, 0), Ranking(["B"], "high", 0, 0)])
+    assert split.confidence == "low"  # the scorer abstains on low

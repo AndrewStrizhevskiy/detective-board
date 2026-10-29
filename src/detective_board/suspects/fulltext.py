@@ -71,11 +71,28 @@ class Ranking:
     grounded_quotes: int
     quotes: int
     raw: str = ""
+    agreement: float = 1.0
 
 
-def _run(client, cache, model, prompt, options, num_ctx, text_for_ground, seed) -> Ranking:
+def _run(
+    client,
+    cache,
+    model,
+    prompt,
+    options,
+    num_ctx,
+    text_for_ground,
+    seed,
+    num_predict=600,
+    temperature=0.0,
+) -> Ranking:
     sch = schema(options)
-    opts = {"temperature": 0.0, "seed": seed, "num_ctx": num_ctx, "num_predict": 600}
+    opts = {
+        "temperature": temperature,
+        "seed": seed,
+        "num_ctx": num_ctx,
+        "num_predict": num_predict,
+    }
     key = digest(PROMPT_VERSION, model, prompt, opts, sch)
     resp = cache.get(key)
     if resp is None:
@@ -103,13 +120,21 @@ def _run(client, cache, model, prompt, options, num_ctx, text_for_ground, seed) 
 
 def rank_fulltext(
     client: LLMClient, cache: KV, *, model: str, question: str, cands, text: str,
-    num_ctx: int = 20480, seed: int = 42,
+    num_ctx: int = 20480, seed: int = 42, num_predict: int = 600, samples: int = 1, temperature: float = 0.3,
 ) -> Ranking:  # fmt: skip
     options = labels(cands)
     prompt = PROMPT_TEXT.format(
         question=question, options="\n".join(f"- {o}" for o in options), text=text
     )
-    return _run(client, cache, model, prompt, options, num_ctx, text, seed)
+    if samples <= 1:
+        return _run(client, cache, model, prompt, options, num_ctx, text, seed, num_predict)
+    runs = [
+        _run(
+            client, cache, model, prompt, options, num_ctx, text, seed + k, num_predict, temperature
+        )
+        for k in range(samples)
+    ]
+    return aggregate(runs)
 
 
 def rank_bare(
@@ -118,3 +143,28 @@ def rank_bare(
     options = labels(cands)
     prompt = PROMPT_BARE.format(question=question, options="\n".join(f"- {o}" for o in options))
     return _run(client, cache, model, prompt, options, 4096, "", seed)
+
+
+def aggregate(runs: Sequence[Ranking]) -> Ranking:
+    """Self-consistency: Borda points over the samples; the confidence is the agreement on the top answer.
+
+    agreement >= 0.8 -> high, >= 0.6 -> medium, otherwise low (the scorer abstains on low).
+    """
+    points: dict[str, float] = {}
+    tops: dict[str, int] = {}
+    for r in runs:
+        for i, cand in enumerate(r.order[:3]):
+            points[cand] = points.get(cand, 0.0) + (3 - i)
+        if r.order:
+            tops[r.order[0]] = tops.get(r.order[0], 0) + 1
+    order = sorted(points, key=lambda c: (-points[c], -tops.get(c, 0), c))
+    agreement = max(tops.values()) / len(runs) if tops else 0.0
+    conf = "high" if agreement >= 0.8 else "medium" if agreement >= 0.6 else "low"
+    return Ranking(
+        order,
+        conf,
+        sum(r.grounded_quotes for r in runs),
+        sum(r.quotes for r in runs),
+        "",
+        round(agreement, 3),
+    )
