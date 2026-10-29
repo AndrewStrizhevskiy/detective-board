@@ -82,3 +82,6 @@ Never cut: working demo, citations, honest refusals, quality measurements.
 
 ## Requests from `feat/offline-package` (2026-10-27)
 - R-23 | devops-engineer + performance-engineer | Pin the Ollama version used for the demo in `docs/team/models.md` (issue #8 assumes it is there; today only the model IDs are). `pack_offline.sh` records the packed version in MANIFEST but cannot check it against a pin. Also decide whether the offline archive leaves out the CUDA/ROCm runtimes in `lib/ollama` for the CPU-only laptop (several GB) | P2
+
+## Requests from `feat/ui-bare-vs-agent` (2026-10-29, ux-designer)
+- R-24 | frontend-engineer + demo-director + tech-lead | Split view bare model vs agent (issue #13, key `b`), built after the freeze on `feat/ui-bare-vs-agent` (draft PR, for after the show). Out of the ux-designer zone (`docs/design/`): `web/js/app.js`, `web/js/bare.js`, `web/index.html`, `web/css/app.css` (frontend-engineer), `web/replay/bare/`, `scripts/bare_recording.py`, `scripts/replay_index.py` (record tooling), `docs/demo/bare-vs-agent.md` (demo-director). Owners: take over or approve; tech-lead: go/no-go after the show. If it is ever shown, `docs/DISCLOSURE.md` (bare-model row, now "2026-10-23") must name the 2026-10-28 dev run too | P2
