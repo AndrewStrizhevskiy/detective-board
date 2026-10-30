@@ -1,0 +1,13 @@
+// C4 L1: системный контекст (по docs/architecture/c4.md, приведено к реализованному состоянию)
+digraph G {
+  rankdir=TB; fontname="Arial"; node [fontname="Arial", fontsize=12, shape=box, style="rounded,filled"]; edge [fontname="Arial", fontsize=10];
+  user [label="Исследователь\n(оператор)\nзадаёт вопросы, смотрит\nдоску и трассу агента", shape=box, fillcolor="#08427b", fontcolor=white];
+  sys  [label="Detective Board\nлокальный офлайн нейро-символический\nследователь по 20 рассказам\nо Шерлоке Холмсе", fillcolor="#1168bd", fontcolor=white];
+  ollama [label="Ollama\nлокальная среда LLM\nи модель эмбеддингов", fillcolor="#999999", fontcolor=white];
+  corpus [label="Проект Гутенберг\n20 рассказов, общественное достояние\n(скачиваются один раз\nscripts/corpus/fetch.py)", fillcolor="#999999", fontcolor=white];
+  gpu [label="GPU-сервер кафедры\n(RTX 4070, Ollama)\nпредвычисление графа и оценок;\nво время показа не используется", fillcolor="#999999", fontcolor=white];
+  user -> sys [label="HTTP, браузер\nSSE-поток трассы"];
+  sys -> ollama [label="HTTP localhost:11434\nизвлечение, эмбеддинги, выбор предложений"];
+  corpus -> sys [label="файлы data/raw → data/clean"];
+  gpu -> sys [label="архив кэша извлечения,\nотчёты (вручную)", style=dashed];
+}

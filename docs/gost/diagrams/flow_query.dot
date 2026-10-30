@@ -1,0 +1,8 @@
+digraph G { rankdir=TB; fontname="Arial"; node [fontname="Arial", fontsize=11, shape=box, style="rounded,filled", fillcolor="#e8eef5"]; edge [fontname="Arial", fontsize=9];
+ q [label="Вопрос (UI → POST /api/ask)"]; tr [label="перевод кириллического вопроса\nна английский (по умолчанию включён)"]; r [label="Маршрутизатор\n(правила; LLM-классификатор выключен)", shape=diamond, fillcolor="#fff2cc"];
+ gate [label="Шлюз поиска: нет опоры в корпусе → отказ\nбез вызова модели", fillcolor="#f8d7da"];
+ fact [label="Текстовые вопросы:\nгибридный поиск (BM25+вектор, RRF)\n+ индекс предложений"]; ex [label="Извлекающий ответ:\nмодель выбирает номера предложений,\nответ — дословный текст"];
+ rule [label="Вопросы о противоречиях/алиби/хронологии:\nMCP-инструмент timeline-alibi → правила R1–R3\nответ по шаблону, без модели"]; honest [label="Охрана честности:\nпустой результат ≠ «противоречий нет»", fillcolor="#fff2cc"];
+ chk [label="Самопроверка:\nкаждая цитата — дословная подстрока\nцитируемого чанка", shape=diamond, fillcolor="#fff2cc"];
+ ans [label="Ответ + цитаты + метки происхождения", fillcolor="#d5e8d4"]; ref [label="Отказ: причина и что искали", fillcolor="#f8d7da"]; trace [label="Поток событий трассы (SSE)\nна каждом шаге", shape=note, fillcolor="#ffffff"];
+ q->tr->r; r->ref [label="вне области\n(правила маршрутизатора)"]; fact->gate [label="нет опоры"]; r->fact [label="факт / связь"]; r->rule [label="алиби / противоречие /\nхронология"]; fact->ex->chk; rule->honest->chk; gate->ref; chk->ans [label="да"]; chk->ref [label="нет"]; ans->trace [style=dotted]; r->trace [style=dotted]; }

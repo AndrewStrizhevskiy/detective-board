@@ -1,0 +1,30 @@
+// C4 L2: контейнеры/модули (реализованное состояние, каталоги src/detective_board/)
+digraph G {
+  rankdir=TB; fontname="Arial"; compound=true; nodesep=0.35; ranksep=0.5;
+  node [fontname="Arial", fontsize=11, shape=box, style="rounded,filled", fillcolor="#438dd5", fontcolor=white]; edge [fontname="Arial", fontsize=9];
+  user [label="Исследователь", fillcolor="#08427b"];
+  subgraph cluster_sys { label="Detective Board (одна машина)"; fontname="Arial"; style=dashed;
+    ui [label="Web UI\nweb/ (ES-модули, без сборки)\nчат, доска-граф, трасса, панель «Почему»"];
+    api [label="API-сервер\nStarlette + uvicorn\nsrc/detective_board/api"];
+    agent [label="Агент\nagent/: маршрутизатор, извлекающие ответы,\nправила-сначала, проверка цитат, отказы"];
+    retr [label="Поиск\nretrieval/: BM25 (FTS5) + sqlite-vec,\nRRF, индекс предложений"];
+    gr [label="Граф\ngraph/: SQLite, якоря-цитаты,\nметки происхождения"];
+    rules [label="Символический слой\nsymbolic/: правила R1, R2, R3\nчистый Python, без LLM и ввода-вывода"];
+    mcpc [label="MCP-клиент\nmcp/client.py"];
+    mcps [label="MCP-сервер timeline-alibi\nmcp/server.py (stdio)"];
+    pipe [label="Конвейер подготовки\nextract/, index/: чанки → извлечение →\nнормализация → граф; индексы", fillcolor="#6b8fb3"];
+    db [label="Данные (SQLite)\ndata/index/db.sqlite\ndata/index/sentences.sqlite\ndata/graph/graph.sqlite\ndata/curated/*.jsonl", shape=cylinder, fillcolor="#2f6f9f"];
+  }
+  ollama [label="Ollama\nqwen3:4b-instruct, bge-m3", fillcolor="#999999"];
+  user -> ui [label="браузер"];
+  ui -> api [label="HTTP + SSE"];
+  api -> agent [label="запуск вопроса"];
+  agent -> retr; agent -> gr; agent -> mcpc [label="call_tool"];
+  agent -> ollama [label="HTTP"];
+  mcpc -> mcps [label="stdio"];
+  mcps -> rules [label="те же функции"];
+  agent -> rules [label="напрямую\n(один источник истины)", style=dashed];
+  rules -> gr [label="чтение фактов", style=dashed];
+  retr -> db; gr -> db; mcps -> db [label="read-only"];
+  pipe -> db [label="запись"]; pipe -> ollama;
+}
