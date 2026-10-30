@@ -1,0 +1,6 @@
+digraph G { rankdir=TB; fontname="Arial"; node [fontname="Arial", fontsize=11, shape=box, style="rounded,filled", fillcolor="#e8eef5"]; edge [fontname="Arial", fontsize=9];
+ subgraph cluster_gpu { label="GPU-сервер (предвычисление, онлайн-доступ нужен только для запуска)"; fontname="Arial"; style=dashed;
+   sv [label="Ollama + RTX 4070\nscripts/server_*.sh\nизвлечение 596 чанков,\nпроход присутствия, оценки"]; out [label="server-out.tar.gz\nextract-cache.sqlite, отчёты", shape=note]; }
+ subgraph cluster_lap { label="Целевой ноутбук (офлайн, CPU, 15 ГиБ)"; fontname="Arial"; style=dashed;
+   arch [label="архив detective-board-offline-<ref>.tar\n(scripts/pack_offline.sh)", shape=note]; ver [label="verify_offline.sh\nсумма, тесты, preflight,\nконтрольные вопросы"]; ol [label="Ollama из архива\nbge-m3, qwen3:4b-instruct, qwen3:4b"]; app [label="just run\nAPI + UI :8000"]; br [label="Браузер"]; }
+ sv->out [label="tar по сети/флешке"]; out->arch [label="just graph (кэш-попадания)", style=dashed]; arch->ver->ol->app->br; }

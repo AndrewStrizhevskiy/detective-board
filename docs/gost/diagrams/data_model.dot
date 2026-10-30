@@ -1,0 +1,9 @@
+digraph G { rankdir=TB; fontname="Arial"; node [fontname="Arial", fontsize=10, shape=record, style=filled, fillcolor="#f5f5f5"]; edge [fontname="Arial", fontsize=9];
+ chunk [label="{g_chunk|chunk_id PK\lstory\lchar_start, char_end\lcontiguous\ltext_sha\linput_hash\l}"];
+ node_ [label="{g_node|id PK\lkind: person|place|item|event|claim\lstory, name, norm_name\lprops_json\lprovenance: extracted|derived\lconfidence: high|low, conf_reason\lchunk_id FK + якорь (char_*, rel_*)\lquote, ambiguous\l}"];
+ edge_ [label="{g_edge|id PK\lsrc FK, dst FK, rel\lprovenance, confidence\lchunk_id FK + якорь\lquote NOT NULL, ambiguous\lUNIQUE(src,dst,rel,chunk_id,rel_start,rel_end)\l}"];
+ ment [label="{g_mention|id PK\lnode_id FK, chunk_id FK\lsurface, surface_norm\lrole: name|alias|descr\limplicit\lякорь + quote\l}"];
+ drop [label="{g_dropped|chunk_id FK\litem_kind, idx, reason\lquote\l}"];
+ over [label="{g_overlay|node_id, key\lvalue_json\lconfidence, source\l}"];
+ meta [label="{g_meta|key PK\lvalue\l}"];
+ chunk->node_ [label="1:N"]; chunk->edge_ [label="1:N"]; chunk->ment [label="1:N"]; chunk->drop [label="1:N"]; node_->edge_ [label="src/dst"]; node_->ment [label="1:N"]; node_->over [label="node_id (логически)", style=dashed]; }
