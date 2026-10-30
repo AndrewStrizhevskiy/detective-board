@@ -79,13 +79,17 @@ def main() -> None:
             "solvable_by": "AI (to be human-checked)", "note": note, "source": "Gutenberg #204",
         })  # fmt: skip
         print(f"{slug}: cut {cut} of {len(text)}, {len(rows)} pre-cut chunks")
-    (out / "chunks.jsonl").write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in chunk_rows) + "\n")
+    (out / "chunks.jsonl").write_text(
+        "\n".join(json.dumps(r, ensure_ascii=False) for r in chunk_rows) + "\n"
+    )
     (ROOT / "eval" / "suspects" / "heldout_cases.jsonl").write_text(
         "\n".join(json.dumps(c, ensure_ascii=False) for c in cases) + "\n"
     )
     manifest = {"source": "https://www.gutenberg.org/cache/epub/204/pg204.txt", "bytes": len(raw.encode()),
                 "sha256": hashlib.sha256(raw.encode()).hexdigest(), "ebook": "The Innocence of Father Brown #204"}  # fmt: skip
-    (ROOT / "eval" / "suspects" / "heldout_manifest.json").write_text(json.dumps(manifest, indent=1))
+    (ROOT / "eval" / "suspects" / "heldout_manifest.json").write_text(
+        json.dumps(manifest, indent=1)
+    )
 
 
 if __name__ == "__main__":
