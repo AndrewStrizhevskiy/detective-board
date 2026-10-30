@@ -24,8 +24,8 @@ NS = (
 )
 
 
-def _run(text: str, bold=False, italic=False, mono=False, size=None) -> str:
-    rpr = ""
+def _run(text: str, bold=False, italic=False, mono=False, size=None, link=False) -> str:
+    rpr = '<w:rStyle w:val="Hyperlink"/>' if link else ""
     if mono:
         rpr += '<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>'
     if bold:
@@ -44,6 +44,29 @@ def _run(text: str, bold=False, italic=False, mono=False, size=None) -> str:
     return f"<w:r>{rpr}{''.join(out)}</w:r>"
 
 
+import os
+import subprocess
+
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+GH_BASE = "https://github.com/AndrewStrizhevskiy/detective-board"
+try:
+    _SHA = subprocess.run(["git", "-C", REPO, "rev-parse", "16122fc"], capture_output=True, text=True).stdout.strip() or "main"
+except Exception:  # noqa: BLE001
+    _SHA = "main"
+_PATH = re.compile(r"^(?:(?:docs|src|eval|scripts|tests|web|data|prompts)/[\w./-]+|README\.md|THIRD_PARTY_NOTICES\.md|CONTRIBUTING\.md|pyproject\.toml|justfile)$")
+_LINKS: list[str] = []
+
+
+def _url(path: str):
+    if not _PATH.match(path) or "..." in path or path.startswith("docs/gost"):
+        return None
+    full = os.path.join(REPO, path)
+    if not os.path.exists(full):
+        return None
+    kind = "tree" if os.path.isdir(full) else "blob"
+    return f"{GH_BASE}/{kind}/{_SHA}/{path.rstrip('/')}"
+
+
 _TOKEN = re.compile(r"(\*\*.+?\*\*|`.+?`|_\S.*?\S_)")
 
 
@@ -56,7 +79,14 @@ def runs(text: str, size=None, bold=False) -> str:
         if part.startswith("**") and part.endswith("**"):
             out.append(_run(part[2:-2], bold=True, size=size))
         elif part.startswith("`") and part.endswith("`"):
-            out.append(_run(part[1:-1], mono=True, size=(size - 4 if size else 24), bold=bold))
+            code = part[1:-1]
+            url = _url(code)
+            msz = size - 4 if size else 24
+            if url:
+                _LINKS.append(url)
+                out.append(f'<w:hyperlink r:id="rIdLnk{len(_LINKS)}" w:history="1">{_run(code, mono=True, size=msz, bold=bold, link=True)}</w:hyperlink>')
+            else:
+                out.append(_run(code, mono=True, size=msz, bold=bold))
         else:
             out.append(_run(part, bold=bold, size=size))
     return "".join(out)
@@ -80,6 +110,7 @@ class Doc:
         self._bm = 0
         self.app_letter = None
         self.heads: list[tuple[int, str]] = []
+        _LINKS.clear()
         self.toc = None
 
     # ----- абзацы -----
@@ -326,6 +357,8 @@ class Doc:
                 '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>',
                 '<Relationship Id="rIdFtr" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>',
                 '<Relationship Id="rIdFtr1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer2.xml"/>']
+        for i, url in enumerate(_LINKS, 1):
+            rels.append(f'<Relationship Id="rIdLnk{i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="{escape(url)}" TargetMode="External"/>')
         for i, (name, _) in enumerate(self.media, 1):
             rels.append(f'<Relationship Id="rIdImg{i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="{name}"/>')
         footer = (
@@ -402,6 +435,7 @@ STYLES = (
     + _style("Heading1", "heading 1", ppr='<w:keepNext/><w:keepLines/><w:spacing w:before="240" w:after="120"/><w:ind w:firstLine="709"/><w:jc w:val="left"/><w:outlineLvl w:val="0"/>', rpr="<w:b/><w:caps/>", nxt="Normal")
     + _style("Heading2", "heading 2", ppr='<w:keepNext/><w:keepLines/><w:spacing w:before="200" w:after="80"/><w:ind w:firstLine="709"/><w:jc w:val="left"/><w:outlineLvl w:val="1"/>', rpr="<w:b/>", nxt="Normal")
     + _style("Heading3", "heading 3", ppr='<w:keepNext/><w:keepLines/><w:spacing w:before="160" w:after="60"/><w:ind w:firstLine="709"/><w:jc w:val="left"/><w:outlineLvl w:val="2"/>', rpr="<w:b/><w:i/>", nxt="Normal")
+    + '<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:uiPriority w:val="99"/><w:unhideWhenUsed/><w:rPr><w:color w:val="0563C1"/><w:u w:val="single"/></w:rPr></w:style>'
     + _style("ListDash", "List Dash", ppr='<w:ind w:left="709" w:firstLine="0"/>')
     + _style("ListNum", "List Number", ppr='<w:ind w:left="709" w:firstLine="0"/>')
     + _style("NoIndent", "No Indent", ppr='<w:ind w:firstLine="0"/>')

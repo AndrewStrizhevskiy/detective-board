@@ -60,11 +60,45 @@ def build(mod: str):
         if new == toc:
             break
         toc = new
+    json.dump(toc, open(os.path.join(TMP, name + ".toc.json"), "w"), ensure_ascii=False)
     final_pdf = os.path.join(OUT, name + ".pdf")
     os.replace(pdf, final_pdf)
     print(f"{name}: {len(pages(final_pdf))} стр., заголовков в оглавлении {len(toc)}")
 
 
+def combine():
+    import d00_index
+    from common import DOCS
+    files = []
+    for abbr, (f, name, std) in DOCS.items():
+        files.append({"pdf": os.path.join(OUT, f + ".pdf"), "title": name, "toc": json.load(open(os.path.join(TMP, f + ".toc.json")))})
+    idx_pdf = None
+    starts = None
+    for _ in range(3):
+        d = d00_index.make(starts)
+        p = os.path.join(TMP, d00_index.FILE + ".docx")
+        d.save(p)
+        idx_pdf = to_pdf(p)
+        n_idx = len(pages(idx_pdf))
+        calc, acc = [], n_idx + 1
+        for fl in files:
+            calc.append(acc)
+            acc += len(pages(fl["pdf"]))
+        if calc == starts:
+            break
+        starts = calc
+    spec = {"files": [{"pdf": idx_pdf, "title": None, "toc": []}] + files}
+    sp = os.path.join(TMP, "spec.json")
+    json.dump(spec, open(sp, "w"), ensure_ascii=False)
+    outp = os.path.join(OUT, "00-komplekt-dokumentacii.pdf")
+    r = subprocess.run(["osascript", "-l", "JavaScript", os.path.join(HERE, "combine.js"), sp, outp], capture_output=True, text=True)
+    print("combine:", r.stdout.strip(), r.stderr.strip()[:300])
+
+
 if __name__ == "__main__":
-    for mod in (sys.argv[1:] or MODULES):
-        build(mod)
+    mods = sys.argv[1:]
+    for mod in (mods or MODULES):
+        if mod != "combine":
+            build(mod)
+    if not mods or "combine" in mods:
+        combine()
