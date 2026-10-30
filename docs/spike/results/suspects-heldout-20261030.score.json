@@ -1,0 +1,865 @@
+{
+ "params": {
+  "cmd": "score",
+  "lam": 1.0,
+  "kind_bonus": 0.5,
+  "min_support": 2,
+  "margin": 1.0,
+  "abstain_low": true,
+  "report": "data/cache/suspects/heldout/HELDOUT.score.json",
+  "md": "data/cache/suspects/heldout/HELDOUT.md",
+  "summary": "data/cache/suspects/heldout/SUMMARY.txt",
+  "label": "HELDOUT",
+  "only_split": "all",
+  "baselines": null
+ },
+ "methods": {
+  "most_mentioned": {
+   "all": {
+    "n": 6,
+    "mrr": 0.5,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   },
+   "reachable": {
+    "n": 6,
+    "mrr": 0.5,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   }
+  },
+  "most_accused": {
+   "all": {
+    "n": 6,
+    "mrr": 0.389,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   },
+   "reachable": {
+    "n": 6,
+    "mrr": 0.389,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   }
+  },
+  "prior": {
+   "all": {
+    "n": 6,
+    "mrr": 0.5,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   },
+   "reachable": {
+    "n": 6,
+    "mrr": 0.5,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   }
+  },
+  "fulltext_14b_open": {
+   "all": {
+    "n": 6,
+    "mrr": 0.25,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "culprit_in_top3": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "cleared_accused": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "answered": 5,
+    "wrong_when_answered": [
+     5,
+     [
+      0.566,
+      1.0
+     ]
+    ],
+    "precision_when_answered": 0.0
+   },
+   "reachable": {
+    "n": 6,
+    "mrr": 0.25,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "culprit_in_top3": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "cleared_accused": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "answered": 5,
+    "wrong_when_answered": [
+     5,
+     [
+      0.566,
+      1.0
+     ]
+    ],
+    "precision_when_answered": 0.0
+   }
+  },
+  "pairwise_14b_open": {
+   "all": {
+    "n": 6,
+    "mrr": 0.561,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   },
+   "reachable": {
+    "n": 6,
+    "mrr": 0.561,
+    "correct_first": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.188,
+      0.812
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   }
+  },
+  "bare": {
+   "all": {
+    "n": 6,
+    "mrr": 0.222,
+    "correct_first": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "culprit_in_top3": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "precision_when_answered": 0.167
+   },
+   "reachable": {
+    "n": 6,
+    "mrr": 0.222,
+    "correct_first": [
+     1,
+     [
+      0.03,
+      0.564
+     ]
+    ],
+    "culprit_in_top3": [
+     2,
+     [
+      0.097,
+      0.7
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.39
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     5,
+     [
+      0.436,
+      0.97
+     ]
+    ],
+    "precision_when_answered": 0.167
+   }
+  }
+ },
+ "cases": {
+  "su-fb-hammer-of-god": {
+   "reachable": true,
+   "n_options": 10,
+   "most_mentioned": {
+    "top": "Wilfred Bohun",
+    "outcome": "correct"
+   },
+   "most_accused": {
+    "top": "Wilfred Bohun",
+    "outcome": "correct"
+   },
+   "prior": {
+    "top": "Wilfred Bohun",
+    "outcome": "correct"
+   },
+   "fulltext_14b_open": {
+    "top": "Joe",
+    "outcome": "other_wrong"
+   },
+   "pairwise_14b_open": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-fb-invisible-man": {
+   "reachable": true,
+   "n_options": 7,
+   "most_mentioned": {
+    "top": "John Turnbull Angus",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Flambeau",
+    "outcome": "other_wrong"
+   },
+   "prior": {
+    "top": "John Turnbull Angus",
+    "outcome": "other_wrong"
+   },
+   "fulltext_14b_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "pairwise_14b_open": {
+    "top": "James Welkin",
+    "outcome": "correct"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-fb-secret-garden": {
+   "reachable": true,
+   "n_options": 13,
+   "most_mentioned": {
+    "top": "Aristide Valentin",
+    "outcome": "correct"
+   },
+   "most_accused": {
+    "top": "Aristide Valentin",
+    "outcome": "correct"
+   },
+   "prior": {
+    "top": "Aristide Valentin",
+    "outcome": "correct"
+   },
+   "fulltext_14b_open": {
+    "top": "Father Brown",
+    "outcome": "other_wrong"
+   },
+   "pairwise_14b_open": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-fb-eye-of-apollo": {
+   "reachable": true,
+   "n_options": 10,
+   "most_mentioned": {
+    "top": "M. Hercule Flambeau",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Joan Stacey",
+    "outcome": "cleared_accused"
+   },
+   "prior": {
+    "top": "M. Hercule Flambeau",
+    "outcome": "other_wrong"
+   },
+   "fulltext_14b_open": {
+    "top": "Joan Stacey",
+    "outcome": "cleared_accused"
+   },
+   "pairwise_14b_open": {
+    "top": "Joan Stacey",
+    "outcome": "cleared_accused"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-fb-three-tools": {
+   "reachable": true,
+   "n_options": 9,
+   "most_mentioned": {
+    "top": "Father Brown",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Gilder",
+    "outcome": "other_wrong"
+   },
+   "prior": {
+    "top": "Father Brown",
+    "outcome": "other_wrong"
+   },
+   "fulltext_14b_open": {
+    "top": "Patrick Royce",
+    "outcome": "cleared_accused"
+   },
+   "pairwise_14b_open": {
+    "top": "NO_PERSON",
+    "outcome": "correct"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "correct"
+   }
+  },
+  "su-fb-wrong-shape": {
+   "reachable": true,
+   "n_options": 6,
+   "most_mentioned": {
+    "top": "Father Brown",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Father Brown",
+    "outcome": "other_wrong"
+   },
+   "prior": {
+    "top": "Father Brown",
+    "outcome": "other_wrong"
+   },
+   "fulltext_14b_open": {
+    "top": "Atkinson",
+    "outcome": "other_wrong"
+   },
+   "pairwise_14b_open": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   }
+  }
+ },
+ "random_expected": {
+  "n": 6,
+  "correct_first": 0.7,
+  "wrong_total": 5.3
+ }
+}
