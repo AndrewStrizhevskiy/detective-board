@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 0 spike: run graph extraction on the hand-labelled chunks with one model.
+"""Phase 0 spike: run graph extraction on the labelled chunks with one model.
 
 Writes predictions as JSONL ({chunk_id, output: <raw string>, ...timing}) in the format
 scripts/spike/score_extraction.py reads. Uses Ollama /api/generate with `format` = JSON schema

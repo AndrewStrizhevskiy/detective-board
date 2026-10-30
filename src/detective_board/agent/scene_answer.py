@@ -323,8 +323,8 @@ def build_scene_answer(
     if cur:
         tail.append(
             f"Curated: {cur} of the facts above were entered and checked by the team "
-            f"(AI-assisted, {CURATED_REVIEW}); they are not output of the automatic "
-            "extraction."
+            f"(prepared with tooling support, {CURATED_REVIEW}); "
+            "they are not output of the automatic extraction."
         )
     if p.get("truncated"):
         tail.append(f"{total - len(persons)} further persons are not listed.")

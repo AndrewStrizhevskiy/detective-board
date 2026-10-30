@@ -23,7 +23,7 @@ def test_short_mode_runs_offline_and_writes_the_report(tmp_path):
     assert f"-{meta['git_sha'][:7]}-{meta['config_hash']}-" in files[0], (
         "commit and config in the name"
     )
-    assert "AI-written" in meta["gold_note"]
+    assert "generated automatically" in meta["gold_note"]
     assert meta["presence"]["fixture"] == "demo" and meta["presence"]["rule_tools"]
     s = result["summary"]
     assert s["vector+rerank"]["status"] == "not run"

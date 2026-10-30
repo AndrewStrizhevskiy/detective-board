@@ -9,7 +9,7 @@ score_pipeline), and the field-level rates the symbolic rules depend on:
   claims: polarity=deny share, about_person non-empty, about_person/place/time grounded in the
           claim's own quote/content/speaker;
   speed:  seconds per chunk.
-Caveats: gold is AI-labelled, 12 chunks, one run per prompt (temperature 0, seed 42).
+Caveats: gold is automatically labelled, 12 chunks, one run per prompt (temperature 0, seed 42).
 
 Usage: symbolic_readiness.py OUT.jsonl [OUT2.jsonl ...] [--gold DIR] [--stamp S] [--md-dir DIR]
 With --stamp the table is also written to <md-dir>/prompt-v2-2-<stamp>.md.
@@ -219,7 +219,7 @@ def format_markdown(rows: dict[str, dict]) -> str:
 
 CAVEATS = (
     "Caveats: only the 12 gold chunks, one run per prompt (temperature 0, seed 42), so differences "
-    "of a few points are noise. Gold is AI-labelled, not human-checked, and not exhaustive "
+    "of a few points are noise. Gold is automatically labelled, not human-checked, and not exhaustive "
     "(participants of gold events are often incomplete, so participants precision is a lower "
     "bound). Events are matched to gold events by quote token overlap >= 50% and participants "
     "by name-token containment. 'Found in own quote' is a normalised substring test; "

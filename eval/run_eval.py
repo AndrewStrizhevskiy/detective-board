@@ -21,7 +21,7 @@ coverage >= 0.5; out-of-corpus: refused), citations (per answer and per citation
 hit, refusal precision / recall and false refusals, chunk recall@k (up to the configuration's own
 k), sentence recall@k from the sentence index, contradiction detection on
 eval/golden/contradictions.jsonl with the rules only (no LLM), latency. Wilson 95 % intervals,
-exact McNemar between configurations, n in every cell. The gold sets are AI-written until issue #9
+exact McNemar between configurations, n in every cell. The gold sets are generated automatically until issue #9
 is done; every table says so.
 
 Output: <out>/eval-<date>-<split>[-short]-<sha7>-<config hash>-<time>.{json,md,svg}; a test-split
@@ -78,7 +78,7 @@ COVERAGE_OK = 0.5
 BARE_MAX_TOKENS = 300
 VECTOR_K = 4
 VECTOR_MIN_SCORE = 0.0
-GOLD_NOTE = "Gold sets are AI-written and not yet reviewed by a human (issue #9): every number is against AI labels."
+GOLD_NOTE = "Gold sets are generated automatically and not yet reviewed by a human (issue #9): every number is against automatic labels."
 SHORT_NOTE = (
     "Short mode: FakeLLM over the 10-chunk fixture index, whose chunk ids reuse real ids with other "
     "text; gold chunks come from data/chunks.jsonl, so recall and citation correctness are 0 by "

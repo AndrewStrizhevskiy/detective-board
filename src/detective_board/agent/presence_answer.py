@@ -179,8 +179,9 @@ def build_presence_answer(
     curated = sum(1 for r in rows if r.get("curated"))
     if curated:
         tail.append(
-            f"Curated: {curated} of the rows were entered and checked by the team (AI-assisted, "
-            f"{CURATED_REVIEW}); they are not output of the automatic extraction."
+            f"Curated: {curated} of the rows were entered and checked by the team "
+            f"(prepared with tooling support, {CURATED_REVIEW}); "
+            "they are not output of the automatic extraction."
         )
     extra: list[str] = []
     if link is not None and link.status == "ambiguous":

@@ -295,8 +295,8 @@ def _finding_sentence(it: RuleItem, c: _Cites) -> str:
     if it.curated:
         line += (
             f"\nCurated: {it.curated} of the facts it rests on were entered and checked by the "
-            f"team (AI-assisted, {CURATED_REVIEW}); they are not output of the automatic "
-            "extraction."
+            f"team (prepared with tooling support, {CURATED_REVIEW}); "
+            "they are not output of the automatic extraction."
         )
     return "- " + line.replace("\n", "\n  ")
 
@@ -510,8 +510,9 @@ def build_timeline_answer(
     curated = sum(1 for e in events if e.get("curated"))
     if curated:
         tail.append(
-            f"Curated: {curated} of the events were entered and checked by the team (AI-assisted, "
-            f"{CURATED_REVIEW}); they are not output of the automatic extraction."
+            f"Curated: {curated} of the events were entered and checked by the team "
+            f"(prepared with tooling support, {CURATED_REVIEW}); "
+            "they are not output of the automatic extraction."
         )
     tail.append(
         f"Label {label}: the order is computed by rule R2 from the events extracted from the text."

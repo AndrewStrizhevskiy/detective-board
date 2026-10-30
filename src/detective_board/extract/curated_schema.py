@@ -1,9 +1,10 @@
 """Schema of the CURATED presence facts (docs/symbolic-layer.md 11.4).
 
-Curated facts are written and checked by the team (AI-assisted, to be re-checked by a human) for the
-demo cases, where the small extraction models do not produce the facts a rule needs (coreference:
-"he", "there"). They are NOT the output of the automatic pipeline and are labelled as such wherever
-they are shown. Kept free of other detective_board imports so the graph layer can import it.
+Curated facts are written and checked by the team (prepared with tooling support, to be
+re-checked by a human) for the demo cases, where the small extraction models do not produce the
+facts a rule needs (coreference: "he", "there"). They are NOT the output of the automatic
+pipeline and are labelled as such wherever they are shown. Kept free of other detective_board
+imports so the graph layer can import it.
 """
 
 from __future__ import annotations

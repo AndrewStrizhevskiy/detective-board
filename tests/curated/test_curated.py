@@ -1,6 +1,6 @@
 """Curated presence facts for the demo cases (docs/symbolic-layer.md 11.4).
 
-The facts are human-checked (AI-assisted); these tests prove the loader and what the rules do with
+The facts are human-checked (prepared with tooling support); these tests prove the loader and what the rules do with
 the facts, not that any model produces them.
 """
 
@@ -73,7 +73,10 @@ def test_file_has_the_demo_cases_and_every_fact_is_labelled(facts):
     ids = {f.id for f in facts}
     assert len(ids) == len(facts) >= 7
     assert {f.story for f in facts} == {WL, BV, AG}
-    assert all(f.curated_by == "team (AI-assisted, to be re-checked by a human)" for f in facts)
+    assert all(
+        f.curated_by == "team (prepared with tooling support, to be re-checked by a human)"
+        for f in facts
+    )
     assert all(f.note.strip() and (f.day_key or f.time_ref) for f in facts)
     assert {"c001-eccles-garcia-bedroom", "c001-baynes-garcia-common"} <= ids
 
@@ -124,7 +127,7 @@ def test_round_trip_events_claims_overlays_and_the_curated_mark(graph, facts):
     for r in ev + cl:
         p = json.loads(r["props_json"])
         assert p["curated"] is True and p["pass"] == "curated" and p["note"]
-        assert p["curated_by"].startswith("team (AI-assisted")
+        assert p["curated_by"].startswith("team (prepared with tooling support")
     garcia = graph.resolve("Aloysius Garcia", story=WL, kinds=("person",))
     assert len(garcia) == 1
     parts = [

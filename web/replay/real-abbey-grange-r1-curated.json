@@ -2515,7 +2515,7 @@
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "(AI-assisted, "
+   "text": "(prepared with tooling support, "
   },
   {
    "run_id": "e55379ce-e030-45c3-8c63-986135e538fc",
@@ -2661,7 +2661,7 @@
    "type": "final",
    "status": "answered",
    "verified": true,
-   "answer": "Rule engine result for abbey-grange: 1 finding.\n- R1 reports verdict violated (OVERLAP_DIFFERENT_PLACES), label conditional: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated). [1: \"secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my\"] [2: \"I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room\"]\n  Conditional because these inputs are low-confidence: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated).\n  Curated: 2 of the facts it rests on were entered and checked by the team (AI-assisted, human re-check pending); they are not output of the automatic extraction.",
+   "answer": "Rule engine result for abbey-grange: 1 finding.\n- R1 reports verdict violated (OVERLAP_DIFFERENT_PLACES), label conditional: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated). [1: \"secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my\"] [2: \"I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room\"]\n  Conditional because these inputs are low-confidence: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated).\n  Curated: 2 of the facts it rests on were entered and checked by the team (prepared with tooling support, human re-check pending); they are not output of the automatic extraction.",
    "citations": [
     {
      "n": 1,

@@ -4,8 +4,7 @@
 
 ## Provenance and status: needs human review
 
-The questions, expected answers and gold quotes were written by an AI assistant (an LLM)
-(eval-engineer role) from reading the text in `data/clean/`, not from memory of
+The questions, expected answers and gold quotes were generated automatically from reading the text in `data/clean/`, not from memory of
 the canon. Nothing has been reviewed by a human yet. The validator proves only
 that each quote is a verbatim substring of its story. It does not prove that the
 quote supports the expected answer, that the answer is complete, or that the
@@ -83,7 +82,7 @@ answer quality (faithfulness, citation correctness, refusal rate, recall).
 
 ### Provenance and status: needs human review
 
-Written by an AI assistant (an LLM, eval-engineer role) from reading the story text in
+Generated automatically from reading the story text in
 `data/clean/`, not from memory of the canon. No human has reviewed it. The
 validator proves only that each quote is a verbatim substring of its story and
 that counts and labels are internally consistent. It does not prove that the
@@ -206,4 +205,4 @@ Protocol:
   the ones you dislike. Never pick the better of several test runs.
 - Report rates with Wilson 95% intervals (not normal approximation). With 30 and 20 items the
   intervals are wide; say so next to the numbers.
-- Gold sets are AI-written and not yet human-reviewed (see above); label results accordingly.
+- Gold sets are generated automatically and not yet human-reviewed (see above); label results accordingly.

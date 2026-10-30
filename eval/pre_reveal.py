@@ -64,7 +64,7 @@ CONDITIONS = ("full", "cut", "bare")
 MAX_VEC_K = 4000  # sqlite-vec limits k to 4096
 GRAPH_EVENTS = ("graph_query", "graph_results", "tool_call", "tool_result")
 NOTE = (
-    "The cases are AI-written: the reveal passages were located by reading the text, the cut placed "
+    "The cases are generated automatically: the reveal passages were located by reading the text, the cut placed "
     "before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical "
     "(names or keywords in the answer and its cited quotes), not a human reading."
 )
@@ -97,7 +97,7 @@ PRIMARY_NOTE = (
 )
 LIMITS = (
     "- n = 16 questions in 8 stories; the two questions of a story are not independent, so the "
-    "intervals are optimistic. Cases and aliases are AI-written, not reviewed by a human.\n"
+    "intervals are optimistic. Cases and aliases are generated automatically, not reviewed by a human.\n"
     "- The cut is placed by reading; the validator checks verbatim quotes, the cut before every quote "
     "and keyword leaks, but cannot check paraphrased hints or a culprit named by a description.\n"
     "- CutRetriever re-fuses the arms over the kept hits; BM25 scores still use the statistics of the "

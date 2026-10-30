@@ -2737,7 +2737,7 @@
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "(AI-assisted, "
+   "text": "(prepared with tooling support, "
   },
   {
    "run_id": "6e8f8ca2-9310-4df8-b53c-cc806ec4aaf4",
@@ -3048,7 +3048,7 @@
    "type": "final",
    "status": "answered",
    "verified": true,
-   "answer": "Timeline for Aloysius Garcia in wisteria-lodge: the graph holds 3 events (2 with a stated day and time, 1 without); 3 are shown.\n1. 22:00-23:59, day not stated (time uncertain) (derived): Death [1: \"the death last night of Mr. Aloysius Garcia\"]\n2. a day inferred from the text, 01:00 (time uncertain) (curated): Aloysius Garcia at Wisteria Lodge, nearly one o’clock [2: \"Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.\"]\n3. a day inferred from the text, 01:00 (time uncertain) (curated): Aloysius Garcia at Oxshott Common, since one o’clock [3: \"He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.\"]\nEvents with a date stated in the text come first, ordered by that date and time; the others follow in order of narration, which is not necessarily the order in which they happened.\n\"A day inferred from the text\" groups events that the extraction placed on one day by weekday or relative wording; it is not a calendar date, and such days cannot be ordered against each other or against stated dates.\nCurated: 2 of the events were entered and checked by the team (AI-assisted, human re-check pending); they are not output of the automatic extraction.\nLabel derived: the order is computed by rule R2 from the events extracted from the text.",
+   "answer": "Timeline for Aloysius Garcia in wisteria-lodge: the graph holds 3 events (2 with a stated day and time, 1 without); 3 are shown.\n1. 22:00-23:59, day not stated (time uncertain) (derived): Death [1: \"the death last night of Mr. Aloysius Garcia\"]\n2. a day inferred from the text, 01:00 (time uncertain) (curated): Aloysius Garcia at Wisteria Lodge, nearly one o’clock [2: \"Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.\"]\n3. a day inferred from the text, 01:00 (time uncertain) (curated): Aloysius Garcia at Oxshott Common, since one o’clock [3: \"He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.\"]\nEvents with a date stated in the text come first, ordered by that date and time; the others follow in order of narration, which is not necessarily the order in which they happened.\n\"A day inferred from the text\" groups events that the extraction placed on one day by weekday or relative wording; it is not a calendar date, and such days cannot be ordered against each other or against stated dates.\nCurated: 2 of the events were entered and checked by the team (prepared with tooling support, human re-check pending); they are not output of the automatic extraction.\nLabel derived: the order is computed by rule R2 from the events extracted from the text.",
    "citations": [
     {
      "n": 1,

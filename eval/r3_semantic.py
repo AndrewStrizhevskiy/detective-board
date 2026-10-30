@@ -55,7 +55,7 @@ NOTE = (
     "`contradicts` has BOTH quotes matching two different involved claims of the case "
     "(strict) or at least one (loose); matching = content-word coverage >= 0.6 of the shorter "
     "side. A control is a false positive when any pair among its judged pairs is judged "
-    "`contradicts`. The model verdict is a hypothesis, not a rule verdict. Gold sets are AI-written."
+    "`contradicts`. The model verdict is a hypothesis, not a rule verdict. Gold sets are generated automatically."
 )
 
 

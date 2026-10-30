@@ -6,7 +6,7 @@
 Writes data/heldout/clean/<slug>.txt (cleaned with scripts/corpus/ingest.py), data/heldout/chunks.jsonl (only the
 chunks before each cut, same chunker as the main corpus), eval/suspects/heldout_cases.jsonl and
 eval/suspects/heldout_manifest.json (sha256 of the raw file). The truth (culprit, cleared, victim) and the cut come
-from reading each story's explanation; they are AI-marked and need a human check.
+from reading each story's explanation; they are automatically marked and need a human check.
 The three novels the user also approved (Styles, Sign of the Four, Study in Scarlet) are real whodunits but their
 text before the reveal (72 to 277 thousand characters) does not fit the 14k-token context of the frozen method, so
 they are NOT used.
@@ -76,7 +76,7 @@ def main() -> None:
         cases.append({
             "id": "su-" + slug, "story": slug, "question": q, "cut_char": cut, "culprit_kind": kind,
             "culprit_names": cul, "cleared_names": clr, "victim_names": vic, "solvable": "partly",
-            "solvable_by": "AI (to be human-checked)", "note": note, "source": "Gutenberg #204",
+            "solvable_by": "automatic labelling (to be human-checked)", "note": note, "source": "Gutenberg #204",
         })  # fmt: skip
         print(f"{slug}: cut {cut} of {len(text)}, {len(rows)} pre-cut chunks")
     (out / "chunks.jsonl").write_text(

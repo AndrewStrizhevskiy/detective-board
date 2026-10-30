@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Score extraction predictions against hand-labelled gold (eval/extraction_gold/).
+"""Score extraction predictions against labelled gold (eval/extraction_gold/).
 
 Predictions: JSONL, one object per line: {"chunk_id": str, "output": <raw model string>}
 or {"chunk_id": str, "extraction": <dict>}. Invalid/missing outputs count as empty

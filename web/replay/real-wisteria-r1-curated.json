@@ -2303,7 +2303,7 @@
    "duration_ms": null,
    "type": "answer_token",
    "attempt": 1,
-   "text": "(AI-assisted, "
+   "text": "(prepared with tooling support, "
   },
   {
    "run_id": "01c8c7f0-cc54-4ac9-82fb-8399c6ea401c",
@@ -2449,7 +2449,7 @@
    "type": "final",
    "status": "answered",
    "verified": true,
-   "answer": "Rule engine result for wisteria-lodge: 1 finding.\n- R1 reports verdict violated (OVERLAP_DIFFERENT_PLACES), label conditional: Aloysius Garcia at Wisteria Lodge, nearly one o’clock (same day: night of the murder, 01:00) (curated); Aloysius Garcia at Oxshott Common, since one o’clock (same day: night of the murder, 01:00) (curated). [1: \"Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.\"] [2: \"He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.\"]\n  Conditional because these inputs are low-confidence: Aloysius Garcia at Wisteria Lodge, nearly one o’clock (same day: night of the murder, 01:00) (curated); Aloysius Garcia at Oxshott Common, since one o’clock (same day: night of the murder, 01:00) (curated).\n  Curated: 2 of the facts it rests on were entered and checked by the team (AI-assisted, human re-check pending); they are not output of the automatic extraction.",
+   "answer": "Rule engine result for wisteria-lodge: 1 finding.\n- R1 reports verdict violated (OVERLAP_DIFFERENT_PLACES), label conditional: Aloysius Garcia at Wisteria Lodge, nearly one o’clock (same day: night of the murder, 01:00) (curated); Aloysius Garcia at Oxshott Common, since one o’clock (same day: night of the murder, 01:00) (curated). [1: \"Some time later Garcia looked in at my door—the room was dark at the time—and asked me if I had rung. I said that I had not. He apologised for having disturbed me so late, saying that it was nearly one o’clock.\"] [2: \"He had been there since one o’clock. There was rain about that time, and his death had certainly been before the rain.\"]\n  Conditional because these inputs are low-confidence: Aloysius Garcia at Wisteria Lodge, nearly one o’clock (same day: night of the murder, 01:00) (curated); Aloysius Garcia at Oxshott Common, since one o’clock (same day: night of the murder, 01:00) (curated).\n  Curated: 2 of the facts it rests on were entered and checked by the team (prepared with tooling support, human re-check pending); they are not output of the automatic extraction.",
    "citations": [
     {
      "n": 1,

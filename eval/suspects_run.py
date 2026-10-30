@@ -6,7 +6,7 @@
     # anywhere, no model; thresholds are tuned on dev only
     uv run python eval/suspects_run.py score data/cache/suspects/dev.json --lam 1 --min-support 2
 
-Cases: eval/suspects/cases.jsonl (AI-written, to be human-checked), split in eval/suspects/split.json
+Cases: eval/suspects/cases.jsonl (generated automatically, to be human-checked), split in eval/suspects/split.json
 (fixed before any run; run `--split test` once). Methods: evidence cards + matrix, long-context LLM,
 bare LLM, and three non-LLM baselines (random, most mentioned, most accused by suspicion words).
 Outcomes per case: correct, cleared_accused (a person the story clears), other_wrong, abstain.

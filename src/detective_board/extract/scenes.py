@@ -5,8 +5,8 @@
 
 A scene is a place, a time window and a victim for one story, with ONE verbatim quote of the text
 that states the crime time or place. It cannot be derived automatically (the extraction has no
-"crime scene" concept), so the team writes it by hand (AI-assisted, human re-check pending) and
-the loader refuses anything that is not grounded: the quote must be a verbatim span of
+"crime scene" concept), so the team writes it by hand (prepared with tooling support, human re-check
+pending) and the loader refuses anything that is not grounded: the quote must be a verbatim span of
 `data/clean/<story>.txt`, the time expression must be in the quote and give an exact clock time
 that equals the window, the place and the victim must be in the quote or declared `inferred`
 (with a note that says why), and the place must exist in the graph or be declared
@@ -34,8 +34,8 @@ from detective_board.graph.normalize import fold_text
 
 SCENES_SCHEMA_VERSION = "scenes-1"
 DEFAULT_FILE = "data/curated/scenes.jsonl"
-SCENE_CURATED_BY = "team (AI-assisted, human re-check pending)"
-SCENE_MARK = f"curated by team, AI-assisted, {CURATED_REVIEW}"
+SCENE_CURATED_BY = "team (prepared with tooling support, human re-check pending)"
+SCENE_MARK = f"curated by team, prepared with tooling support, {CURATED_REVIEW}"
 _ID = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 _KEY = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 _SLUG = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")

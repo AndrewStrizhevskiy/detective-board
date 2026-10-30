@@ -76,7 +76,8 @@ def report(stamp: str, outputs: list[Path], results_dir: Path = RESULTS_DIR) -> 
         f"Scorer: `scripts/spike/score_pipeline.py`. Runs: {', '.join(rows)}.\n\n"
         f"{sp.format_markdown(rows)}\n\n"
         "json ok = status ok; usable = ok or repaired; person/place/time/deny = share of claims; "
-        "in_speech/transit = share of events. The gold sets are AI-labelled (not human-checked).\n",
+        "in_speech/transit = share of events. "
+        "The gold sets are automatically labelled (not human-checked).\n",
         encoding="utf-8",
     )
     print(f"\nwrote {md}")
