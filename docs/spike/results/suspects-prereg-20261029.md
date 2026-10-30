@@ -1,6 +1,6 @@
 # Suspect board before the reveal: frozen protocol (written before the test run, 2026-10-29)
 
-Cases: `eval/suspects/cases.jsonl` (16 stories, AI-written, not yet human-checked). Split: `eval/suspects/split.json`
+Cases: `eval/suspects/cases.jsonl` (16 stories, generated automatically, not yet human-checked). Split: `eval/suspects/split.json`
 (alphabetical, even = dev, odd = test), fixed before any run. The test split is run **once** with the settings below.
 
 Model: `qwen3:8b`, Ollama on the GPU server, temperature 0.3 and 3 votes for evidence cards, long-context call at

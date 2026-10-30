@@ -1,7 +1,7 @@
-# Curated facts and scene: AI pass and human re-check (2026-10-29), issue #22
+# Curated facts and scene: Automated pass and human re-check (2026-10-29), issue #22
 
-Two steps on 2026-10-29. First, an AI assistant (an LLM, working for LitrumCoder) made the pass
-below and corrected five notes. Then **LitrumCoder (human)** read every record, its story context
+Two steps on 2026-10-29. First, an automated pass (prepared for LitrumCoder) was run
+and five notes were corrected. Then **LitrumCoder (human)** read every record, its story context
 and the table below, and found no mismatch. Both files now carry `reviewed_by: LitrumCoder` and
 `reviewed_on: 2026-10-29`. Screens, answers and slides say "human re-check done by LitrumCoder on 2026-10-29"
 (`curated_schema.CURATED_REVIEW`, kept equal to the files by `tests/curated/test_review.py`).

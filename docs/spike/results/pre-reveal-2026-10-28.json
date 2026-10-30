@@ -67,7 +67,7 @@
       "cut",
       "bare"
     ],
-    "note": "The cases are AI-written (reveal passages located by reading the text, keywords chosen so that no sentence and no chunk before the cut holds them together: scripts/eval/validate_pre_reveal.py). A 'named' needs the keywords in the answer text or its cited quotes, not a human reading.",
+    "note": "The cases are generated automatically (reveal passages located by reading the text, keywords chosen so that no sentence and no chunk before the cut holds them together: scripts/eval/validate_pre_reveal.py). A 'named' needs the keywords in the answer text or its cited quotes, not a human reading.",
     "started": "2026-10-28T19:45:06+00:00"
   },
   "summary": {

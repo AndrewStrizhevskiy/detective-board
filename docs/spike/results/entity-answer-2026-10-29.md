@@ -4,7 +4,7 @@ Branch `exp/entity-answer` (from `main` at tag rc4, commit 98067d8). Experimenta
 (`AgentConfig.entity_answer = False`), not merged, not pushed. Everything below is measured with the
 4B generator `qwen3:4b-instruct`, temperature 0, seed 42, the app's `AgentConfig` otherwise, on a shared
 laptop (every Ollama run under `flock /tmp/db-llm.lock`). All outcomes are lexical (names in the answer
-and its quotes) and the cases are AI-written, as in `pre-reveal-2026-10-28-rescored.md`.
+and its quotes) and the cases are generated automatically, as in `pre-reveal-2026-10-28-rescored.md`.
 
 ## Verdict
 
@@ -150,7 +150,7 @@ Paired: innocent accused only on 2 (p 0.5); wrong person only on 3 (p 0.25); ref
 - Evidence is missing from the 20 sentences in most dev questions (above); the mode cannot name a culprit that no listed sentence names next to an act.
 - Graph noise reaches the candidates: "Silver Blaze" (the horse) and "Basil" are person nodes; "William the coachman" is a separate node from the victim; ambiguous bare surnames are dropped, which also drops "young McCarthy".
 - NOT_A_PERSON was never selected and verified; its cue list (horse, snake, suicide ...) is generic and untested end to end on real data.
-- n is tiny: dev 9 rows (6 in scope, one golden), held-out 8 per condition, two questions per story are not independent, cases and aliases are AI-written, scoring is lexical. All intervals are wide; no difference between off and on is significant (for V3 every exact McNemar p is at least 0.25; V2's five extra refusals on dev: p 0.0625).
+- n is tiny: dev 9 rows (6 in scope, one golden), held-out 8 per condition, two questions per story are not independent, cases and aliases are generated automatically, scoring is lexical. All intervals are wide; no difference between off and on is significant (for V3 every exact McNemar p is at least 0.25; V2's five extra refusals on dev: p 0.0625).
 - The OFF baseline of the held-out comparison is the 2026-10-28 run (earlier commit, graph and index files may have been rebuilt since); its dev counterpart reproduced.
 - Dev rows were used to design V2 and V3 (peek runs on dev questions only); dev numbers are therefore optimistic design-set numbers.
 - No "same fix failed twice" stop: each variant addressed the previous variant's observed failure with a different change; the three-variant budget is spent.

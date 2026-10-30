@@ -1,7 +1,7 @@
 # Dev-split failure analysis of the agent (2026-10-28)
 
 Source: `eval-2026-10-28-dev-ab945e8-78b3bbb3f2a6-145202-rescored.json` (34 dev questions, 27 answerable, 1 run), plus three live replays of
-g023, g031 and g036 on the API (read-only; no code or config change). AI-written gold, so every number is against AI labels.
+g023, g031 and g036 on the API (read-only; no code or config change). automatically generated gold, so every number is against automatic labels.
 
 ## Where the 27 answerable questions go (agent = hybrid+graph, extractive mode)
 

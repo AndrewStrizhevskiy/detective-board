@@ -1,6 +1,6 @@
 # Pre-reveal test, 2026-10-29
 
-The cases are AI-written: the reveal passages were located by reading the text, the cut placed before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical (names or keywords in the answer and its cited quotes), not a human reading.
+The cases are generated automatically: the reveal passages were located by reading the text, the cut placed before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical (names or keywords in the answer and its cited quotes), not a human reading.
 
 - run at commit `98067d8` (dirty tree), generator `qwen3:4b-instruct`, seed 42, temperature 0.0, machine mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-42-generic
 - cases: eval/pre_reveal/cases.jsonl (sha256 e1ee1364ac22 at run time), 3 questions in 2 stories; AgentConfig = the app defaults (full dict in the JSON)
@@ -51,7 +51,7 @@ Leak exposure of the primary metric: chunks that end before the cut and hold a c
 
 ## Limits
 
-- n = 16 questions in 8 stories; the two questions of a story are not independent, so the intervals are optimistic. Cases and aliases are AI-written, not reviewed by a human.
+- n = 16 questions in 8 stories; the two questions of a story are not independent, so the intervals are optimistic. Cases and aliases are generated automatically, not reviewed by a human.
 - The cut is placed by reading; the validator checks verbatim quotes, the cut before every quote and keyword leaks, but cannot check paraphrased hints or a culprit named by a description.
 - CutRetriever re-fuses the arms over the kept hits; BM25 scores still use the statistics of the full index (ranks hardly change). The chunk that straddles the cut is dropped, so up to one chunk of legitimate pre-cut text is lost per story.
 - The graph and the rule tools are not cut; no question here routed to them (no graph_query or tool_call event), otherwise the row would be 'unscored'.

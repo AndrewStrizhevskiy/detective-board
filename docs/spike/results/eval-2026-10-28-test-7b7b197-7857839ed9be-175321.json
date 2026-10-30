@@ -108,7 +108,7 @@
   "vector_min_score": 0.0,
   "n_questions": 30,
   "n_contradictions": 20,
-  "gold_note": "Gold sets are AI-written and not yet reviewed by a human (issue #9): every number is against AI labels.",
+  "gold_note": "Gold sets are generated automatically and not yet reviewed by a human (issue #9): every number is against automatic labels.",
   "out_dir": "/home/mendax/code/detective-board/docs/spike/results"
  },
  "summary": {
@@ -2581,7 +2581,7 @@
    "answerable": true,
    "expected_behavior": "answer",
    "status": "answered",
-   "answer": "Rule engine result for abbey-grange: 1 finding.\n- R1 reports verdict violated (OVERLAP_DIFFERENT_PLACES), label conditional: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated). [1: \"secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my\"] [2: \"I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room\"]\n  Conditional because these inputs are low-confidence: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated).\n  Curated: 2 of the facts it rests on were entered and checked by the team (AI-assisted, human re-check pending); they are not output of the automatic extraction.\nNote: no person in the graph named Abbey Grange; the scan covered the whole story.",
+   "answer": "Rule engine result for abbey-grange: 1 finding.\n- R1 reports verdict violated (OVERLAP_DIFFERENT_PLACES), label conditional: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated). [1: \"secured me tightly to the oaken chair which stands at the head of the dining-table. I was so firmly bound that I could not move, and a handkerchief round my mouth prevented me from uttering a sound. It was at this instant that my\"] [2: \"I was standing with her just inside the window, in all innocence, as God is my judge, when he rushed like a madman into the room\"]\n  Conditional because these inputs are low-confidence: Lady Brackenstall at oaken chair (at the moment sir eustace entered, relative time) (curated); Lady Brackenstall at window (at the moment sir eustace entered, relative time) (curated).\n  Curated: 2 of the facts it rests on were entered and checked by the team (prepared with tooling support, human re-check pending); they are not output of the automatic extraction.\nNote: no person in the graph named Abbey Grange; the scan covered the whole story.",
    "citations": [
     {
      "n": 1,

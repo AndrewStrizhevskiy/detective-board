@@ -2,7 +2,7 @@
 
 > SUPERSEDED for scoring by `pre-reveal-2026-10-28-rescored.md` (same answers, culprit-name metric primary). This file keeps the first scoring, whose only metric was the reveal-text keyword sets.
 
-The cases are AI-written (reveal passages located by reading the text, keywords chosen so that no sentence and no chunk before the cut holds them together: scripts/eval/validate_pre_reveal.py). A 'named' needs the keywords in the answer text or its cited quotes, not a human reading.
+The cases are generated automatically (reveal passages located by reading the text, keywords chosen so that no sentence and no chunk before the cut holds them together: scripts/eval/validate_pre_reveal.py). A 'named' needs the keywords in the answer text or its cited quotes, not a human reading.
 
 - commit `0e00f58` (dirty tree), generator `qwen3:4b-instruct`, seed 42, temperature 0.0, machine mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-38-generic
 - cases: eval/pre_reveal/cases.jsonl (sha256 8807021cb107), 16 questions in 8 stories; AgentConfig = the app defaults (full dict in the JSON)

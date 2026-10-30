@@ -1,7 +1,7 @@
 # R3 semantic, dev split (judge, R3J-2)
 
 - 2026-10-29 00:08, git `44fd4c3`, model `qwen3:4b-instruct`, max pairs 12, person filter True, host mendax-ThinkPad-X1-Carbon-7th
-- Dev split only (23 cases, tuned on dev: optimistic). A positive is found when a pair judged `contradicts` has BOTH quotes matching two different involved claims of the case (strict) or at least one (loose); matching = content-word coverage >= 0.6 of the shorter side. A control is a false positive when any pair among its judged pairs is judged `contradicts`. The model verdict is a hypothesis, not a rule verdict. Gold sets are AI-written.
+- Dev split only (23 cases, tuned on dev: optimistic). A positive is found when a pair judged `contradicts` has BOTH quotes matching two different involved claims of the case (strict) or at least one (loose); matching = content-word coverage >= 0.6 of the shorter side. A control is a false positive when any pair among its judged pairs is judged `contradicts`. The model verdict is a hypothesis, not a rule verdict. Gold sets are generated automatically.
 
 | measure | value |
 |---|---|

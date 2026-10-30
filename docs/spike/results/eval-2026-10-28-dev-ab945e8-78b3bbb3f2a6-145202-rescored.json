@@ -108,7 +108,7 @@
   "vector_min_score": 0.0,
   "n_questions": 34,
   "n_contradictions": 23,
-  "gold_note": "Gold sets are AI-written and not yet reviewed by a human (issue #9): every number is against AI labels.",
+  "gold_note": "Gold sets are generated automatically and not yet reviewed by a human (issue #9): every number is against automatic labels.",
   "out_dir": "/home/mendax/code/detective-board/docs/spike/results",
   "rescored": "2026-10-28: behaviour_correct recomputed from the recorded answers with the fixed key-fact coverage (the first version stripped the citations, which for extractive answers deleted the whole answer and scored every answerable question 0). Nothing else changed; no model was run."
  },

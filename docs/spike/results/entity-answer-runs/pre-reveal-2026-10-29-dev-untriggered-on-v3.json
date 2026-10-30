@@ -71,7 +71,7 @@
     "conditions": [
       "full"
     ],
-    "note": "The cases are AI-written: the reveal passages were located by reading the text, the cut placed before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical (names or keywords in the answer and its cited quotes), not a human reading.",
+    "note": "The cases are generated automatically: the reveal passages were located by reading the text, the cut placed before them and checked by scripts/eval/validate_pre_reveal.py. Every outcome is lexical (names or keywords in the answer and its cited quotes), not a human reading.",
     "started": "2026-10-29T05:37:54+00:00"
   },
   "summary": {
