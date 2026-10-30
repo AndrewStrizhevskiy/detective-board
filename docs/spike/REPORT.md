@@ -106,7 +106,7 @@ Settings: constrained decoding, temperature 0, seed 42, num_ctx 4096, num_predic
 
 Caveats:
 1. Only 12 chunks, so differences among the top four on claims (0.26-0.31) are noise.
-2. The gold labels were written by a Claude agent and not reviewed by a human.
+2. The gold labels were written by an AI assistant (an LLM) and not reviewed by a human.
 3. Gold is not exhaustive, so precision is understated and recall is the more reliable side.
 4. The overlap metric is lenient (any overlap counts) and inflated for claims and relations. It measures "found the right passage".
 5. Events are scored only by the lenient metric.

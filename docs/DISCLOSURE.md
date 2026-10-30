@@ -78,7 +78,7 @@ Licences of the models: `THIRD_PARTY_NOTICES.md`.
 ## Gold sets: written by an AI
 
 `eval/golden/questions.jsonl` (64 questions) and `eval/golden/contradictions.jsonl`
-(43 cases) were written by a Claude agent from the text in `data/clean/`, not by a human. The
+(43 cases) were written by an AI assistant (an LLM) from the text in `data/clean/`, not by a human. The
 validators prove only that quotes are verbatim substrings of the stories. The 12-chunk
 extraction gold set is also agent-labelled. Dev/test split and protocol: `eval/golden/split.json`
 and `eval/golden/README.md`.

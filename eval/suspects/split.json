@@ -1,0 +1,23 @@
+{
+ "rule": "stories sorted alphabetically; even index = dev, odd index = test; fixed 2026-10-29 before any run",
+ "dev": [
+  "abbey-grange",
+  "black-peter",
+  "boscombe-valley-mystery",
+  "musgrave-ritual",
+  "norwood-builder",
+  "red-headed-league",
+  "resident-patient",
+  "speckled-band"
+ ],
+ "test": [
+  "beryl-coronet",
+  "blue-carbuncle",
+  "crooked-man",
+  "naval-treaty",
+  "priory-school",
+  "reigate-squires",
+  "silver-blaze",
+  "thor-bridge"
+ ]
+}

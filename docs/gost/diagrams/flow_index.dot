@@ -1,0 +1,6 @@
+digraph G { rankdir=TB; fontname="Arial"; node [fontname="Arial", fontsize=11, shape=box, style="rounded,filled", fillcolor="#e8eef5"]; edge [fontname="Arial", fontsize=9];
+ raw [label="data/raw/*.txt\n(Гутенберг)"]; ingest [label="scripts/corpus/ingest.py\nснятие шапки/подвала,\nсклейка строк"]; clean [label="data/clean/*.txt"];
+ chunk [label="чанки по абзацам\ndata/chunks.jsonl\n(596 шт.)"]; idx [label="just index\nFTS5 + векторы bge-m3\ndata/index/db.sqlite"]; sent [label="just sentences\nиндекс предложений\ndata/index/sentences.sqlite"];
+ ext [label="LLM-извлечение\n(qwen3:4b, extract-2.1,\nJSON-схема, temperature 0)"]; cache [label="кэш извлечения\ndata/cache/extract-cache.sqlite", shape=cylinder];
+ ground [label="привязка цитат:\nдословная подстрока чанка,\nиначе элемент отбрасывается"]; norm [label="нормализация:\nвремя, высказывания,\nсущности (extract.normalise)"]; g [label="just graph\ndata/graph/graph.sqlite", shape=cylinder];
+ raw->ingest->clean->chunk; chunk->idx; chunk->sent; chunk->ext->cache->ground->norm->g; }

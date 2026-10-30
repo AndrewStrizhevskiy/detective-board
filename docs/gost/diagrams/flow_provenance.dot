@@ -1,0 +1,5 @@
+digraph G { rankdir=TB; fontname="Arial"; node [fontname="Arial", fontsize=11, shape=box, style="rounded,filled", fillcolor="#e8eef5"]; edge [fontname="Arial", fontsize=9];
+ txt [label="фрагмент рассказа"]; llm [label="LLM-извлечение\n(вероятностное)"]; fact [label="факт + дословная цитата\nметка extracted\nconfidence high/low", fillcolor="#fff2cc"];
+ cur [label="курируемые факты\n(человек, data/curated)\nпометка «curated»", fillcolor="#ffe6cc"]; g [label="граф SQLite", shape=cylinder]; rules [label="правила R1/R2/R3\n(детерминированные)"];
+ d [label="вывод + Explanation\n(правило, факты, рёбра, цитаты)\nметка derived", fillcolor="#d5e8d4"]; c [label="метка conditional\nназван сомнительный вход", fillcolor="#ffe6cc"]; dec [shape=diamond, label="есть вход с\nconfidence=low?"];
+ txt->llm->fact->g; cur->g; g->rules->dec; dec->c [label="да"]; dec->d [label="нет"]; }

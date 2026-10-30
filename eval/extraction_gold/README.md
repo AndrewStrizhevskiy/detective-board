@@ -4,7 +4,7 @@
 `src/detective_board/extract/schema.py` (entities, events, claims, relations; each item has a
 verbatim `quote` that is a substring of the chunk, checked by `tests/test_score_extraction.py`).
 
-**Provenance: these labels were produced by a Claude agent reading the chunk text, NOT by a
+**Provenance: these labels were produced by an AI assistant (an LLM) reading the chunk text, NOT by a
 human.** They have not been reviewed. A human spot-check is required before the numbers are
 trusted (suggested: all claims and relations of at least 4 chunks). Labels are not exhaustive:
 minor entities and implicit relations may be missing, so recall is the more reliable metric
