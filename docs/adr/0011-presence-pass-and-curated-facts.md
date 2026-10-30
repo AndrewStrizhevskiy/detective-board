@@ -22,7 +22,7 @@ Corpus constraint: no R3 positive with an explicit person, place and time exists
 
 1. **Rely on generic claims.** Fails (ADR-0012).
 2. **Presence pass only, automatic.** presence-2.1 with qwen3:8b is the best so far, but 11 kept facts with several wrong persons or places cannot back a demo finding, and the 4B model keeps 1 of 7.
-3. **Curated facts for the demo cases plus the automatic pass reported separately.** `data/curated/presence_demo.jsonl` has five facts, each tied to a verbatim quote (the loader refuses quotes that are not verbatim spans of `data/clean/<story>.txt`): two for c001 (Eccles and Baynes, the R1 case) and three for the Boscombe control (c041/c042). Facts are marked `curated: true`, `curated_by` "team (AI-assisted, to be re-checked by a human)", `inferred` slots and `confidence: low` where coreference was done by hand. The label appears in the graph, the Explanation summaries `(curated)` and a `Curated:` line in the answer.
+3. **Curated facts for the demo cases plus the automatic pass reported separately.** `data/curated/presence_demo.jsonl` has five facts, each tied to a verbatim quote (the loader refuses quotes that are not verbatim spans of `data/clean/<story>.txt`): two for c001 (Eccles and Baynes, the R1 case) and three for the Boscombe control (c041/c042). Facts are marked `curated: true`, `curated_by` "team (prepared with tooling support, to be re-checked by a human)", `inferred` slots and `confidence: low` where coreference was done by hand. The label appears in the graph, the Explanation summaries `(curated)` and a `Curated:` line in the answer.
 
 ## Decision
 

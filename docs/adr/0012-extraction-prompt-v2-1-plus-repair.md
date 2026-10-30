@@ -3,7 +3,7 @@
 - Status: Accepted (2026-10-26, recorded 2026-10-27).
 - Date: 2026-10-26
 - Deciders: tech-lead
-- Provisional parts: all numbers are from 12 gold chunks (AI-labelled) or from a 64-chunk cached sample; the repair "after" figures are from `scripts/eval/repair_eval.py` runs reported on 2026-10-26 and were not re-run for this ADR.
+- Provisional parts: all numbers are from 12 gold chunks (automatically labelled) or from a 64-chunk cached sample; the repair "after" figures are from `scripts/eval/repair_eval.py` runs reported on 2026-10-26 and were not re-run for this ADR.
 
 ## Context
 

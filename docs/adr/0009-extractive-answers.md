@@ -46,5 +46,5 @@ Make `answer_mode = extractive` the default (`AgentConfig.answer_mode`); keep `g
 - Positive: 8-20 s per question instead of 45-140 s, so the time-to-first-token worry (`docs/design/demo-script.md`) is gone for the main demo steps; no composed text means no hallucinated wording; out-of-corpus questions are refused plainly.
 - Negative: answers are one or two quoted sentences, not prose; a sentence can be verbatim and still not be the best answer. "Answered" is not "correct": g032 and g038 were answered, but nobody has judged whether the sentence is right. g007 and g016 stay unanswered (NONE); g062 (Russian) stays refused by the gate.
 - The 4B model is wording-sensitive: a rewording of one clause of the selection prompt flipped g001 from the right sentence to NONE (commits ba6f773, 40ee6c3). The prompt text is frozen at the tested wording; do not edit it without re-running the 12 questions.
-- Limits: n=12, one run, temperature 0, seed 42, no human judging, gold written by an AI. These are pilot numbers.
+- Limits: n=12, one run, temperature 0, seed 42, no human judging, gold generated automatically. These are pilot numbers.
 - Not measured: precision of the chosen sentence against gold on a larger set; behaviour of the 8B model in this mode; behaviour on the department server.

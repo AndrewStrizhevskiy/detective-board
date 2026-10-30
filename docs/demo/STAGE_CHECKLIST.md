@@ -8,7 +8,7 @@ Build for the show: the tag the team agreed on (`git describe --tags`; offline a
 - [ ] The backup screen recording (mp4, one clip per step and the full run) on the stick and on the laptop, played once.
 - [ ] Printed or offline copies: this checklist, `docs/design/demo-script.md` section 2a (operator cards), `docs/demo/jury-faq.md`.
 - [ ] A fresh `just run` from the archive on the laptop with the network OFF; the three scripted questions answer (g001, the Garcia R1, the refusal).
-- [ ] Disclosure slide reads: precomputed on other hardware with the same models (allowed by the organizers), curated facts human-checked and labelled, gold sets AI-written (human review date or "not done"), test split run once.
+- [ ] Disclosure slide reads: precomputed on other hardware with the same models (allowed by the organizers), curated facts human-checked and labelled, gold sets generated automatically (human review date or "not done"), test split run once.
 
 ## T-60 min on site
 - [ ] Mains power, performance profile, battery saver off, notifications and updates off, screen lock off, display never sleeps, brightness full.

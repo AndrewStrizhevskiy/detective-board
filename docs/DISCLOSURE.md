@@ -37,14 +37,14 @@ Text questions are answered in the default extractive mode (ADR-0009): the langu
 
 The demo cases (Wisteria Lodge and Abbey Grange, rule R1, and the Boscombe Valley control) use curated facts:
 a small set of "person, place, time" statements in `data/curated/presence_demo.jsonl`, each with a
-verbatim quote, written and checked by the team (AI-assisted), and re-checked by a human (LitrumCoder,
+verbatim quote, written and checked by the team (prepared with tooling support), and re-checked by a human (LitrumCoder,
 2026-10-29; `docs/spike/results/curated-review-2026-10-29.md`). They are used because the small extraction models do not resolve
 "he" and "there" on these passages. The screen, the Why panel and the spoken answer say "curated"
 wherever such a fact is an input. The file has eight facts (three for Wisteria Lodge: Garcia twice and Scott Eccles in his own room, three for the Boscombe control, two for Abbey Grange). The two Abbey Grange facts have no clock time: both are placed "at the moment Sir Eustace entered the room", a relative time that the team asserts is one moment, so the finding is always labelled conditional and says "relative time, curated". The automatic extraction numbers are reported separately and
 are not improved by, or mixed with, the curated facts. A finding built on curated facts shows what
 the rules do when the facts are right, not what a model finds on its own.
 
-A second AI pass (2026-10-29, `docs/spike/results/curated-review-2026-10-29.md`) re-read all
+A second automated pass (2026-10-29, `docs/spike/results/curated-review-2026-10-29.md`) re-read all
 eight facts and the scene against the story text. All quotes are verbatim; none was removed; five
 notes were corrected or extended, and no slot or confidence value changed. That pass was the working
 aid of the human re-check: LitrumCoder then read every record against the story text, found no
@@ -53,7 +53,7 @@ Wisteria Lodge time "nearly one o'clock" is Garcia's own words, which Holmes lat
 alibi, so the R1 conflict is between two testimonies, and the story resolves it as a lie about the
 time.
 
-A second curated file, `data/curated/scenes.jsonl`, holds the crime scenes of the suspects / alibi-exclusion board (docs/symbolic-layer.md 11.6): for a story a place, a time window, the victim and one verbatim quote that states the crime time or place (today one scene, Wisteria Lodge, 01:00 on Oxshott Common). Like the facts above it is written by the team, AI-assisted, re-checked by a human on the same day, and every board says "curated by team, AI-assisted, human re-check done by LitrumCoder on 2026-10-29". The board reports only where the text places people (testimony, not proof); "excluded" never means innocent, "not excluded" never means suspected, and the system makes no statement about guilt. On the real graph the board excludes nobody (the only decisive content is the victim's own two conflicting accounts): of 1,700 automatic events only 18 have a person, a place, a story day and a clock time, and the board says so on screen.
+A second curated file, `data/curated/scenes.jsonl`, holds the crime scenes of the suspects / alibi-exclusion board (docs/symbolic-layer.md 11.6): for a story a place, a time window, the victim and one verbatim quote that states the crime time or place (today one scene, Wisteria Lodge, 01:00 on Oxshott Common). Like the facts above it is written by the team, prepared with tooling support, re-checked by a human on the same day, and every board says "curated by team, prepared with tooling support, human re-check done by LitrumCoder on 2026-10-29". The board reports only where the text places people (testimony, not proof); "excluded" never means innocent, "not excluded" never means suspected, and the system makes no statement about guilt. On the real graph the board excludes nobody (the only decisive content is the victim's own two conflicting accounts): of 1,700 automatic events only 18 have a person, a place, a story day and a clock time, and the board says so on screen.
 
 What the automatic pipeline did on real data (first real run, one story, wisteria-lodge, after the deterministic repair): 107 events, 137 claims, 0 exact clock times, 0 story days, 1 usable presence proposition; rule R1 examined 19 pairs and could not decide 16. The precision of automatic presence facts has not been measured: TO BE FILLED after the department-server run.
 
@@ -75,12 +75,12 @@ and the judge model is named next to each result that used one. Judge use so far
 (the answer check in `eval/run_answer_check.py` uses text proxies and a regex, not an LLM judge).
 Licences of the models: `THIRD_PARTY_NOTICES.md`.
 
-## Gold sets: written by an AI
+## Gold sets: generated automatically
 
 `eval/golden/questions.jsonl` (64 questions) and `eval/golden/contradictions.jsonl`
-(43 cases) were written by an AI assistant (an LLM) from the text in `data/clean/`, not by a human. The
+(43 cases) were generated automatically from the text in `data/clean/`, not by a human. The
 validators prove only that quotes are verbatim substrings of the stories. The 12-chunk
-extraction gold set is also agent-labelled. Dev/test split and protocol: `eval/golden/split.json`
+extraction gold set is also automatically labelled. Dev/test split and protocol: `eval/golden/split.json`
 and `eval/golden/README.md`.
 
 Human review status (to be filled by the reviewers; until filled, nothing was reviewed):

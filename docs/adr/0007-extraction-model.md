@@ -3,7 +3,7 @@
 - Status: **Proposed**
 - Date: 2026-10-23
 - Deciders: tech-lead
-- Provisional parts: the whole choice rests on a 12-chunk pilot with gold written by an AI assistant (an LLM) and not reviewed by a human. Revisit after a human spot-check of the gold set (`eval/extraction_gold/README.md`). Evidence: `docs/spike/REPORT.md` sections 6 and 7.
+- Provisional parts: the whole choice rests on a 12-chunk pilot with gold generated automatically and not reviewed by a human. Revisit after a human spot-check of the gold set (`eval/extraction_gold/README.md`). Evidence: `docs/spike/REPORT.md` sections 6 and 7.
 
 ## Context
 

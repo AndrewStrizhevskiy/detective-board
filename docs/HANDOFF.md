@@ -100,7 +100,7 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
 4. **Build `eval/run_eval.py`** (Package C): bare LLM / vector / vector+rerank / hybrid+graph; heavy runs on
    the strong machine, a short CI mode. Tune the provisional thresholds (min_score 0.018, min_support 0.25,
    min_claim_overlap 0.3; R-13).
-5. **Human review of the AI-written gold sets** (`eval/golden/README.md`, `eval/extraction_gold/README.md`).
+5. **Human review of the automatically generated gold sets** (`eval/golden/README.md`, `eval/extraction_gold/README.md`).
 6. UI items in `docs/backlog.md` (R-15/R-16), packaging and clean-machine test, slides and rehearsals
    (Package D, `docs/design/demo-script.md`). Measurements of speed/RAM only on the target laptop.
 
@@ -110,7 +110,7 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
   before measuring (`keep_alive: 0`). Sustained 7-8B load reaches 96 C and throttles.
 - Do not use `pkill -f` / `pgrep -f` with a pattern that also appears in your own shell command line.
 - `uv run` here uses CPython 3.14; the project requires >= 3.12 and CI should pin 3.12.
-- Gold sets and labels were written by an AI assistant (an LLM), not by a human: precision numbers are underestimates, recall is more
+- Gold sets and labels were generated automatically, not by a human: precision numbers are underestimates, recall is more
   trustworthy; every metric file states its caveats.
 - A Russian question is translated to English first (`translate_questions`, optional, quality unmeasured, n=1-7); without it the relevance gate refuses it (cross-language support check).
 - Only 4 genuine R1 (person in two places) and 3 R2 (order cycle) cases exist in the corpus; R3 dominates.

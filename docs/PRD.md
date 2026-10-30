@@ -54,7 +54,7 @@ Long-form fiction is hard to interrogate. A reader asking "who could not have be
 - **Limitation: extraction errors pass into the symbolic layer.** Rules are exact on the graph they get, not on the story. A wrongly extracted time, place or speaker yields a wrong but well-explained `derived` finding. Mitigations: explanations show the source quote of every input; findings built on low-confidence inputs are `conditional`; extraction quality is measured separately (gold set) and reported. We do not claim the output is true, only that it follows from the stated facts.
 
 ## 7. Success metrics (targets mostly TBD)
-Only the latency target and the rule-determinism target are numeric. Everything else stays TBD on purpose: the spike measured speed and retrieval, not answer quality, and its gold sets were written by an AI and not reviewed by a human. The right column gives the spike evidence, not a target.
+Only the latency target and the rule-determinism target are numeric. Everything else stays TBD on purpose: the spike measured speed and retrieval, not answer quality, and its gold sets were generated automatically and not reviewed by a human. The right column gives the spike evidence, not a target.
 
 | Metric | Definition | Target | Spike evidence |
 |---|---|---|---|

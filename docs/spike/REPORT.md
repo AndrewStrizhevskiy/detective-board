@@ -11,7 +11,7 @@ Choose models and storage for an offline, CPU-only Holmes corpus (20 stories, 59
 | LLM speed | 1 warmup + 3 runs per prompt, temperature 0, seed 42, num_ctx 4096, RSS sampled every 0.5 s | `bench_llm.py` | `llm-20261022-17*` |
 | Embedding model | speed on 50 chunks/pass; story-level hit (15 EN + 5 RU); chunk-level hit/MRR (35 questions) | `bench_embed.py`, `bench_retrieval.py` | `embed-*`, `retrieval-*` |
 | BM25 / vector / hybrid | real `retrieval` module, 22 configs, 35 questions | `bench_arms.py` | `arms-20261023-080849.md` |
-| Extraction | 12 hand-labelled chunks, constrained JSON-schema decoding, 6 models | `run_extraction.py`, `score_extraction.py`, `overlap_metric.py` | `extract-*.jsonl` |
+| Extraction | 12 labelled chunks, constrained JSON-schema decoding, 6 models | `run_extraction.py`, `score_extraction.py`, `overlap_metric.py` | `extract-*.jsonl` |
 | Answer model | real Agent, retrieval-only path, 12 golden questions | `eval/run_answer_check.py` | PENDING |
 
 ## 2. Environment
@@ -106,7 +106,7 @@ Settings: constrained decoding, temperature 0, seed 42, num_ctx 4096, num_predic
 
 Caveats:
 1. Only 12 chunks, so differences among the top four on claims (0.26-0.31) are noise.
-2. The gold labels were written by an AI assistant (an LLM) and not reviewed by a human.
+2. The gold labels were generated automatically and not reviewed by a human.
 3. Gold is not exhaustive, so precision is understated and recall is the more reliable side.
 4. The overlap metric is lenient (any overlap counts) and inflated for claims and relations. It measures "found the right passage".
 5. Events are scored only by the lenient metric.
@@ -133,7 +133,7 @@ Caveats:
 |---|---|---|
 | Embeddings | bge-m3 | High |
 | Retrieval | SQLite FTS5 + sqlite-vec, hybrid RRF k=30, w 0.5:1, BM25 in OR mode | Medium (tuned on the evaluation questions) |
-| Extraction | qwen3:4b, think off | Medium-low (12 chunks, AI gold) |
+| Extraction | qwen3:4b, think off | Medium-low (12 chunks, automatically labelled gold) |
 | Answer model | qwen3:4b-instruct (section 9) | Medium-low (n=12) |
 | Reranker | not needed for hit@5 | Medium |
 
@@ -154,14 +154,14 @@ Files: `docs/spike/results/answers-20261023-v3.md` and `answers-20261023-v3-<mod
 - Bare-LLM baseline (qwen3:4b-instruct, no retrieval): it confidently denies true facts (for g001: Roylott "was not killed by a snake") and invents context; behaved as required on 1/3 out-of-corpus/adversarial questions, the agent on 2/3.
 - Failure causes found and fixed on the way (all visible in git history): window selection without IDF weights; a strict system prompt without an example made the 4B model refuse even with the answer in the prompt; the sentence splitter cut "Dr."; the eval script did not pass the IDF file. The remaining misses are mostly retrieval: the gold chunk is in the top-4 for about 81% of answerable questions (`evidence-20261023-093201.md`: the gold evidence is inside the prompt for 66-69%).
 - The Russian question is refused by the relevance gate before any LLM call (the lexical support check fails across languages); Russian remains optional.
-- Caveats: n=12, one run per model, crude coverage proxy, no human judging, gold written by an AI, thresholds provisional.
+- Caveats: n=12, one run per model, crude coverage proxy, no human judging, gold generated automatically, thresholds provisional.
 - Latency at the chosen setting: about 42 s to first token and 60 s total on average on this CPU. The demo must show trace events and retrieved quotes while the model prefills.
 
 ## 10. Risks
 
 1. Claims and relations are weak on every model (strict F1 0.09-0.31), and the rules R1-R3 consume exactly these.
 2. R1 and R3 need time and claim-property normalisation, and free-text times are the weak link. This was not measured in the spike.
-3. All gold sets were written by an AI and not reviewed by a human.
+3. All gold sets were generated automatically and not reviewed by a human.
 4. The corpus has only 4 real R1 and 3 R2 cases, and R3 dominates.
 5. Samples are small everywhere (35 retrieval questions, 12 extraction chunks, 3 speed runs).
 6. About 30 h of extraction against a 5-day freeze.

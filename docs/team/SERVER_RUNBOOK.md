@@ -146,7 +146,7 @@ from the shard's final report: it decides the plan in section 4.
 ```bash
 just gold12          # or: scripts/server_gold12.sh   (models x prompts; resumable; FORCE=1 reruns)
 ```
-It runs both prompts (v2.0, v2.1) with qwen3:4b and qwen3:4b-instruct on the 12 hand-labelled chunks, prints each
+It runs both prompts (v2.0, v2.1) with qwen3:4b and qwen3:4b-instruct on the 12 labelled chunks, prints each
 command it runs and one comparison table, and writes `docs/spike/results/gold12-<stamp>.md` (the scorer is
 `scripts/spike/score_pipeline.py`; options in `docs/team/README.md`). Pick the prompt/model with the best claims and relations numbers that keeps JSON
 validity at 100% and quote grounding at or above 0.9. Defaults on the laptop were qwen3:4b and prompt v2.1

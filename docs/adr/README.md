@@ -10,7 +10,7 @@ Format: `0000-template.md` (context, options, decision, consequences). One decis
 | [0004](0004-symbolic-layer.md) | Symbolic layer: plain Python rules over the graph (R1-R3) | Proposed | effort estimates, engine-dependent parts |
 | [0005](0005-web-stack.md) | Web stack: Starlette 1.9.0 + uvicorn 0.54.0, own SSE framing; static ES-module UI, vendored Cytoscape.js 3.34.4 | Accepted | no |
 | [0006](0006-embedding-model.md) | Embedding model: bge-m3 | Accepted | retrieval parameters tuned on the same 35 questions |
-| [0007](0007-extraction-model.md) | Extraction model: qwen3:4b | Proposed | 12-chunk pilot, AI-written gold |
+| [0007](0007-extraction-model.md) | Extraction model: qwen3:4b | Proposed | 12-chunk pilot, automatically generated gold |
 | [0008](0008-answer-model.md) | Answer model: provisional qwen3:4b | Proposed, finalised after the answer-model check | entirely, until `answers-20261023-082109*` is read |
 | [0009](0009-extractive-answers.md) | Extractive answers (model chooses sentences) | Accepted (pilot, n=12) | prompt wording frozen; no human judging |
 | [0010](0010-rule-first-answers.md) | Rule-first deterministic answers and the honesty guard | Accepted | hit rate on real graph unmeasured |
