@@ -1,0 +1,7 @@
+digraph G { rankdir=TB; nodesep=0.3; ranksep=0.35; node [fontname="Arial", fontsize=15, shape=box, style="rounded,filled", fillcolor="#EEF1F5", color="#1F3A5F", margin="0.2,0.12"]; edge [color="#1F3A5F", penwidth=1.6, fontname="Arial", fontsize=12];
+ a [label="1. Берём 20 рассказов\n(обычные текстовые файлы)"];
+ b [label="2. Режем на 596 кусочков\n(как страницы книги)"];
+ c [label="3. Модель читает кусочек и выписывает\nна карточки: кто, где, что случилось, кто что сказал.\nНа каждой карточке — точная цитата из текста"];
+ d [label="4. Карточки без точной цитаты выбрасываем"];
+ e [label="5. Остальные карточки складываем\nна доску (граф): карточки + нитки между ними"];
+ a->b->c->d->e; }

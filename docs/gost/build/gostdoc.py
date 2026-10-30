@@ -67,7 +67,7 @@ def _url(path: str):
     return f"{GH_BASE}/{kind}/{_SHA}/{path.rstrip('/')}"
 
 
-_TOKEN = re.compile(r"(\*\*.+?\*\*|`.+?`|_\S.*?\S_)")
+_TOKEN = re.compile(r"(\*\*.+?\*\*|`.+?`)")
 
 
 def runs(text: str, size=None, bold=False) -> str:
@@ -96,6 +96,9 @@ def png_size(path: str) -> tuple[int, int]:
     with open(path, "rb") as f:
         d = f.read(32)
     return struct.unpack(">II", d[16:24])
+
+
+AUTHORS = ["Верховых Егор", "Стрижевский Андрей", "Парамонов Даниил", "Приц Артём"]
 
 
 class Doc:
@@ -175,6 +178,12 @@ class Doc:
             self.heads.append((2, label + " " + text))
         self.body.append(f'<w:p><w:pPr><w:pStyle w:val="Heading{level}"/></w:pPr>{_run(label + " " + text)}</w:p>')
 
+    def fhead(self, label: str, path: str):
+        self.body.append(f'<w:p><w:pPr><w:pStyle w:val="FH"/></w:pPr>{_run(label + " ")}{runs(chr(96) + path + chr(96), size=28, bold=True)}</w:p>')
+
+    def ftext(self, text: str):
+        self.body.append(f'<w:p><w:pPr><w:pStyle w:val="FT"/></w:pPr>{runs(text)}</w:p>')
+
     # ----- списки -----
     def bul(self, items: list[str]):
         for it in items:
@@ -213,7 +222,7 @@ class Doc:
     def _label(self, kind: str, n: int) -> str:
         return f"{self.app_letter}.{n}" if self.app_letter else str(n)
 
-    def table(self, caption: str, header: list[str], rows: list[list[str]], widths: list[float] | None = None):
+    def table(self, caption: str, header: list[str], rows: list[list[str]], widths: list[float] | None = None, fsize: int = 24):
         if caption:
             self.tbl_no += 1
             no = self._label("t", self.tbl_no)
@@ -225,7 +234,7 @@ class Doc:
         def cell(txt: str, w: int, head=False):
             shade = '<w:shd w:val="clear" w:color="auto" w:fill="E7E6E6"/>' if head else ""
             paras = "".join(
-                f'<w:p><w:pPr><w:pStyle w:val="TableText"/>{"<w:jc w:val=\"center\"/>" if head else ""}</w:pPr>{runs(line, size=24, bold=head)}</w:p>'
+                f'<w:p><w:pPr><w:pStyle w:val="TableText"/>{"<w:jc w:val=\"center\"/>" if head else ""}</w:pPr>{runs(line, size=fsize, bold=head)}</w:p>'
                 for line in (str(txt).split("\n\n") or [""])
             )
             return f'<w:tc><w:tcPr><w:tcW w:w="{w}" w:type="dxa"/>{shade}</w:tcPr>{paras}</w:tc>'
@@ -272,17 +281,24 @@ class Doc:
     # ----- титульные страницы -----
     def title_pages(self, meta_lines: list[str]):
         c = lambda t, b=False, sz=None, size=None: self.p(t, style="Title0", bold=b, size=sz or size)
-        c("________________________________________________")
-        self.p("(наименование организации – заполнить)", style="Title0", size=20)
-        self.p("", style="Title0")
-        self.raw(
+        simple = not self.std
+        if simple:
+            for _ in range(3):
+                self.p("", style="Title0")
+        if not simple:
+            c("________________________________________________")
+            self.p("(наименование организации – заполнить)", style="Title0", size=20)
+            self.p("", style="Title0")
+        if not simple:
+          self.raw(
             '<w:p><w:pPr><w:pStyle w:val="Title0"/><w:ind w:left="5200"/><w:jc w:val="left"/></w:pPr>'
             + _run("УТВЕРЖДАЮ", bold=True)
             + "</w:p>"
-        )
-        for t in ["Должность ____________________", "____________ / ____________", "«____» ______________ 2026 г."]:
+          )
+        if not simple:
+          for t in ["Должность ____________________", "____________ / ____________", "«____» ______________ 2026 г."]:
             self.raw(f'<w:p><w:pPr><w:pStyle w:val="Title0"/><w:ind w:left="5200"/><w:jc w:val="left"/></w:pPr>{_run(t)}</w:p>')
-        self.raw('<w:p><w:pPr><w:pStyle w:val="Title0"/><w:ind w:left="5200"/><w:jc w:val="left"/></w:pPr>' + _run("(поля подписи оставлены пустыми)", italic=True, size=20) + "</w:p>")
+          self.raw('<w:p><w:pPr><w:pStyle w:val="Title0"/><w:ind w:left="5200"/><w:jc w:val="left"/></w:pPr>' + _run("(поля подписи оставлены пустыми)", italic=True, size=20) + "</w:p>")
         for _ in range(3):
             self.p("", style="Title0")
         c("ДЕТЕКТИВНАЯ ДОСКА (Detective Board)", True, 32)
@@ -291,18 +307,28 @@ class Doc:
         c(self.title.upper(), True, 32)
         if self.subtitle:
             c(self.subtitle)
-        c(self.std)
-        self.p("", style="Title0")
-        c("Обозначение документа: ____________ (присваивается организацией)", size=24)
-        for _ in range(2):
+        if not simple:
+            c(self.std)
             self.p("", style="Title0")
+            c("Обозначение документа: ____________ (присваивается организацией)", size=24)
+        self.p("", style="Title0")
+        self.p("**Авторы:**", style="Title0", size=24)
+        for a in AUTHORS:
+            self.p(a, style="Title0", size=24)
+        self.p("", style="Title0")
         for ln in meta_lines:
             self.p(ln, style="Title0", size=24)
         for _ in range(2):
             self.p("", style="Title0")
         c("2026")
         self.pagebreak()
-        # лист согласования
+        if not simple:
+          self._approval_sheet()
+        self.p("**СОДЕРЖАНИЕ**", style="Title0")
+        self.body.append('@@TOC@@')
+        self.pagebreak()
+
+    def _approval_sheet(self):
         self.p("**ЛИСТ СОГЛАСОВАНИЯ**", style="Title0")
         self.p("Подписи, фамилии и даты не заполнены: документ составлен по состоянию репозитория и не согласован ни с кем.", style="NoIndent")
         self.table(
@@ -311,9 +337,6 @@ class Doc:
             [["Разработал", "", "", "", ""], ["Проверил", "", "", "", ""], ["Нормоконтроль", "", "", "", ""], ["Утвердил", "", "", "", ""]],
             [1.4, 1.6, 1.8, 1.1, 1.0],
         )
-        self.pagebreak()
-        self.p("**СОДЕРЖАНИЕ**", style="Title0")
-        self.body.append('@@TOC@@')
         self.pagebreak()
 
     def change_sheet(self):
@@ -436,6 +459,8 @@ STYLES = (
     + _style("Heading2", "heading 2", ppr='<w:keepNext/><w:keepLines/><w:spacing w:before="200" w:after="80"/><w:ind w:firstLine="709"/><w:jc w:val="left"/><w:outlineLvl w:val="1"/>', rpr="<w:b/>", nxt="Normal")
     + _style("Heading3", "heading 3", ppr='<w:keepNext/><w:keepLines/><w:spacing w:before="160" w:after="60"/><w:ind w:firstLine="709"/><w:jc w:val="left"/><w:outlineLvl w:val="2"/>', rpr="<w:b/><w:i/>", nxt="Normal")
     + '<w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:uiPriority w:val="99"/><w:unhideWhenUsed/><w:rPr><w:color w:val="0563C1"/><w:u w:val="single"/></w:rPr></w:style>'
+    + _style("FH", "File Heading", ppr='<w:keepNext/><w:keepLines/><w:spacing w:before="140" w:after="20" w:line="240" w:lineRule="auto"/><w:ind w:firstLine="0"/><w:jc w:val="left"/>', rpr='<w:b/><w:sz w:val="24"/><w:szCs w:val="24"/>', nxt="FT")
+    + _style("FT", "File Text", ppr='<w:spacing w:after="40" w:line="252" w:lineRule="auto"/><w:ind w:firstLine="0"/><w:jc w:val="left"/>', rpr='<w:sz w:val="23"/><w:szCs w:val="23"/>')
     + _style("ListDash", "List Dash", ppr='<w:ind w:left="709" w:firstLine="0"/>')
     + _style("ListNum", "List Number", ppr='<w:ind w:left="709" w:firstLine="0"/>')
     + _style("NoIndent", "No Indent", ppr='<w:ind w:firstLine="0"/>')

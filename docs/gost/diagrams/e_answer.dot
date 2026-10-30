@@ -1,0 +1,9 @@
+digraph G { rankdir=TB; nodesep=0.3; ranksep=0.35; node [fontname="Arial", fontsize=15, shape=box, style="rounded,filled", fillcolor="#EEF1F5", color="#1F3A5F", margin="0.2,0.12"]; edge [color="#1F3A5F", penwidth=1.6, fontname="Arial", fontsize=12];
+ q [label="Вы задаёте вопрос"];
+ r [label="Диспетчер решает, какой это вопрос", shape=box];
+ l [label="«Библиотекарь»: ищет нужные\nстраницы и предложения"];
+ j [label="«Следователь»: правила проверяют\nместа и время (если вопрос про алиби)"];
+ ch [label="«Судья»: каждая цитата есть\nв тексте слово в слово?", fillcolor="#FFF4D6"];
+ ok [label="Ответ: цитата + откуда она", fillcolor="#DDEEDD"];
+ no [label="Отказ: «в тексте этого нет»", fillcolor="#F6DADA"];
+ q->r; r->l [label="вопрос о тексте"]; r->j [label="алиби, противоречия"]; l->ch; j->ch; ch->ok [label="да"]; ch->no [label="нет"]; r->no [label="не про Холмса"]; }

@@ -1,0 +1,4 @@
+digraph G { rankdir=LR; nodesep=0.5; ranksep=0.7; node [fontname="Arial", fontsize=15, shape=box, style="rounded,filled", fillcolor="#FFFFFF", color="#1F3A5F", margin="0.2,0.12"]; edge [color="#9B1C1C", penwidth=2, fontname="Arial", fontsize=13, arrowhead=none];
+ p [label="Человек\nГарсия", fillcolor="#EEF1F5"]; p1 [label="Место\nдом в Уистерии", fillcolor="#EEF1F5"]; p2 [label="Место\nпустошь Оксшот", fillcolor="#EEF1F5"];
+ e1 [label="Событие: «около часа ночи\nон был в доме»\nцитата → рассказ", fillcolor="#FFF4D6"]; e2 [label="Событие: «около часа ночи\nон был на пустоши»\nцитата → рассказ", fillcolor="#FFF4D6"];
+ p->e1 [label="участвует"]; p->e2 [label="участвует"]; e1->p1 [label="где"]; e2->p2 [label="где"]; e1->e2 [label="конфликт (R1)", style=dashed, color="#9B1C1C", constraint=false]; }
