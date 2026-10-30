@@ -1,6 +1,6 @@
 # Contributing
 
-Four teammates, each with Claude Code, work in parallel on separate branches. Everything must be
+Four teammates work in parallel on separate branches. Everything must be
 merged into `main` by **2026-10-27 18:00**; feature freeze is **2026-10-28**. Work packages:
 `docs/team/ASSIGNMENTS.md`. Read `docs/PRD.md`, `docs/adr/`, `docs/backlog.md` first.
 
@@ -37,9 +37,8 @@ Conventional Commits: `feat(extract): ...`, `fix(web): ...`, `docs: ...`, `test:
 
 1. Description: what and why, linked backlog ID (T-xx / R-xx), how to reproduce.
 2. Tests added or updated; `just lint test typecheck` green locally (CI runs the same).
-3. Independent review: the `code-reviewer` agent (checklist in `.claude/agents/code-reviewer.md`:
-   correctness, types, tests, error handling, interface adherence, docs, scope; verdict
-   APPROVE / CHANGES) **and** one human teammate. Paste the agent verdict in the PR.
+3. Independent review by one teammate who did not write the change (checklist: correctness, types,
+   tests, error handling, interface adherence, docs, scope; verdict APPROVE / CHANGES). Paste the verdict in the PR.
 4. Squash or rebase merge; the author fixes review items, the reviewer re-checks.
 5. Measurements of speed or RAM are valid **only on the target laptop (ThinkPad X1, 7th gen)**.
    Numbers from any other machine must be labelled as such in the PR ("measured on <GPU/CPU>,
@@ -49,8 +48,8 @@ Conventional Commits: `feat(extract): ...`, `fix(web): ...`, `docs: ...`, `test:
 
 ## Zones of ownership
 
-Each Claude Code agent role in `.claude/agents/*.md` has a **Zone** line (for example
-frontend-engineer: `src/detective_board/web/`). Edit only files in your package's zones (listed
+Each role in `docs/team/ZONES.md` has a **Zone** (for example
+frontend-engineer: `web/`). Edit only files in your package's zones (listed
 per package in `docs/team/ASSIGNMENTS.md`). Need a change elsewhere: add a request line to
 `docs/backlog.md` (format `R-nn | owner | what | priority`) and tell the owner; do not edit it.
 Cross-zone changes found in review are rejected.

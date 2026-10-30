@@ -4,7 +4,7 @@ Deadline for all four packages: **everything merged into `main` by 2026-10-27 18
 2026-10-28 (fixes only). Rules: `CONTRIBUTING.md`. Models: `docs/team/models.md`.
 Hours are estimates of focused work including review rounds. Hardware-dependent timings are
 valid only on the target laptop (ThinkPad X1 7th gen); label anything else as such.
-Zones come from `.claude/agents/*.md`; need a change outside yours: add an `R-nn` line to
+Zones are listed in `docs/team/ZONES.md`; need a change outside yours: add an `R-nn` line to
 `docs/backlog.md`.
 
 Suggested start order (day 1 = 2026-10-23): A and C start the long GPU runs first, B and D
@@ -91,7 +91,7 @@ against the fake backend.
 compares four configurations.
 
 **Deliverables**
-1. Human spot-check (a person, not Claude) of `eval/golden/*` (64 questions, 43 contradiction cases; at least 10 items per the README, the least certain 8 plus random ones) and `eval/extraction_gold/*` (all claims and relations of at least 4 of the 12 chunks). Corrections and a log (who, which ids, what changed) in a PR; update the "needs human review" status in both READMEs only after the check. Run `scripts/eval/validate_golden.py` and `validate_contradictions.py` after edits.
+1. Human spot-check (a person, not the AI assistant that wrote them) of `eval/golden/*` (64 questions, 43 contradiction cases; at least 10 items per the README, the least certain 8 plus random ones) and `eval/extraction_gold/*` (all claims and relations of at least 4 of the 12 chunks). Corrections and a log (who, which ids, what changed) in a PR; update the "needs human review" status in both READMEs only after the check. Run `scripts/eval/validate_golden.py` and `validate_contradictions.py` after edits.
 2. `eval/run_eval.py`: runs 4 configurations (bare LLM / vector only / vector+rerank / hybrid+graph) over `eval/golden/questions.jsonl`; metrics: faithfulness, citation correctness, refusal rate (out-of-corpus questions), hallucination rate, retrieval recall, table + chart output (markdown table, PNG chart or text bar chart, written to `docs/spike/results/eval-<ts>.md|json`); `--short` CI mode (small subset, fake/mocked LLM, no Ollama) wired to `just eval --short`.
 3. Heavy run on the strong machine; the report states hardware, models, seeds, and which numbers are speed (not valid for the laptop) vs quality.
 4. Separate table for rule-based contradiction detection (T-39), if time allows.

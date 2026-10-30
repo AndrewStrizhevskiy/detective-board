@@ -4,7 +4,7 @@
 
 ## Provenance and status: needs human review
 
-The questions, expected answers and gold quotes were written by a Claude agent
+The questions, expected answers and gold quotes were written by an AI assistant (an LLM)
 (eval-engineer role) from reading the text in `data/clean/`, not from memory of
 the canon. Nothing has been reviewed by a human yet. The validator proves only
 that each quote is a verbatim substring of its story. It does not prove that the
@@ -83,7 +83,7 @@ answer quality (faithfulness, citation correctness, refusal rate, recall).
 
 ### Provenance and status: needs human review
 
-Written by a Claude agent (eval-engineer role) from reading the story text in
+Written by an AI assistant (an LLM, eval-engineer role) from reading the story text in
 `data/clean/`, not from memory of the canon. No human has reviewed it. The
 validator proves only that each quote is a verbatim substring of its story and
 that counts and labels are internally consistent. It does not prove that the

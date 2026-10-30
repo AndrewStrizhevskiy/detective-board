@@ -110,7 +110,7 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
   before measuring (`keep_alive: 0`). Sustained 7-8B load reaches 96 C and throttles.
 - Do not use `pkill -f` / `pgrep -f` with a pattern that also appears in your own shell command line.
 - `uv run` here uses CPython 3.14; the project requires >= 3.12 and CI should pin 3.12.
-- Gold sets and labels were written by a Claude agent: precision numbers are underestimates, recall is more
+- Gold sets and labels were written by an AI assistant (an LLM), not by a human: precision numbers are underestimates, recall is more
   trustworthy; every metric file states its caveats.
 - A Russian question is translated to English first (`translate_questions`, optional, quality unmeasured, n=1-7); without it the relevance gate refuses it (cross-language support check).
 - Only 4 genuine R1 (person in two places) and 3 R2 (order cycle) cases exist in the corpus; R3 dominates.
@@ -124,5 +124,5 @@ Full report: `docs/spike/REPORT.md`. ADRs: `docs/adr/` (0001-0008). Short versio
 `src/detective_board/{retrieval,index,extract,graph,symbolic,mcp,agent,api}`, `web/`, `prompts/extract/`,
 `eval/` (golden sets, spike questions, answer check, evidence study), `scripts/` (corpus, spike benchmarks,
 shard/merge tools, priority runner), `docs/` (PRD, architecture, ADRs, symbolic-layer, api, security,
-test-plan, design, demo, team, spike), `.claude/agents/` (the 20 agent definitions used by the orchestrator),
+test-plan, design, demo, team, spike), `docs/team/ZONES.md` (roles and zones of ownership),
 `CONTRIBUTING.md`.

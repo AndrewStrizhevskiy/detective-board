@@ -204,7 +204,7 @@ Goal: integrate one off-the-shelf server (filesystem or fetch) with an explicit 
 
 Design (the allowlist is enforced in two places, so a server misconfiguration alone does not open access):
 
-1. Server-side restriction, set at spawn time by our config: the filesystem server is started with only the allowed directories as arguments. **[U]** exact package name and CLI (the reference `@modelcontextprotocol/server-filesystem` takes allowed dirs as positional args; not fetched here). Allowed: `data/clean/`, `data/raw/` (read-only use), `docs/` if needed. Not allowed: repo root, `.env*`, `~`, `.claude/`, `scripts/`, any secrets path.
+1. Server-side restriction, set at spawn time by our config: the filesystem server is started with only the allowed directories as arguments. **[U]** exact package name and CLI (the reference `@modelcontextprotocol/server-filesystem` takes allowed dirs as positional args; not fetched here). Allowed: `data/clean/`, `data/raw/` (read-only use), `docs/` if needed. Not allowed: repo root, `.env*`, `~`, `scripts/`, any secrets path.
 2. Client-side gate in our MCP client wrapper, before sending `call_tool`:
    - tool-name allowlist (read-only tools only: e.g. read/list/search; write/move/edit tools are never exposed to the model **[U]** actual tool names to be read from `list_tools`);
    - path argument is `resolve()`d (symlinks followed) and must be inside an allowed root, otherwise the call is rejected with `invalid_input` and a `tool.result ok:false` trace event;
