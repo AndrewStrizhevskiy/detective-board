@@ -40,6 +40,8 @@ from detective_board.suspects.candidates import (  # noqa: E402
     mask_text,
 )
 from detective_board.suspects.common import (  # noqa: E402
+    CHUNKS,
+    CLEAN,
     KV,
     load_cases,
     load_split,
@@ -110,9 +112,9 @@ def run_tag(args) -> str:
 
 
 def collect(args) -> None:
-    cases = load_cases()
+    cases = load_cases(Path(args.cases)) if args.cases else load_cases()
     split = load_split()
-    if args.split != "all":
+    if args.split != "all" and not args.cases:
         cases = [c for c in cases if c["story"] in split[args.split]]
     if args.only:
         cases = [c for c in cases if c["story"] in args.only]
@@ -120,6 +122,8 @@ def collect(args) -> None:
     client_cls = ThinkClient if args.think else OllamaClient
     client = client_cls(host=args.host, timeout=3600.0, keep_alive="30m")
     tag = run_tag(args)
+    chunks_path = Path(args.chunks_file) if args.chunks_file else CHUNKS
+    clean_dir = Path(args.clean_dir) if args.clean_dir else CLEAN
     out = {"params": vars(args) | {"graph": str(args.graph)}, "cases": {}}
     cdir = Path(args.cache_dir)
     cdir.mkdir(parents=True, exist_ok=True)
@@ -132,8 +136,8 @@ def collect(args) -> None:
         open_c = copy.deepcopy(cs)
         masked_c = copy.deepcopy(cs)
         mask_candidates(masked_c)
-        chunks = pre_cut_chunks(case["story"], cut)
-        text = story_text(case["story"])[:cut]
+        chunks = pre_cut_chunks(case["story"], cut, chunks_path)
+        text = story_text(case["story"], clean_dir)[:cut]
         art: dict = {
             "case": case,
             "cut": cut,
@@ -423,6 +427,9 @@ def main() -> None:
     c = sub.add_parser("collect")
     c.add_argument("--split", choices=["dev", "test", "all"], default="dev")
     c.add_argument("--only", nargs="*")
+    c.add_argument("--cases", help="a cases file (all its cases are run, the split is ignored)")
+    c.add_argument("--clean-dir", help="directory with <story>.txt for the cases file")
+    c.add_argument("--chunks-file", help="chunks.jsonl for the cases file")
     c.add_argument("--graph", type=Path, default=ROOT / "data" / "graph" / "graph.sqlite")
     c.add_argument("--host", default="http://localhost:11434")
     c.add_argument("--model", default="qwen3:8b")
