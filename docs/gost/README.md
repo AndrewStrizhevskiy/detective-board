@@ -25,7 +25,8 @@
 **Дополнительно (не часть ЕСПД-комплекта):**
 
 - [proekt-dlya-vseh.pdf](proekt-dlya-vseh.pdf) / [.docx](proekt-dlya-vseh.docx) – «Проект для всех»: простое объяснение, что делает проект, чего он не умеет, и раздел про каждый файл репозитория с указателем.
-- [09-prezentaciya.pptx](09-prezentaciya.pptx) / [.pdf](09-prezentaciya.pdf) – презентация, 12 слайдов.
+- [09-prezentaciya.pptx](09-prezentaciya.pptx) / [.pdf](09-prezentaciya.pdf) – презентация, минимальная, 12 слайдов.
+- [10-prezentaciya-dizajn.pptx](10-prezentaciya-dizajn.pptx) / [.pdf](10-prezentaciya-dizajn.pdf) – оформленная презентация, 14 слайдов, с заметками докладчика.
 
 **Единый PDF:** [00-komplekt-dokumentacii.pdf](00-komplekt-dokumentacii.pdf) – все 8 документов подряд (100 страниц): страница-указатель со ссылками на первые страницы документов, панель закладок с оглавлением каждого документа, пути к файлам репозитория в тексте – ссылки на GitHub на коммите `16122fc`.
 
