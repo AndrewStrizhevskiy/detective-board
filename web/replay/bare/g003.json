@@ -1,0 +1,20 @@
+{
+ "meta": {
+  "label": "RECORDING",
+  "kind": "bare model, no sources",
+  "qid": "g003",
+  "question": "What reward was offered for the return of the Countess of Morcar's blue carbuncle?",
+  "model": "qwen3:4b-instruct",
+  "call": "question only as the user message, no system prompt, temperature 0, seed 42, 300-token cap",
+  "recorded_on": "2026-10-28",
+  "machine": "mendax-ThinkPad-X1-Carbon-7th / x86_64 / Linux 7.0.0-38-generic",
+  "git_sha": "ab945e8",
+  "config_hash": "78b3bbb3f2a6",
+  "split": "dev",
+  "ttft_s": 1.365,
+  "seconds": 31.546,
+  "source": "docs/spike/results/eval-2026-10-28-dev-ab945e8-78b3bbb3f2a6-145202-rescored.json",
+  "note": "Copied unchanged from the eval run; not chosen or edited after the run."
+ },
+ "answer": "There is no historical record or credible source indicating that a reward was offered for the return of the Countess of Morcar's blue carbuncle. The \"Countess of Morcar\" is not a historically documented figure in the context of a blue carbuncle, and the idea of such a jewel being lost or sought after with a reward appears to be a fictional or speculative element.\n\nThe blue carbuncle is a gemstone that appears in the novel *The Blue Carbuncle* by Arthur Conan Doyle, a detective story featuring Sherlock Holmes. In that story, the blue carbuncle is a valuable jewel that is stolen and later recovered, but it is not associated with the Countess of Morcar. The plot revolves around a mystery involving a missing jewel, not a reward specifically tied to a noblewoman named Morcar.\n\nTherefore, the reward for the return of the Countess of Morcar's blue carbuncle does not exist in any authentic historical or literary context.\n\n**Conclusion:** There was no actual reward offered for the return of the Countess of Morcar's blue carbuncle—this is a fictional or misattributed idea."
+}
