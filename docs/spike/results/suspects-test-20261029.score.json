@@ -1,0 +1,1773 @@
+{
+ "params": {
+  "cmd": "score",
+  "lam": 1.0,
+  "kind_bonus": 0.5,
+  "min_support": 2,
+  "margin": 1.0,
+  "abstain_low": true,
+  "report": "data/cache/suspects/overnight/TEST.score.json",
+  "md": "data/cache/suspects/overnight/TEST.md",
+  "summary": "data/cache/suspects/overnight/SUMMARY.txt",
+  "label": "TEST",
+  "only_split": "test",
+  "baselines": "data/cache/suspects/overnight/results/baselines.json"
+ },
+ "methods": {
+  "most_mentioned": {
+   "all": {
+    "n": 8,
+    "mrr": 0.408,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "precision_when_answered": 0.25
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.408,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "precision_when_answered": 0.25
+   }
+  },
+  "most_accused": {
+   "all": {
+    "n": 8,
+    "mrr": 0.448,
+    "correct_first": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "culprit_in_top3": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "other_wrong": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "precision_when_answered": 0.375
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.448,
+    "correct_first": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "culprit_in_top3": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "other_wrong": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "precision_when_answered": 0.375
+   }
+  },
+  "prior": {
+   "all": {
+    "n": 8,
+    "mrr": 0.443,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "precision_when_answered": 0.25
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.443,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "precision_when_answered": 0.25
+   }
+  },
+  "matrix_masked": {
+   "all": {
+    "n": 8,
+    "mrr": 0.454,
+    "correct_first": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "culprit_in_top3": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "cleared_accused": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 7,
+    "wrong_when_answered": [
+     6,
+     [
+      0.487,
+      0.974
+     ]
+    ],
+    "precision_when_answered": 0.143
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.454,
+    "correct_first": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "culprit_in_top3": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "cleared_accused": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 7,
+    "wrong_when_answered": [
+     6,
+     [
+      0.487,
+      0.974
+     ]
+    ],
+    "precision_when_answered": 0.143
+   }
+  },
+  "fulltext_masked": {
+   "all": {
+    "n": 8,
+    "mrr": 0.292,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "abstain": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.292,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "abstain": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "answered": 6,
+    "wrong_when_answered": [
+     4,
+     [
+      0.3,
+      0.903
+     ]
+    ],
+    "precision_when_answered": 0.333
+   }
+  },
+  "matrix_open": {
+   "all": {
+    "n": 8,
+    "mrr": 0.479,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "culprit_in_top3": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "abstain": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "wrong_total": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "answered": 3,
+    "wrong_when_answered": [
+     3,
+     [
+      0.438,
+      1.0
+     ]
+    ],
+    "precision_when_answered": 0.0
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.479,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "culprit_in_top3": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "abstain": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "wrong_total": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "answered": 3,
+    "wrong_when_answered": [
+     3,
+     [
+      0.438,
+      1.0
+     ]
+    ],
+    "precision_when_answered": 0.0
+   }
+  },
+  "fulltext_open": {
+   "all": {
+    "n": 8,
+    "mrr": 0.396,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "wrong_total": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "answered": 5,
+    "wrong_when_answered": [
+     3,
+     [
+      0.231,
+      0.882
+     ]
+    ],
+    "precision_when_answered": 0.4
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.396,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "wrong_total": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "answered": 5,
+    "wrong_when_answered": [
+     3,
+     [
+      0.231,
+      0.882
+     ]
+    ],
+    "precision_when_answered": 0.4
+   }
+  },
+  "bare": {
+   "all": {
+    "n": 8,
+    "mrr": 0.542,
+    "correct_first": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "answered": 7,
+    "wrong_when_answered": [
+     4,
+     [
+      0.25,
+      0.842
+     ]
+    ],
+    "precision_when_answered": 0.429
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.542,
+    "correct_first": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "wrong_total": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "answered": 7,
+    "wrong_when_answered": [
+     4,
+     [
+      0.25,
+      0.842
+     ]
+    ],
+    "precision_when_answered": 0.429
+   }
+  },
+  "ens_agree_masked": {
+   "all": {
+    "n": 8,
+    "mrr": 0.292,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "culprit_in_top3": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "abstain": [
+     7,
+     [
+      0.529,
+      0.978
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "wrong_total": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "answered": 1,
+    "wrong_when_answered": [
+     1,
+     [
+      0.207,
+      1.0
+     ]
+    ],
+    "precision_when_answered": 0.0
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.292,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "culprit_in_top3": [
+     3,
+     [
+      0.137,
+      0.694
+     ]
+    ],
+    "abstain": [
+     7,
+     [
+      0.529,
+      0.978
+     ]
+    ],
+    "cleared_accused": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "other_wrong": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "wrong_total": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "answered": 1,
+    "wrong_when_answered": [
+     1,
+     [
+      0.207,
+      1.0
+     ]
+    ],
+    "precision_when_answered": 0.0
+   }
+  },
+  "ens_either_masked": {
+   "all": {
+    "n": 8,
+    "mrr": 0.306,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "precision_when_answered": 0.25
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.306,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "abstain": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "cleared_accused": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "other_wrong": [
+     4,
+     [
+      0.215,
+      0.785
+     ]
+    ],
+    "wrong_total": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "answered": 8,
+    "wrong_when_answered": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "precision_when_answered": 0.25
+   }
+  },
+  "ens_agree_open": {
+   "all": {
+    "n": 8,
+    "mrr": 0.396,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     8,
+     [
+      0.676,
+      1.0
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "other_wrong": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "wrong_total": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "answered": 0,
+    "wrong_when_answered": null,
+    "precision_when_answered": null
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.396,
+    "correct_first": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "culprit_in_top3": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "abstain": [
+     8,
+     [
+      0.676,
+      1.0
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "other_wrong": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "wrong_total": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "answered": 0,
+    "wrong_when_answered": null,
+    "precision_when_answered": null
+   }
+  },
+  "ens_either_open": {
+   "all": {
+    "n": 8,
+    "mrr": 0.47,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "answered": 7,
+    "wrong_when_answered": [
+     5,
+     [
+      0.359,
+      0.918
+     ]
+    ],
+    "precision_when_answered": 0.286
+   },
+   "reachable": {
+    "n": 8,
+    "mrr": 0.47,
+    "correct_first": [
+     2,
+     [
+      0.071,
+      0.591
+     ]
+    ],
+    "culprit_in_top3": [
+     6,
+     [
+      0.409,
+      0.929
+     ]
+    ],
+    "abstain": [
+     1,
+     [
+      0.022,
+      0.471
+     ]
+    ],
+    "cleared_accused": [
+     0,
+     [
+      0.0,
+      0.324
+     ]
+    ],
+    "other_wrong": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "wrong_total": [
+     5,
+     [
+      0.306,
+      0.863
+     ]
+    ],
+    "answered": 7,
+    "wrong_when_answered": [
+     5,
+     [
+      0.359,
+      0.918
+     ]
+    ],
+    "precision_when_answered": 0.286
+   }
+  }
+ },
+ "cases": {
+  "su-beryl-coronet": {
+   "reachable": true,
+   "n_options": 7,
+   "most_mentioned": {
+    "top": "Alexander Holder",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Arthur",
+    "outcome": "cleared_accused"
+   },
+   "prior": {
+    "top": "Alexander Holder",
+    "outcome": "other_wrong"
+   },
+   "matrix_masked": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "fulltext_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "matrix_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "fulltext_open": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "bare": {
+    "top": "Sir George Burnwell",
+    "outcome": "correct"
+   },
+   "ens_agree_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_masked": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-blue-carbuncle": {
+   "reachable": true,
+   "n_options": 13,
+   "most_mentioned": {
+    "top": "Mr. Henry Baker",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Countess of Morcar",
+    "outcome": "other_wrong"
+   },
+   "prior": {
+    "top": "Mr. Henry Baker",
+    "outcome": "other_wrong"
+   },
+   "matrix_masked": {
+    "top": "Mr. Henry Baker",
+    "outcome": "other_wrong"
+   },
+   "fulltext_masked": {
+    "top": "Inspector Bradstreet",
+    "outcome": "other_wrong"
+   },
+   "matrix_open": {
+    "top": "Countess of Morcar",
+    "outcome": "other_wrong"
+   },
+   "fulltext_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "bare": {
+    "top": "John Horner",
+    "outcome": "cleared_accused"
+   },
+   "ens_agree_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_masked": {
+    "top": "Inspector Bradstreet",
+    "outcome": "other_wrong"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": "Countess of Morcar",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-crooked-man": {
+   "reachable": true,
+   "n_options": 6,
+   "most_mentioned": {
+    "top": "Miss Morrison",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Miss Morrison",
+    "outcome": "other_wrong"
+   },
+   "prior": {
+    "top": "Miss Morrison",
+    "outcome": "other_wrong"
+   },
+   "matrix_masked": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "fulltext_masked": {
+    "top": "Henry",
+    "outcome": "correct"
+   },
+   "matrix_open": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "fulltext_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "ens_agree_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_masked": {
+    "top": "Henry",
+    "outcome": "correct"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-naval-treaty": {
+   "reachable": true,
+   "n_options": 13,
+   "most_mentioned": {
+    "top": "Joseph Harrison",
+    "outcome": "correct"
+   },
+   "most_accused": {
+    "top": "Joseph Harrison",
+    "outcome": "correct"
+   },
+   "prior": {
+    "top": "Joseph Harrison",
+    "outcome": "correct"
+   },
+   "matrix_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "fulltext_masked": {
+    "top": "Miss Harrison",
+    "outcome": "correct"
+   },
+   "matrix_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "fulltext_open": {
+    "top": "Joseph Harrison",
+    "outcome": "correct"
+   },
+   "bare": {
+    "top": "Joseph Harrison",
+    "outcome": "correct"
+   },
+   "ens_agree_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_masked": {
+    "top": "Miss Harrison",
+    "outcome": "correct"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": "Joseph Harrison",
+    "outcome": "correct"
+   }
+  },
+  "su-priory-school": {
+   "reachable": true,
+   "n_options": 13,
+   "most_mentioned": {
+    "top": "Thorneycroft Huxtable",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "James Wilder",
+    "outcome": "correct"
+   },
+   "prior": {
+    "top": "Thorneycroft Huxtable",
+    "outcome": "other_wrong"
+   },
+   "matrix_masked": {
+    "top": "Duke of Holdernesse",
+    "outcome": "other_wrong"
+   },
+   "fulltext_masked": {
+    "top": "young Saltire",
+    "outcome": "other_wrong"
+   },
+   "matrix_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "fulltext_open": {
+    "top": "Duke of Holdernesse",
+    "outcome": "other_wrong"
+   },
+   "bare": {
+    "top": "NO_PERSON",
+    "outcome": "other_wrong"
+   },
+   "ens_agree_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_masked": {
+    "top": "young Saltire",
+    "outcome": "other_wrong"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": "Duke of Holdernesse",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-reigate-squires": {
+   "reachable": true,
+   "n_options": 11,
+   "most_mentioned": {
+    "top": "Cunningham",
+    "outcome": "correct"
+   },
+   "most_accused": {
+    "top": "Cunningham",
+    "outcome": "correct"
+   },
+   "prior": {
+    "top": "Cunningham",
+    "outcome": "correct"
+   },
+   "matrix_masked": {
+    "top": "Cunningham",
+    "outcome": "correct"
+   },
+   "fulltext_masked": {
+    "top": "young Mr. Alec",
+    "outcome": "other_wrong"
+   },
+   "matrix_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "fulltext_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "bare": {
+    "top": "Alec Cunningham",
+    "outcome": "correct"
+   },
+   "ens_agree_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_masked": {
+    "top": "young Mr. Alec",
+    "outcome": "other_wrong"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": null,
+    "outcome": "abstain"
+   }
+  },
+  "su-silver-blaze": {
+   "reachable": true,
+   "n_options": 13,
+   "most_mentioned": {
+    "top": "Colonel Ross",
+    "outcome": "other_wrong"
+   },
+   "most_accused": {
+    "top": "Fitzroy Simpson",
+    "outcome": "cleared_accused"
+   },
+   "prior": {
+    "top": "Colonel Ross",
+    "outcome": "other_wrong"
+   },
+   "matrix_masked": {
+    "top": "Fitzroy Simpson",
+    "outcome": "cleared_accused"
+   },
+   "fulltext_masked": {
+    "top": "Fitzroy Simpson",
+    "outcome": "cleared_accused"
+   },
+   "matrix_open": {
+    "top": "Fitzroy Simpson",
+    "outcome": "cleared_accused"
+   },
+   "fulltext_open": {
+    "top": "Silas Brown",
+    "outcome": "other_wrong"
+   },
+   "bare": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_agree_masked": {
+    "top": "Fitzroy Simpson",
+    "outcome": "cleared_accused"
+   },
+   "ens_either_masked": {
+    "top": "Fitzroy Simpson",
+    "outcome": "cleared_accused"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": "Silas Brown",
+    "outcome": "other_wrong"
+   }
+  },
+  "su-thor-bridge": {
+   "reachable": true,
+   "n_options": 13,
+   "most_mentioned": {
+    "top": "Miss Grace Dunbar",
+    "outcome": "cleared_accused"
+   },
+   "most_accused": {
+    "top": "Miss Grace Dunbar",
+    "outcome": "cleared_accused"
+   },
+   "prior": {
+    "top": "Miss Grace Dunbar",
+    "outcome": "cleared_accused"
+   },
+   "matrix_masked": {
+    "top": "Miss Grace Dunbar",
+    "outcome": "cleared_accused"
+   },
+   "fulltext_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "matrix_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "fulltext_open": {
+    "top": "NO_PERSON",
+    "outcome": "correct"
+   },
+   "bare": {
+    "top": "Neil Gibson",
+    "outcome": "other_wrong"
+   },
+   "ens_agree_masked": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_masked": {
+    "top": "Miss Grace Dunbar",
+    "outcome": "cleared_accused"
+   },
+   "ens_agree_open": {
+    "top": null,
+    "outcome": "abstain"
+   },
+   "ens_either_open": {
+    "top": "NO_PERSON",
+    "outcome": "correct"
+   }
+  }
+ },
+ "random_expected": {
+  "n": 8,
+  "correct_first": 1.34,
+  "wrong_total": 6.66
+ }
+}
